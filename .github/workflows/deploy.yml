@@ -26,10 +26,22 @@ jobs:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with: { version: latest }
-      - name: 프로젝트 연결
-        run: supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" -p "$SUPABASE_DB_PASSWORD"
-      - name: DB 스키마 적용
-        run: supabase db push --linked -p "$SUPABASE_DB_PASSWORD"
+      - name: DB 스키마 적용 (Management API, DB 비밀번호 불필요)
+        run: |
+          set -e
+          for f in supabase/migrations/*.sql; do
+            echo "적용: $f"
+            python3 - "$f" > /tmp/body.json <<'PY'
+          import json,sys
+          print(json.dumps({"query": open(sys.argv[1],encoding="utf-8").read()}))
+          PY
+            code=$(curl -sS -o /tmp/out.txt -w "%{http_code}" -X POST \
+              "https://api.supabase.com/v1/projects/${{ vars.SUPABASE_PROJECT_REF }}/database/query" \
+              -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+              -H "Content-Type: application/json" --data @/tmp/body.json)
+            echo "HTTP $code"
+            if [ "$code" -ge 300 ]; then cat /tmp/out.txt; exit 1; fi
+          done
       - name: 비밀값 설정
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
