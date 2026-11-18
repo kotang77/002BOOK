@@ -54,9 +54,9 @@ jobs:
           for k in ANTHROPIC_API_KEY RESEND_API_KEY TOSS_SECRET_KEY PLANS_JSON; do
             [ -n "${!k}" ] && args+=("$k=${!k}")
           done
-          supabase secrets set "${args[@]}" --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
+          supabase secrets set "${args[@]}" --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" --yes
       - name: API 함수 배포
-        run: supabase functions deploy api --no-verify-jwt --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
+        run: supabase functions deploy api --no-verify-jwt --use-api --yes --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
 
   web:
     name: 웹사이트 빌드
