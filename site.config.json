@@ -1,5 +1,6 @@
 {
   "domain": "002book.com",
+  "freeLaunch": true,
   "supabaseUrl": "https://znvinhrmiakjxdzypmpq.supabase.co",
   "supabaseAnonKey": "sb_publishable_gostrwsJINSvsAuY8YD2ag_fMfErcfA",
   "tossClientKey": "",

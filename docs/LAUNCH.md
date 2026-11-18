@@ -79,3 +79,15 @@ GitHub → Settings → Pages → Custom domain에 `002book.com` 저장 → 몇 
 
 ## 앱을 고칠 때
 지금처럼 Claude 게시본에서 고치고 → '이전용 내보내기'로 받은 파일의 앱 원본을 저장소 `app/source.html`에 넣으면 자동 배포돼요. (Claude에게 "새 내보내기 파일로 002book 업데이트해 줘"라고 하면 됩니다.)
+
+## 무료 출시 → 유료 전환 (사업자등록 전 단계)
+현재는 **무료 출시 모드**(`site.config.json`의 `freeLaunch: true`, 서버 `FREE_LAUNCH=1`)다.
+- 결제 화면(`/pay/*`)은 빌드에서 빠지고, 서버의 `pay.*` 요청은 막혀 있다. 모든 회원이 맞춤형코스를 쓸 수 있다.
+- 약관 제10·11조, 개인정보 처리방침(결제 항목·토스 위탁), 환불정책은 "현재 무료" 문구로 바뀐다.
+- 사업자 정보 칸에는 "개인 운영(사업자 등록 전)"과 문의 이메일만 표시된다.
+
+**유료로 바꿀 때 순서**
+1. 개인사업자(간이과세) 등록 → 통신판매업 신고 → 토스페이먼츠 가맹 승인
+2. `site.config.json`: `freeLaunch: false`, `business.*`, `tossClientKey` 채우기
+3. GitHub Variables에 `FREE_LAUNCH=0` 추가, Secrets에 `TOSS_SECRET_KEY` 등록
+4. 약관·방침 개정 공지(시작 30일 전) 후 배포

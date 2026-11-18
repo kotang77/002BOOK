@@ -48,9 +48,10 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
           MAIL_FROM: ${{ vars.MAIL_FROM || '002BOOK <no-reply@002book.com>' }}
+          FREE_LAUNCH: ${{ vars.FREE_LAUNCH || '1' }}
           PLANS_JSON: ${{ vars.PLANS_JSON }}
         run: |
-          args=("SITE_URL=https://002book.com" "ALLOWED_ORIGINS=https://002book.com,https://www.002book.com" "MAIL_FROM=$MAIL_FROM")
+          args=("SITE_URL=https://002book.com" "ALLOWED_ORIGINS=https://002book.com,https://www.002book.com" "MAIL_FROM=$MAIL_FROM" "FREE_LAUNCH=$FREE_LAUNCH")
           for k in ANTHROPIC_API_KEY RESEND_API_KEY TOSS_SECRET_KEY PLANS_JSON; do
             [ -n "${!k}" ] && args+=("$k=${!k}")
           done

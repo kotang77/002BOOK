@@ -66,14 +66,16 @@ for (const [label, from, to] of STRINGS) {
   if (n !== 1) { errors.push(`문자열 패치 "${label}": ${n}번 나옴 (1번이어야 함)`); continue; }
   html = html.replace(from, () => to);
 }
+const FREE = process.env.FREE_LAUNCH ? process.env.FREE_LAUNCH === '1' : cfg.freeLaunch !== false; // 무료 출시 모드(기본 켜짐)
 const biz = cfg.business || {};
 // 전자상거래법 제10조·제13조: 상호, 대표자, 주소, 전화, 이메일, 사업자등록번호, 통신판매업 신고번호, 호스팅 제공자, 이용약관 연결
 const bizLine = [biz.name && `상호 ${biz.name}`, biz.owner && `대표 ${biz.owner}`, biz.address && `주소 ${biz.address}`, biz.phone && `전화 ${biz.phone}`, biz.email && `이메일 ${biz.email}`,
   biz.regNo && `사업자등록번호 ${biz.regNo}` + (biz.regNo ? ` <a href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=${biz.regNo.replace(/\D/g, '')}" target="_blank" rel="noopener" style="color:inherit">[사업자정보 확인]</a>` : ''),
   biz.mailOrderNo && `통신판매업 신고 ${biz.mailOrderNo}${biz.mailOrderAgency ? ' (' + biz.mailOrderAgency + ')' : ''}`,
   `호스팅 제공 GitHub, Inc. · Supabase, Inc.`].filter(Boolean).join(' · ');
+const opLine = FREE && !biz.name ? ['서비스 운영자 개인 운영 (무료 제공 · 사업자 등록 전)', (biz.email || biz.privacyEmail) && `문의 ${biz.email || biz.privacyEmail}`, '호스팅 제공 GitHub, Inc. · Supabase, Inc.'].filter(Boolean).join(' · ') : bizLine;
 const missing = ['name', 'owner', 'address', 'phone', 'email', 'regNo', 'mailOrderNo'].filter((k) => !biz[k]);
-if (missing.length) console.warn('⚠ site.config.json 사업자 정보 비어 있음 (전자상거래법 표시 의무): ' + missing.join(', '));
+if (missing.length && !FREE) console.warn('⚠ site.config.json 사업자 정보 비어 있음 (전자상거래법 표시 의무): ' + missing.join(', '));
 
 /* ---------- 4) 남은 위험 패턴 검사 ---------- */
 const main2 = mainScript(html).code;
@@ -89,18 +91,22 @@ fs.cpSync(path.join(ROOT, 'web'), DIST, { recursive: true });
 fs.writeFileSync(path.join(DIST, 'index.html'), html);
 fs.writeFileSync(path.join(DIST, '404.html'), html);
 fs.writeFileSync(path.join(DIST, 'runtime/config.js'),
-  `window.__002CFG=${JSON.stringify({ api: SUPA ? SUPA.replace(/\/$/, '') + '/functions/v1/api' : '', anon: ANON, toss: cfg.tossClientKey || '' })};\n`);
+  `window.__002CFG=${JSON.stringify({ api: SUPA ? SUPA.replace(/\/$/, '') + '/functions/v1/api' : '', anon: ANON, toss: cfg.tossClientKey || '', free: FREE })};\n`);
 const buildId = crypto.createHash('sha256').update(html + fs.readFileSync(path.join(ROOT, 'web/runtime/claude-shim.js'))).digest('hex').slice(0, 10);
 const sw = path.join(DIST, 'sw.js'); fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace('__BUILD_ID__', buildId));
 const REPL = {
-  __BUSINESS_INFO__: bizLine, __BIZ_NAME__: biz.name || '002BOOK', __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
+  __BUSINESS_INFO__: opLine, __BIZ_NAME__: biz.name || (FREE ? '002BOOK 운영자' : '002BOOK'), __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
   __PRIVACY_OFFICER__: biz.privacyOfficer || biz.owner || '(개인정보 보호책임자)', __PRIVACY_EMAIL__: biz.privacyEmail || biz.email || 'help@002book.com',
   __EFFECTIVE_DATE__: cfg.effectiveDate || '2026년 12월 1일', __POLICY_VERSION__: cfg.policyVersion || '2026-12-01',
 };
 for (const f of ['index.html', '404.html', 'terms.html', 'privacy.html', 'refund.html', 'guardian.html', 'pay/checkout.html', 'pay/success.html', 'pay/fail.html', 'admin/import.html']) {
   const p = path.join(DIST, f); if (!fs.existsSync(p)) continue;
-  let t = fs.readFileSync(p, 'utf8'); for (const [k, v] of Object.entries(REPL)) t = t.replaceAll(k, v); fs.writeFileSync(p, t);
+  let t = fs.readFileSync(p, 'utf8');
+  // 유료/무료 블록: 무료 출시 모드면 PAID 블록을 지우고 FREE 블록만 남긴다
+  t = t.replace(/<!--PAID-->([\s\S]*?)<!--\/PAID-->/g, FREE ? '' : '$1').replace(/<!--FREE-->([\s\S]*?)<!--\/FREE-->/g, FREE ? '$1' : '');
+  for (const [k, v] of Object.entries(REPL)) t = t.replaceAll(k, v); fs.writeFileSync(p, t);
 }
+if (FREE) fs.rmSync(path.join(DIST, 'pay'), { recursive: true, force: true }); // 무료 출시 모드: 결제 페이지는 내보내지 않는다
 if (cfg.domain) fs.writeFileSync(path.join(DIST, 'CNAME'), cfg.domain + '\n');
 fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
 
@@ -130,4 +136,4 @@ fs.writeFileSync(path.join(DIST, '.well-known/assetlinks.json'), JSON.stringify(
   target: { namespace: 'android_app', package_name: cfg.android?.packageId || 'com.book002.app', sha256_cert_fingerprints: fps },
 }] : [], null, 2));
 
-console.log(`빌드 완료 → dist/ (build ${buildId}, 패치 ${edits.length + STRINGS.length}개${SUPA ? '' : ', ⚠ SUPABASE_URL 비어 있음'})`);
+console.log(`빌드 완료 → dist/ (build ${buildId}, 패치 ${edits.length + STRINGS.length}개, ${FREE ? '무료 출시 모드' : '유료 모드'}${SUPA ? '' : ', ⚠ SUPABASE_URL 비어 있음'})`);

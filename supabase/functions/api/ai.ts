@@ -7,7 +7,8 @@ const MODELS: Record<string, string> = {
   complex: env('MODEL_COMPLEX', 'claude-sonnet-5-5'), // 비용을 고려해 기본은 Sonnet. Opus를 원하면 MODEL_COMPLEX=claude-opus-5-5
 };
 const MAX_TOKENS: Record<string, number> = { quick: 1024, default: 4096, complex: 8192 };
-const DAILY_FREE = Number(env('AI_DAILY_LIMIT_FREE', '30'));
+// 무료 출시 모드(FREE_LAUNCH=1, 기본)에서는 모두 무료 한도를 쓰므로 기본값을 조금 넉넉하게 둔다
+const DAILY_FREE = Number(env('AI_DAILY_LIMIT_FREE', env('FREE_LAUNCH', '1') === '1' ? '50' : '30'));
 const DAILY_PAID = Number(env('AI_DAILY_LIMIT_PAID', '200'));
 
 type Msg = { role: 'user' | 'assistant'; content: string };

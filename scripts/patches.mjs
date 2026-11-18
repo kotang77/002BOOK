@@ -86,7 +86,7 @@ const SIGNUP_EXTRA = `<label for="su-birth">태어난 연월 <small class="hint"
         <ul class="hint" style="margin:6px 0 0;padding-left:18px">
           <li><b>목적</b>: 회원 관리, 학년별 책·영화 코스와 논술 AI 첨삭 제공, 친구·가족 기능</li>
           <li><b>항목</b>: 아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역, 학년, 성별, 태어난 연월, 학습 기록 (만 14세 미만은 보호자 이름·이메일)</li>
-          <li><b>보유 기간</b>: 탈퇴하면 바로 삭제 (법령상 결제 기록은 5년)</li>
+          <li><b>보유 기간</b>: 탈퇴하면 바로 삭제\${(window.__002CFG&&window.__002CFG.free)?'':' (법령상 결제 기록은 5년)'}</li>
           <li><b>생성형 AI</b>: 첨삭·추천·일기 답장은 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
           <li><b>국외 이전</b>: 서비스 운영을 위해 Supabase·Anthropic·Resend·GitHub(미국)에 처리를 맡겨요.</li>
           <li><b>공개 범위</b>: 다른 회원에게는 닉네임만 보여요. 나머지는 내가 공개를 켠 것만 보여요.</li>
@@ -98,6 +98,10 @@ const SIGNUP_EXTRA = `<label for="su-birth">태어난 연월 <small class="hint"
       `;
 
 export const STRINGS = [
+  ['free: 무료 출시 모드에서는 모두 맞춤형 사용 가능', `const isPaid=()=>paidOf(S.id);`, `const isPaid=()=>!!(window.__002CFG&&window.__002CFG.free)||paidOf(S.id);`],
+  ['free: 상단 등급 표시', `<span class="bdg \${isPaid()?'paid':''}" style="flex:none">\${isAdmin()?'관리자':isPaid()?'유료회원':'무료회원'}</span>`, `<span class="bdg \${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">\${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span>`],
+  ['free: 내 정보 등급 표시', `\${esc(S.id)} · \${isAdmin()?'관리자':isPaid()?'유료회원':'무료회원'} · 가입`, `\${esc(S.id)} · \${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'} · 가입`],
+  ['free: 내 정보 유료 안내 숨김', `function subSecHTML(){`, `function subSecHTML(){if(window.__002CFG&&window.__002CFG.free)return '';`],
   ['boot: 저장된 로그인은 서버 세션으로만', `const saved=lsGet('ppang.login');`, `const saved=(window.__002.auth.session()||{}).uid||null;`],
   ['auth: 연결 실패 안내', `'<p class="warn">이 페이지는 Claude에 로그인한 상태로 열어야 해요. 초대받은 계정으로 다시 열어 주세요.</p>'`, `'<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>'`],
   ['signup: 비밀번호 8자', `<label for="su-pw">비밀번호 <small class="hint">4자 이상</small>`, `<label for="su-pw">비밀번호 <small class="hint">8자 이상</small>`],

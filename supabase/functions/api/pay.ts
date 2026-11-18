@@ -8,11 +8,15 @@ const PLANS: Record<string, Plan> = JSON.parse(env('PLANS_JSON', JSON.stringify(
   month6: { name: '002BOOK 유료회원 6개월', amount: 25900, days: 183 },   // 부가세 포함 (월 약 4,317원, 12% 할인)
 })));
 
+export const FREE_LAUNCH = env('FREE_LAUNCH', '1') === '1';
+
 export function payPlans() {
+  if (FREE_LAUNCH) fail('not_available', '지금은 모든 기능이 무료예요. 유료 서비스는 준비 중이에요.', 404);
   return Object.entries(PLANS).map(([id, p]) => ({ id, ...p }));
 }
 
 export async function payReady(uid: string, plan: string) {
+  if (FREE_LAUNCH) fail('not_available', '지금은 모든 기능이 무료예요. 유료 서비스는 준비 중이에요.', 404);
   const p = PLANS[plan];
   if (!p) fail('bad_plan', '없는 이용권이에요.');
   const orderId = `002b_${Date.now().toString(36)}_${crypto.randomUUID().slice(0, 8)}`;
@@ -26,6 +30,7 @@ export async function payConfirm(
   b: { paymentKey: string; orderId: string; amount: number },
   markPaid: (until: number, orderId: string) => Promise<void>,
 ) {
+  if (FREE_LAUNCH) fail('not_available', '지금은 모든 기능이 무료예요. 유료 서비스는 준비 중이에요.', 404);
   const secret = env('TOSS_SECRET_KEY');
   if (!secret) fail('pay_not_configured', '결제가 아직 설정되지 않았어요.', 503);
   const { data: order } = await sb.from('payments').select('*').eq('order_id', String(b.orderId)).maybeSingle();
