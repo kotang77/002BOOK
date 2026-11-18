@@ -1,0 +1,161 @@
+"""002BOOK 끝-끝 테스트: 데이터 가져오기 → 관리자 로그인 → 화면 확인 → 회원가입(성인/만14세 미만) → 권한 확인"""
+import json, re, sys, time, urllib.request
+from playwright.sync_api import sync_playwright
+
+WEB = 'http://localhost:8080'
+API = 'http://localhost:8000'
+EXPORT = sys.argv[1]
+errors, results = [], []
+
+def ok(name, cond, extra=''):
+    results.append((name, bool(cond), extra))
+    print(('PASS ' if cond else 'FAIL ') + name + (' — ' + extra if extra else ''))
+
+def api(op, session=None, **kw):
+    h = {'content-type': 'application/json'}
+    if session: h['x-session'] = session
+    req = urllib.request.Request(API, data=json.dumps({'op': op, **kw}).encode(), headers=h, method='POST')
+    try:
+        return json.loads(urllib.request.urlopen(req).read())
+    except urllib.error.HTTPError as e:
+        return json.loads(e.read())
+
+with sync_playwright() as p:
+    b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
+    ctx = b.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=2, locale='ko-KR')
+    page = ctx.new_page()
+    page.on('pageerror', lambda e: errors.append('pageerror: ' + str(e)))
+    page.on('console', lambda m: m.type == 'error' and errors.append('console: ' + m.text))
+
+    # 1) 가져오기
+    page.goto(WEB + '/admin/import.html')
+    page.set_input_files('#file', EXPORT)
+    page.fill('#pw', 'testpass1234')
+    page.click('button[type=submit]')
+    page.wait_for_function("document.getElementById('log').textContent.match(/완료!|실패/)", timeout=60000)
+    log = page.inner_text('#log'); print(log)
+    ok('데이터 가져오기', '완료!' in log)
+
+    # 가져오기 페이지에서 관리자로 로그인했으므로 바로 서재로 들어가야 함
+    page.goto(WEB + '/'); page.wait_for_selector('.who', timeout=15000)
+    ok('가져오기 후 자동 입장', True)
+    page.evaluate("localStorage.clear()")
+    # 2) 관리자 로그인 → 메인 화면
+    page.goto(WEB + '/')
+    page.wait_for_selector('form[data-form=login]', timeout=15000)
+    page.screenshot(path='/tmp/s1_login.png')
+    page.fill('#li-id', 'kotang77'); page.fill('#li-pw', 'testpass1234')
+    page.click('form[data-form=login] button[type=submit]')
+    page.wait_for_selector('.who', timeout=15000)
+    time.sleep(2)
+    page.screenshot(path='/tmp/s2_main.png')
+    ok('관리자 로그인·메인 화면', page.locator('.who').count() > 0, page.inner_text('.who'))
+    ok('관리자 배지', '관리자' in page.content())
+    # 새로고침해도 로그인 유지
+    page.reload(); page.wait_for_selector('.who', timeout=15000)
+    ok('새로고침 후 로그인 유지', True)
+    sess = page.evaluate("JSON.parse(localStorage.getItem('002.session')).token")
+
+    # 관리 화면
+    page.evaluate("document.querySelector('[data-act=view][data-v=admin]')&&document.querySelector('[data-act=view][data-v=admin]').click()")
+    time.sleep(2); page.screenshot(path='/tmp/s3_admin.png')
+    ok('관리 화면에 회원 목록', '전체 회원' in page.content() and 'rich_claire' in page.content())
+
+    # 로그아웃
+    page.evaluate("document.querySelector('[data-act=logout]').click()")
+    page.wait_for_selector('form[data-form=login]', timeout=10000)
+    ok('로그아웃 → 세션 삭제', api('auth.me', sess).get('error', {}).get('code') == 'unauthenticated')
+
+    # 3) 성인 회원가입
+    page.evaluate("document.querySelector('[data-act=authtab][data-v=signup]').click()")
+    page.wait_for_selector('#su-id')
+    page.screenshot(path='/tmp/s4_signup.png', full_page=True)
+    page.fill('#su-id', 'tester01'); page.fill('#su-pw', 'abcd1234!'); page.fill('#su-nick', '테스터')
+    page.select_option('#su-gender', index=1)
+    page.select_option('#su-grade', label='부모') if page.locator('#su-grade option', has_text='부모').count() else None
+    page.fill('#su-email', 'tester01@example.com'); page.fill('#su-birth', '1985-03')
+    page.check('input[name=agt]'); page.check('input[name=agp]')
+    page.click('form[data-form=signup] button[type=submit]')
+    page.wait_for_selector('.who', timeout=15000)
+    ok('성인 회원가입 → 바로 입장', True)
+    s2 = page.evaluate("JSON.parse(localStorage.getItem('002.session')).token")
+
+    # 권한: 남의 진도·비공개 정보
+    r = api('db.get', s2, path='progress/kotang77'); ok('남의 진도 못 읽음', r.get('result') is None, str(r)[:80])
+    r = api('db.get', s2, path='members/kotang77'); d = (r.get('result') or {}).get('data', {})
+    ok('남의 이메일·비번 안 보임', d and 'email' not in d and 'pw' not in d and 'salt' not in d, ','.join(d.keys())[:120])
+    r = api('db.set', s2, path='config/plans', data={'paid': {'tester01': {'at': 1}}}); ok('스스로 유료회원 못 됨', r.get('error', {}).get('code') == 'permission_denied')
+    r = api('db.update', s2, path='members/kotang77', data={'nick': 'x'}); ok('남의 회원정보 못 바꿈', r.get('error', {}).get('code') == 'permission_denied')
+    r = api('db.query', s2, collection='diaries'); ok('남의 일기 안 보임', r.get('result') == [], str(r)[:80])
+    r = api('db.query', s2, collection='evals'); ok('남의 첨삭 안 보임', r.get('result') == [], str(r)[:80])
+    r = api('db.query', s2, collection='members'); ok('회원 목록은 공개 정보만', all('email' not in x['data'] for x in r.get('result', []) if x['id']!='tester01'), str(len(r.get('result', []))) + '명')
+    r = api('db.set', s2, path='progress/tester01', data={'done': {'b0:book': 1}}); ok('내 진도 저장', 'result' in r)
+    r = api('ai.sample', s2, messages=[{'role': 'user', 'content': '안녕'}]); ok('AI 호출(가짜)', 'result' in r)
+    r = api('ai.sample', None, messages=[{'role': 'user', 'content': '안녕'}]); ok('로그인 없이 AI 못 씀', r.get('error', {}).get('code') == 'unauthenticated')
+
+    # 비밀번호 바꾸기 & 이전 해시 업그레이드 확인
+    r = api('auth.changePassword', s2, oldPw='abcd1234!', newPw='newpass999'); ok('비밀번호 변경', 'result' in r, str(r)[:80])
+    r = api('auth.login', None, id='tester01', pw='abcd1234!'); ok('옛 비밀번호 거부', r.get('error', {}).get('code') == 'bad_password')
+
+    # 4) 만 14세 미만 가입 → 보호자 동의
+    page.evaluate("document.querySelector('[data-act=logout]').click()")
+    page.wait_for_selector('form[data-form=login]')
+    page.evaluate("document.querySelector('[data-act=authtab][data-v=signup]').click()")
+    page.fill('#su-id', 'kid01'); page.fill('#su-pw', 'kidpass123'); page.fill('#su-nick', '꼬마')
+    page.select_option('#su-gender', index=1); page.fill('#su-email', 'kid01@example.com'); page.fill('#su-birth', '2014-05')
+    page.check('input[name=agt]'); page.check('input[name=agp]')
+    page.click('form[data-form=signup] button[type=submit]')
+    time.sleep(1.5)
+    ok('보호자 없으면 거절', '보호자' in page.inner_text('#autherr'), page.inner_text('#autherr'))
+    page.fill('#su-gname', '보호자'); page.fill('#su-gemail', 'parent@example.com')
+    page.click('form[data-form=signup] button[type=submit]')
+    page.wait_for_selector('.okmsg', timeout=10000)
+    ok('보호자 동의 요청 안내', '보호자' in page.inner_text('.okmsg'))
+    r = api('auth.login', None, id='kid01', pw='kidpass123'); ok('동의 전 로그인 막힘', r.get('error', {}).get('code') == 'guardian_pending')
+    time.sleep(.5)
+    m = re.findall(r'guardian=([A-Za-z0-9_-]+)', open('/tmp/api.log').read())
+    ok('보호자 메일 발송', bool(m))
+    if m:
+        html = urllib.request.urlopen(API + '/functions/v1/api?guardian=' + m[-1]).read().decode()
+        ok('보호자 동의 링크', '동의가 완료' in html)
+        r = api('auth.login', None, id='kid01', pw='kidpass123'); ok('동의 후 로그인', 'result' in r)
+
+    # 5) 비밀번호 찾기 (메일)
+    page.evaluate("document.querySelector('[data-act=authtab][data-v=find]').click()")
+    page.fill('#fd-id', 'tester01'); page.fill('#fd-email', 'tester01@example.com')
+    page.click('form[data-form=find] button[type=submit]'); time.sleep(1.5)
+    tmp = re.findall(r'임시 비밀번호는 아래와 같아요\.\s+(\S+)', open('/tmp/api.log').read())
+    ok('임시 비밀번호 메일', bool(tmp))
+    if tmp:
+        page.fill('#li-id', 'tester01'); page.fill('#li-pw', tmp[-1]); page.click('form[data-form=login] button[type=submit]')
+        page.wait_for_selector('.who', timeout=10000); time.sleep(1)
+        ok('임시 비번 로그인 → 비번 변경 화면', '임시 비밀번호' in page.content())
+        page.screenshot(path='/tmp/s5_tmp.png')
+
+    # 6) 탈퇴
+    r = api('auth.login', None, id='kid01', pw='kidpass123'); ks = r['result']['session']['token']
+    r = api('auth.withdraw', ks, pw='kidpass123'); ok('탈퇴', 'result' in r)
+    r = api('auth.login', None, id='kid01', pw='kidpass123'); ok('탈퇴 후 계정 없음', r.get('error', {}).get('code') == 'no_user')
+
+    # 6-2) 옮겨 온 회원 각각: 자기 기록은 모두 보이고, 남의 것은 안 보임
+    exp = json.load(open(EXPORT))['docs']
+    for uid in [k.split('/')[1] for k in exp if k.startswith('members/')]:
+        r = api('auth.login', None, id=uid, pw='testpass1234'); t = r['result']['session']['token']
+        for col in ['evals', 'diaries', 'works']:
+            want = sorted(k.split('/', 1)[1] for k in exp if k.startswith(col + '/') and k.split('/', 1)[1].startswith(uid + '_'))
+            got = sorted(x['id'] for x in api('db.query', t, collection=col)['result'])
+            mine = [g for g in got if g.startswith(uid + '_')]
+            ok(f'{uid}: 내 {col} {len(want)}건 모두 보임', mine == want, f'{len(mine)}/{len(want)}')
+        r = api('db.get', t, path='dykeys/' + uid); ok(f'{uid}: 내 일기 키', (r['result'] is not None) == (('dykeys/' + uid) in exp))
+        own = api('db.get', t, path='progress/' + uid); ok(f'{uid}: 내 진도', (own['result'] is not None) == (('progress/' + uid) in exp))
+
+    # 7) 데스크톱 화면
+    d = b.new_page(viewport={'width': 1280, 'height': 860})
+    d.goto(WEB + '/'); d.wait_for_selector('form[data-form=login]'); d.fill('#li-id', 'kotang77'); d.fill('#li-pw', 'testpass1234')
+    d.click('form[data-form=login] button[type=submit]'); d.wait_for_selector('.who', timeout=15000); time.sleep(2)
+    d.screenshot(path='/tmp/s6_desktop.png')
+    b.close()
+
+errs = [e for e in errors if 'fonts.g' not in e and 'cdnjs' not in e and 'favicon' not in e]
+print('\n브라우저 오류:', len(errs)); [print(' ', e[:200]) for e in errs[:15]]
+print('\n결과: %d/%d 통과' % (sum(1 for r in results if r[1]), len(results)))

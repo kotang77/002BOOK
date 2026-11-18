@@ -1,0 +1,57 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>002BOOK · 유료회원 결제</title>
+<link rel="stylesheet" href="/pages.css">
+<script src="/runtime/config.js"></script><script src="/runtime/claude-shim.js"></script>
+<script src="https://js.tosspayments.com/v2/standard"></script></head>
+<body><main class="pg">
+<header><img src="/icons/icon-192.png" alt=""><a href="/">002BOOK</a></header>
+<h1>유료회원 이용권<small>맞춤형 코스, 더 많은 AI 첨삭을 쓸 수 있어요</small></h1>
+<div class="plans" id="plans"><p class="muted">이용권을 불러오는 중…</p></div>
+<div class="card">
+  <ul class="muted" style="margin:0;padding-left:18px">
+    <li>자동 결제가 아니에요. 이용 기간이 끝나면 무료회원으로 바뀌고, 다시 결제하지 않으면 돈이 나가지 않아요.</li>
+    <li>만 19세 미만은 보호자의 동의를 받아 결제해 주세요. 보호자 동의 없는 결제는 취소할 수 있어요.</li>
+    <li>결제 후 7일 안에 유료 기능을 쓰지 않았다면 전액 환불해 드려요. 자세한 내용은 <a href="/refund.html">환불정책</a>을 봐 주세요.</li>
+  </ul>
+</div>
+<div id="payment-method"></div>
+<div id="agreement"></div>
+<p><button class="btn" id="pay" disabled style="width:100%">결제하기</button></p>
+<p class="muted" id="msg"></p>
+<p><a href="/">← 서재로 돌아가기</a></p>
+</main>
+<script>
+(async()=>{
+  const $=id=>document.getElementById(id), msg=t=>$('msg').textContent=t;
+  const s=window.__002.auth.session();
+  if(!s){msg('먼저 002BOOK에 로그인해 주세요.');$('pay').textContent='로그인하러 가기';$('pay').disabled=false;$('pay').onclick=()=>location.href='/';return}
+  if(window.__002.isPlayApp){msg('앱에서는 결제할 수 없어요. 002book.com 웹사이트에서 결제해 주세요.');return}
+  const key=(window.__002CFG||{}).toss;
+  if(!key||!window.TossPayments){msg('결제가 아직 준비 중이에요. 관리자에게 문의해 주세요.');return}
+  let plans=[],cur=null,widgets=null;
+  try{plans=await window.__002.server.plans()}catch(e){msg(e.message);return}
+  const wrap=$('plans');wrap.innerHTML='';
+  plans.forEach((p,i)=>{const b=document.createElement('button');b.type='button';b.className='plan';
+    b.innerHTML='<b></b><span></span><div class="muted"></div>';b.querySelector('b').textContent=p.name;
+    b.querySelector('span').textContent=p.amount.toLocaleString('ko-KR')+'원';b.querySelector('.muted').textContent=p.days+'일 이용';
+    b.onclick=()=>pick(p,b);wrap.appendChild(b);if(!i)setTimeout(()=>pick(p,b))});
+  async function pick(p,btn){
+    cur=p;wrap.querySelectorAll('.plan').forEach(x=>x.setAttribute('aria-pressed',x===btn));
+    try{
+      if(!widgets){
+        const ready=await window.__002.server.payReady(p.id);cur.order=ready;
+        widgets=TossPayments(key).widgets({customerKey:ready.customerKey});
+        await widgets.setAmount({currency:'KRW',value:p.amount});
+        await Promise.all([widgets.renderPaymentMethods({selector:'#payment-method',variantKey:'DEFAULT'}),widgets.renderAgreement({selector:'#agreement',variantKey:'AGREEMENT'})]);
+      }else{cur.order=await window.__002.server.payReady(p.id);await widgets.setAmount({currency:'KRW',value:p.amount})}
+      $('pay').disabled=false;msg('');
+    }catch(e){msg(e.message||'결제창을 열지 못했어요.')}
+  }
+  $('pay').onclick=async()=>{
+    if(!cur||!cur.order)return;
+    try{await widgets.requestPayment({orderId:cur.order.orderId,orderName:cur.order.orderName,
+      successUrl:location.origin+'/pay/success.html',failUrl:location.origin+'/pay/fail.html'})}
+    catch(e){msg(e.message||'결제를 시작하지 못했어요.')}
+  };
+})();
+</script></body></html>

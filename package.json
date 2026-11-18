@@ -1,0 +1,17 @@
+{
+  "name": "002book",
+  "version": "1.0.0",
+  "description": "002BOOK — 002book.com",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "python3 tests/e2e.py"
+  },
+  "dependencies": {
+    "acorn": "^8.19.0",
+    "sharp": "^0.33.5"
+  },
+  "private": true
+}

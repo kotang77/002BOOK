@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.keystore
+android/app/
+android/build/
+android/gradle*
+android/*.aab
+android/*.apk
+android/*.idsig
+android/build.gradle
+android/settings.gradle
+android/store_icon.png
+android/manifest-checksum.txt
+002book-export*.json
+.env

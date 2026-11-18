@@ -1,0 +1,17 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>002BOOK · 결제 확인</title><link rel="stylesheet" href="/pages.css">
+<script src="/runtime/config.js"></script><script src="/runtime/claude-shim.js"></script></head>
+<body><main class="pg"><header><img src="/icons/icon-192.png" alt=""><a href="/">002BOOK</a></header>
+<h1 id="t">결제를 확인하는 중이에요…</h1><p id="m" class="muted">창을 닫지 말고 잠시만 기다려 주세요.</p>
+<p><a class="btn" href="/" id="go" hidden>서재로 가기</a></p></main>
+<script>
+(async()=>{
+  const q=new URLSearchParams(location.search),$=id=>document.getElementById(id);
+  try{
+    const r=await window.__002.server.payConfirm({paymentKey:q.get('paymentKey'),orderId:q.get('orderId'),amount:Number(q.get('amount'))});
+    $('t').textContent='유료회원이 되었어요!';
+    $('m').textContent=new Date(r.until).toLocaleDateString('ko-KR')+'까지 맞춤형 코스와 모든 기능을 쓸 수 있어요.';
+  }catch(e){$('t').textContent='결제를 확인하지 못했어요';$('m').textContent=(e.message||'')+' 돈이 빠져나갔다면 관리자에게 주문번호 '+q.get('orderId')+'를 알려 주세요.'}
+  $('go').hidden=false;
+})();
+</script></body></html>

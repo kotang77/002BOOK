@@ -1,0 +1,19 @@
+{
+  "domain": "002book.com",
+  "supabaseUrl": "",
+  "supabaseAnonKey": "",
+  "tossClientKey": "",
+  "effectiveDate": "2026년 12월 1일",
+  "business": {
+    "name": "",
+    "owner": "",
+    "regNo": "",
+    "mailOrderNo": "",
+    "address": "",
+    "contact": ""
+  },
+  "android": {
+    "packageId": "com.book002.app",
+    "sha256Fingerprints": []
+  }
+}
