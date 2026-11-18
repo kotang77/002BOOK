@@ -157,6 +157,8 @@ div.vban2 .vbcap{padding:0 4px}
 div.vban2 .vbct p{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-family:var(--f-display);font-size:13px;line-height:1.4;color:var(--ink)}
 div.vban2 .vbct small{font-size:10.5px}div.vban2 .vbct b{font-size:14px}
 div.vban2 .vbcap em{font-size:11px;padding:2px 6px}
+/* 메인 비전보드 배너: 넓은 화면에서 보드 이미지를 절반 크기로 줄이고 문구를 오른쪽에 둔다 */
+@media (min-width:720px){div.vban2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:16px;padding:6px 14px 6px 6px}div.vban2 .vbcap{flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;padding:0}div.vban2 .vbct p{-webkit-line-clamp:4;font-size:16px;line-height:1.55}div.vban2 .vbcap .mbtn{align-self:flex-end}}
 section.dash{grid-template-columns:minmax(0,1fr);margin-bottom:10px}
 section.dash .dcard{padding:7px 10px;gap:5px;border-radius:10px}
 section.dash .dp1{gap:8px}
