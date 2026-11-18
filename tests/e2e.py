@@ -83,7 +83,7 @@ with sync_playwright() as p:
     # 권한: 남의 진도·비공개 정보
     r = api('db.get', s2, path='progress/kotang77'); ok('남의 진도 못 읽음', r.get('result') is None, str(r)[:80])
     r = api('db.get', s2, path='members/kotang77'); d = (r.get('result') or {}).get('data', {})
-    ok('남의 이메일·비번 안 보임', d and 'email' not in d and 'pw' not in d and 'salt' not in d, ','.join(d.keys())[:120])
+    ok('남의 이메일·비번 안 보임', d and 'email' not in d and 'pw' not in d and 'salt' not in d and 'seen' not in d, ','.join(d.keys())[:120])
     r = api('db.set', s2, path='config/plans', data={'paid': {'tester01': {'at': 1}}}); ok('스스로 유료회원 못 됨', r.get('error', {}).get('code') == 'permission_denied')
     r = api('db.update', s2, path='members/kotang77', data={'nick': 'x'}); ok('남의 회원정보 못 바꿈', r.get('error', {}).get('code') == 'permission_denied')
     r = api('db.query', s2, collection='diaries'); ok('남의 일기 안 보임', r.get('result') == [], str(r)[:80])
@@ -113,12 +113,28 @@ with sync_playwright() as p:
     ok('보호자 동의 요청 안내', '보호자' in page.inner_text('.okmsg'))
     r = api('auth.login', None, id='kid01', pw='kidpass123'); ok('동의 전 로그인 막힘', r.get('error', {}).get('code') == 'guardian_pending')
     time.sleep(.5)
-    m = re.findall(r'guardian=([A-Za-z0-9_-]+)', open('/tmp/api.log').read())
+    m = re.findall(r'guardian\.html\?t=([A-Za-z0-9_%-]+)', open('/tmp/api.log').read())
     ok('보호자 메일 발송', bool(m))
     if m:
-        html = urllib.request.urlopen(API + '/functions/v1/api?guardian=' + m[-1]).read().decode()
-        ok('보호자 동의 링크', '동의가 완료' in html)
+        g = ctx.new_page(); g.goto(WEB + '/guardian.html?t=' + m[-1]); g.wait_for_selector('#f', timeout=10000)
+        ok('보호자 동의 페이지(링크만 열어서는 동의 안 됨)', api('auth.login', None, id='kid01', pw='kidpass123').get('error', {}).get('code') == 'guardian_pending')
+        g.screenshot(path='/tmp/s7_guardian.png', full_page=True)
+        g.fill('input[name=name]', '김보호'); g.select_option('select[name=rel]', label='모'); g.check('input[name=ok]'); g.check('input[name=ok2]')
+        g.click('#f button[type=submit]'); g.wait_for_selector('.card', timeout=10000); time.sleep(.5)
+        ok('보호자 동의 완료', '동의가 완료' in g.inner_text('#box'))
+        ok('보호자 확인 메일', '보호자 동의가 확인' in open('/tmp/api.log').read())
         r = api('auth.login', None, id='kid01', pw='kidpass123'); ok('동의 후 로그인', 'result' in r)
+        kid = r['result']['session']['token']
+        r = api('db.get', kid, path='members/kid01'); ok('만14세 미만 마케팅 동의 저장 안 함', r['result']['data'].get('marketing') is False)
+        g.close()
+
+    # 4-2) 공개 설정: 기본은 닉네임만, 켠 항목만 보임
+    r = api('auth.login', None, id='tester01', pw='newpass999'); t1 = r['result']['session']['token']
+    api('db.update', t1, path='members/tester01', data={'bio': '안녕', 'region': '경기', 'grade': '중1'})
+    view = lambda: api('db.get', kid, path='members/tester01')['result']['data']
+    v = view(); ok('기본: 닉네임만 공개', set(v.keys()) <= {'id', 'nick', 'pub', 'avatar'} and v['nick'] == '테스터', ','.join(v.keys()))
+    api('db.update', t1, path='members/tester01', data={'pub': {'bio': True, 'region': False, 'grade': True, 'photo': False}})
+    v = view(); ok('공개 켠 항목만 보임', v.get('bio') == '안녕' and v.get('grade') == '중1' and 'region' not in v, ','.join(v.keys()))
 
     # 5) 비밀번호 찾기 (메일)
     page.evaluate("document.querySelector('[data-act=authtab][data-v=find]').click()")

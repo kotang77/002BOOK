@@ -9,11 +9,16 @@
     "owner": "",
     "regNo": "",
     "mailOrderNo": "",
+    "mailOrderAgency": "",
     "address": "",
-    "contact": ""
+    "phone": "",
+    "email": "",
+    "privacyOfficer": "",
+    "privacyEmail": ""
   },
   "android": {
     "packageId": "com.book002.app",
     "sha256Fingerprints": []
-  }
+  },
+  "policyVersion": "2026-12-01"
 }

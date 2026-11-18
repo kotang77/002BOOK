@@ -132,13 +132,14 @@ async function guardianMail(id: string, nick: string, gName: string, gEmail: str
   const token = randToken();
   const { data: acc } = await sb.from('accounts').select('guardian_consent').eq('id', id).single();
   await sb.from('accounts').update({ guardian_consent: { ...(acc?.guardian_consent ?? {}), status: 'pending', name: gName, email: gEmail, token_hash: await sha256hex(token), requested_at: Date.now() } }).eq('id', id);
-  const link = `${env('SUPABASE_URL')}/functions/v1/api?guardian=${encodeURIComponent(token)}`;
+  const link = `${SITE}/guardian.html?t=${encodeURIComponent(token)}`;
   await sendMail(gEmail, '[002BOOK] 자녀 회원가입 동의 요청', mailShell('보호자 동의 요청',
     `<p>${escHtml(gName)} 님, 안녕하세요.</p><p>자녀(닉네임 <b>${escHtml(nick)}</b>, 아이디 <b>${escHtml(id)}</b>)가 002BOOK 가입을 신청했어요.
      만 14세 미만 아동의 개인정보 수집에는 「개인정보 보호법」 제22조의2에 따라 법정대리인의 동의가 필요해요.</p>
      <p>수집 항목: 아이디, 닉네임, 이메일, 거주지역(시·도), 학년, 성별, 출생 연월, 독서·논술·일기 기록<br>이용 목적: 독서·영화 학습 서비스와 AI 첨삭 제공<br>보관 기간: 회원 탈퇴 시까지 (탈퇴 즉시 삭제)</p>
      <p><a href="${SITE}/privacy.html" style="color:#8A5024">개인정보처리방침 전문 보기</a></p>
-     <p style="margin:22px 0"><a href="${link}" style="background:#3E2F26;color:#FBF6EC;padding:10px 18px;border-radius:8px;text-decoration:none">동의하고 가입 승인하기</a></p>
+     <p style="margin:22px 0"><a href="${link}" style="background:#3E2F26;color:#FBF6EC;padding:10px 18px;border-radius:8px;text-decoration:none">동의 내용 확인하기</a></p>
+     <p style="font-size:13px;color:#6F6155">링크를 열면 동의 내용을 확인하고 [동의] 또는 [동의하지 않음]을 고를 수 있어요. 링크는 7일 동안 쓸 수 있어요.</p>
      <p style="font-size:13px;color:#6F6155">동의하지 않으시면 이 메일을 무시해 주세요. 7일 뒤 신청이 자동으로 지워져요.</p>`));
 }
 
@@ -167,7 +168,8 @@ async function signup(req: Request, b: Record<string, unknown>) {
   const member = {
     id, nick: str('nick', 12) || id, region: str('region', 10), grade: str('grade', 6) || '중1', gender: str('gender', 4),
     bio: str('bio', 40), buddy: str('buddy', 10), buddyAv: str('buddyAv', 20), buddyImg: String(b.buddyImg ?? '').slice(0, 60000),
-    email, birth: String(b.birth), mode: 'base', prefs: {}, at: Date.now(), agreedAt: Date.now(), marketing: !!b.agreeMarketing,
+    email, birth: String(b.birth), mode: 'base', prefs: {}, pub: {}, at: Date.now(), agreedAt: Date.now(), policyVersion: env('POLICY_VERSION', '2026-12-01'),
+    marketing: !minor && !!b.agreeMarketing, aiNoticeAt: Date.now(),
   };
   await writeRow('members/' + id, member, id, null);
   if (minor) {
@@ -280,6 +282,8 @@ async function handle(req: Request, b: Record<string, unknown>) {
     case 'auth.me': { const uid = need(ctx); const acc = await account(uid); return { uid, admin: ctx.admin, paid: await isPaid(uid), mustChange: !!acc?.must_change }; }
     case 'auth.verify': { const uid = need(ctx); const acc = await account(uid); if (!acc || !(await checkPw(acc, String(b.pw ?? '')))) fail('bad_password', '비밀번호가 맞지 않아요.'); return { ok: true }; }
     case 'auth.reset': return resetPw(b);
+    case 'auth.guardianInfo': return guardianInfo(String(b.token ?? ''));
+    case 'auth.guardianConsent': return guardianConsent(req, b);
     case 'auth.findId': {
       const email = String(b.email ?? '').trim();
       const { data } = await sb.from('accounts').select('id').ilike('email', email).maybeSingle();
@@ -409,27 +413,47 @@ async function handle(req: Request, b: Record<string, unknown>) {
   }
 }
 
-/* ---------- 보호자 동의 링크 (GET) ---------- */
-async function guardianPage(token: string) {
-  const th = await sha256hex(token);
-  const { data } = await sb.from('accounts').select('id, guardian_consent').eq('guardian_consent->>token_hash', th).maybeSingle();
-  let msg = '링크가 만료되었거나 이미 처리됐어요.';
-  if (data && data.guardian_consent?.status === 'pending') {
-    const gc = { ...data.guardian_consent, status: 'agreed', agreed_at: Date.now() }; delete gc.token_hash;
-    await sb.from('accounts').update({ guardian_consent: gc }).eq('id', data.id);
-    msg = `동의가 완료됐어요. 이제 자녀(${escHtml(data.id)})가 002BOOK에 로그인할 수 있어요.`;
+/* ---------- 보호자 동의 (개인정보 보호법 제22조의2, 시행령 제17조의2) ----------
+ * 메일 링크는 002book.com/guardian.html(동의 내용을 보여 주는 페이지)만 연다. 메일 보안 검사기가 링크를 미리 열어도 동의되지 않도록
+ * 실제 동의는 페이지의 [동의] 버튼(POST op=auth.guardianConsent)으로만 처리하고, 처리 결과를 보호자 메일로 다시 알린다. */
+async function pendingByToken(token: string) {
+  const { data } = await sb.from('accounts').select('id, email, created_at, guardian_consent').eq('guardian_consent->>token_hash', await sha256hex(token)).maybeSingle();
+  if (!data || data.guardian_consent?.status !== 'pending') return null;
+  if (Date.now() - Number(data.guardian_consent.requested_at ?? 0) > 7 * 864e5) return null;
+  return data;
+}
+
+async function guardianInfo(token: string) {
+  const acc = await pendingByToken(token);
+  if (!acc) fail('expired', '링크가 만료되었거나 이미 처리됐어요. 자녀가 다시 가입 신청을 하면 새 메일이 가요.');
+  const m = await readRow('members/' + acc!.id);
+  return { id: acc!.id, nick: String(m?.data?.nick ?? acc!.id), grade: String(m?.data?.grade ?? '') };
+}
+
+async function guardianConsent(req: Request, b: Record<string, unknown>) {
+  const acc = await pendingByToken(String(b.token ?? ''));
+  if (!acc) fail('expired', '링크가 만료되었거나 이미 처리됐어요.');
+  const gc = acc!.guardian_consent;
+  if (!b.agree) {
+    await sb.from('docs').delete().eq('path', 'members/' + acc!.id);
+    await sb.from('accounts').delete().eq('id', acc!.id);
+    await sendMail(gc.email, '[002BOOK] 가입 신청이 취소됐어요', mailShell('가입 신청 취소', `<p>동의하지 않으셔서 자녀(${escHtml(acc!.id)})의 가입 신청과 입력한 정보를 모두 삭제했어요.</p>`)).catch(() => {});
+    return { message: '동의하지 않으셔서 가입 신청과 입력한 정보를 모두 삭제했어요.' };
   }
-  return new Response(`<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>002BOOK</title></head>
-<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#F3ECDF;font-family:sans-serif;color:#2B241F;text-align:center;padding:24px">
-<div><h2 style="font-family:serif">002BOOK 보호자 동의</h2><p>${msg}</p><p><a href="${SITE}" style="color:#8A5024">002book.com 으로 가기</a></p></div></body></html>`,
-    { headers: { 'content-type': 'text/html; charset=utf-8' } });
+  const name = String(b.name ?? '').trim().slice(0, 30), rel = String(b.rel ?? '').slice(0, 20);
+  if (!name || !rel) fail('bad_request', '보호자 이름과 관계를 적어 주세요.');
+  const rec = { status: 'agreed', name, relation: rel, email: gc.email, agreed_at: Date.now(), requested_at: gc.requested_at,
+    ip_hash: (await sha256hex(req.headers.get('x-forwarded-for') ?? '')).slice(0, 16), method: 'email-link+web-consent+email-notice', policy_version: env('POLICY_VERSION', '2026-12-01') };
+  await sb.from('accounts').update({ guardian_consent: rec }).eq('id', acc!.id);
+  await sendMail(gc.email, '[002BOOK] 보호자 동의가 확인됐어요', mailShell('보호자 동의 확인',
+    `<p>${escHtml(name)} 님(${escHtml(rel)})의 동의로 자녀(아이디 <b>${escHtml(acc!.id)}</b>)의 가입이 완료됐어요. (${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })})</p>
+     <p>본인이 동의하지 않았다면 바로 ${escHtml(env('PRIVACY_CONTACT', 'help@002book.com'))} 로 알려 주세요. 자녀 정보는 언제든지 열람·정정·삭제를 요청할 수 있어요.</p>`)).catch(() => {});
+  return { message: '동의가 완료됐어요. 이제 자녀가 002BOOK에 로그인할 수 있어요. 확인 메일도 보내 드렸어요.' };
 }
 
 Deno.serve(async (req) => {
   const h = cors(req);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: h });
-  const url = new URL(req.url);
-  if (req.method === 'GET' && url.searchParams.get('guardian')) return guardianPage(url.searchParams.get('guardian')!);
   if (req.method !== 'POST') return new Response('002BOOK API', { headers: h });
   try {
     const b = await req.json();

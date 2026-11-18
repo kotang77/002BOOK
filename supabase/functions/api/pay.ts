@@ -4,8 +4,8 @@ import { env, fail, sb, sha256hex } from './lib.ts';
 
 type Plan = { name: string; amount: number; days: number };
 const PLANS: Record<string, Plan> = JSON.parse(env('PLANS_JSON', JSON.stringify({
-  month1: { name: '002BOOK 유료회원 1개월', amount: 9900, days: 31 },
-  month6: { name: '002BOOK 유료회원 6개월', amount: 49000, days: 183 },
+  month1: { name: '002BOOK 유료회원 1개월', amount: 4900, days: 31 },     // 부가세 포함
+  month6: { name: '002BOOK 유료회원 6개월', amount: 25900, days: 183 },   // 부가세 포함 (월 약 4,317원, 12% 할인)
 })));
 
 export function payPlans() {

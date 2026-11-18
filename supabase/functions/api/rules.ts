@@ -6,8 +6,6 @@ import { ADMIN_ID, sb } from './lib.ts';
 export type Ctx = { uid: string | null; admin: boolean };
 export type Row = { path: string; parent: string; id: string; data: Record<string, unknown>; owner: string | null; version: number; updated_at: string };
 
-// 다른 회원에게 보여 주지 않는 회원 정보
-const MEMBER_PRIVATE = ['email', 'prefs', 'mustChange', 'pw', 'salt', 'birth', 'guardian', 'gender', 'marketing', 'agreedAt'];
 // 회원이 직접 바꿀 수 없는 필드 (서버만 바꿈)
 const MEMBER_LOCKED = ['pw', 'salt', 'id', 'birth', 'guardian'];
 
@@ -75,18 +73,23 @@ export async function canRead(ctx: Ctx, path: string, row: Row | null): Promise<
   }
 }
 
-/** 읽기 결과를 다른 회원에게 보여 줄 모양으로 다듬는다 */
+/** 읽기 결과를 다른 회원에게 보여 줄 모양으로 다듬는다
+ *  다른 회원에게는 닉네임(과 그림 캐릭터)만 기본 공개.
+ *  회원이 '내 정보 → 공개 설정'에서 켠 항목(pub.bio / pub.grade / pub.region / pub.photo)만 추가로 보인다. */
 export function redact(ctx: Ctx, row: Row): Row {
-  if (top(row.path) === 'members' && !(ctx.admin || row.id === ctx.uid)) {
-    const data = { ...row.data };
-    for (const k of MEMBER_PRIVATE) delete data[k];
-    return { ...row, data };
-  }
-  if (top(row.path) === 'members') {
-    const data = { ...row.data }; delete data.pw; delete data.salt;
-    return { ...row, data };
-  }
-  return row;
+  if (top(row.path) !== 'members') return row;
+  const src = { ...row.data } as Record<string, unknown>;
+  delete src.pw; delete src.salt;
+  if (ctx.admin || row.id === ctx.uid) return { ...row, data: src };
+  const pub = (src.pub ?? {}) as Record<string, boolean>;
+  const photo = src.avatar === 'custom';
+  const out: Record<string, unknown> = { id: row.id, nick: src.nick ?? row.id, pub: { bio: !!pub.bio, grade: !!pub.grade, region: !!pub.region, photo: !!pub.photo } };
+  if (!photo) out.avatar = src.avatar ?? '';                 // 앱이 주는 그림 캐릭터는 개인정보가 아님
+  if (photo && pub.photo) { out.avatar = 'custom'; out.avatarImg = src.avatarImg; }
+  if (pub.bio) out.bio = src.bio;
+  if (pub.grade) out.grade = src.grade;
+  if (pub.region) out.region = src.region;
+  return { ...row, data: out };
 }
 
 /* ---------- 쓰기 ---------- */

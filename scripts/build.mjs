@@ -67,8 +67,13 @@ for (const [label, from, to] of STRINGS) {
   html = html.replace(from, () => to);
 }
 const biz = cfg.business || {};
-const bizLine = [biz.name && `상호 ${biz.name}`, biz.owner && `대표 ${biz.owner}`, biz.regNo && `사업자등록번호 ${biz.regNo}`, biz.mailOrderNo && `통신판매업 ${biz.mailOrderNo}`, biz.address, biz.contact].filter(Boolean).join(' · ');
-html = html.replace('__BUSINESS_INFO__', bizLine || '002BOOK');
+// 전자상거래법 제10조·제13조: 상호, 대표자, 주소, 전화, 이메일, 사업자등록번호, 통신판매업 신고번호, 호스팅 제공자, 이용약관 연결
+const bizLine = [biz.name && `상호 ${biz.name}`, biz.owner && `대표 ${biz.owner}`, biz.address && `주소 ${biz.address}`, biz.phone && `전화 ${biz.phone}`, biz.email && `이메일 ${biz.email}`,
+  biz.regNo && `사업자등록번호 ${biz.regNo}` + (biz.regNo ? ` <a href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=${biz.regNo.replace(/\D/g, '')}" target="_blank" rel="noopener" style="color:inherit">[사업자정보 확인]</a>` : ''),
+  biz.mailOrderNo && `통신판매업 신고 ${biz.mailOrderNo}${biz.mailOrderAgency ? ' (' + biz.mailOrderAgency + ')' : ''}`,
+  `호스팅 제공 GitHub, Inc. · Supabase, Inc.`].filter(Boolean).join(' · ');
+const missing = ['name', 'owner', 'address', 'phone', 'email', 'regNo', 'mailOrderNo'].filter((k) => !biz[k]);
+if (missing.length) console.warn('⚠ site.config.json 사업자 정보 비어 있음 (전자상거래법 표시 의무): ' + missing.join(', '));
 
 /* ---------- 4) 남은 위험 패턴 검사 ---------- */
 const main2 = mainScript(html).code;
@@ -87,9 +92,14 @@ fs.writeFileSync(path.join(DIST, 'runtime/config.js'),
   `window.__002CFG=${JSON.stringify({ api: SUPA ? SUPA.replace(/\/$/, '') + '/functions/v1/api' : '', anon: ANON, toss: cfg.tossClientKey || '' })};\n`);
 const buildId = crypto.createHash('sha256').update(html + fs.readFileSync(path.join(ROOT, 'web/runtime/claude-shim.js'))).digest('hex').slice(0, 10);
 const sw = path.join(DIST, 'sw.js'); fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace('__BUILD_ID__', buildId));
-for (const f of ['terms.html', 'privacy.html', 'refund.html', 'pay/checkout.html', 'pay/success.html', 'pay/fail.html', 'admin/import.html']) {
+const REPL = {
+  __BUSINESS_INFO__: bizLine, __BIZ_NAME__: biz.name || '002BOOK', __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
+  __PRIVACY_OFFICER__: biz.privacyOfficer || biz.owner || '(개인정보 보호책임자)', __PRIVACY_EMAIL__: biz.privacyEmail || biz.email || 'help@002book.com',
+  __EFFECTIVE_DATE__: cfg.effectiveDate || '2026년 12월 1일', __POLICY_VERSION__: cfg.policyVersion || '2026-12-01',
+};
+for (const f of ['index.html', '404.html', 'terms.html', 'privacy.html', 'refund.html', 'guardian.html', 'pay/checkout.html', 'pay/success.html', 'pay/fail.html', 'admin/import.html']) {
   const p = path.join(DIST, f); if (!fs.existsSync(p)) continue;
-  fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replaceAll('__BUSINESS_INFO__', bizLine || '002BOOK').replaceAll('__BIZ_NAME__', biz.name || '002BOOK').replaceAll('__BIZ_OWNER__', biz.owner || '(대표자명)').replaceAll('__BIZ_CONTACT__', biz.contact || 'help@002book.com').replaceAll('__EFFECTIVE_DATE__', cfg.effectiveDate || '2026년 12월 1일'));
+  let t = fs.readFileSync(p, 'utf8'); for (const [k, v] of Object.entries(REPL)) t = t.replaceAll(k, v); fs.writeFileSync(p, t);
 }
 if (cfg.domain) fs.writeFileSync(path.join(DIST, 'CNAME'), cfg.domain + '\n');
 fs.writeFileSync(path.join(DIST, '.nojekyll'), '');

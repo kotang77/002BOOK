@@ -33,7 +33,7 @@ export const FUNCTIONS = {
   const bm=/^(\\d{4})-(\\d{2})$/.exec(g('birth'));if(!bm)return er('태어난 연도와 월을 골라 주세요.');
   const now=new Date();let age=now.getFullYear()-(+bm[1]);if(now.getMonth()+1<+bm[2])age--;
   if(age<14&&(!g('gname')||!EMAILRE.test(g('gemail'))))return er('만 14세 미만은 보호자 이름과 보호자 이메일을 적어 주세요.');
-  if(!fd.get('agt')||!fd.get('agp'))return er('이용약관과 개인정보 수집·이용에 동의해 주세요.');
+  if(!fd.get('agt')||!fd.get('agp'))return er('이용약관 동의와 개인정보 처리 안내 확인에 체크해 주세요.');
   const p={id,pw,nick,region:g('region'),grade:SCODES.includes(g('grade'))?g('grade'):'중1',gender:g('gender'),bio:g('bio').slice(0,40),buddy:g('buddy').slice(0,10)||BUDDY0,...budFields(),
     email:g('email').slice(0,120),birth:g('birth'),guardianName:g('gname'),guardianEmail:g('gemail'),agreeTerms:!!fd.get('agt'),agreePrivacy:!!fd.get('agp'),agreeMarketing:!!fd.get('agm')};
   const btn=$('form[data-form=signup] button[type=submit]');if(btn)btn.disabled=true;
@@ -62,6 +62,7 @@ export const FUNCTIONS = {
 // 원래 함수 본문을 고쳐서 쓰는 패치 (원본 함수 텍스트 → 새 텍스트)
 export const FUNCTION_EDITS = {
   saveProfile: [
+    ['const up={nick,email,region,', "const up={pub:{bio:!!fd.get('pub_bio'),grade:!!fd.get('pub_grade'),region:!!fd.get('pub_region'),photo:!!fd.get('pub_photo')},nick,email,region,"],
     [`if(pw.length<4)return er('새 비밀번호는 4자 이상이어야 해요.');
         if(await sha(S.me.salt+cur)!==S.me.pw)return er('현재 비밀번호가 맞지 않아요.');
         up.pw=await sha(S.me.salt+pw);up.mustChange=false;`,
@@ -81,9 +82,19 @@ const SIGNUP_EXTRA = `<label for="su-birth">태어난 연월 <small class="hint"
       <fieldset style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0;display:flex;flex-direction:column;gap:8px"><legend class="hint" style="padding:0 4px">만 14세 미만이면 보호자 정보도 적어 주세요</legend>
         <label for="su-gname">보호자 이름<input id="su-gname" name="gname" maxlength="30" autocomplete="off"></label>
         <label for="su-gemail">보호자 이메일 <small class="hint">이 주소로 동의 요청 메일이 가요</small><input id="su-gemail" name="gemail" type="email" autocomplete="off"></label></fieldset>
-      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agt" required style="width:auto"> [필수] <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">이용약관</a>에 동의해요</label>
-      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agp" required style="width:auto"> [필수] <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">개인정보 수집·이용</a>에 동의해요</label>
-      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agm" style="width:auto"> [선택] 새 소식 이메일 받기</label>
+      <details style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--field)"><summary style="cursor:pointer;font-weight:500">개인정보 처리·AI 이용 안내 (꼭 읽어 주세요)</summary>
+        <ul class="hint" style="margin:6px 0 0;padding-left:18px">
+          <li><b>목적</b>: 회원 관리, 학년별 책·영화 코스와 논술 AI 첨삭 제공, 친구·가족 기능</li>
+          <li><b>항목</b>: 아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역, 학년, 성별, 태어난 연월, 학습 기록 (만 14세 미만은 보호자 이름·이메일)</li>
+          <li><b>보유 기간</b>: 탈퇴하면 바로 삭제 (법령상 결제 기록은 5년)</li>
+          <li><b>생성형 AI</b>: 첨삭·추천·일기 답장은 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
+          <li><b>국외 이전</b>: 서비스 운영을 위해 Supabase·Anthropic·Resend·GitHub(미국)에 처리를 맡겨요.</li>
+          <li><b>공개 범위</b>: 다른 회원에게는 닉네임만 보여요. 나머지는 내가 공개를 켠 것만 보여요.</li>
+          <li>선택 항목(소개·사진·마케팅)은 동의하지 않아도 이용에 제한이 없어요. 자세한 내용은 <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">개인정보처리방침</a>을 봐 주세요.</li>
+        </ul></details>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agt" required style="width:auto"> [필수] <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">이용약관</a>(생성형 AI 이용 고지 포함)에 동의해요</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agp" required style="width:auto"> [필수] 위 개인정보 처리·국외 이전 안내를 확인했어요</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agm" style="width:auto"> [선택] 새 소식 이메일 받기 <small class="hint">만 14세 이상만</small></label>
       `;
 
 export const STRINGS = [
@@ -111,10 +122,23 @@ export const STRINGS = [
 <script src="/runtime/config.js"></script>
 <script src="/runtime/claude-shim.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>`],
+  ['profile: 공개 설정', `<div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3>`, `<div class="sec" style="margin-top:6px"><h3>공개 설정</h3><p class="hint">다른 회원에게는 <b>닉네임</b>만 보여요. 아래에서 켠 정보만 함께 보여요. 이메일·성별·태어난 연월은 항상 비공개예요.</p>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_bio" style="width:auto" \${(m.pub||{}).bio?'checked':''}> 한 줄 소개 공개</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_grade" style="width:auto" \${(m.pub||{}).grade?'checked':''}> 학년 공개</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_region" style="width:auto" \${(m.pub||{}).region?'checked':''}> 거주지역(시·도) 공개</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_photo" style="width:auto" \${(m.pub||{}).photo?'checked':''}> 내가 올린 프로필 사진 공개 <small class="hint">끄면 다른 회원에게는 기본 캐릭터로 보여요</small></label></div>
+    <div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3>`],
+  ['profile: 한 줄 소개 안내', `<label for="pf-bio">한 줄 소개 <small class="hint">친구들에게 보여요</small>`, `<label for="pf-bio">한 줄 소개 <small class="hint">아래 공개 설정을 켜야 다른 회원에게 보여요</small>`],
+  ['profile: 새 비밀번호 8자', `<label for="pf-pw">새 비밀번호 <small class="hint">4자 이상</small>`, `<label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small>`],
+  ['signup: 한 줄 소개 안내', `<small class="hint">친구들에게 보여요. 비워도 돼요</small>`, `<small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small>`],
+  ['friends: 다른 회원 아이디 숨김', "\${esc([m.id,sub(m.id)].filter(Boolean).join(' · '))}", "\${esc(sub(m.id))}"],
+  ['AI 표시: 첨삭 PDF 쪽 바닥글', "첨삭 평가서 · \${nSheets+k+1} / \${all}</div>", "첨삭 평가서 · 생성형 AI(Claude)가 작성한 첨삭 · \${nSheets+k+1} / \${all}</div>"],
+  ['AI 표시: 첨삭 PDF 메타데이터', "await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});", "pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 첨삭 결과',creator:'002BOOK · AI 생성',keywords:'AI-generated'});await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});"],
+  ['AI 표시: 비전보드 저장 안내', "toast('비전보드를 저장했어요.')", "toast('비전보드를 저장했어요. 문구 일부는 생성형 AI가 다듬었어요.')"],
   ['html lang', `<!doctype html><html><head>`, `<!doctype html><html lang="ko"><head>`],
   ['tail: 약관 링크·서비스워커', `\n</body></html>`, `
-<div id="legal" style="text-align:center;font-size:12px;color:#6F6155;padding:18px 0 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a> · <a href="/refund.html" style="color:inherit">환불정책</a><br>__BUSINESS_INFO__</div>
-<style>#legal{display:none}body:has(.auth) #legal{display:block}</style>
+<div id="legal" style="text-align:center;font-size:12px;color:#6F6155;padding:18px 0 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a> · <a href="/refund.html" style="color:inherit">환불정책</a><br>002BOOK의 첨삭·추천·피드백은 생성형 AI(Anthropic Claude)가 만들어요. 사실과 다를 수 있어요.<br>__BUSINESS_INFO__</div>
+<style>#legal{max-width:1100px;margin:0 auto}@media (max-width:720px){#legal{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}}</style>
 <script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 </body></html>`],
 ];

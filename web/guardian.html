@@ -1,0 +1,47 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><title>002BOOK · 보호자 동의</title>
+<link rel="stylesheet" href="/pages.css">
+<script src="/runtime/config.js"></script><script src="/runtime/claude-shim.js"></script></head>
+<body><main class="pg">
+<header><img src="/icons/icon-192.png" alt=""><a href="/">002BOOK</a></header>
+<h1>자녀의 002BOOK 가입에 동의해 주세요<small>만 14세 미만 아동 회원가입 · 법정대리인 동의</small></h1>
+<div id="box"><p class="muted">신청 내용을 확인하는 중이에요…</p></div>
+<footer>__BUSINESS_INFO__</footer>
+</main>
+<script>
+(async()=>{
+  const t=new URLSearchParams(location.search).get('t')||'', box=document.getElementById('box'), call=window.__002.server.call;
+  history.replaceState(null,'','/guardian.html'); // 주소창·방문 기록에 토큰이 남지 않게
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let info;
+  try{info=await call('auth.guardianInfo',{token:t})}catch(e){box.innerHTML='<div class="card">'+esc(e.message)+'</div>';return}
+  box.innerHTML=`<p>자녀(닉네임 <b>${esc(info.nick)}</b>, 아이디 <b>${esc(info.id)}</b>${info.grade?', '+esc(info.grade):''})가 002BOOK 가입을 신청했어요.
+  만 14세 미만 아동의 개인정보를 처리하려면 「개인정보 보호법」 제22조의2에 따라 법정대리인의 동의가 필요해요.</p>
+  <div class="card"><table>
+  <tr><th>처리 목적</th><td>회원 관리, 독서·영화 학습 코스와 논술 AI 첨삭 제공, 친구·가족 기능, 공지 전달</td></tr>
+  <tr><th>처리 항목</th><td>아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역(시·도), 학년, 성별, 태어난 연월, 학습 기록(진도·논술·첨삭·사진·일기 등)<br>보호자: 이름, 이메일, 관계, 동의 일시</td></tr>
+  <tr><th>보유 기간</th><td>회원 탈퇴 시 즉시 삭제 (법령상 보관 의무가 있는 결제 기록은 해당 기간 보관)</td></tr>
+  <tr><th>국외 이전</th><td>서비스 제공에 필요한 범위에서 국외 업체(Supabase, Anthropic, Resend, GitHub)에 처리를 맡겨요. 자세한 내용은 <a href="/privacy.html" target="_blank">개인정보처리방침</a> 제5조를 봐 주세요.</td></tr>
+  <tr><th>생성형 AI 이용</th><td>논술 첨삭·책 추천·일기 피드백은 <b>생성형 AI(Anthropic Claude)</b>가 만들어요. 자녀가 버튼을 누를 때만 내용이 AI로 보내지고, AI 학습에는 쓰이지 않아요.</td></tr>
+  <tr><th>다른 회원에게 공개</th><td>닉네임만 기본 공개. 다른 정보는 자녀가 공개를 켠 항목만 보여요.</td></tr>
+  <tr><th>마케팅</th><td>만 14세 미만 회원에게는 광고·마케팅 메일을 보내지 않아요.</td></tr>
+  <tr><th>동의를 거부할 권리</th><td>동의하지 않을 수 있어요. 동의하지 않으면 가입이 완료되지 않고, 신청 정보는 바로 삭제돼요.</td></tr>
+  </table></div>
+  <form id="f">
+    <label>보호자 이름<input name="name" required maxlength="30" autocomplete="name"></label>
+    <label>자녀와의 관계<select name="rel" required><option value="">골라 주세요</option><option>부</option><option>모</option><option>그 밖의 법정대리인</option></select></label>
+    <label style="flex-direction:row;gap:8px;align-items:flex-start;font-weight:400"><input type="checkbox" name="ok" required style="margin-top:6px"> 위 내용을 읽었고, 자녀의 개인정보 처리에 법정대리인으로서 동의해요.</label>
+    <label style="flex-direction:row;gap:8px;align-items:flex-start;font-weight:400"><input type="checkbox" name="ok2" required style="margin-top:6px"> 저는 이 아동의 법정대리인(부모 등)이에요.</label>
+    <div><button class="btn" type="submit">동의하고 가입 승인</button> <button class="btn ghost" type="button" id="no">동의하지 않음</button></div>
+    <p class="muted" id="msg"></p>
+  </form>`;
+  const f=document.getElementById('f'),msg=document.getElementById('msg');
+  async function go(agree){
+    const fd=new FormData(f);msg.textContent='처리 중이에요…';
+    try{const r=await call('auth.guardianConsent',{token:t,agree,name:fd.get('name'),rel:fd.get('rel')});box.innerHTML='<div class="card">'+esc(r.message)+'</div>'}
+    catch(e){msg.textContent=e.message||'처리하지 못했어요.'}
+  }
+  f.onsubmit=e=>{e.preventDefault();go(true)};
+  document.getElementById('no').onclick=()=>{if(confirm('동의하지 않으면 가입 신청과 입력한 정보가 모두 지워져요. 계속할까요?'))go(false)};
+})();
+</script></body></html>
