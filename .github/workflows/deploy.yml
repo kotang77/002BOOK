@@ -29,7 +29,7 @@ jobs:
       - name: 프로젝트 연결
         run: supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" -p "$SUPABASE_DB_PASSWORD"
       - name: DB 스키마 적용
-        run: supabase db push -p "$SUPABASE_DB_PASSWORD"
+        run: supabase db push --linked -p "$SUPABASE_DB_PASSWORD"
       - name: 비밀값 설정
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
