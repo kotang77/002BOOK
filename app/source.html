@@ -157,16 +157,6 @@ div.vban2 .vbcap{padding:0 4px}
 div.vban2 .vbct p{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-family:var(--f-display);font-size:13px;line-height:1.4;color:var(--ink)}
 div.vban2 .vbct small{font-size:10.5px}div.vban2 .vbct b{font-size:14px}
 div.vban2 .vbcap em{font-size:11px;padding:2px 6px}
-/* 메인 비전보드 배너: 넓은 화면에서 보드 이미지를 절반 크기로 줄이고 문구를 오른쪽에 둔다 */
-@media (min-width:720px){div.vban2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:16px;padding:6px 14px 6px 6px}div.vban2 .vbcap{flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;padding:0}div.vban2 .vbct p{-webkit-line-clamp:4;font-size:16px;line-height:1.55}div.vban2 .vbcap .mbtn{align-self:flex-end}}
-.vbside{display:none}
-@media (min-width:720px){div.vban2 .vpw{align-self:center}div.vban2 .vbcap{justify-content:center;gap:10px;padding:4px 0}div.vban2 .vbct p{-webkit-line-clamp:2;font-size:15.5px;line-height:1.45}
-.vbside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;width:100%}
-.vbsi{display:flex;align-items:center;gap:8px;min-width:0;background:#FFFDF6;border:1px solid rgba(176,111,60,.22);border-radius:8px;padding:5px;box-shadow:0 1px 2px rgba(62,47,38,.06)}
-.vbsp{flex:none;width:46px;height:46px;border-radius:6px;overflow:hidden;background:#eee}.vbsp img{width:100%;height:100%;object-fit:cover;display:block}.vbsp .vill i{font-size:24px}
-.vbst{min-width:0;display:flex;flex-direction:column;gap:2px}.vbst b{font:600 13px/1.25 var(--f-body);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vbst span{font-size:11.5px;line-height:1.3;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}div.vban2 .vbst em{font:700 10.5px/1.4 var(--f-body);color:#fff;background:#C0392B;border-radius:3px;padding:0 4px;margin-right:4px;transform:none}.vbsi:nth-child(n+5){display:none}}
-@media (min-width:1100px){.vbside{grid-template-columns:repeat(3,minmax(0,1fr))}.vbsi:nth-child(n+5){display:flex}}
 section.dash{grid-template-columns:minmax(0,1fr);margin-bottom:10px}
 section.dash .dcard{padding:7px 10px;gap:5px;border-radius:10px}
 section.dash .dp1{gap:8px}
@@ -1376,13 +1366,9 @@ function vbPhoneHTML(v){
     <div class="vphf">002BOOK · 꿈이 이루어지는 곳이 천국이다</div></div></div>`;
 }
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
-/* 메인 배너 오른쪽: 보드에 등록된 꿈(사진·문구)을 작은 카드로 채운다. 넓은 화면에서만 보인다 */
-function vbSideHTML(v){const L=vbRich(v);if(!L.length)return '';
-  const o=[...L.filter(x=>!x.img),...L.filter(x=>x.img)].slice(0,6);
-  return `<div class="vbside">${o.map(it=>`<div class="vbsi"><div class="vbsp">${vbPic(it)}</div><div class="vbst"><b>${esc(it.head)}</b><span>${it.when?`<em>${esc(String(it.when))}</em>`:''}${esc(it.line||it.text||'')}</span></div></div>`).join('')}</div>`}
 function visionBanner(){
   const v=vbOf(),b=v&&v.board;
-  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}<div class="vbcap"><div class="vbct">${b.statement?`<p>${esc(b.statement)}</p>`:''}</div>${vbSideHTML(v)}${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
+  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}<div class="vbcap"><div class="vbct">${b.statement?`<p>${esc(b.statement)}</p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
   return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
 }
 function vbBoardHTML(v){
