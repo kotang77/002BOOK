@@ -254,7 +254,7 @@ section.dash .dl2 .bar{flex:1}
 .vpw.vcol{aspect-ratio:960/320}.vpo.vcol{height:320px}
 .vcc{position:absolute;background:#fff;padding:6px 6px 0;box-shadow:2px 6px 10px rgba(40,20,5,.38);text-align:center}
 .vcc.hero{padding:8px 8px 0;box-shadow:3px 10px 18px rgba(40,20,5,.48)}
-.vcci{aspect-ratio:4/3;overflow:hidden;background:#eee}.vcci img{width:100%;height:100%;object-fit:cover;display:block}
+.vcci{aspect-ratio:4/3;overflow:hidden;background:#eee}.vcci img{width:100%;height:100%;object-fit:cover;display:block}.vcci{container-type:inline-size;width:100%;align-self:stretch}.vcci .vill i{font-size:46cqw}
 .vcc b{display:block;height:26px;font:400 16px/26px 'Nanum Pen Script',cursive;color:#2B241F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
 .vcc.hero b{height:34px;font-size:24px;line-height:34px}
 .vcc em{position:absolute;right:-6px;bottom:22px;background:#E84A3A;color:#fff;font:700 12px 'Noto Sans KR',sans-serif;font-style:normal;padding:1px 6px;transform:rotate(-4deg);z-index:2}
@@ -1319,16 +1319,17 @@ function vbPosterHTML(v){
 const VBSEED=(Math.random()*4294967296)>>>0;
 function vbCollageHTML(v){
   let sd=VBSEED||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};const rr=(a,b)=>a+(b-a)*R();
-  const P=(v?vbRich(v):[]).filter(x=>x.img);
+  const AL=v?vbRich(v):[],P=AL.filter(x=>x.img),F=AL.filter(x=>!x.img);
   for(let k=P.length-1;k>0;k--){const j=Math.floor(R()*(k+1));[P[k],P[j]]=[P[j],P[k]]}
-  const ph=P.slice(0,7),n=ph.length,H=320;const b=(v&&v.board)||{};
+  /* 사진이 5장보다 적으면 사진 없는 꿈을 같은 폴라로이드 프레임에 그림으로 채워 최소 5장을 꽂는다 */
+  const ph=P.slice(0,7);while(ph.length<5&&F.length)ph.push(F.shift());const n=ph.length,H=320;const b=(v&&v.board)||{};
   if(!n)return `<div class="vpw vcol"><div class="vpo vcol vcork"><div class="vcempty"><b>${esc(b.title||'나의 꿈 지도')}</b><span>꿈 사진을 올리면 여기에 크게 꽂혀요 📷</span></div></div></div>`;
   const zs=[1,2,3,4,5,6,7,8];for(let k=zs.length-1;k>0;k--){const j=Math.floor(R()*(k+1));[zs[k],zs[j]]=[zs[j],zs[k]]}let zi=0;
   const card=(it,x,wf,hero)=>{const pad=hero?16:12,cap=hero?42:32,ar=it.ar||4/3,w0=wf;if((wf-pad)/ar+cap>H-14)wf=Math.round((H-14-cap)*ar+pad);x+=(w0-wf)/2;const w=wf-pad,h=Math.round(w/ar)+cap;
     const free=Math.max(0,H-h-12);const y=Math.round(6+free/2+rr(-1,1)*free/2*(hero?.3:1));
     const rot=hero?rr(-2.5,2.5):rr(-7,7);const z=hero?20:zs[zi++%8];
     const pin=R()<.55?`<i class="vpin2 ${['','red','blue','gold'][Math.floor(R()*4)]}" style="left:${Math.round(wf/2+rr(-wf/5,wf/5))}px;top:5px"></i>`:`<em class="vctape" style="transform:translateX(-50%) rotate(${rr(-9,9).toFixed(1)}deg)"></em>`;
-    return `<div class="vcc${hero?' hero':''}" style="left:${Math.round(x)}px;top:${y}px;width:${Math.round(wf)}px;transform:rotate(${rot.toFixed(1)}deg);z-index:${z}">${pin}<div class="vcci" style="aspect-ratio:${ar.toFixed(3)}"><img src="${it.img}" alt="${esc(it.head)}"></div><b>${esc(it.head)}</b>${it.when?`<em>${it.when}</em>`:''}</div>`};
+    return `<div class="vcc${hero?' hero':''}" style="left:${Math.round(x)}px;top:${y}px;width:${Math.round(wf)}px;transform:rotate(${rot.toFixed(1)}deg);z-index:${z}">${pin}<div class="vcci" style="aspect-ratio:${ar.toFixed(3)}">${it.img?`<img src="${it.img}" alt="${esc(it.head)}">`:vbPic(it)}</div><b>${esc(it.head)}</b>${it.when?`<em>${it.when}</em>`:''}</div>`};
   let out='';
   if(n===1)out=card(ph[0],(960-376)/2+rr(-30,30),376,true);
   else if(n===2){const wf=340;out=card(ph[0],480-wf+24+rr(-20,10),wf,true)+card(ph[1],480-24+rr(-10,20),wf,true)}
@@ -1336,7 +1337,7 @@ function vbCollageHTML(v){
     const hf=n<=3?346:316;const hx=(960-hf)/2+rr(-24,24);
     const L=[],Rt=[];ph.slice(1).forEach((x,i)=>(i%2?Rt:L).push(x));
     const side=(960-hf)/2-4;
-    const lay=(arr,x0)=>{const c=arr.length;if(!c)return '';const wf=Math.min(n<=3?262:236,side/c*1.35);const step=c>1?(side-wf)/(c-1):0;
+    const lay=(arr,x0)=>{const c=arr.length;if(!c)return '';const wf=Math.min(n<=3?262:236,side/c*(n<=5?1.12:1.35));const step=c>1?(side-wf)/(c-1):0;
       return arr.map((it,i)=>card(it,(c>1?x0+i*step:x0+(side-wf)/2)+rr(-8,8),wf,false)).join('')};
     out=lay(L,4)+lay(Rt,960-4-side)+card(ph[0],hx,hf,true);
   }
