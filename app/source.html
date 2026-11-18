@@ -1556,7 +1556,7 @@ function authHTML(){
     <p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">임시 비밀번호 요청하기</button>
     <button type="button" class="lnk" data-act="authtab" data-v="login">로그인으로 돌아가기</button></form>`;
   else body=`<form data-form="signup"><label for="su-id">아이디 <small class="hint">영문 소문자·숫자 3~20자</small><input id="su-id" name="id" autocomplete="username" autocapitalize="none" required></label>
-    <label for="su-pw">비밀번호 <small class="hint">4자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>
+    <label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>
     <label for="su-nick">닉네임 <small class="hint">다른 회원에게 보이는 이름이에요. 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12"></label>
     <label for="su-region">거주지역<select id="su-region" name="region">${REGIONS.map(r=>`<option${r==='경기'?' selected':''}>${r}</option>`).join('')}</select></label>
     <label for="su-bio">한 줄 소개 <small class="hint">친구들에게 보여요. 비워도 돼요</small><input id="su-bio" name="bio" maxlength="40" placeholder="예: 책 읽는 걸 좋아하는 호기심 많은 사람"></label>
@@ -2411,7 +2411,7 @@ function memberRowHTML(m){
         <button class="btn ghost small" data-act="admto" data-id="${esc(m.id)}">알림 보내기</button>
         ${m.email?`<a class="btn ghost small" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('[002BOOK] ')}">이메일 보내기</a>`:'<button class="btn ghost small" disabled>이메일 없음</button>'}
         ${adm?'':`<button class="btn ghost small" data-act="admblock" data-id="${esc(m.id)}">${blk?'정지 풀기':'이용 정지'}</button>`}</div>
-      <div class="inl"><input id="adm-pw" type="text" aria-label="새 비밀번호" placeholder="새 비밀번호 (4자 이상)" autocomplete="off"><button class="btn ghost small" data-act="admpw" data-id="${esc(m.id)}">비밀번호 바꾸기</button></div>
+      <div class="inl"><input id="adm-pw" type="text" aria-label="새 비밀번호" placeholder="새 비밀번호 (8자 이상)" autocomplete="off"><button class="btn ghost small" data-act="admpw" data-id="${esc(m.id)}">비밀번호 바꾸기</button></div>
       ${adm?'':`<div><button class="btn danger small" data-act="admdel" data-id="${esc(m.id)}">회원 삭제</button> <span class="hint">진도·첨삭·후기·일기까지 모두 지워져요.</span></div>`}</div>`}
   return `<div class="mb" data-k="${esc((m.id+' '+(m.nick||'')).toLowerCase())}"><button class="mbh" data-act="admopen" data-id="${esc(m.id)}" aria-expanded="${open}"><b>${esc(m.nick||m.id)}</b><span class="hint">${esc(m.id)} · ${esc(m.grade||'')} · ${esc(m.region||'')}</span>${adm?'<span class="bdg adm">관리자</span>':`<span class="bdg ${paid?'paid':''}">${paid?'유료':'무료'}</span>`}${blk?'<span class="bdg blk">정지</span>':''}</button>${d}</div>`;
 }
@@ -2976,7 +2976,7 @@ async function saveProfile(fd){
   const up={nick,email,region,grade:SCODES.includes(grade)?grade:S.me.grade,bio:String(fd.get('bio')||'').trim().slice(0,40),buddy:String(fd.get('buddy')||'').trim().slice(0,10)||BUDDY0,...budFields()};if(GENDERS.includes(gender))up.gender=gender;
   try{
     if(pw){
-      if(pw.length<4)return er('새 비밀번호는 4자 이상이어야 해요.');
+      if(pw.length<8)return er('새 비밀번호는 8자 이상이어야 해요.');
       if(await sha(S.me.salt+cur)!==S.me.pw)return er('현재 비밀번호가 맞지 않아요.');
       up.pw=await sha(S.me.salt+pw);up.mustChange=false;
     }else if(S.me.mustChange)return er('임시 비밀번호로 들어왔어요. 새 비밀번호를 정해 주세요.');
@@ -3000,7 +3000,7 @@ function profileHTML(){
     ${gradeFields(m.grade,'pf')}
     <div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3><p class="hint">바꾸지 않으려면 비워 두세요.</p>
       <label for="pf-cur">현재 비밀번호<input id="pf-cur" name="cur" type="password" autocomplete="current-password"></label>
-      <label for="pf-pw">새 비밀번호 <small class="hint">4자 이상</small><input id="pf-pw" name="pw" type="password" autocomplete="new-password"></label></div>
+      <label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small><input id="pf-pw" name="pw" type="password" autocomplete="new-password"></label></div>
     <p class="err" id="pferr"></p><div><button class="btn" type="submit">저장</button></div></form>
   ${isAdmin()?'':`<form data-form="withdraw" class="sec" style="margin-top:18px"><h3>회원 탈퇴</h3><p class="hint">탈퇴하면 내 정보, 진도, 첨삭, 논술, 후기, 친구·가족 관계와 메시지, 일기, 내가 쓴 책이 모두 지워지고 되돌릴 수 없어요.</p>
     <label for="wd-pw">비밀번호<input id="wd-pw" name="pw" type="password" autocomplete="current-password"></label>
@@ -3011,7 +3011,7 @@ async function doSignup(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
   const nick=String(fd.get('nick')||'').trim()||id;
   if(!/^[a-z0-9_-]{3,20}$/.test(id)){S.authErr='아이디는 영문 소문자와 숫자로 3~20자여야 해요.';return render()}
-  if(pw.length<4){S.authErr='비밀번호는 4자 이상이어야 해요.';return render()}
+  if(pw.length<8){S.authErr='비밀번호는 8자 이상이어야 해요.';return render()}
   if(!EMAILRE.test(String(fd.get('email')||'').trim())){S.authErr='이메일 주소를 정확히 적어 주세요.';return render()}
   if(!GENDERS.includes(String(fd.get('gender')||''))){S.authErr='성별을 골라 주세요.';return render()}
   try{
@@ -4176,7 +4176,7 @@ document.addEventListener('click',async e=>{
       try{await savePlans();toast(was?'정지를 풀었어요.':'이용을 정지했어요.')}
       catch(err){if(was)S.plans.blocked[id]={at:Date.now()};else delete S.plans.blocked[id];toast('저장하지 못했어요. 서재 주인 계정으로 열었는지 확인해 주세요.')}
       render();break}
-    case 'admpw':{if(!isAdmin())break;const v=String(($('#adm-pw')||{}).value||'');if(v.length<4){toast('새 비밀번호는 4자 이상이어야 해요.');break}
+    case 'admpw':{if(!isAdmin())break;const v=String(($('#adm-pw')||{}).value||'');if(v.length<8){toast('새 비밀번호는 8자 이상이어야 해요.');break}
       const m=(S.adm.members||[]).find(x=>x.id===d.id);if(!m)break;
       try{const salt=m.salt||hid(d.id+Date.now()+Math.random());await S.db.doc('members/'+d.id).update({salt,pw:await sha(salt+v)});m.salt=salt;toast('비밀번호를 바꿨어요. 회원에게 알려 주세요.');render()}
       catch(err){toast('비밀번호를 바꾸지 못했어요.')}break}

@@ -63,7 +63,7 @@ export const FUNCTIONS = {
 export const FUNCTION_EDITS = {
   saveProfile: [
     ['const up={nick,email,region,', "const up={pub:{bio:!!fd.get('pub_bio'),grade:!!fd.get('pub_grade'),region:!!fd.get('pub_region'),photo:!!fd.get('pub_photo')},nick,email,region,"],
-    [`if(pw.length<4)return er('새 비밀번호는 4자 이상이어야 해요.');
+    [`if(pw.length<8)return er('새 비밀번호는 8자 이상이어야 해요.');
         if(await sha(S.me.salt+cur)!==S.me.pw)return er('현재 비밀번호가 맞지 않아요.');
         up.pw=await sha(S.me.salt+pw);up.mustChange=false;`,
      `if(pw.length<8)return er('새 비밀번호는 8자 이상이어야 해요.');
@@ -104,7 +104,7 @@ export const STRINGS = [
   ['free: 내 정보 유료 안내 숨김', `function subSecHTML(){`, `function subSecHTML(){if(window.__002CFG&&window.__002CFG.free)return '';`],
   ['boot: 저장된 로그인은 서버 세션으로만', `const saved=lsGet('ppang.login');`, `const saved=(window.__002.auth.session()||{}).uid||null;`],
   ['auth: 연결 실패 안내', `'<p class="warn">이 페이지는 Claude에 로그인한 상태로 열어야 해요. 초대받은 계정으로 다시 열어 주세요.</p>'`, `'<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>'`],
-  ['signup: 비밀번호 8자', `<label for="su-pw">비밀번호 <small class="hint">4자 이상</small>`, `<label for="su-pw">비밀번호 <small class="hint">8자 이상</small>`],
+  ['signup: 비밀번호 8자', `<label for="su-pw">비밀번호 <small class="hint">8자 이상</small>`, `<label for="su-pw">비밀번호 <small class="hint">8자 이상</small>`],
   ['signup: 생년월·보호자·약관 동의', `<p class="err" id="autherr">\${esc(S.authErr)}</p><button class="btn" type="submit">가입하고 시작하기</button>`,
     SIGNUP_EXTRA + `<p class="err" id="autherr">\${esc(S.authErr)}</p><button class="btn" type="submit">가입하고 시작하기</button>`],
   ['admin: 임시 비밀번호는 서버에서', `try{const salt=m.salt||hid(id+Date.now()+Math.random());await S.db.doc('members/'+id).update({salt,pw:await sha(salt+pw),mustChange:true});m.salt=salt;`,
@@ -133,7 +133,7 @@ export const STRINGS = [
       <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_photo" style="width:auto" \${(m.pub||{}).photo?'checked':''}> 내가 올린 프로필 사진 공개 <small class="hint">끄면 다른 회원에게는 기본 캐릭터로 보여요</small></label></div>
     <div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3>`],
   ['profile: 한 줄 소개 안내', `<label for="pf-bio">한 줄 소개 <small class="hint">친구들에게 보여요</small>`, `<label for="pf-bio">한 줄 소개 <small class="hint">아래 공개 설정을 켜야 다른 회원에게 보여요</small>`],
-  ['profile: 새 비밀번호 8자', `<label for="pf-pw">새 비밀번호 <small class="hint">4자 이상</small>`, `<label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small>`],
+  ['profile: 새 비밀번호 8자', `<label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small>`, `<label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small>`],
   ['signup: 한 줄 소개 안내', `<small class="hint">친구들에게 보여요. 비워도 돼요</small>`, `<small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small>`],
   ['friends: 다른 회원 아이디 숨김', "\${esc([m.id,sub(m.id)].filter(Boolean).join(' · '))}", "\${esc(sub(m.id))}"],
   ['AI 표시: 첨삭 PDF 쪽 바닥글', "첨삭 평가서 · \${nSheets+k+1} / \${all}</div>", "첨삭 평가서 · 생성형 AI(Claude)가 작성한 첨삭 · \${nSheets+k+1} / \${all}</div>"],

@@ -316,7 +316,7 @@ async function handle(req: Request, b: Record<string, unknown>) {
     /* ---- 관리자 ---- */
     case 'admin.setPassword': {
       needAdmin(ctx); const id = String(b.id ?? ''); const pw = String(b.pw ?? '');
-      if (pw.length < 4) fail('weak_password', '비밀번호는 4자 이상이어야 해요.');
+      if (pw.length < 8) fail('weak_password', '비밀번호는 8자 이상이어야 해요.');
       if (!(await account(id))) fail('no_user', '회원을 찾지 못했어요.');
       await sb.from('accounts').update({ ...(await hashNew(pw)), must_change: !!b.temp, updated_at: new Date().toISOString() }).eq('id', id);
       await sb.from('sessions').delete().eq('uid', id);
