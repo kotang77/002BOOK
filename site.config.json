@@ -1,7 +1,7 @@
 {
   "domain": "002book.com",
-  "supabaseUrl": "",
-  "supabaseAnonKey": "",
+  "supabaseUrl": "https://znvinhrmiakjxdzypmpq.supabase.co",
+  "supabaseAnonKey": "sb_publishable_gostrwsJINSvsAuY8YD2ag_fMfErcfA",
   "tossClientKey": "",
   "effectiveDate": "2026년 12월 1일",
   "business": {
