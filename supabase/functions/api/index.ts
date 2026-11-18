@@ -250,7 +250,8 @@ async function importDocs(b: { docs: Record<string, Record<string, unknown>> }) 
     if (path.startsWith('members/')) {
       const id = path.split('/')[1]; owner = id;
       if (d.pw && d.salt && !(await account(id))) {
-        await sb.from('accounts').insert({ id, email: String(d.email ?? '') || null, pw_hash: String(d.pw), pw_salt: String(d.salt), pw_algo: 'legacy-sha256', must_change: !!d.mustChange });
+        const { error: ae } = await sb.from('accounts').insert({ id, email: String(d.email ?? '') || null, pw_hash: String(d.pw), pw_salt: String(d.salt), pw_algo: 'legacy-sha256', must_change: !!d.mustChange });
+        if (ae) fail('db_error', '계정을 저장하지 못했어요.', 500, `accounts: ${ae.message}`);
         acc++;
       }
       delete data.pw; delete data.salt;
@@ -337,7 +338,11 @@ async function handle(req: Request, b: Record<string, unknown>) {
         const m = ((b.docs ?? {}) as Record<string, Record<string, unknown>>)['members/' + ADMIN_ID];
         if (!m || !m.salt || !m.pw || !safeEq(await sha256hex(String(m.salt) + String(b.pw ?? '')), String(m.pw))) fail('forbidden', '관리자 비밀번호가 맞지 않아요.', 403);
       }
-      return importDocs(b as { docs: Record<string, Record<string, unknown>> });
+      try { return await importDocs(b as { docs: Record<string, Record<string, unknown>> }); }
+      catch (e) { // 이전 작업은 관리자만 하므로 원인을 화면에 보여 준다
+        if (e instanceof HttpErr && e.extra) fail(e.code, `${e.message} (원인: ${typeof e.extra === 'string' ? e.extra : JSON.stringify(e.extra)})`, e.status);
+        throw e;
+      }
     }
     case 'admin.usage': {
       needAdmin(ctx);
