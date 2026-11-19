@@ -242,6 +242,9 @@ section.dash .dl2 .bar{flex:1}
 .vpol.lg{width:110px;padding:7px 7px 5px}.vpol.lg .vpoli .vill i{font-size:48px}.vpol.lg b{font-size:18px}
 /* 메인 배너 콜라주: 올린 사진만 크게, 접속할 때마다 새 배치 */
 .vpw.vcol{aspect-ratio:960/320}.vpo.vcol{height:320px}
+/* 메인 비전보드 배너: 웹(넓은 화면)은 폭 1920 보드로 바꿔 높이를 절반으로, 휴대폰·앱(720px 미만)은 그대로 */
+.vpw.vcol.vwide{display:none;aspect-ratio:1920/320}.vpo.vcol.vwide{width:1920px}
+@media (min-width:720px){div.vban2 .vpw.vcol:not(.vwide){display:none}div.vban2 .vpw.vcol.vwide{display:block}}
 .vcc{position:absolute;background:#fff;padding:6px 6px 0;box-shadow:2px 6px 10px rgba(40,20,5,.38);text-align:center}
 .vcc.hero{padding:8px 8px 0;box-shadow:3px 10px 18px rgba(40,20,5,.48)}
 .vcci{aspect-ratio:4/3;overflow:hidden;background:#eee}.vcci img{width:100%;height:100%;object-fit:cover;display:block}.vcci{container-type:inline-size;width:100%;align-self:stretch}.vcci .vill i{font-size:46cqw}
@@ -1307,13 +1310,15 @@ function vbPosterHTML(v){
 }
 /* 메인 배너: 꿈 사진만 골라 크게 꽂는 콜라주. 시드는 페이지를 열 때 한 번 정해져서, 접속할 때마다 배치가 바뀌고 화면 안에서는 그대로 유지돼요 */
 const VBSEED=(Math.random()*4294967296)>>>0;
-function vbCollageHTML(v){
+function vbCollageHTML(v,W){
+  /* W: 보드 폭. 기본값은 휴대폰·앱용 보드. 웹(넓은 화면)은 폭을 두 배로 그려 같은 높이(320)에 가로로 길게 → 화면에서 높이가 절반이 돼요 */
+  W=W||960;const wide=W>960;
   let sd=VBSEED||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};const rr=(a,b)=>a+(b-a)*R();
   const AL=v?vbRich(v):[],P=AL.filter(x=>x.img),F=AL.filter(x=>!x.img);
   for(let k=P.length-1;k>0;k--){const j=Math.floor(R()*(k+1));[P[k],P[j]]=[P[j],P[k]]}
   /* 사진이 5장보다 적으면 사진 없는 꿈을 같은 폴라로이드 프레임에 그림으로 채워 최소 5장을 꽂는다 */
-  const ph=P.slice(0,7);while(ph.length<5&&F.length)ph.push(F.shift());const n=ph.length,H=320;const b=(v&&v.board)||{};
-  if(!n)return `<div class="vpw vcol"><div class="vpo vcol vcork"><div class="vcempty"><b>${esc(b.title||'나의 꿈 지도')}</b><span>꿈 사진을 올리면 여기에 크게 꽂혀요 📷</span></div></div></div>`;
+  const ph=P.slice(0,wide?11:7);while(ph.length<(wide?7:5)&&F.length)ph.push(F.shift());const n=ph.length,H=320;const b=(v&&v.board)||{};
+  if(!n)return `<div class="vpw vcol${wide?' vwide':''}" data-w="${W}"><div class="vpo vcol vcork${wide?' vwide':''}"><div class="vcempty"><b>${esc(b.title||'나의 꿈 지도')}</b><span>꿈 사진을 올리면 여기에 크게 꽂혀요 📷</span></div></div></div>`;
   const zs=[1,2,3,4,5,6,7,8];for(let k=zs.length-1;k>0;k--){const j=Math.floor(R()*(k+1));[zs[k],zs[j]]=[zs[j],zs[k]]}let zi=0;
   const card=(it,x,wf,hero)=>{const pad=hero?16:12,cap=hero?42:32,ar=it.ar||4/3,w0=wf;if((wf-pad)/ar+cap>H-14)wf=Math.round((H-14-cap)*ar+pad);x+=(w0-wf)/2;const w=wf-pad,h=Math.round(w/ar)+cap;
     const free=Math.max(0,H-h-12);const y=Math.round(6+free/2+rr(-1,1)*free/2*(hero?.3:1));
@@ -1321,24 +1326,24 @@ function vbCollageHTML(v){
     const pin=R()<.55?`<i class="vpin2 ${['','red','blue','gold'][Math.floor(R()*4)]}" style="left:${Math.round(wf/2+rr(-wf/5,wf/5))}px;top:5px"></i>`:`<em class="vctape" style="transform:translateX(-50%) rotate(${rr(-9,9).toFixed(1)}deg)"></em>`;
     return `<div class="vcc${hero?' hero':''}" style="left:${Math.round(x)}px;top:${y}px;width:${Math.round(wf)}px;transform:rotate(${rot.toFixed(1)}deg);z-index:${z}">${pin}<div class="vcci" style="aspect-ratio:${ar.toFixed(3)}">${it.img?`<img src="${it.img}" alt="${esc(it.head)}">`:vbPic(it)}</div><b>${esc(it.head)}</b>${it.when?`<em>${it.when}</em>`:''}</div>`};
   let out='';
-  if(n===1)out=card(ph[0],(960-376)/2+rr(-30,30),376,true);
-  else if(n===2){const wf=340;out=card(ph[0],480-wf+24+rr(-20,10),wf,true)+card(ph[1],480-24+rr(-10,20),wf,true)}
+  if(n===1)out=card(ph[0],(W-376)/2+rr(-30,30),376,true);
+  else if(n===2){const wf=340;out=card(ph[0],W/2-wf+24+rr(-20,10),wf,true)+card(ph[1],W/2-24+rr(-10,20),wf,true)}
   else{
-    const hf=n<=3?346:316;const hx=(960-hf)/2+rr(-24,24);
+    const hf=wide?368:n<=3?346:316;const hx=(W-hf)/2+rr(-24,24);
     const L=[],Rt=[];ph.slice(1).forEach((x,i)=>(i%2?Rt:L).push(x));
-    const side=(960-hf)/2-4;
-    const lay=(arr,x0)=>{const c=arr.length;if(!c)return '';const wf=Math.min(n<=3?262:236,side/c*(n<=5?1.12:1.35));const step=c>1?(side-wf)/(c-1):0;
+    const side=(W-hf)/2-4;
+    const lay=(arr,x0)=>{const c=arr.length;if(!c)return '';const wf=Math.min(wide?330:n<=3?262:236,side/c*(wide?1.05:n<=5?1.12:1.35));const step=c>1?(side-wf)/(c-1):0;
       return arr.map((it,i)=>card(it,(c>1?x0+i*step:x0+(side-wf)/2)+rr(-8,8),wf,false)).join('')};
-    out=lay(L,4)+lay(Rt,960-4-side)+card(ph[0],hx,hf,true);
+    out=lay(L,4)+lay(Rt,W-4-side)+card(ph[0],hx,hf,true);
   }
-  return `<div class="vpw vcol"><div class="vpo vcol vcork">${out}</div></div>`;
+  return `<div class="vpw vcol${wide?' vwide':''}" data-w="${W}"><div class="vpo vcol vcork${wide?' vwide':''}">${out}</div></div>`;
 }
 function cvFit(){document.querySelectorAll('.cvrow[data-fit]').forEach(r=>{const s=r.querySelector('.cvside'),c=r.querySelector('.cvimg');if(!s||!c)return;c.style.flex='none';c.style.aspectRatio='auto';
   const im=c.querySelector('img');const rt=im&&im.naturalWidth&&im.naturalHeight?im.naturalWidth/im.naturalHeight:0;
   if(im&&!rt&&!im.dataset.fw){im.dataset.fw=1;im.addEventListener('load',cvFit,{once:true})}
   for(let n=0;n<3;n++){const h=s.offsetHeight;if(!h)return;const mx=Math.round(r.clientWidth*.42);let w=Math.round(h*(rt||.72));if(w>mx)w=mx;c.style.width=w+'px';c.style.height=(rt?Math.round(w/rt):h)+'px'}
   if(im){im.style.width='100%';im.style.height='100%';im.style.objectFit=rt?'contain':'cover'}})}
-function vbFit(){cvFit();document.querySelectorAll('.vpw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/960;if(p&&s>0)p.style.transform=`scale(${s})`});document.querySelectorAll('.vphw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/390;if(p&&s>0)p.style.transform=`scale(${s})`});vbScatter()}
+function vbFit(){cvFit();document.querySelectorAll('.vpw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/(+w.dataset.w||960);if(p&&s>0)p.style.transform=`scale(${s})`});document.querySelectorAll('.vphw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/390;if(p&&s>0)p.style.transform=`scale(${s})`});vbScatter()}
 /* 폰 보드 사진 랜덤 배치: 칸을 섞어 고르고, 사진 비율대로 크기를 정한 뒤 살짝 겹치고 기울여 꽂아요. 시드는 보드마다 고정이라 저장 이미지와 화면 배치가 같아요 */
 function vbScatter(root){(root||document).querySelectorAll('.vphg').forEach(g=>{
   const W=g.clientWidth,H=g.clientHeight,C=[...g.children];if(!W||!H||!C.length)return;
@@ -1368,8 +1373,8 @@ function vbPhoneHTML(v){
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
 function visionBanner(){
   const v=vbOf(),b=v&&v.board;
-  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}<div class="vbcap"><div class="vbct">${b.statement?`<p>${esc(b.statement)}</p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
-  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
+  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,1920)}<div class="vbcap"><div class="vbct">${b.statement?`<p>${esc(b.statement)}</p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
+  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,1920)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
 }
 function vbBoardHTML(v){
   const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';const L=vbRich(v);
