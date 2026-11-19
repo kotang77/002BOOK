@@ -99,7 +99,7 @@ const REPL = {
   __PRIVACY_OFFICER__: biz.privacyOfficer || biz.owner || '(개인정보 보호책임자)', __PRIVACY_EMAIL__: biz.privacyEmail || biz.email || 'help@002book.com',
   __EFFECTIVE_DATE__: cfg.effectiveDate || '2026년 12월 1일', __POLICY_VERSION__: cfg.policyVersion || '2026-12-01',
 };
-for (const f of ['index.html', '404.html', 'terms.html', 'privacy.html', 'refund.html', 'guardian.html', 'pay/checkout.html', 'pay/success.html', 'pay/fail.html', 'admin/import.html']) {
+for (const f of ['index.html', '404.html', 'terms.html', 'privacy.html', 'refund.html', 'delete-account.html', 'guardian.html', 'pay/checkout.html', 'pay/success.html', 'pay/fail.html', 'admin/import.html']) {
   const p = path.join(DIST, f); if (!fs.existsSync(p)) continue;
   let t = fs.readFileSync(p, 'utf8');
   // 유료/무료 블록: 무료 출시 모드면 PAID 블록을 지우고 FREE 블록만 남긴다
