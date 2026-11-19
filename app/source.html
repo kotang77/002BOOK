@@ -242,8 +242,8 @@ section.dash .dl2 .bar{flex:1}
 .vpol.lg{width:110px;padding:7px 7px 5px}.vpol.lg .vpoli .vill i{font-size:48px}.vpol.lg b{font-size:18px}
 /* 메인 배너 콜라주: 올린 사진만 크게, 접속할 때마다 새 배치 */
 .vpw.vcol{aspect-ratio:960/320}.vpo.vcol{height:320px}
-/* 메인 비전보드 배너: 웹(넓은 화면)은 폭 1920 보드로 바꿔 높이를 절반으로, 휴대폰·앱(720px 미만)은 그대로 */
-.vpw.vcol.vwide{display:none;aspect-ratio:1920/320}.vpo.vcol.vwide{width:1920px}
+/* 메인 비전보드 배너: 웹(넓은 화면)은 폭 2133 보드로 바꿔 높이를 처음의 45%로, 휴대폰·앱(720px 미만)은 그대로 */
+.vpw.vcol.vwide{display:none;aspect-ratio:2133/320}.vpo.vcol.vwide{width:2133px}
 @media (min-width:720px){div.vban2 .vpw.vcol:not(.vwide){display:none}div.vban2 .vpw.vcol.vwide{display:block}}
 .vcc{position:absolute;background:#fff;padding:6px 6px 0;box-shadow:2px 6px 10px rgba(40,20,5,.38);text-align:center}
 .vcc.hero{padding:8px 8px 0;box-shadow:3px 10px 18px rgba(40,20,5,.48)}
@@ -1373,8 +1373,8 @@ function vbPhoneHTML(v){
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
 function visionBanner(){
   const v=vbOf(),b=v&&v.board;
-  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,1920)}<div class="vbcap"><div class="vbct">${b.statement?`<p>${esc(b.statement)}</p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
-  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,1920)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
+  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,2133)}<div class="vbcap"><div class="vbct">${b.statement?`<p>${esc(b.statement)}</p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
+  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,2133)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
 }
 function vbBoardHTML(v){
   const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';const L=vbRich(v);
