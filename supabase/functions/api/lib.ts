@@ -55,14 +55,14 @@ export function tempPassword() {
 }
 
 /* ---------- 메일 (Resend) ---------- */
-export async function sendMail(to: string | string[], subject: string, html: string) {
-  if (env('FAKE_MAIL')) { console.log('MAIL→', to, subject, '|', [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]).join(' '), '|', html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 400)); return; }
+export async function sendMail(to: string | string[], subject: string, html: string, attachments?: { filename: string; content: string }[]) {
+  if (env('FAKE_MAIL')) { console.log('MAIL→', to, subject, '|', [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]).join(' '), '|', html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 400), '| 첨부', (attachments ?? []).map((a) => a.filename + ':' + a.content.length).join(',')); return; }
   const key = env('RESEND_API_KEY');
   if (!key) fail('mail_not_configured', '메일 발송이 아직 설정되지 않았어요.', 503);
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from: env('MAIL_FROM', '002BOOK <no-reply@002book.com>'), to, subject, html }),
+    body: JSON.stringify({ from: env('MAIL_FROM', '002BOOK <no-reply@002book.com>'), to, subject, html, ...(attachments?.length ? { attachments } : {}) }),
   });
   if (!r.ok) fail('mail_failed', '메일을 보내지 못했어요.', 502, await r.text());
 }

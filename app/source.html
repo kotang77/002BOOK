@@ -243,6 +243,25 @@ section.dash .dl2 .bar{flex:1}
 /* 메인 배너 콜라주: 올린 사진만 크게, 접속할 때마다 새 배치 */
 .vpw.vcol{aspect-ratio:960/320}.vpo.vcol{height:320px}
 /* 구술 평가 */
+
+/* 구술 2차·리포트·기록 */
+.orstep{font-size:12px;font-weight:400;color:var(--muted);margin-left:6px}
+.orsteps{margin:2px 0 4px}
+.orpair{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.orprev summary{font-size:13px;color:var(--muted);cursor:pointer}.orprev p{font-size:14px;line-height:1.7;margin:6px 0 0}
+.ormodel{background:#FFFDF6;border:1px dashed rgba(194,154,75,.7);border-radius:10px;padding:10px 14px}.ormodel b{font-size:13px;color:#8A5024}.ormodel p{margin:6px 0 0;font-family:var(--f-display);font-size:16px;line-height:1.85;color:var(--ink);word-break:keep-all}
+.orthink{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(31,92,74,.08);border-radius:10px;padding:10px 14px}.orthink b{font-size:14px}.orcd{font-family:var(--f-display);font-size:26px;font-weight:800;color:#1F5C4A;font-variant-numeric:tabular-nums;min-width:64px}
+.orprevt{margin:0;font-size:14px;line-height:1.7;color:var(--ink)}
+.orsum{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.orsum>div{display:flex;flex-direction:column;align-items:center;min-width:72px;padding:6px 10px;border-radius:10px;background:rgba(62,47,38,.05)}.orsum small{font-size:12px;color:var(--muted)}.orsum b{font-family:var(--f-display);font-size:24px}.orsum .g{background:rgba(31,92,74,.1)}.orsum .g b{color:#1F5C4A}
+.orsum.big>div{flex:1;min-width:90px;padding:10px}.orsum.big b{font-size:34px}.orsum em{font-style:normal;font-size:13px;font-weight:700}
+.up{color:#2F6B3A}.dn{color:#A04A1A}
+.orgrow{font-size:13px;font-weight:700;color:#1F5C4A;background:rgba(31,92,74,.1);border-radius:999px;padding:2px 9px;margin-left:6px}
+.or12{display:grid;grid-template-columns:1fr;gap:8px}.or12>div{border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;gap:6px}.or12 b{font-size:13px}.or12 p{margin:0;font-size:14px;line-height:1.7}.or12 .orpb{align-self:flex-start}
+@media (min-width:720px){.or12{grid-template-columns:1fr 1fr}}
+.orsc .bar{position:relative}.orsc .bar i{position:absolute;left:0;top:0;bottom:0}.orsc .bar i.p1{background:rgba(185,165,139,.55);z-index:1}.orsc .bar i:not(.p1){z-index:2}.orsc .sc b small{font-size:11px;margin-left:2px}
+.orchart{margin:0}.orchart svg{width:100%;height:auto;display:block}.orchart figcaption{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}.orchart .k1,.orchart .k2{display:inline-block;width:16px;height:3px;border-radius:2px}.orchart .k1{background:#B9A58B}.orchart .k2{background:#1F5C4A;margin-left:8px}
+.orrow{gap:4px}.orrow .row{display:flex;gap:6px;flex-wrap:wrap}
+.orpush{margin:10px 0}
 .orq{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;background:var(--paper);display:flex;flex-direction:column;gap:8px}
 .orq.on{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.12)}.orq.ok{border-color:rgba(194,154,75,.6)}
 .orqh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.orqh b{font-family:var(--f-display);font-size:15px}.orqh small{color:var(--muted);font-size:12px}.orqh .orref{margin-left:auto}
@@ -2953,8 +2972,8 @@ function renderLayers(){
     l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='kid'?kidHTML():sh.type==='mkprev'?mkPrevHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
     const p=l1.querySelector('.panel');if(p&&keep)p.scrollTop=top}
   if(S.id&&S.survey){l2.hidden=false;l2.innerHTML=surveyHTML();return}
-  if(!S.id||(!S.info&&!S.evalView&&!S.oralView)){l2.hidden=true;l2.innerHTML=''}
-  else{l2.hidden=false;const k2=l2.querySelector('.panel');const gd=!S.evalView&&S.info&&S.info.guide&&canGuide();const t2=k2&&gd&&k2.classList.contains('gd')?k2.scrollTop:0;l2.innerHTML=S.oralView?oralEvalHTML():S.evalView?evalHTML():gd?guideHTML():infoHTML();fitMn();if(t2){const p2=l2.querySelector('.panel');if(p2)p2.scrollTop=t2}}
+  if(!S.id||(!S.info&&!S.evalView&&!S.oralView&&!S.oralHist)){l2.hidden=true;l2.innerHTML=''}
+  else{l2.hidden=false;const k2=l2.querySelector('.panel');const gd=!S.evalView&&S.info&&S.info.guide&&canGuide();const t2=k2&&gd&&k2.classList.contains('gd')?k2.scrollTop:0;l2.innerHTML=S.oralView?oralEvalHTML():S.oralHist?oralHistHTML():S.evalView?evalHTML():gd?guideHTML():infoHTML();fitMn();if(t2){const p2=l2.querySelector('.panel');if(p2)p2.scrollTop=t2}}
 }
 
 /* ---------- 시작·로그인 ---------- */
@@ -2963,7 +2982,7 @@ async function enter(id,member){
   if(!member){if(!m.exists)throw new Error('none');member=m.data()}
   if(blockedOf(id))throw {code:'blocked'};
   S.me=clone(member);S.id=id;
-  S.progress=Object.assign({done:{},notes:{},qs:{},evalLog:[],drafts:{},picks:{}},p.exists?clone(p.data()):{});S.evals={};S.evals2={};S.essays={};S.evalView=null;S.orals={};S.oans={};S.oLoad={};S.oBusy={};S.oaud={};S.oralView=null;S.oralOff=null;
+  S.progress=Object.assign({done:{},notes:{},qs:{},evalLog:[],drafts:{},picks:{}},p.exists?clone(p.data()):{});S.evals={};S.evals2={};S.essays={};S.evalView=null;S.orals={};S.orals2={};S.odoc={};S.oLoad={};S.oBusy={};S.oaud={};S.oralView=null;S.oralOff=null;S.oralHist=null;S.orSend=null;S.pushSt=null;
   S.custom=c.exists?clone(c.data()):null;
   S.mode=(S.me.mode==='custom'&&S.custom&&isPaid())?'custom':'base';
   S.grade=GR.includes(S.me.grade)?S.me.grade:'중1';S.view='course';S.sheet=null;S.info=null;
@@ -3024,7 +3043,7 @@ function profileHTML(){
   const m=S.me;
   return `<div class="panel"><div class="ph"><h2>내 정보<small>${esc(S.id)} · ${isAdmin()?'관리자':isPaid()?'유료회원':'무료회원'} · 가입 ${fmtD(m.at)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   ${m.mustChange?'<p class="warn">임시 비밀번호로 들어왔어요. 아래에서 새 비밀번호로 바꿔 주세요.</p>':''}
-  ${subSecHTML()}
+  ${subSecHTML()}${pushHTML('자녀의 구술 테스트 리포트, 친구·가족 알림을 이 기기에서 휴대폰 알림으로 받아요.')}
   <form data-form="profile">
     <label for="pf-nick">닉네임<input id="pf-nick" name="nick" maxlength="12" value="${esc(m.nick||'')}"></label>
     <label for="pf-email">이메일<input id="pf-email" name="email" type="email" autocomplete="email" value="${esc(m.email||'')}" required></label>
@@ -3380,34 +3399,47 @@ async function makePdf(){
   finally{host.remove()}
 }
 /* ---------- 구술 평가 ----------
-   이달의 책·영화로 구술 질문 3개 → 질문마다 최대 2분 녹음(브라우저 음성 인식으로 말한 내용 받아 적기)
-   → 세 답변을 모아 구술 첨삭(점수·말한 내용 첨삭·다듬은 답·모범 답안·꼬리 질문) → PDF 평가서, 최근 5회 누적 분석.
-   저장 위치: 질문 S.progress.oqs[key], 답변 글 orals/<uid>_<key>_a, 녹음 orauds/<uid>_<key>_<n>, 평가 orals/<uid>_<key> */
-const OR_MAX=120,OR_N=3;
+   1차: 이달의 책·영화로 구술 질문 3개 → 질문마다 최대 2분 녹음(브라우저 음성 인식으로 받아 적기) → 1차 구술 첨삭
+   2차: 질문마다 1차 대답 다시 듣기 → 모범 답안 따라 읽기(녹음·정확도) → 3분 생각 시간 → 같은 질문에 다시 대답
+        → 2차 평가(1차와 비교, 대답 성장 점수) → 1·2차 종합 최종 리포트 PDF → 가족(부모·선생님)에게 메일·휴대폰 알림
+   저장: 질문 S.progress.oqs[key] · 답변 글 orals/<uid>_<key>_a {ans,sh,ans2,memo} · 녹음 orauds/<uid>_<key>_<n>, _s<n>, _2_<n>
+         1차 평가 orals/<uid>_<key> · 2차 평가 orals/<uid>_<key>_r2 · 누적 S.progress.oralLog */
+const OR_N=3,OR_THINK=180;
+const OR_MAXS={1:120,s:180,2:120};
 const OR_SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
 const OR_MIC='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/></svg>';
-let OREC=null,ORAU=null,ORT=null;
-S.orals=S.orals||{};S.oans=S.oans||{};S.oLoad=S.oLoad||{};S.oBusy=S.oBusy||{};S.oaud=S.oaud||{};
+let OREC=null,ORAU=null,ORT=null,ORTICK=null;
+S.orals=S.orals||{};S.orals2=S.orals2||{};S.odoc=S.odoc||{};S.oLoad=S.oLoad||{};S.oBusy=S.oBusy||{};S.oaud=S.oaud||{};
 const orQ=i=>(S.progress.oqs||{})[nk(i)];
-const orAns=i=>S.oans[nk(i)]||[];
+const orD=i=>S.odoc[nk(i)]||{ans:[],sh:[],ans2:[],memo:[]};
+const orAns=i=>orD(i).ans;
+const orAud=(uid,key,n,mode)=>uid+'_'+key+'_'+(mode==='s'?'s'+n:mode==2||mode==='2'?'2_'+n:n);
 const orFill=t=>(String(t||'').match(/(^|[\s,.])(음+|어+|으+|그+|아+|저기|뭐지|뭐랄까|그니까|그러니까|약간|막)(?=[\s,.?!]|$)/g)||[]).length;
 const orChars=t=>String(t||'').replace(/\s/g,'').length;
+const orMS=s=>fmtSw(s).replace(/^0/,'');
 function orStat(a){const sec=Math.max(1,+a.sec||0),ch=orChars(a.text),cpm=Math.round(ch/(sec/60));
-  const sp=cpm<200?'조금 느려요':cpm>380?'조금 빨라요':'알맞아요';const ln=sec<40?'짧아요':sec<75?'조금 짧아요':'충분해요';
-  return {sec,ch,cpm,sp,ln,fill:orFill(a.text)}}
+  return {sec,ch,cpm,sp:cpm<200?'조금 느려요':cpm>380?'조금 빨라요':'알맞아요',fill:orFill(a.text)}}
+/* 따라 읽기 정확도: 모범 답안과 받아 적은 글을 글자 단위로 맞춰 본 비율(LCS) */
+function orAcc(model,said){
+  const n=x=>String(x||'').replace(/[^0-9A-Za-z가-힣]/g,'');const a=n(model),b=n(said);if(!a||!b)return null;
+  let prev=new Uint16Array(b.length+1),cur=new Uint16Array(b.length+1);
+  for(let x=1;x<=a.length;x++){for(let y=1;y<=b.length;y++)cur[y]=a[x-1]===b[y-1]?prev[y-1]+1:Math.max(prev[y],cur[y-1]);[prev,cur]=[cur,prev];cur.fill(0)}
+  return Math.round(prev[b.length]/a.length*100)}
 async function orLoad(i,force){
-  const key=nk(i);if(!S.db||(!force&&(S.oans[key]||S.oLoad[key])))return;
+  const key=nk(i);if(!S.db||(!force&&(S.odoc[key]||S.oLoad[key])))return;
   S.oLoad[key]=true;
   try{
-    const [e,a]=await Promise.all([S.db.doc('orals/'+S.id+'_'+key).get(),S.db.doc('orals/'+S.id+'_'+key+'_a').get()]);
-    S.orals[key]=e.exists?clone(e.data()):null;
-    const d=a.exists?clone(a.data()):{};S.oans[key]=Array.isArray(d.ans)?d.ans:[];
-  }catch(err){S.oans[key]=S.oans[key]||[]}
+    const [e,e2,a]=await Promise.all([S.db.doc('orals/'+S.id+'_'+key).get(),S.db.doc('orals/'+S.id+'_'+key+'_r2').get(),S.db.doc('orals/'+S.id+'_'+key+'_a').get()]);
+    S.orals[key]=e.exists?clone(e.data()):null;S.orals2[key]=e2.exists?clone(e2.data()):null;
+    const d=a.exists?clone(a.data()):{};S.odoc[key]={ans:Array.isArray(d.ans)?d.ans:[],sh:Array.isArray(d.sh)?d.sh:[],ans2:Array.isArray(d.ans2)?d.ans2:[],memo:Array.isArray(d.memo)?d.memo:[]};
+  }catch(err){S.odoc[key]=S.odoc[key]||{ans:[],sh:[],ans2:[],memo:[]}}
   S.oLoad[key]=false;renderLayers();
 }
 async function orSaveAns(i){
-  const key=nk(i);const ans=(S.oans[key]||[]).map(a=>a?{q:a.q,text:a.text||'',raw:a.raw||'',sec:a.sec||0,at:a.at||0,mime:a.mime||'',audio:!!a.audio}:null);
-  try{await S.db.doc('orals/'+S.id+'_'+key+'_a').set({uid:S.id,key,ans:clone(ans),at:Date.now()})}catch(e){toast('답변을 저장하지 못했어요. 인터넷 연결을 확인해 주세요.')}
+  const key=nk(i);const D=orD(i);
+  const m=a=>a?{q:a.q,text:a.text||'',raw:a.raw||'',sec:a.sec||0,at:a.at||0,mime:a.mime||'',audio:!!a.audio,acc:a.acc==null?null:a.acc}:null;
+  try{await S.db.doc('orals/'+S.id+'_'+key+'_a').set({uid:S.id,key,ans:clone(D.ans.map(m)),sh:clone(D.sh.map(m)),ans2:clone(D.ans2.map(m)),memo:clone(D.memo.map(x=>String(x||'').slice(0,1500))),at:Date.now()})}
+  catch(e){toast('답변을 저장하지 못했어요. 인터넷 연결을 확인해 주세요.')}
 }
 function orTpl(it){
   const lv={'중1':'경험과 느낌을 중심으로','중2':'이유와 비교를 중심으로','중3':'가치 판단과 사회 적용을 중심으로'}[it.g]||'';
@@ -3415,7 +3447,7 @@ function orTpl(it){
     {q:`영화 「${it.m1}」와 「${it.m2}」의 주인공은 어려움 앞에서 어떻게 달랐나요? 둘 중 누구의 태도를 닮고 싶은지 말해 보세요.`,from:['영화 ①','영화 ②'],tip:'두 인물의 공통점과 차이점을 하나씩 짚어요.'},
     {q:`이달의 주제 '${String(it.topic||'').split(':')[0]}'를 내 생활에 적용한다면 무엇을 바꾸고 싶나요? 세 작품 가운데 하나를 근거로 들어 말해 보세요.`,from:['책','영화 ①','영화 ②'],tip:'작품 속 장면 하나 + 나의 경험 하나를 연결해요.'}]}
 async function genOQs(i,only){
-  const it=items()[i];const key=nk(i);if(S.oBusy[key])return;
+  const it=items()[i];const key=nk(i);if(S.oBusy[key]||S.orals[key])return;
   S.oBusy[key]=only==null?'all':'q'+only;renderLayers();
   const old=orQ(i);const lvl={'중1':'중학교 1학년: 작품 속 사실과 인물의 마음을 이해하고 자기 경험과 연결하는 수준. 어려운 개념어 없이 묻는다.','중2':'중학교 2학년: 인물·작품의 관점을 비교하고 이유를 들어 판단하는 수준.','중3':'중학교 3학년: 가치 판단, 사회 문제 적용, 반대 입장 고려까지 요구하는 외고·자사고 면접 수준.'}[it.g]||'중학생 수준.';
   let out=null;
@@ -3434,20 +3466,24 @@ async function genOQs(i,only){
   else if(out){q.shown[only]=out[0].q;q.from[only]=out[0].from;q.tips[only]=out[0].tip}
   else if(only!=null)toast('새 질문을 만들지 못했어요. 잠시 뒤 다시 눌러 주세요.');
   q.at=Date.now();S.progress.oqs=Object.assign({},S.progress.oqs,{[key]:q});
-  const ans=S.oans[key]||[];let ch=false;
-  q.shown.forEach((t,n)=>{if(ans[n]&&ans[n].q!==t){ans[n]=null;ch=true;S.db.doc('orauds/'+S.id+'_'+key+'_'+n).delete().catch(()=>{});delete S.oaud[key+'_'+n]}});
-  if(ch){S.oans[key]=ans;orSaveAns(i)}
+  const D=orD(i);let ch=false;
+  q.shown.forEach((t,n)=>{if(D.ans[n]&&D.ans[n].q!==t){D.ans[n]=null;ch=true;S.db.doc('orauds/'+orAud(S.id,key,n,1)).delete().catch(()=>{});delete S.oaud[orAud(S.id,key,n,1)]}});
+  if(ch){S.odoc[key]=D;orSaveAns(i)}
   S.oBusy[key]=false;saveProgress();renderLayers();
 }
+/* ---------- 녹음 (mode 1: 1차 대답, 's': 모범 답안 따라 읽기, 2: 2차 대답) ---------- */
 function orMime(){if(!window.MediaRecorder)return '';const c=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];for(const m of c){try{if(MediaRecorder.isTypeSupported(m))return m}catch(e){}}return ''}
 function orSRText(R){
   const segs=R.done.concat(R.cur);const out=[];
   segs.forEach(t=>{t=String(t||'').trim();if(!t)return;const p=out[out.length-1];
     if(p&&t.startsWith(p))out[out.length-1]=t;else if(p&&p.startsWith(t))return;else out.push(t)});
   return out.join(' ').replace(/\s+/g,' ').trim()}
-async function orStart(i,n){
-  if(OREC){toast('녹음 중인 답변을 먼저 완료해 주세요.');return}
-  const q=orQ(i);if(!q||!q.shown[n])return;
+async function orStart(i,n,mode){
+  mode=mode==='s'?'s':+mode===2?2:1;
+  if(OREC){toast('녹음 중인 것을 먼저 완료해 주세요.');return}
+  const key=nk(i);const q=orQ(i);const E1=S.orals[key];if(mode===1&&(!q||!q.shown[n]))return;if(mode!==1&&!(E1&&(E1.answers||[])[n]))return;
+  if(mode===1&&S.orals[key]){toast('1차 평가를 마친 대답은 다시 녹음할 수 없어요. 2차 대답으로 이어가요.');return}
+  if(mode===2){const sh=orD(i).sh[n];if(!sh){toast('모범 답안 따라 읽기를 먼저 해 주세요.');return}if(Date.now()-sh.at<OR_THINK*1000){toast('3분 생각 시간이 끝나면 다시 대답할 수 있어요.');return}if(S.orals2[key]){toast('2차 평가를 마쳤어요.');return}}
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){toast('이 브라우저는 녹음을 지원하지 않아요. 크롬이나 사파리 최신 버전에서 열어 주세요.');return}
   let stream;
   try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
@@ -3455,7 +3491,8 @@ async function orStart(i,n){
   if(ORAU){try{ORAU.pause()}catch(e){}}
   const mime=orMime();let rec;
   try{rec=new MediaRecorder(stream,mime?{mimeType:mime,audioBitsPerSecond:32000}:{audioBitsPerSecond:32000})}catch(e){rec=new MediaRecorder(stream)}
-  const R={i,key:nk(i),n,q:q.shown[n],stream,rec,chunks:[],done:[],cur:[],interim:'',t0:Date.now(),mime:rec.mimeType||mime||'audio/webm',sr:null,stop:false};
+  const qt=mode==='s'?String(E1.answers[n].model||''):mode===2?String(E1.answers[n].q||''):q.shown[n];
+  const R={i,key,n,mode,q:qt,max:OR_MAXS[mode],stream,rec,chunks:[],done:[],cur:[],interim:'',t0:Date.now(),mime:rec.mimeType||mime||'audio/webm',sr:null,stop:false};
   rec.ondataavailable=e=>{if(e.data&&e.data.size)R.chunks.push(e.data)};
   rec.onstop=()=>{orFinish(R)};
   rec.start(1000);
@@ -3464,18 +3501,17 @@ async function orStart(i,n){
     sr.onerror=e=>{R.srErr=e&&e.error};
     sr.onend=()=>{R.done=R.done.concat(R.cur);R.cur=[];R.interim='';if(!R.stop&&OREC===R&&!['not-allowed','service-not-allowed','audio-capture'].includes(R.srErr)&&(R.srN=(R.srN||0)+1)<40){try{sr.start()}catch(x){}}else if(R.stop&&R.srWait)R.srWait()};
     sr.start();R.sr=sr}catch(e){R.sr=null}}
-  OREC=R;R.timer=setInterval(()=>{if((Date.now()-R.t0)/1000>=OR_MAX){orStop();toast('2분이 지나 녹음을 마쳤어요.')}else orLive()},250);
+  OREC=R;R.timer=setInterval(()=>{if((Date.now()-R.t0)/1000>=R.max){orStop();toast(R.max/60+'분이 지나 녹음을 마쳤어요.')}else orLive()},250);
   renderLayers();
 }
 function orLive(){
-  const R=OREC;if(!R)return;const s=Math.min(OR_MAX,(Date.now()-R.t0)/1000);
+  const R=OREC;if(!R)return;const s=Math.min(R.max,(Date.now()-R.t0)/1000);
   const t=$('#or-t'),b=$('#or-b'),l=$('#or-live');
-  if(t)t.textContent=fmtSw(s).replace(/^0/,'')+' / 2:00';if(b)b.style.width=(s/OR_MAX*100).toFixed(1)+'%';
+  if(t){t.textContent=orMS(s)+' / '+orMS(R.max);t.classList.toggle('late',s>=R.max-15)}if(b)b.style.width=(s/R.max*100).toFixed(1)+'%';
   if(l){const tx=(orSRText(R)+' '+R.interim).trim();l.textContent=tx||(R.sr?'말을 시작하면 여기에 글자로 나타나요…':'이 브라우저는 음성 인식을 지원하지 않아요. 녹음이 끝나면 말한 내용을 직접 적어 주세요.')}
-  if(t)t.classList.toggle('late',s>=OR_MAX-15);
 }
 function orStop(discard){
-  const R=OREC;if(!R||R.stop)return;R.stop=true;R.discard=!!discard;clearInterval(R.timer);R.sec=Math.min(OR_MAX,Math.round((Date.now()-R.t0)/1000));
+  const R=OREC;if(!R||R.stop)return;R.stop=true;R.discard=!!discard;clearInterval(R.timer);R.sec=Math.min(R.max,Math.round((Date.now()-R.t0)/1000));
   R.srDone=new Promise(res=>{R.srWait=res;setTimeout(res,1500)});
   if(R.sr){try{R.sr.stop()}catch(e){R.srWait()}}else R.srWait();
   try{R.rec.state!=='inactive'?R.rec.stop():orFinish(R)}catch(e){orFinish(R)}
@@ -3489,162 +3525,285 @@ async function orFinish(R){
   if(OREC===R)OREC=null;
   if(R.discard){renderLayers();return}
   const text=orSRText(R);const blob=new Blob(R.chunks,{type:R.mime.split(';')[0]});
-  if(R.sec<3||(!blob.size&&!text)){toast('녹음이 너무 짧아요. 다시 답변해 주세요.');renderLayers();return}
-  const key=R.key;const ans=S.oans[key]=(S.oans[key]||[]).slice();
+  if(R.sec<3||(!blob.size&&!text)){toast('녹음이 너무 짧아요. 다시 해 주세요.');renderLayers();return}
+  const key=R.key;const D=S.odoc[key]=orD(R.i);const fld=R.mode==='s'?'sh':R.mode===2?'ans2':'ans';
   const a={q:R.q,text,raw:text,sec:R.sec,at:Date.now(),mime:blob.type||R.mime,audio:false};
-  ans[R.n]=a;renderLayers();
+  if(R.mode==='s')a.acc=orAcc(R.q,text);
+  D[fld]=D[fld].slice();D[fld][R.n]=a;renderLayers();
+  const aid=orAud(S.id,key,R.n,R.mode);
   try{
     if(blob.size){const data=await orB64(blob);
-      if(data.length<2300000){await S.db.doc('orauds/'+S.id+'_'+key+'_'+R.n).set({uid:S.id,key,n:R.n,mime:a.mime,sec:a.sec,data,at:a.at});a.audio=true;
-        if(S.oaud[key+'_'+R.n])try{URL.revokeObjectURL(S.oaud[key+'_'+R.n])}catch(e){}S.oaud[key+'_'+R.n]=URL.createObjectURL(blob)}
+      if(data.length<2300000){await S.db.doc('orauds/'+aid).set({uid:S.id,key,n:R.n,mode:String(R.mode),mime:a.mime,sec:a.sec,data,at:a.at});a.audio=true;
+        if(S.oaud[aid])try{URL.revokeObjectURL(S.oaud[aid])}catch(e){}S.oaud[aid]=URL.createObjectURL(blob)}
       else toast('녹음 파일이 너무 커서 소리는 저장하지 않았어요. 말한 내용은 저장했어요.')}
   }catch(e){toast('녹음 소리를 저장하지 못했어요. 말한 내용은 저장했어요.')}
   await orSaveAns(R.i);
-  toast(text?'답변을 저장했어요. 잘못 알아들은 낱말이 있으면 고쳐 주세요.':'녹음을 저장했어요. 녹음을 들으며 말한 내용을 직접 적어 주세요.');
+  toast(R.mode==='s'?'따라 읽기를 마쳤어요. 이제 3분 동안 내 대답을 다시 생각해 봐요.':text?'대답을 저장했어요. 잘못 알아들은 낱말이 있으면 고쳐 주세요.':'녹음을 저장했어요. 녹음을 들으며 말한 내용을 직접 적어 주세요.');
   renderLayers();
 }
-async function orPlay(i,n){
-  const key=nk(i),k=key+'_'+n;
-  if(ORAU&&ORAU._k===k&&!ORAU.paused){ORAU.pause();renderLayers();return}
-  let url=S.oaud[k];
+async function orPlay(aid){
+  if(!aid)return;
+  if(ORAU&&ORAU._k===aid&&!ORAU.paused){ORAU.pause();renderLayers();return}
+  let url=S.oaud[aid];
   if(!url){toast('녹음을 불러오는 중이에요…');
-    try{const d=await S.db.doc('orauds/'+S.id+'_'+k).get();if(!d.exists)throw 0;const x=d.data();
+    try{const d=await S.db.doc('orauds/'+aid).get();if(!d.exists)throw 0;const x=d.data();
       const bin=atob(x.data);const u=new Uint8Array(bin.length);for(let j=0;j<bin.length;j++)u[j]=bin.charCodeAt(j);
-      url=S.oaud[k]=URL.createObjectURL(new Blob([u],{type:x.mime||'audio/webm'}))}catch(e){toast('녹음을 불러오지 못했어요.');return}}
+      url=S.oaud[aid]=URL.createObjectURL(new Blob([u],{type:x.mime||'audio/webm'}))}catch(e){toast('녹음을 불러오지 못했어요.');return}}
   if(ORAU){try{ORAU.pause()}catch(e){}}
-  ORAU=new Audio(url);ORAU._k=k;ORAU.onended=ORAU.onpause=()=>renderLayers();
+  ORAU=new Audio(url);ORAU._k=aid;ORAU.onended=ORAU.onpause=()=>renderLayers();
   ORAU.play().then(()=>renderLayers()).catch(()=>toast('이 기기에서 녹음을 재생하지 못했어요.'));
 }
 const orPlaying=k=>!!(ORAU&&ORAU._k===k&&!ORAU.paused);
+const orPB=(aid,label)=>`<button class="chip orpb" data-act="orplay" data-a="${esc(aid)}" aria-pressed="${orPlaying(aid)}">${orPlaying(aid)?'■ 멈추기':'▶ '+label}</button>`;
+/* 3분 생각 시간: 화면의 [data-cd] 숫자만 1초마다 바꾸고, 끝나면 화면을 다시 그린다 */
+function orTick(){
+  const els=document.querySelectorAll('[data-cd]');
+  if(!els.length){clearInterval(ORTICK);ORTICK=null;return}
+  let fin=false;els.forEach(el=>{const left=Math.ceil((+el.dataset.cd-Date.now())/1000);if(left<=0)fin=true;else el.textContent=orMS(left)});
+  if(fin){clearInterval(ORTICK);ORTICK=null;renderLayers()}
+}
+function orTickOn(){if(!ORTICK)ORTICK=setInterval(orTick,1000);setTimeout(orTick,0)}
+/* ---------- 구술 탭 ---------- */
 function oralHTML(i){
   if(!svAll(i))return svLockHTML(i).replace('논술은 설문을','구술은 설문을');
-  const key=nk(i);const it=items()[i];
-  if(!S.oans[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
-  const q=orQ(i);const busy=S.oBusy[key];
+  const key=nk(i);
+  if(!S.odoc[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
+  const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];
+  const hist0=`<div class="sec"><h3>구술 테스트 기록</h3>${orLogMini(S.progress.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(S.id)}" style="align-self:flex-start">전체 구술 기록 보기</button></div>`;
+  if(ev)return oralR2HTML(i)+hist0;
   if((!q||!Array.isArray(q.shown)||q.shown.length<OR_N)&&!busy){setTimeout(()=>genOQs(i),0)}
   if(busy==='all'||!q||!q.shown||q.shown.length<OR_N)return '<div class="sec"><h3>이달의 구술 질문</h3><div class="sk"></div><div class="sk"></div><p class="hint">구술 질문을 만들고 있어요. 잠시만 기다려 주세요.</p></div>';
-  const ans=orAns(i);const ev=S.orals[key];const R=OREC&&OREC.key===key?OREC:null;
-  const done=q.shown.filter((_,n)=>ans[n]&&String(ans[n].text||'').trim()).length;
-  const evb=S.oralBusy===key;
+  return oralR1HTML(i)+hist0;
+}
+function orRecBox(R){return `<div class="orrec" role="status"><span class="ordot" aria-hidden="true"></span><b id="or-t">${R.stop?'저장하는 중…':'0:00 / '+orMS(R.max)}</b><div class="orbar"><i id="or-b"></i></div><button class="btn" data-act="orstop" ${R.stop?'disabled':''}>완료</button></div><p class="orlive" id="or-live" aria-live="polite"></p>`}
+function orTxBox(i,n,a,mode){return `<label class="ortx">${mode===2?'다시 말한 내용':'내가 말한 내용'} <small class="hint">${a.raw?'음성 인식 결과예요. 잘못 알아들은 낱말만 고쳐 주세요.':'음성 인식이 되지 않았어요. 녹음을 들으며 말한 그대로 적어 주세요.'}</small><textarea data-ortx="${n}" data-m="${mode}" data-i="${i}" rows="4" placeholder="말한 내용을 그대로 적어 주세요">${esc(a.text||'')}</textarea></label>`}
+function oralR1HTML(i){
+  const key=nk(i);const q=orQ(i);const busy=S.oBusy[key];const ans=orAns(i);const R=OREC&&OREC.key===key&&OREC.mode===1?OREC:null;
+  const done=q.shown.filter((_,n)=>ans[n]&&String(ans[n].text||'').trim()).length;const evb=S.oralBusy===key;
   const card=(t,n)=>{
-    const a=ans[n];const rec=R&&R.n===n;const k=key+'_'+n;
-    let body;
-    if(rec)body=`<div class="orrec" role="status"><span class="ordot" aria-hidden="true"></span><b id="or-t">${R.stop?'저장하는 중…':'0:00 / 2:00'}</b><div class="orbar"><i id="or-b"></i></div><button class="btn" data-act="orstop" ${R.stop?'disabled':''}>완료</button></div><p class="orlive" id="or-live" aria-live="polite"></p>`;
+    const a=ans[n];const rec=R&&R.n===n;const aid=orAud(S.id,key,n,1);let body;
+    if(rec)body=orRecBox(R);
     else if(a){const st=orStat(a);
-      body=`<div class="orsv"><span class="tagk">저장됨 · ${fmtSw(a.sec).replace(/^0/,'')}</span>${a.audio?`<button class="chip" data-act="orplay" data-i="${i}" data-n="${n}" aria-pressed="${orPlaying(k)}">${orPlaying(k)?'■ 멈추기':'▶ 들어 보기'}</button>`:''}<button class="chip" data-act="orrec" data-i="${i}" data-n="${n}" ${OREC||evb?'disabled':''}>${OR_MIC}다시 녹음</button>${st.ch?`<small class="hint">${st.ch}자 · 1분에 ${st.cpm}자</small>`:''}</div>
-      <label class="ortx">내가 말한 내용 <small class="hint">${a.raw?'음성 인식 결과예요. 잘못 알아들은 낱말만 고쳐 주세요.':'음성 인식이 되지 않았어요. 녹음을 들으며 말한 그대로 적어 주세요.'}</small><textarea data-ortx="${n}" data-i="${i}" rows="4" placeholder="말한 내용을 그대로 적어 주세요">${esc(a.text||'')}</textarea></label>`}
-    else body=`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${n}" ${OREC||evb?'disabled':''}>${OR_MIC}답변하기</button><small class="hint">누르면 녹음이 바로 시작돼요 · 최대 2분</small></div>`;
+      body=`<div class="orsv"><span class="tagk">저장됨 · ${orMS(a.sec)}</span>${a.audio?orPB(aid,'들어 보기'):''}<button class="chip" data-act="orrec" data-i="${i}" data-n="${n}" data-m="1" ${OREC||evb?'disabled':''}>${OR_MIC}다시 녹음</button>${st.ch?`<small class="hint">${st.ch}자 · 1분에 ${st.cpm}자</small>`:''}</div>${orTxBox(i,n,a,1)}`}
+    else body=`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${n}" data-m="1" ${OREC||evb?'disabled':''}>${OR_MIC}답변하기</button><small class="hint">누르면 녹음이 바로 시작돼요 · 최대 2분</small></div>`;
     const fr=(q.from||[])[n]||[];
     return `<div class="orq${rec?' on':''}${a&&!rec?' ok':''}"><div class="orqh"><b>질문 ${n+1}</b>${fr.length?`<small>${esc(fr.join(' · '))}</small>`:''}<button class="chip orref" data-act="orq1" data-i="${i}" data-n="${n}" ${OREC||busy||evb?'disabled':''} aria-label="질문 ${n+1} 다른 질문으로 바꾸기">${busy==='q'+n?'만드는 중…':'↻ 다른 질문'}</button></div>
       <p class="orqt">${esc(t)}</p>${(q.tips||[])[n]?`<p class="hint ortip">💡 ${esc(q.tips[n])}</p>`:''}${body}</div>`};
-  const log=(S.progress.oralLog||[]).slice(-5).reverse();
-  return `<div class="sec"><h3>이달의 구술 질문</h3>
-    <p class="hint">면접관이 묻는다고 생각하고 질문마다 2분 안에 소리 내어 답해 보세요. [답변하기]를 누르면 녹음이 시작되고, [완료]를 누르면 저장돼요. 세 질문에 모두 답하면 구술 평가를 받을 수 있어요.</p>
+  return `<div class="sec"><h3>이달의 구술 질문 <small class="orstep">1차 대답</small></h3>
+    <p class="hint">면접관이 묻는다고 생각하고 질문마다 2분 안에 소리 내어 답해 보세요. [답변하기]를 누르면 녹음이 시작되고, [완료]를 누르면 저장돼요. 세 질문에 모두 답하면 1차 구술 평가를 받아요. 평가가 끝나면 모범 답안을 따라 읽고 3분 생각한 뒤 다시 대답하는 2차 도전이 열려요.</p>
     ${!OR_SR?'<p class="warn">이 브라우저는 음성 인식을 지원하지 않아 녹음만 돼요. 녹음 뒤 말한 내용을 직접 적어 주세요. 크롬이나 사파리에서는 말한 내용이 자동으로 적혀요.</p>':''}
     ${q.shown.map(card).join('')}
-    <div class="orgo"><button class="btn" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>구술 평가 받기</button><span class="hint">${done<OR_N?`답변 ${done} / ${OR_N}`:'세 답변을 모두 모아 평가해요. 1~2분 걸려요.'}</span></div>
+    <div class="orgo"><button class="btn" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>1차 구술 평가 받기</button><span class="hint">${done<OR_N?`답변 ${done} / ${OR_N}`:'세 답변을 모아 평가해요. 1~2분 걸려요.'}</span></div>
     ${evb?`<p class="hint" role="status" id="or-msg">${esc(S.oralMsg||'')}</p>`:''}
     ${!S.sample?'<p class="warn">Claude 연결이 없어 구술 평가를 받을 수 없어요.</p>':''}
     ${S.oralOff&&S.oralOff.i===i?`<div class="offtopic" role="alert"><b>질문과 맞지 않아요</b><p>${esc(S.oralOff.reason||'답변이 질문과 거리가 멀어 보여요.')}</p><p>질문을 다시 읽고, 내 생각을 담아 다시 녹음한 뒤 평가를 눌러 주세요. 이번 답변은 점수에 반영되지 않았어요.</p></div>`:''}
-    ${ev?`<div class="row"><span class="tagk">구술 평가 완료</span><button class="link" data-act="orview" data-i="${i}">내 구술 평가 보기 · 총점 ${esc(ev.total)}점 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</button></div><p class="hint">다시 녹음하고 평가를 다시 받으면 새 평가로 바뀌고, 누적 기록에는 둘 다 남아요.</p>`:''}
-  </div>
-  <div class="sec"><h3>최근 구술 기록</h3>${log.length?`<div class="orlog">${log.map(x=>`<div><b>${esc(x.total)}</b><span>${esc(x.m)} 「${esc(x.title)}」</span><small class="hint">${esc((x.tags||[]).join(' · '))}</small></div>`).join('')}</div>`:'<p class="hint">아직 구술 평가 기록이 없어요. 첫 평가를 받으면 여기에 쌓이고, 최근 5회 기록으로 반복되는 습관을 짚어 줘요.</p>'}</div>`;
+  </div>`;
 }
+function oralR2HTML(i){
+  const key=nk(i);const ev=S.orals[key];const ev2=S.orals2[key];const D=orD(i);const evb=S.oralBusy===key;
+  let cd=false;
+  const card=(a1,n)=>{
+    const sh=D.sh[n],a2=D.ans2[n];const model=String(a1.model||'');const recS=OREC&&OREC.key===key&&OREC.n===n&&OREC.mode==='s';const rec2=OREC&&OREC.key===key&&OREC.n===n&&OREC.mode===2;
+    const left=sh?Math.ceil((sh.at+OR_THINK*1000-Date.now())/1000):OR_THINK;const thinkOk=sh&&left<=0;
+    const st=a2?3:thinkOk?2:sh?1:0;
+    const li=(k,t)=>`<li class="${st>k?'dn':st===k?'on':''}">${t}</li>`;
+    let body=`<div class="orpair"><span>1차 대답 · ${orMS(a1.sec||0)}</span>${a1.audio?orPB(orAud(S.id,key,n,1),'1차 대답 다시 듣기'):''}</div>
+      <details class="orprev"><summary>1차에 말한 내용과 선생님 지적</summary><p>${esc(a1.text)}</p>${a1.problem?`<p class="swm"><i>－</i>${esc(a1.problem)}</p>`:''}</details>
+      <div class="ormodel"><b>모범 답안</b><p>${esc(model)}</p></div>`;
+    if(st===0)body+=recS?orRecBox(OREC):`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${n}" data-m="s" ${OREC||evb?'disabled':''}>${OR_MIC}모범 답안 따라 읽기</button><small class="hint">소리 내어 또박또박 읽어요 · 최대 3분</small></div>`;
+    else body+=`<div class="orsv"><span class="tagk">따라 읽기 · ${orMS(sh.sec)}</span>${sh.audio?orPB(orAud(S.id,key,n,'s'),'따라 읽기 듣기'):''}${sh.acc!=null?`<small class="hint">모범 답안과 ${sh.acc}% 같게 읽었어요</small>`:''}</div>`;
+    if(st===1){cd=true;body+=`<div class="orthink" role="timer"><b>생각 시간</b><span class="orcd" data-cd="${sh.at+OR_THINK*1000}">${orMS(left)}</span><small class="hint">모범 답안에서 배운 점을 살려 내 생각으로 다시 말할 내용을 정리해요. 3분이 지나면 다시 대답하기가 열려요.</small></div>`}
+    if(st>=1&&!a2)body+=`<label class="ortx">생각 메모 <small class="hint">선택 · 나만 봐요</small><textarea data-ormemo="${n}" data-i="${i}" rows="3" placeholder="결론 → 근거 두 가지 → 마무리 순서로 적어 봐요">${esc(D.memo[n]||'')}</textarea></label>`;
+    if(st===2)body+=rec2?orRecBox(OREC):`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${n}" data-m="2" ${OREC||evb?'disabled':''}>${OR_MIC}다시 대답하기</button><small class="hint">같은 질문에 다시 답해요 · 최대 2분</small></div>`;
+    if(st===3){const s2=orStat(a2);body+=rec2?orRecBox(OREC):`<div class="orsv"><span class="tagk">2차 대답 · ${orMS(a2.sec)}</span>${a2.audio?orPB(orAud(S.id,key,n,2),'2차 대답 듣기'):''}${ev2?'':`<button class="chip" data-act="orrec" data-i="${i}" data-n="${n}" data-m="2" ${OREC||evb?'disabled':''}>${OR_MIC}다시 녹음</button>`}${s2.ch?`<small class="hint">${s2.ch}자 · 1분에 ${s2.cpm}자</small>`:''}</div>${ev2?`<p class="orprevt">${esc(a2.text)}</p>`:orTxBox(i,n,a2,2)}`}
+    return `<div class="orq${recS||rec2?' on':''}${st===3?' ok':''}"><div class="orqh"><b>질문 ${n+1}</b></div><p class="orqt">${esc(a1.q)}</p>
+      <ol class="steps orsteps" aria-label="2차 도전 순서">${li(0,'따라 읽기')}${li(1,'3분 생각')}${li(2,'다시 대답')}</ol>${body}</div>`};
+  const ready=(ev.answers||[]).every((a,n)=>D.ans2[n]&&String(D.ans2[n].text||'').trim());
+  if(cd)setTimeout(orTickOn,0);
+  return `<div class="sec"><div class="orsum"><div><small>1차 총점</small><b>${esc(ev.total)}</b></div>${ev2?`<div><small>2차 총점</small><b>${esc(ev2.total)}</b></div><div class="g"><small>성장 점수</small><b>${esc(ev2.growth)}</b></div>`:''}<button class="link" data-act="orview" data-i="${i}" data-r="1">1차 평가 보기</button>${ev2?`<button class="link" data-act="orview" data-i="${i}" data-r="2">최종 리포트 보기</button>`:''}</div></div>
+  <div class="sec"><h3>2차 도전 <small class="orstep">따라 읽고, 생각하고, 다시 대답하기</small></h3>
+    <p class="hint">질문마다 1차 대답을 다시 들어 보고, 모범 답안을 소리 내어 따라 읽어요. 따라 읽기를 마치면 3분 생각 시간이 주어지고, 그다음 같은 질문에 다시 대답해요. 세 질문을 모두 다시 대답하면 2차 평가에서 1차와 비교해 대답 성장 점수를 받아요.</p>
+    ${(ev.answers||[]).map(card).join('')}
+    ${ev2?`<div class="praise"><b>2차 평가 완료 · 1차 ${esc(ev.total)}점 → 2차 ${esc(ev2.total)}점 · 성장 점수 ${esc(ev2.growth)}점</b><p>${ev2.sentAt?`최종 리포트를 ${esc((ev2.sentTo||[]).join(', '))}님께 이메일과 휴대폰 알림으로 보냈어요.`:'가족으로 연결된 부모님·선생님이 있으면 최종 리포트를 이메일과 휴대폰 알림으로 보내 드려요.'}</p></div>`
+      :`<div class="orgo"><button class="btn" data-act="oreval2" data-i="${i}" ${!ready||OREC||evb||!S.sample?'disabled':''}>2차 평가 받기</button><span class="hint">${ready?'1차와 비교해 평가하고 최종 리포트를 만들어요. 1~2분 걸려요.':`다시 대답 ${(ev.answers||[]).filter((a,n)=>D.ans2[n]&&String(D.ans2[n].text||'').trim()).length} / ${OR_N}`}</span></div>`}
+    ${evb?`<p class="hint" role="status" id="or-msg">${esc(S.oralMsg||'')}</p>`:''}
+    ${S.orSend&&S.orSend.key===key?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:''}
+  </div>`;
+}
+/* ---------- 1차 평가 ---------- */
 async function oralEval(i){
   const key=nk(i);const it=items()[i];const q=orQ(i);const ans=orAns(i);
   if(S.oralBusy||!S.sample||!q)return;
   if(q.shown.some((_,n)=>!ans[n]||!String(ans[n].text||'').trim())){toast('세 질문에 모두 답하고, 말한 내용이 적혀 있는지 확인해 주세요.');return}
-  S.oralOff=null;S.oralBusy=key;S.oralMsg='구술 평가를 시작했어요. 1~2분 걸리니 이 창을 닫지 말아 주세요.';renderLayers();
+  S.oralOff=null;S.oralBusy=key;S.oralMsg='1차 구술 평가를 시작했어요. 1~2분 걸리니 이 창을 닫지 말아 주세요.';renderLayers();
   try{
     const A=q.shown.map((t,n)=>{const a=ans[n];const st=orStat(a);return {q:t,text:String(a.text).trim(),edited:!!a.raw&&a.raw.trim()!==String(a.text).trim(),sec:st.sec,chars:st.ch,cpm:st.cpm,fill:st.fill,stt:!!a.raw}});
     const prev=(S.progress.oralLog||[]).slice(-5);
-    const prompt=`너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 구술면접을 지도해 온 최고의 면접 강사다. 중학생 제자가 녹음한 구술 답변을 논술 첨삭처럼 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g} (이 학년 수준에 맞춰 기대치를 정한다)\n- 책: 「${it.book}」\n- 영화: 「${it.m1}」, 「${it.m2}」\n- 이달의 주제: ${it.topic}\n- 답변 시간: 질문마다 최대 2분\n\n[학생 답변]\n${A.map((a,n)=>`<답변 ${n+1}>\n질문: ${a.q}\n말한 시간: ${a.sec}초 · ${a.chars}자 · 1분에 ${a.cpm}자 · 군말로 보이는 말 ${a.fill}회${a.stt?(a.edited?' · 음성 인식 결과를 학생이 일부 고침':' · 음성 인식 결과'):' · 학생이 녹음을 듣고 직접 받아 적음'}\n말한 내용: ${a.text}`).join('\n\n')}\n\n[알아 둘 점]\n말한 내용은 휴대폰 음성 인식으로 받아 적은 글이라 문장부호와 띄어쓰기가 없거나 낱말을 잘못 알아들었을 수 있다. 맞춤법·띄어쓰기·문장부호는 평가하지 않는다. 앞뒤가 맞지 않는 낱말 하나는 인식 오류로 보고 너그럽게 읽는다. 대신 말하기 자체(군말 '음, 어, 그, 약간, 막' 반복, 끝맺지 못한 문장, 같은 말 되풀이, 구어체 비속어, 너무 짧거나 긴 답, 말하는 속도)는 평가한다. 우리말 발표 속도는 1분에 250~350자 안팎이 알맞다.\n\n[최근 구술 평가 기록(최대 5회)]\n${prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 총점 ${x.total}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 구술 평가)'}\n\n[주제 일치 확인: 가장 먼저 한다]\n세 답변이 모두 질문과 전혀 상관없거나(장난, 노래, 다른 이야기, 의미 없는 말) 거의 아무 말도 하지 않았다면 첨삭하지 말고 {"offTopic":true,"reason":"왜 질문과 맞지 않는지 학생에게 다정하게 1~2문장"}만 출력한다. 하나라도 질문에 답하려 했으면 offTopic이 아니다. 질문과 동떨어진 답변이 일부 있으면 그 답변의 problem에 분명히 쓴다.\n\n[첨삭 기준]\n1. scores: 이해, 논리, 근거, 표현, 전달력, 태도 각 70~100의 정수. 이해=질문과 작품을 정확히 이해했는가, 논리=주장-이유-결론의 흐름, 근거=작품 속 장면·인물·경험을 구체적으로 들었는가, 표현=어휘와 문장의 완결성, 전달력=군말·속도·말한 시간·끝맺음, 태도=자신감 있고 성실하게 끝까지 답했는가(말한 시간과 분량, 자기 생각을 분명히 밝혔는지로 판단). 점수 구간: 95~100(아주 뛰어남), 86~94, 76~85, 70~75. 학생에게 긍정적인 동기를 주기 위해 어떤 항목도 70점 아래로 주지 않는다. 부족한 항목도 70~75로 주되 고칠 점은 분명히 알려 준다.\n2. scoreWhy: 여섯 항목 각각 {plus:[가점 요인 1~2개], minus:[감점 요인 1~2개]}. 학생이 실제로 한 말이나 말하기 습관을 짚어 한 문장(45자 안팎)으로 쓰고 점수와 어긋나지 않게 한다. 감점 요인에는 고치는 방향을 덧붙인다. 둘 다 비워 두지 않는다.\n3. answers: 답변마다 하나씩 정확히 ${OR_N}개. 각각\n  - no: 답변 번호\n  - summary: 학생 답의 핵심 주장 한 문장\n  - good: 잘한 점 한두 문장(실제로 한 말을 짚어서)\n  - problem: 아쉬운 점과 고치는 방법 한두 문장\n  - marks: 말한 내용 위에 직접 하는 첨삭 표시 최대 6개. 각각 find(말한 내용에 있는 그대로의 짧은 구절 2~12자, 그 답변 안에서 한 번만 나오는 구절), kind("delete"=빼야 할 군말·되풀이, "replace"=더 알맞은 말로 바꿈(fix에 바꿀 말), "insert"=find 앞에 넣을 말(fix), "good"=잘한 표현, "wave"=논리가 약하거나 모호한 부분), fix, note(20자 안팎 지도 한 줄)\n  - sentences: 말한 문장 지도 최대 3개(잘한 문장 1개 포함). 각각 orig(말한 내용에 있는 그대로), grade("잘함"|"보통"|"고침"), why(한두 문장), fix(더 좋게 말하는 문장. "잘함"이면 빈 문자열)\n  - better: 학생이 한 말과 생각을 그대로 살려, 2분 안에 또렷하게 말할 수 있게 다듬은 답. 말하는 문체(~습니다/~요)로 280~380자. 첫 문장에서 결론을 먼저 말하고, 근거 두 가지, 마무리 한 문장 구조.\n  - model: 같은 질문에 대한 모범 답안. 최상위권 ${it.g} 학생이 2분 안에 말할 수 있는 분량(320~420자), 말하는 문체, 작품 속 구체적인 장면을 근거로 든다. 확실하지 않은 작품 내용은 지어내지 않는다.\n  - followUp: 실제 면접관이 이어서 물을 꼬리 질문 1개\n4. comment: 총평 3~4문장. 세 답변을 아울러 말하기 습관과 생각의 깊이를 평가한다.\n5. praise: 실제로 잘한 말과 태도를 구체적으로 짚어 칭찬하고 앞으로도 자신 있게 말하도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(바로 연습할 수 있는 방법 포함).\n7. tags: 이번 구술의 대표 약점 유형 키워드 최대 4개(예: "결론 먼저 말하기", "근거 부족", "군말", "짧은 답변", "말끝 흐림").\n8. cumulative: 최근 기록과 이번 구술을 합쳐 반복되는 습관과 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 구술 평가라고 밝히고 이번의 우선 과제를 쓴다.\n9. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n\nJSON 객체 하나만 출력한다. 형식:\n{"offTopic":false,"scores":{"이해":0,"논리":0,"근거":0,"표현":0,"전달력":0,"태도":0},"scoreWhy":{"이해":{"plus":[""],"minus":[""]},"논리":{"plus":[""],"minus":[""]},"근거":{"plus":[""],"minus":[""]},"표현":{"plus":[""],"minus":[""]},"전달력":{"plus":[""],"minus":[""]},"태도":{"plus":[""],"minus":[""]}},"answers":[{"no":1,"summary":"","good":"","problem":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"sentences":[{"orig":"","grade":"보통","why":"","fix":""}],"better":"","model":"","followUp":""}],"comment":"","praise":"","strengths":[],"improvements":[],"tags":[],"cumulative":"","teacher":""}`;
+    const prompt=`너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 구술면접을 지도해 온 최고의 면접 강사다. 중학생 제자가 녹음한 구술 답변을 논술 첨삭처럼 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g} (이 학년 수준에 맞춰 기대치를 정한다)\n- 책: 「${it.book}」\n- 영화: 「${it.m1}」, 「${it.m2}」\n- 이달의 주제: ${it.topic}\n- 답변 시간: 질문마다 최대 2분\n\n[학생 답변]\n${A.map((a,n)=>`<답변 ${n+1}>\n질문: ${a.q}\n말한 시간: ${a.sec}초 · ${a.chars}자 · 1분에 ${a.cpm}자 · 군말로 보이는 말 ${a.fill}회${a.stt?(a.edited?' · 음성 인식 결과를 학생이 일부 고침':' · 음성 인식 결과'):' · 학생이 녹음을 듣고 직접 받아 적음'}\n말한 내용: ${a.text}`).join('\n\n')}\n\n${OR_NOTE}\n\n[최근 구술 테스트 기록(최대 5회)]\n${orPrevText(prev)}\n\n[주제 일치 확인: 가장 먼저 한다]\n세 답변이 모두 질문과 전혀 상관없거나(장난, 노래, 다른 이야기, 의미 없는 말) 거의 아무 말도 하지 않았다면 첨삭하지 말고 {"offTopic":true,"reason":"왜 질문과 맞지 않는지 학생에게 다정하게 1~2문장"}만 출력한다. 하나라도 질문에 답하려 했으면 offTopic이 아니다. 질문과 동떨어진 답변이 일부 있으면 그 답변의 problem에 분명히 쓴다.\n\n[첨삭 기준]\n${OR_SCORE}\n3. answers: 답변마다 하나씩 정확히 ${OR_N}개. 각각\n  - no: 답변 번호\n  - summary: 학생 답의 핵심 주장 한 문장\n  - good: 잘한 점 한두 문장(실제로 한 말을 짚어서)\n  - problem: 아쉬운 점과 고치는 방법 한두 문장\n  - marks: ${OR_MARKS}\n  - sentences: 말한 문장 지도 최대 3개(잘한 문장 1개 포함). 각각 orig(말한 내용에 있는 그대로), grade("잘함"|"보통"|"고침"), why(한두 문장), fix(더 좋게 말하는 문장. "잘함"이면 빈 문자열)\n  - better: 학생이 한 말과 생각을 그대로 살려, 2분 안에 또렷하게 말할 수 있게 다듬은 답. 말하는 문체(~습니다/~요)로 280~380자. 첫 문장에서 결론을 먼저 말하고, 근거 두 가지, 마무리 한 문장 구조.\n  - model: 같은 질문에 대한 모범 답안. 학생이 소리 내어 따라 읽을 글이므로 최상위권 ${it.g} 학생이 2분 안에 말할 수 있는 분량(320~420자), 말하는 문체로 쓰고 작품 속 구체적인 장면을 근거로 든다. 확실하지 않은 작품 내용은 지어내지 않는다.\n  - followUp: 실제 면접관이 이어서 물을 꼬리 질문 1개\n4. comment: 총평 3~4문장. 세 답변을 아울러 말하기 습관과 생각의 깊이를 평가한다.\n5. praise: 실제로 잘한 말과 태도를 구체적으로 짚어 칭찬하고 앞으로도 자신 있게 말하도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(바로 연습할 수 있는 방법 포함).\n7. tags: 이번 구술의 대표 약점 유형 키워드 최대 4개(예: "결론 먼저 말하기", "근거 부족", "군말", "짧은 답변", "말끝 흐림").\n8. cumulative: 최근 기록과 이번 구술을 합쳐 반복되는 습관과 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 구술 테스트라고 밝히고 이번의 우선 과제를 쓴다.\n9. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n\nJSON 객체 하나만 출력한다. 형식:\n{"offTopic":false,"scores":${OR_SC_JSON},"scoreWhy":${OR_SW_JSON},"answers":[{"no":1,"summary":"","good":"","problem":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"sentences":[{"orig":"","grade":"보통","why":"","fix":""}],"better":"","model":"","followUp":""}],"comment":"","praise":"","strengths":[],"improvements":[],"tags":[],"cumulative":"","teacher":""}`;
     const ev=await S.sample.json(prompt,{cache:false,modelTier:'complex',onText:({text})=>{const el=$('#or-msg');if(el)el.textContent='구술 평가 중이에요… ('+text.length+'자 작성됨)'}});
     if(ev&&ev.offTopic===true){S.oralBusy='';S.oralOff={i,reason:String(ev.reason||'').slice(0,300)};renderLayers();toast('질문과 맞지 않는 답변이에요. 다시 녹음해 주세요.');return}
     if(!ev||typeof ev!=='object'||!ev.scores||!Array.isArray(ev.answers))throw {code:'invalid_json'};
-    ev.scores=Object.fromEntries(Object.entries(ev.scores).map(([k,v])=>[k,Math.max(70,Math.min(100,scv(v)))]));
-    const nums=Object.values(ev.scores).map(Number).filter(x=>!isNaN(x));
-    const total=nums.length?Math.round(nums.reduce((a,b)=>a+b,0)/nums.length):0;
-    const at=Date.now();
-    const rec={...ev,answers:A.map((a,n)=>Object.assign({},(ev.answers||[]).find(x=>+x.no===n+1)||ev.answers[n]||{},{no:n+1,q:a.q,text:a.text,sec:a.sec,chars:a.chars,cpm:a.cpm,fill:a.fill,audio:!!(ans[n]&&ans[n].audio)})),total,at,title:it.book,g:it.g,m:it.m,kw:String(it.topic||'').split(':')[0].trim(),uid:S.id};
+    const {scores,total}=orScore(ev.scores);const at=Date.now();
+    const rec={...ev,scores,answers:A.map((a,n)=>Object.assign({},(ev.answers||[]).find(x=>+x.no===n+1)||ev.answers[n]||{},{no:n+1,q:a.q,text:a.text,sec:a.sec,chars:a.chars,cpm:a.cpm,fill:a.fill,audio:!!(ans[n]&&ans[n].audio)})),total,at,title:it.book,g:it.g,m:it.m,kw:String(it.topic||'').split(':')[0].trim(),uid:S.id,round:1};
     await S.db.doc('orals/'+S.id+'_'+key).set(clone(rec));
-    S.progress.oralLog=[...(S.progress.oralLog||[]),{at,key,title:it.book,m:it.g+' '+it.m,total,tags:(ev.tags||[]).map(String).slice(0,4),improve:(ev.improvements||[]).map(String).slice(0,3)}].slice(-10);
+    const log=(S.progress.oralLog||[]).filter(x=>x.key!==key||x.t2!=null);
+    log.push({at,key,title:it.book,m:it.g+' '+it.m,total,t1:total,sc:scores,tags:(ev.tags||[]).map(String).slice(0,4),improve:(ev.improvements||[]).map(String).slice(0,3)});
+    S.progress.oralLog=log.slice(-100);
     S.progress.orDone=Object.assign({},S.progress.orDone,{[key]:1});saveProgress();
-    S.orals[key]=rec;S.oralBusy='';S.oralView={key,i};renderLayers();toast('구술 평가가 끝났어요.');
-  }catch(e){
-    S.oralBusy='';const c=e&&e.code;
-    toast(c==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':c==='invalid_json'||c==='bad_json'?'평가 결과가 중간에 끊겼어요. 한 번 더 눌러 주세요.':'구술 평가를 하지 못했어요. 잠시 뒤 다시 눌러 주세요.');
-    renderLayers();
-  }
+    S.orals[key]=rec;S.oralBusy='';orOpen(S.id,key,1,i);toast('1차 구술 평가가 끝났어요. 모범 답안을 따라 읽고 2차 도전을 해 봐요.');
+  }catch(e){S.oralBusy='';orErr(e,'구술 평가를 하지 못했어요. 잠시 뒤 다시 눌러 주세요.')}
 }
-/* 말한 내용 위에 첨삭 표시: pdf면 인쇄용 인라인 스타일 */
+const OR_NOTE=`[알아 둘 점]\n말한 내용은 휴대폰 음성 인식으로 받아 적은 글이라 문장부호와 띄어쓰기가 없거나 낱말을 잘못 알아들었을 수 있다. 맞춤법·띄어쓰기·문장부호는 평가하지 않는다. 앞뒤가 맞지 않는 낱말 하나는 인식 오류로 보고 너그럽게 읽는다. 대신 말하기 자체(군말 '음, 어, 그, 약간, 막' 반복, 끝맺지 못한 문장, 같은 말 되풀이, 구어체 비속어, 너무 짧거나 긴 답, 말하는 속도)는 평가한다. 우리말 발표 속도는 1분에 250~350자 안팎이 알맞다.`;
+const OR_SCORE=`1. scores: 이해, 논리, 근거, 표현, 전달력, 태도 각 70~100의 정수. 이해=질문과 작품을 정확히 이해했는가, 논리=주장-이유-결론의 흐름, 근거=작품 속 장면·인물·경험을 구체적으로 들었는가, 표현=어휘와 문장의 완결성, 전달력=군말·속도·말한 시간·끝맺음, 태도=자신감 있고 성실하게 끝까지 답했는가(말한 시간과 분량, 자기 생각을 분명히 밝혔는지로 판단). 점수 구간: 95~100(아주 뛰어남), 86~94, 76~85, 70~75. 학생에게 긍정적인 동기를 주기 위해 어떤 항목도 70점 아래로 주지 않는다. 부족한 항목도 70~75로 주되 고칠 점은 분명히 알려 준다.\n2. scoreWhy: 여섯 항목 각각 {plus:[가점 요인 1~2개], minus:[감점 요인 1~2개]}. 학생이 실제로 한 말이나 말하기 습관을 짚어 한 문장(45자 안팎)으로 쓰고 점수와 어긋나지 않게 한다. 감점 요인에는 고치는 방향을 덧붙인다. 둘 다 비워 두지 않는다.`;
+const OR_MARKS=`말한 내용 위에 직접 하는 첨삭 표시 최대 6개. 각각 find(말한 내용에 있는 그대로의 짧은 구절 2~12자, 그 답변 안에서 한 번만 나오는 구절), kind("delete"=빼야 할 군말·되풀이, "replace"=더 알맞은 말로 바꿈(fix에 바꿀 말), "insert"=find 앞에 넣을 말(fix), "good"=잘한 표현, "wave"=논리가 약하거나 모호한 부분), fix, note(20자 안팎 지도 한 줄)`;
+const OR_SC_JSON='{"이해":0,"논리":0,"근거":0,"표현":0,"전달력":0,"태도":0}';
+const OR_SW_JSON='{"이해":{"plus":[""],"minus":[""]},"논리":{"plus":[""],"minus":[""]},"근거":{"plus":[""],"minus":[""]},"표현":{"plus":[""],"minus":[""]},"전달력":{"plus":[""],"minus":[""]},"태도":{"plus":[""],"minus":[""]}}';
+const orPrevText=prev=>prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 1차 ${x.t1??x.total}점${x.t2!=null?` → 2차 ${x.t2}점, 성장 점수 ${x.growth}`:''}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 구술 테스트)';
+function orScore(sc){const scores=Object.fromEntries(Object.entries(sc||{}).map(([k,v])=>[k,Math.max(70,Math.min(100,scv(v)))]));const nums=Object.values(scores).map(Number).filter(x=>!isNaN(x));return {scores,total:nums.length?Math.round(nums.reduce((a,b)=>a+b,0)/nums.length):0}}
+function orErr(e,msg){const c=e&&e.code;toast(c==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':c==='invalid_json'||c==='bad_json'?'평가 결과가 중간에 끊겼어요. 한 번 더 눌러 주세요.':msg);renderLayers()}
+/* ---------- 2차 평가: 1차와 비교, 대답 성장 점수 ---------- */
+async function oralEval2(i){
+  const key=nk(i);const it=items()[i];const ev=S.orals[key];const D=orD(i);
+  if(S.oralBusy||!S.sample||!ev||S.orals2[key])return;
+  if((ev.answers||[]).some((_,n)=>!D.ans2[n]||!String(D.ans2[n].text||'').trim())){toast('세 질문에 모두 다시 대답하고, 말한 내용이 적혀 있는지 확인해 주세요.');return}
+  S.oralBusy=key;S.oralMsg='2차 구술 평가를 시작했어요. 1차와 비교하느라 1~2분 걸려요. 이 창을 닫지 말아 주세요.';renderLayers();
+  try{
+    const A=(ev.answers||[]).map((a1,n)=>{const a=D.ans2[n];const st=orStat(a);const sh=D.sh[n]||{};return {q:a1.q,t1:a1.text,p1:a1.problem||'',model:a1.model||'',acc:sh.acc,shSec:sh.sec||0,think:String(D.memo[n]||'').trim(),text:String(a.text).trim(),edited:!!a.raw&&a.raw.trim()!==String(a.text).trim(),sec:st.sec,chars:st.ch,cpm:st.cpm,fill:st.fill,stt:!!a.raw}});
+    const prev=(S.progress.oralLog||[]).filter(x=>x.key!==key).slice(-5);
+    const prompt=`너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 구술면접을 지도해 온 최고의 면접 강사다. 중학생 제자가 1차 구술 첨삭을 받은 뒤, 모범 답안을 소리 내어 따라 읽고 3분 동안 생각한 다음 같은 질문에 다시 대답했다. 2차 대답을 첨삭하고 1차와 비교해 얼마나 성장했는지 평가하라. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」 / 영화: 「${it.m1}」, 「${it.m2}」 / 주제: ${it.topic}\n- 1차 총점: ${ev.total}점, 1차 항목 점수: ${Object.entries(ev.scores||{}).map(([k,v])=>k+' '+v).join(', ')}\n- 1차 고칠 점: ${(ev.improvements||[]).join(' / ')}\n\n${A.map((a,n)=>`<질문 ${n+1}> ${a.q}\n[1차 대답] ${a.t1}\n[1차에서 지적한 점] ${a.p1}\n[모범 답안] ${a.model}\n[따라 읽기] ${a.shSec}초${a.acc!=null?`, 모범 답안과 ${a.acc}% 같게 읽음`:''}\n[생각 메모] ${a.think||'없음'}\n[2차 대답] 말한 시간 ${a.sec}초 · ${a.chars}자 · 1분에 ${a.cpm}자 · 군말 ${a.fill}회${a.stt?(a.edited?' · 음성 인식 결과를 학생이 일부 고침':' · 음성 인식 결과'):' · 학생이 직접 받아 적음'}\n${a.text}`).join('\n\n')}\n\n${OR_NOTE}\n\n[최근 구술 테스트 기록(최대 5회)]\n${orPrevText(prev)}\n\n[평가 기준]\n${OR_SCORE}\n   2차 점수는 2차 대답만 보고 1차와 같은 기준으로 매긴다.\n3. growth: 대답 성장 점수(70~100 정수). 1차 대비 2차가 얼마나 나아졌는지를 본다. 결론을 먼저 말하기, 근거의 구체성, 구조, 군말·말끝, 1차 지적 사항 반영을 따진다. 모범 답안을 거의 그대로 외워 말한 부분은 성장으로 보지 않고, 자기 생각을 살리면서 모범 답안에서 배운 구조·근거·표현을 가져온 것을 높이 평가한다. 실제로 나아진 만큼 주되 70점 아래로 주지 않는다. 95~100은 눈에 띄게 달라진 경우.\n4. growthWhy: 성장 점수의 이유 {plus:[나아진 점 2~3개], minus:[아직 남은 과제 1~2개]}. 1차와 2차에 실제로 한 말을 짚어 한 문장씩 쓴다.\n5. answers: 질문마다 하나씩 정확히 ${OR_N}개. 각각\n  - no, summary(2차 대답의 핵심 주장 한 문장)\n  - growth: 이 질문의 대답 성장 점수(70~100)\n  - improved: 1차보다 나아진 점 한두 문장(1차와 2차 표현을 나란히 짚어서)\n  - still: 아직 부족한 점과 다음 연습 방법 한두 문장\n  - copied: 모범 답안을 거의 그대로 외워 말했으면 true, 아니면 false\n  - marks: 2차 대답에 대한 ${OR_MARKS}\n  - sentences: 2차 대답의 문장 지도 최대 2개. 각각 orig, grade("잘함"|"보통"|"고침"), why, fix\n6. growthComment: 1·2차를 비교한 성장 총평 3~4문장.\n7. comment: 2차 대답의 총평 2~3문장.\n8. praise: 다시 도전해 나아진 점을 구체적으로 칭찬하고 격려하는 따뜻한 멘트 3~4문장. 반드시 쓴다.\n9. strengths: 잘한 점 3개. improvements: 다음 구술 테스트까지 연습할 점 3개(구체적인 방법 포함).\n10. tags: 2차 이후에도 남은 약점 키워드 최대 4개.\n11. cumulative: 최근 기록과 이번 1·2차를 합쳐 반복되는 습관과 나아지는 흐름, 앞으로의 과제를 4~6문장으로 쓴다.\n12. nextGoal: 다음 구술 테스트의 목표 한 문장.\n13. teacher: 부모님도 읽는 선생님 한마디. 성장을 칭찬하는 한 문장과 가장 중요한 다음 과제 한두 문장, 총 3문장 이내.\n\nJSON 객체 하나만 출력한다. 형식:\n{"scores":${OR_SC_JSON},"scoreWhy":${OR_SW_JSON},"growth":0,"growthWhy":{"plus":[""],"minus":[""]},"answers":[{"no":1,"summary":"","growth":0,"improved":"","still":"","copied":false,"marks":[{"find":"","kind":"replace","fix":"","note":""}],"sentences":[{"orig":"","grade":"보통","why":"","fix":""}]}],"growthComment":"","comment":"","praise":"","strengths":[],"improvements":[],"tags":[],"cumulative":"","nextGoal":"","teacher":""}`;
+    const r=await S.sample.json(prompt,{cache:false,modelTier:'complex',onText:({text})=>{const el=$('#or-msg');if(el)el.textContent='2차 평가 중이에요… ('+text.length+'자 작성됨)'}});
+    if(!r||typeof r!=='object'||!r.scores||!Array.isArray(r.answers))throw {code:'invalid_json'};
+    const {scores,total}=orScore(r.scores);const cl=v=>Math.max(70,Math.min(100,Math.round(+v)||70));const at=Date.now();
+    const answers=A.map((a,n)=>{const x=(r.answers||[]).find(y=>+y.no===n+1)||r.answers[n]||{};const a2=D.ans2[n];return Object.assign({},x,{no:n+1,q:a.q,text:a.text,sec:a.sec,chars:a.chars,cpm:a.cpm,fill:a.fill,growth:cl(x.growth),audio:!!(a2&&a2.audio),shAcc:a.acc,shSec:a.shSec,shAudio:!!(D.sh[n]&&D.sh[n].audio)})});
+    const rec={...r,scores,total,growth:cl(r.growth),answers,firstTotal:ev.total,firstScores:ev.scores,at,firstAt:ev.at,title:it.book,g:it.g,m:it.m,kw:ev.kw||'',uid:S.id,round:2};
+    await S.db.doc('orals/'+S.id+'_'+key+'_r2').set(clone(rec));
+    const log=(S.progress.oralLog||[]).slice();let e=log.slice().reverse().find(x=>x.key===key);
+    if(!e){e={at:ev.at,key,title:it.book,m:it.g+' '+it.m,t1:ev.total,sc:ev.scores};log.push(e)}
+    Object.assign(e,{total,t2:total,growth:rec.growth,sc2:scores,at2:at,tags:(r.tags||[]).map(String).slice(0,4),improve:(r.improvements||[]).map(String).slice(0,3)});
+    S.progress.oralLog=log.slice(-100);saveProgress();
+    S.orals2[key]=rec;S.oralBusy='';orOpen(S.id,key,2,i);toast('2차 평가가 끝났어요. 최종 리포트를 만들었어요.');
+    orSendReport(i,false);
+  }catch(e){S.oralBusy='';orErr(e,'2차 평가를 하지 못했어요. 잠시 뒤 다시 눌러 주세요.')}
+}
+/* ---------- 최종 리포트 보내기 (부모·선생님) ---------- */
+async function orSendReport(i,manual){
+  const key=nk(i);const ev=S.orals[key],ev2=S.orals2[key];const SV=window.__002&&window.__002.server;
+  if(!ev||!ev2)return;
+  if(!SV){if(manual)toast('이 화면에서는 리포트를 보낼 수 없어요. 002book.com에서 열어 주세요.');return}
+  try{
+    const chk=await SV.call('oral.report',{key,check:true});
+    if(!chk||!chk.to||!chk.to.length){if(manual)toast('가족으로 연결된 부모님·선생님이 없어요. 친구 화면에서 가족을 맺으면 리포트를 보낼 수 있어요.');return}
+    S.orSend={key,msg:`최종 리포트를 ${chk.to.join(', ')}님께 보내는 중이에요…`};renderLayers();
+    const {pdf,fname}=await orReportPdf(ev,ev2,true);
+    const data=await orB64(pdf.output('blob'));
+    const r=await SV.call('oral.report',{key,pdf:data,filename:fname+'.pdf'});
+    ev2.sentAt=Date.now();ev2.sentTo=r.to;ev2.sentN=(ev2.sentN||0)+1;
+    S.orSend={key,msg:`최종 리포트를 ${r.to.join(', ')}님께 보냈어요. (이메일 ${r.mailed}통 · 휴대폰 알림 ${r.pushed}건)`};
+    toast('부모님·선생님께 최종 리포트를 보냈어요.');
+  }catch(e){console.warn('orSendReport',e);S.orSend={key,msg:e&&e.code==='rate_limited'?'이 리포트는 이미 여러 번 보냈어요.':'리포트를 보내지 못했어요. 최종 리포트 화면에서 [다시 보내기]를 눌러 주세요.'};}
+  renderLayers();
+}
+/* ---------- 첨삭 표시 ---------- */
 function orMarked(text,marks,pdf){
   const t=String(text||'');const ms=[];
   (Array.isArray(marks)?marks:[]).forEach(m=>{if(!m||!m.find)return;const f=String(m.find);let from=0,pos=-1;
     while((pos=t.indexOf(f,from))>=0){if(!ms.some(c=>pos<c.e&&pos+f.length>c.s))break;from=pos+1}
     if(pos>=0)ms.push(Object.assign({},m,{s:pos,e:pos+f.length}))});
   ms.sort((a,b)=>a.s-b.s);ms.forEach((m,n)=>{m.n=n+1});
-  const st=pdf?{del:'text-decoration:line-through;text-decoration-color:#c0392b;color:#999',fix:'color:#1b45c9;font-weight:700',good:'border-bottom:2px solid #2f8a4a',wave:'text-decoration:underline wavy #d35400',n:'font-size:10px;color:#fff;background:#2f6b3a;border-radius:7px;padding:0 4px;margin-left:1px;vertical-align:super'}:null;
-  const a=(c,s)=>pdf?` style="${s}"`:` class="${c}"`;
+  const st={del:'text-decoration:line-through;text-decoration-color:#c0392b;color:#999',fix:'color:#1b45c9;font-weight:700',good:'border-bottom:2px solid #2f8a4a',wave:'text-decoration:underline wavy #d35400',n:'font-size:10px;color:#fff;background:#2f6b3a;border-radius:7px;padding:0 4px;margin-left:1px;vertical-align:super'};
+  const a=(c,s)=>pdf?` style="${st[s]}"`:` class="${c}"`;
   let h='',p=0;
   ms.forEach(m=>{h+=esc(t.slice(p,m.s));const seg=esc(t.slice(m.s,m.e));const fx=esc(m.fix||'');const K=m.kind;
-    const num=m.note?`<sup${a('orn',pdf&&st.n)}>${m.n}</sup>`:'';
-    if(K==='delete')h+=`<s${a('ordel',pdf&&st.del)}>${seg}</s>${num}`;
-    else if(K==='replace')h+=`<s${a('ordel',pdf&&st.del)}>${seg}</s><b${a('orfix',pdf&&st.fix)}>${fx}</b>${num}`;
-    else if(K==='insert')h+=`<b${a('orfix',pdf&&st.fix)}>∨${fx}</b>${seg}${num}`;
-    else if(K==='good')h+=`<u${a('orgood',pdf&&st.good)}>${seg}</u>${num}`;
-    else h+=`<span${a('orwav',pdf&&st.wave)}>${seg}</span>${num}`;
+    const num=m.note?`<sup${a('orn','n')}>${m.n}</sup>`:'';
+    if(K==='delete')h+=`<s${a('ordel','del')}>${seg}</s>${num}`;
+    else if(K==='replace')h+=`<s${a('ordel','del')}>${seg}</s><b${a('orfix','fix')}>${fx}</b>${num}`;
+    else if(K==='insert')h+=`<b${a('orfix','fix')}>∨${fx}</b>${seg}${num}`;
+    else if(K==='good')h+=`<u${a('orgood','good')}>${seg}</u>${num}`;
+    else h+=`<span${a('orwav','wave')}>${seg}</span>${num}`;
     p=m.e});
   h+=esc(t.slice(p));
   const notes=ms.filter(m=>m.note).map(m=>`<li${pdf?' style="font-size:13px;color:#2f6b3a"':''}><b>${m.n}</b> ${esc(m.note)}</li>`).join('');
   return {h,notes}}
+/* ---------- 평가 화면 (1차 평가 / 최종 리포트) ---------- */
+function orOpen(uid,key,r,i){
+  const own=uid===S.id;
+  if(own&&(r===2?S.orals2[key]:S.orals[key])){S.oralView={uid,key,r,i,ev1:S.orals[key],ev2:S.orals2[key]};renderLayers();return}
+  S.oralView={uid,key,r,i,loading:true};renderLayers();
+  Promise.all([S.db.doc('orals/'+uid+'_'+key).get(),S.db.doc('orals/'+uid+'_'+key+'_r2').get()]).then(([a,b])=>{
+    if(!S.oralView||S.oralView.key!==key||S.oralView.uid!==uid)return;
+    S.oralView={uid,key,r,i,ev1:a.exists?clone(a.data()):null,ev2:b.exists?clone(b.data()):null};renderLayers()}).catch(()=>{if(S.oralView){S.oralView.loading=false;S.oralView.err=true;renderLayers()}});
+}
+const orScoreRows=(ev,prevSc)=>{const sc=ev.scores||{};return '<div class="orsc">'+Object.keys(sc).map(k=>{const p=prevSc&&prevSc[k]!=null?scv(prevSc[k]):null;const v=scv(sc[k]);
+  return `<div class="sc"><span>${esc(k)}</span><div class="bar">${p!=null?`<i class="p1" style="width:${Math.max(0,Math.min(100,p))}%"></i>`:''}<i style="width:${Math.max(0,Math.min(100,v))}%"></i></div><b>${v}${p!=null?` <small class="${v>=p?'up':'dn'}">${v-p>=0?'+':''}${v-p}</small>`:''}</b></div>${(w=>w?`<div class="swy">${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:'')(swList(ev,k))}`}).join('')+'</div>'};
 function oralEvalHTML(){
-  const v=S.oralView;const ev=S.orals[v.key];
-  if(!ev)return `<div class="panel"><div class="ph"><h2>구술 평가</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div><p>평가를 찾지 못했어요.</p></div>`;
-  const sc=ev.scores||{};
+  const v=S.oralView;const head=t=>`<div class="ph"><h2>${t}</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
+  if(v.loading)return `<div class="panel">${head('구술 평가')}<div class="sk"></div><div class="sk"></div></div>`;
+  const ev=v.ev1,ev2=v.ev2;const uid=v.uid||S.id;
+  if(!ev||(v.r===2&&!ev2))return `<div class="panel">${head('구술 평가')}<p>평가를 찾지 못했어요.</p></div>`;
   const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p class="hint">없음</p>';
   const gc=g=>g==='잘함'?'ok':g==='고침'?'rev':'md';
-  const ansHTML=(a,n)=>{const mk=orMarked(a.text,a.marks);const k=v.key+'_'+n;
-    const sp=a.cpm<200?'조금 느려요':a.cpm>380?'조금 빨라요':'알맞아요';
-    return `<div class="sec ora"><h3>질문 ${n+1}</h3><p class="orqt">${esc(a.q)}</p>
-      <div class="orchips"><span>말한 시간 <b>${fmtSw(a.sec).replace(/^0/,'')}</b></span><span>${esc(a.chars)}자</span><span>1분에 ${esc(a.cpm)}자 · ${sp}</span>${a.fill?`<span>군말 ${esc(a.fill)}회</span>`:''}${a.audio?`<button class="chip" data-act="orplay" data-i="${v.i}" data-n="${n}">${orPlaying(k)?'■ 멈추기':'▶ 내 목소리 듣기'}</button>`:''}</div>
-      ${a.summary?`<p><b>핵심 주장</b> ${esc(a.summary)}</p>`:''}
-      <div class="ormk"><small class="hint">말한 내용 첨삭 · 빨간 줄은 뺄 말, 파란 글씨는 고친 말, 초록 밑줄은 잘한 표현이에요.</small><p>${mk.h}</p>${mk.notes?`<ol class="ornotes">${mk.notes}</ol>`:''}</div>
-      <div class="swy"><p class="swp"><i>＋</i>${esc(a.good||'')}</p><p class="swm"><i>－</i>${esc(a.problem||'')}</p></div>
-      ${Array.isArray(a.sentences)&&a.sentences.length?`<h4>문장 지도</h4>${a.sentences.map(x=>`<div class="rv"><span><span class="gr ${gc(x.grade)}">${esc(x.grade||'보통')}</span> ${esc(x.orig)}</span><span class="hint">${esc(x.why)}</span>${x.fix?`<span class="rw">이렇게 말해요 · ${esc(x.fix)}</span>`:''}</div>`).join('')}`:''}
+  const sent=a=>Array.isArray(a)&&a.length?`<h4>문장 지도</h4>${a.map(x=>`<div class="rv"><span><span class="gr ${gc(x.grade)}">${esc(x.grade||'보통')}</span> ${esc(x.orig)}</span><span class="hint">${esc(x.why)}</span>${x.fix?`<span class="rw">이렇게 말해요 · ${esc(x.fix)}</span>`:''}</div>`).join('')}`:'';
+  const chips=(a,aid,label)=>`<div class="orchips"><span>말한 시간 <b>${orMS(a.sec)}</b></span><span>${esc(a.chars)}자</span><span>1분에 ${esc(a.cpm)}자 · ${a.cpm<200?'조금 느려요':a.cpm>380?'조금 빨라요':'알맞아요'}</span>${a.fill?`<span>군말 ${esc(a.fill)}회</span>`:''}${a.audio?orPB(aid,label):''}</div>`;
+  const marked=a=>{const mk=orMarked(a.text,a.marks);return `<div class="ormk"><small class="hint">말한 내용 첨삭 · 빨간 줄은 뺄 말, 파란 글씨는 고친 말, 초록 밑줄은 잘한 표현이에요.</small><p>${mk.h}</p>${mk.notes?`<ol class="ornotes">${mk.notes}</ol>`:''}</div>`};
+  const top=t=>`${head(t)}<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="orpdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${v.r===2&&uid===S.id?`<button class="btn ghost" data-act="orsend" data-i="${v.i}">${ev2.sentAt?'부모님·선생님께 다시 보내기':'부모님·선생님께 보내기'}</button>`:''}${v.r===2?`<button class="btn ghost" data-act="orview" data-r="1" data-uid="${esc(uid)}" data-key="${esc(v.key)}">1차 평가 보기</button>`:ev2?`<button class="btn ghost" data-act="orview" data-r="2" data-uid="${esc(uid)}" data-key="${esc(v.key)}">최종 리포트 보기</button>`:''}</div>`;
+  if(v.r!==2){
+    const ans=(a,n)=>`<div class="sec ora"><h3>질문 ${n+1}</h3><p class="orqt">${esc(a.q)}</p>${chips(a,orAud(uid,v.key,n,1),'내 대답 다시 듣기')}
+      ${a.summary?`<p><b>핵심 주장</b> ${esc(a.summary)}</p>`:''}${marked(a)}
+      <div class="swy"><p class="swp"><i>＋</i>${esc(a.good||'')}</p><p class="swm"><i>－</i>${esc(a.problem||'')}</p></div>${sent(a.sentences)}
       ${a.better?`<details open><summary>내 답을 다듬으면</summary><p class="rw" style="white-space:pre-wrap">${esc(a.better)}</p></details>`:''}
       ${a.model?`<details><summary>모범 답안</summary><p style="white-space:pre-wrap">${esc(a.model)}</p></details>`:''}
-      ${a.followUp?`<p class="orfu"><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`:''}</div>`};
-  return `<div class="panel ev"><div class="ph"><h2>${esc(ev.g)} ${esc(ev.m)} 구술 평가<br><small style="font-size:15px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="orpdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${S.downloads?'<span class="hint">저장한 PDF를 열어 인쇄할 수 있어요.</span>':'<span class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</span>'}</div>
-  <div class="sec"><h3>총점 <span class="big">${esc(ev.total)}</span> / 100</h3>
-    ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}</b></div>${(w=>w?`<div class="swy">${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:'')(swList(ev,k))}`).join('')}
-    <p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
-  ${(ev.answers||[]).map(ansHTML).join('')}
-  <div class="sec"><h3>잘한 점</h3>${ul(ev.strengths)}<h3>고칠 점</h3>${ul(ev.improvements)}</div>
-  <div class="sec"><h3>누적 분석 (최근 5회)</h3><p>${esc(ev.cumulative)}</p></div>
-  ${ev.teacher?`<div class="sec"><h3>선생님 한마디</h3><p>${esc(ev.teacher)}</p></div>`:''}</div>`;
+      ${a.followUp?`<p class="orfu"><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`:''}</div>`;
+    return `<div class="panel ev">${top(`${esc(ev.g)} ${esc(ev.m)} 1차 구술 평가<br><small style="font-size:15px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」</small>`)}
+    <div class="sec"><h3>1차 총점 <span class="big">${esc(ev.total)}</span> / 100</h3>${orScoreRows(ev)}
+      <p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
+    ${(ev.answers||[]).map(ans).join('')}
+    <div class="sec"><h3>잘한 점</h3>${ul(ev.strengths)}<h3>고칠 점</h3>${ul(ev.improvements)}</div>
+    <div class="sec"><h3>누적 분석 (최근 5회)</h3><p>${esc(ev.cumulative)}</p></div>
+    ${ev.teacher?`<div class="sec"><h3>선생님 한마디</h3><p>${esc(ev.teacher)}</p></div>`:''}
+    ${uid===S.id&&!ev2?'<p class="note">이제 구술 탭에서 모범 답안을 따라 읽고, 3분 생각한 뒤 다시 대답하는 2차 도전을 해 봐요.</p>':''}</div>`;
+  }
+  const d=ev2.total-ev.total;const gw=ev2.growthWhy||{};
+  const ans2=(a,n)=>{const a1=(ev.answers||[])[n]||{};
+    return `<div class="sec ora"><h3>질문 ${n+1} <small class="orgrow">성장 ${esc(a.growth)}점</small></h3><p class="orqt">${esc(a.q)}</p>
+      <div class="or12"><div><b>1차 대답</b>${a1.audio?orPB(orAud(uid,v.key,n,1),'1차 듣기'):''}<p>${esc(a1.text||'')}</p></div><div><b>2차 대답</b>${a.audio?orPB(orAud(uid,v.key,n,2),'2차 듣기'):''}<p>${esc(a.text)}</p></div></div>
+      <div class="orchips">${a.shAcc!=null?`<span>따라 읽기 정확도 <b>${esc(a.shAcc)}%</b></span>`:''}${a.shAudio?orPB(orAud(uid,v.key,n,'s'),'따라 읽기 듣기'):''}<span>1차 ${orMS(a1.sec||0)} → 2차 <b>${orMS(a.sec)}</b></span><span>1분에 ${esc(a.cpm)}자</span>${a.fill?`<span>군말 ${esc(a.fill)}회</span>`:''}</div>
+      <div class="swy"><p class="swp"><i>＋</i>${esc(a.improved||'')}</p><p class="swm"><i>－</i>${esc(a.still||'')}</p></div>
+      ${a.copied?'<p class="warn">이번 대답은 모범 답안을 거의 그대로 외워 말했어요. 다음에는 모범 답안의 구조만 빌리고 내 생각과 경험으로 채워 보세요.</p>':''}
+      ${marked(a)}${sent(a.sentences)}</div>`};
+  return `<div class="panel ev">${top(`${esc(ev.g)} ${esc(ev.m)} 구술 테스트 최종 리포트<br><small style="font-size:15px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · 1·2차 종합</small>`)}
+  <div class="sec"><div class="orsum big"><div><small>1차 총점</small><b>${esc(ev.total)}</b></div><div><small>2차 총점</small><b>${esc(ev2.total)}</b><em class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'} ${Math.abs(d)}</em></div><div class="g"><small>대답 성장 점수</small><b>${esc(ev2.growth)}</b></div></div>
+    ${ev2.sentAt?`<p class="hint">${new Date(ev2.sentAt).toLocaleDateString('ko-KR')} ${esc((ev2.sentTo||[]).join(', '))}님께 이메일과 휴대폰 알림으로 보냈어요.</p>`:''}
+    ${S.orSend&&S.orSend.key===v.key?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:''}
+    <div class="praise"><b>성장 총평</b><p>${esc(ev2.growthComment||'')}</p></div>
+    ${(gw.plus||[]).length||(gw.minus||[]).length?`<div class="swy">${(gw.plus||[]).map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${(gw.minus||[]).map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}</div>
+  <div class="sec"><h3>항목 점수 <small class="hint">연한 막대 1차 · 진한 막대 2차</small></h3>${orScoreRows(ev2,ev.scores)}<p>${esc(ev2.comment||'')}</p>${ev2.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev2.praise)}</p></div>`:''}</div>
+  ${(ev2.answers||[]).map(ans2).join('')}
+  <div class="sec"><h3>잘한 점</h3>${ul(ev2.strengths)}<h3>다음까지 연습할 점</h3>${ul(ev2.improvements)}${ev2.nextGoal?`<p class="orfu"><b>다음 목표</b> ${esc(ev2.nextGoal)}</p>`:''}</div>
+  <div class="sec"><h3>누적 분석 (최근 5회)</h3><p>${esc(ev2.cumulative||'')}</p></div>
+  ${ev2.teacher?`<div class="sec"><h3>선생님 한마디</h3><p>${esc(ev2.teacher)}</p></div>`:''}</div>`;
 }
+/* ---------- PDF ---------- */
+function orPdfBase(){const B=[];const add=(h,hd)=>B.push({h:`<div class="pb${hd?' hd':''}">${h}</div>`,hd:!!hd});const H=t=>add(`<h2>${esc(t)}</h2>`,true);
+  const paras=t=>String(t||'').split(/\n+/).filter(x=>x.trim());const L=a=>Array.isArray(a)?a.map(x=>`<li>${esc(x)}</li>`).join(''):'';
+  const sw=(ev,k,sc)=>{const w=swList(ev,k);return w?`<p><b>${esc(k)} ${scv(sc[k])}점</b></p><ul>${w.plus.map(x=>`<li><b style="color:#2f6b3a">＋ 가점</b> ${esc(x)}</li>`).join('')}${w.minus.map(x=>`<li><b style="color:#a04a1a">－ 감점</b> ${esc(x)}</li>`).join('')}</ul>`:''};
+  const mk=a=>{const m=orMarked(a.text,a.marks,true);return `<p style="font-size:13px;color:#555">말한 내용 첨삭 (빨간 줄: 뺄 말 · 파란 글씨: 고친 말 · 초록 밑줄: 잘한 표현)</p><p style="background:#FAF7F0;padding:8px 12px;line-height:1.9">${m.h}</p>${m.notes?`<ol style="margin:4px 0 0;padding-left:18px;list-style:none">${m.notes}</ol>`:''}`};
+  const sent=a=>(a||[]).map(x=>`<p><b>[${esc(x.grade||'보통')}]</b> ${esc(x.orig)}<br><span style="color:#555;font-size:13px">${esc(x.why)}</span>${x.fix?`<br><span style="color:#1b45c9">이렇게 말해요 · ${esc(x.fix)}</span>`:''}</p>`).join('');
+  return {B,add,H,paras,L,sw,mk,sent}}
+const orStats=a=>`말한 시간 ${orMS(a.sec||0)} · ${esc(a.chars)}자 · 1분에 ${esc(a.cpm)}자${a.fill?' · 군말 '+esc(a.fill)+'회':''}`;
 function oralPdfBlocks(ev){
-  const sc=ev.scores||{};const B=[];
-  const add=(h,hd)=>B.push({h:`<div class="pb${hd?' hd':''}">${h}</div>`,hd:!!hd});
-  const H=t=>add(`<h2>${esc(t)}</h2>`,true);
-  const paras=t=>String(t||'').split(/\n+/).filter(x=>x.trim());
-  const L=a=>Array.isArray(a)?a.map(x=>`<li>${esc(x)}</li>`).join(''):'';
-  add(`<h1>002BOOK 구술 첨삭 평가서</h1><p style="color:#555">${esc(ev.g)} ${esc(ev.m)}${ev.kw?' · '+esc(ev.kw):''} · 「${esc(ev.title)}」 · ${esc(S.id||'')} · ${new Date(ev.at).toLocaleDateString('ko-KR')}</p>`);
-  H('총점 '+ev.total+' / 100');
+  const {B,add,H,paras,L,sw,mk,sent}=orPdfBase();const sc=ev.scores||{};
+  add(`<h1>002BOOK 1차 구술 평가서</h1><p style="color:#555">${esc(ev.g)} ${esc(ev.m)}${ev.kw?' · '+esc(ev.kw):''} · 「${esc(ev.title)}」 · ${esc(ev.uid||S.id||'')} · ${new Date(ev.at).toLocaleDateString('ko-KR')}</p>`);
+  H('1차 총점 '+ev.total+' / 100');
   add(`<table>${Object.keys(sc).map(k=>`<tr><td style="width:30%">${esc(k)}</td><td>${scv(sc[k])} / 100</td></tr>`).join('')}</table>`);
-  if(Object.keys(sc).some(k=>swList(ev,k))){H('항목별 점수 이유');Object.keys(sc).forEach(k=>{const w=swList(ev,k);if(!w)return;add(`<p><b>${esc(k)} ${scv(sc[k])}점</b></p><ul>${w.plus.map(x=>`<li><b style="color:#2f6b3a">＋ 가점</b> ${esc(x)}</li>`).join('')}${w.minus.map(x=>`<li><b style="color:#a04a1a">－ 감점</b> ${esc(x)}</li>`).join('')}</ul>`)})}
+  if(Object.keys(sc).some(k=>swList(ev,k))){H('항목별 점수 이유');Object.keys(sc).forEach(k=>{const h=sw(ev,k,sc);if(h)add(h)})}
   paras(ev.comment).forEach(t=>add(`<p>${esc(t)}</p>`));
   if(ev.praise)add(`<p style="background:#EEF5EC;border-left:4px solid #557257;padding:8px 12px"><b>칭찬과 응원</b><br>${esc(ev.praise)}</p>`);
   (ev.answers||[]).forEach((a,n)=>{
-    H('질문 '+(n+1));add(`<p><b>${esc(a.q)}</b></p><p style="color:#555;font-size:13px">말한 시간 ${fmtSw(a.sec).replace(/^0/,'')} · ${esc(a.chars)}자 · 1분에 ${esc(a.cpm)}자${a.fill?' · 군말 '+esc(a.fill)+'회':''}</p>`);
+    H('질문 '+(n+1));add(`<p><b>${esc(a.q)}</b></p><p style="color:#555;font-size:13px">${orStats(a)}</p>`);
     if(a.summary)add(`<p><b>핵심 주장</b> ${esc(a.summary)}</p>`);
-    const mk=orMarked(a.text,a.marks,true);
-    add(`<p style="font-size:13px;color:#555">말한 내용 첨삭 (빨간 줄: 뺄 말 · 파란 글씨: 고친 말 · 초록 밑줄: 잘한 표현)</p><p style="background:#FAF7F0;padding:8px 12px;line-height:1.9">${mk.h}</p>`);
-    if(mk.notes)add(`<ol style="margin:0;padding-left:18px;list-style:none">${mk.notes}</ol>`);
+    add(mk(a));
     add(`<p><b style="color:#2f6b3a">＋ 잘한 점</b> ${esc(a.good||'')}<br><b style="color:#a04a1a">－ 아쉬운 점</b> ${esc(a.problem||'')}</p>`);
-    (a.sentences||[]).forEach(x=>add(`<p><b>[${esc(x.grade||'보통')}]</b> ${esc(x.orig)}<br><span style="color:#555;font-size:13px">${esc(x.why)}</span>${x.fix?`<br><span style="color:#1b45c9">이렇게 말해요 · ${esc(x.fix)}</span>`:''}</p>`));
+    if(a.sentences&&a.sentences.length)add(sent(a.sentences));
     if(a.better)add(`<p><b>내 답을 다듬으면</b><br><span style="color:#1b45c9;white-space:pre-wrap">${esc(a.better)}</span></p>`);
     if(a.model)add(`<p><b>모범 답안</b><br><span style="white-space:pre-wrap">${esc(a.model)}</span></p>`);
     if(a.followUp)add(`<p><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`);
@@ -3654,48 +3813,160 @@ function oralPdfBlocks(ev){
   H('누적 분석 (최근 5회)');paras(ev.cumulative).forEach(t=>add(`<p>${esc(t)}</p>`));
   if(ev.teacher){H('선생님 한마디');add(`<p>${esc(ev.teacher)}</p>`)}
   return B}
-async function oralPdf(){
-  const v=S.oralView;const ev=v&&S.orals[v.key];if(!ev)return;
-  if(!S.downloads){toast('이 화면에서는 PDF 저장을 쓸 수 없어요.');return}
-  if(!window.html2canvas||!(window.jspdf&&window.jspdf.jsPDF)){toast('PDF 도구를 불러오지 못했어요. 새로고침 후 다시 해 주세요.');return}
-  toast('PDF를 만드는 중이에요…');
+function oralReportBlocks(ev,ev2){
+  const {B,add,H,paras,L,sw,mk,sent}=orPdfBase();const s1=ev.scores||{},s2=ev2.scores||{};const d=ev2.total-ev.total;const gw=ev2.growthWhy||{};
+  const box=(l,v,c)=>`<td style="text-align:center;padding:10px;border:1px solid #bbb;width:33%"><div style="font-size:13px;color:#555">${l}</div><div style="font-size:30px;font-weight:700;color:${c||'#111'}">${v}</div></td>`;
+  add(`<h1>002BOOK 구술 테스트 최종 리포트</h1><p style="color:#555">${esc(ev.g)} ${esc(ev.m)}${ev.kw?' · '+esc(ev.kw):''} · 「${esc(ev.title)}」 · ${esc(ev2.uid||S.id||'')} · 1차 ${new Date(ev.at).toLocaleDateString('ko-KR')} / 2차 ${new Date(ev2.at).toLocaleDateString('ko-KR')}</p>`);
+  add(`<table><tr>${box('1차 총점',ev.total)}${box('2차 총점',`${ev2.total} <span style="font-size:15px;color:${d>=0?'#2f6b3a':'#a04a1a'}">${d>=0?'▲':'▼'}${Math.abs(d)}</span>`)}${box('대답 성장 점수',ev2.growth,'#1F5C4A')}</tr></table>`);
+  add(`<p style="color:#555;font-size:13px">진행: 1차 대답 → 1차 첨삭 → 1차 대답 다시 듣기 → 모범 답안 따라 읽기 → 3분 생각 → 같은 질문에 다시 대답 → 2차 첨삭·성장 평가</p>`);
+  H('성장 총평');paras(ev2.growthComment).forEach(t=>add(`<p>${esc(t)}</p>`));
+  if((gw.plus||[]).length||(gw.minus||[]).length)add(`<ul>${(gw.plus||[]).map(x=>`<li><b style="color:#2f6b3a">＋ 나아진 점</b> ${esc(x)}</li>`).join('')}${(gw.minus||[]).map(x=>`<li><b style="color:#a04a1a">－ 남은 과제</b> ${esc(x)}</li>`).join('')}</ul>`);
+  H('항목 점수 비교');
+  add(`<table><tr><td style="background:#f3f0e8"><b>항목</b></td><td style="background:#f3f0e8"><b>1차</b></td><td style="background:#f3f0e8"><b>2차</b></td><td style="background:#f3f0e8"><b>변화</b></td></tr>${Object.keys(s2).map(k=>{const a=scv(s1[k]||0),b=scv(s2[k]);return `<tr><td>${esc(k)}</td><td>${a||'-'}</td><td><b>${b}</b></td><td style="color:${b>=a?'#2f6b3a':'#a04a1a'}">${a?(b-a>=0?'+':'')+(b-a):''}</td></tr>`}).join('')}</table>`);
+  if(Object.keys(s2).some(k=>swList(ev2,k))){H('2차 항목별 점수 이유');Object.keys(s2).forEach(k=>{const h=sw(ev2,k,s2);if(h)add(h)})}
+  paras(ev2.comment).forEach(t=>add(`<p>${esc(t)}</p>`));
+  if(ev2.praise)add(`<p style="background:#EEF5EC;border-left:4px solid #557257;padding:8px 12px"><b>칭찬과 응원</b><br>${esc(ev2.praise)}</p>`);
+  (ev2.answers||[]).forEach((a,n)=>{const a1=(ev.answers||[])[n]||{};
+    H(`질문 ${n+1} · 성장 ${a.growth}점`);add(`<p><b>${esc(a.q)}</b></p>`);
+    add(`<p><b>1차 대답</b> <span style="color:#555;font-size:13px">(${orStats(a1)})</span><br>${esc(a1.text||'')}</p>`);
+    if(a1.problem)add(`<p style="color:#a04a1a;font-size:13px">1차 지적: ${esc(a1.problem)}</p>`);
+    if(a.shAcc!=null||a.shSec)add(`<p style="color:#555;font-size:13px">모범 답안 따라 읽기 ${orMS(a.shSec||0)}${a.shAcc!=null?` · 정확도 ${a.shAcc}%`:''} → 3분 생각</p>`);
+    add(`<p><b>2차 대답</b> <span style="color:#555;font-size:13px">(${orStats(a)})</span></p>`+mk(a));
+    add(`<p><b style="color:#2f6b3a">＋ 나아진 점</b> ${esc(a.improved||'')}<br><b style="color:#a04a1a">－ 남은 과제</b> ${esc(a.still||'')}</p>${a.copied?'<p style="color:#a04a1a;font-size:13px">※ 모범 답안을 거의 그대로 외워 말한 부분이 있어요. 구조만 빌리고 내 생각으로 채우는 연습이 필요해요.</p>':''}`);
+    if(a.sentences&&a.sentences.length)add(sent(a.sentences));
+    if(a1.model)add(`<p><b>모범 답안</b><br><span style="white-space:pre-wrap;color:#333">${esc(a1.model)}</span></p>`);
+  });
+  H('잘한 점');add(`<ul>${L(ev2.strengths)}</ul>`);
+  H('다음까지 연습할 점');add(`<ul>${L(ev2.improvements)}</ul>`);if(ev2.nextGoal)add(`<p><b>다음 목표</b> ${esc(ev2.nextGoal)}</p>`);
+  H('누적 분석 (최근 5회)');paras(ev2.cumulative).forEach(t=>add(`<p>${esc(t)}</p>`));
+  if(ev2.teacher){H('선생님 한마디');add(`<p>${esc(ev2.teacher)}</p>`)}
+  return B}
+async function orRenderPdf(blocks,label,light){
+  if(!window.html2canvas||!(window.jspdf&&window.jspdf.jsPDF))throw {code:'no_pdf'};
   const host=document.createElement('div');document.body.appendChild(host);
   try{
     try{await document.fonts.load('20px "Nanum Myeongjo"','가나다')}catch(e){}
     if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-    const pdf=new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+    const pdf=new window.jspdf.jsPDF({unit:'pt',format:'a4',compress:true});
     const pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight();
-    const blocks=oralPdfBlocks(ev);const pages=pdfPages(blocks,host,1123-44-64);
+    const pages=pdfPages(blocks,host,1123-44-64);
     for(let k=0;k<pages.length;k++){
       host.style.cssText='position:fixed;left:-10000px;top:0;width:794px;height:1123px;background:#fff';
-      host.innerHTML=PDF_CSS+`<div class="pd" style="position:relative;width:794px;height:1123px;padding:44px 44px 0;box-sizing:border-box">${pages[k].map(j=>blocks[j].h).join('')}<div class="pf">002BOOK · ${esc(ev.g)} ${esc(ev.m)} 구술 평가서 · 생성형 AI(Claude)가 작성한 평가 · ${k+1} / ${pages.length}</div></div>`;
+      host.innerHTML=PDF_CSS+`<div class="pd" style="position:relative;width:794px;height:1123px;padding:44px 44px 0;box-sizing:border-box">${pages[k].map(j=>blocks[j].h).join('')}<div class="pf">002BOOK · ${esc(label)} · 생성형 AI(Claude)가 작성한 평가 · ${k+1} / ${pages.length}</div></div>`;
       await new Promise(r=>setTimeout(r,30));
-      const cv=await html2canvas(host,{scale:2,backgroundColor:'#ffffff'});
+      const cv=await html2canvas(host,{scale:light?1.5:2,backgroundColor:'#ffffff'});
       if(k)pdf.addPage();
-      pdf.addImage(cv.toDataURL('image/jpeg',0.92),'JPEG',0,0,pw,ph);
+      pdf.addImage(cv.toDataURL('image/jpeg',light?0.82:0.92),'JPEG',0,0,pw,ph);
     }
-    const _d=new Date(),_p2=x=>String(x).padStart(2,'0');
-    const fname=[String(_d.getFullYear()).slice(2)+_p2(_d.getMonth()+1)+_p2(_d.getDate()),ev.g,(ev.kw||'').trim(),'구술',(S.me&&S.me.nick)||S.id||''].filter(Boolean).join(' ').replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,' ').trim();
-    pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 구술 평가 결과',creator:'002BOOK · AI 생성',keywords:'AI-generated'});
+    return pdf;
+  }finally{host.remove()}
+}
+const orFname=(ev,kind)=>{const _d=new Date(),_p2=x=>String(x).padStart(2,'0');return [String(_d.getFullYear()).slice(2)+_p2(_d.getMonth()+1)+_p2(_d.getDate()),ev.g,(ev.kw||'').trim(),kind,(ev.uid&&ev.uid!==S.id?ev.uid:(S.me&&S.me.nick)||S.id)||''].filter(Boolean).join(' ').replace(/[\\/:*?"<>|]/g,'').replace(/\s+/g,' ').trim()};
+async function orReportPdf(ev,ev2,light){
+  const pdf=await orRenderPdf(oralReportBlocks(ev,ev2),`${ev.g} ${ev.m} 구술 테스트 최종 리포트`,light);const fname=orFname(ev,'구술 최종 리포트');
+  pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 구술 평가 결과',creator:'002BOOK · AI 생성',keywords:'AI-generated'});
+  return {pdf,fname}}
+async function oralPdf(){
+  const v=S.oralView;if(!v||!v.ev1)return;
+  if(!S.downloads){toast('이 화면에서는 PDF 저장을 쓸 수 없어요.');return}
+  toast('PDF를 만드는 중이에요…');
+  try{
+    let pdf,fname;
+    if(v.r===2&&v.ev2)({pdf,fname}=await orReportPdf(v.ev1,v.ev2,false));
+    else{pdf=await orRenderPdf(oralPdfBlocks(v.ev1),`${v.ev1.g} ${v.ev1.m} 1차 구술 평가서`);fname=orFname(v.ev1,'1차 구술');pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 구술 평가 결과',creator:'002BOOK · AI 생성',keywords:'AI-generated'})}
     await S.downloads.save({data:pdf.output('blob'),filename:fname+'.pdf'});
     toast('PDF를 저장했어요.');
-  }catch(e){if(!e||e.code!=='declined')toast('PDF를 저장하지 못했어요. 다시 눌러 주세요.')}
-  finally{host.remove()}
+  }catch(e){toast(e&&e.code==='no_pdf'?'PDF 도구를 불러오지 못했어요. 새로고침 후 다시 해 주세요.':e&&e.code==='declined'?'':'PDF를 저장하지 못했어요. 다시 눌러 주세요.')}
 }
+/* ---------- 누적 기록 ---------- */
+function orLogMini(log){
+  const l=(log||[]).slice(-5).reverse();
+  return l.length?`<div class="orlog">${l.map(x=>`<div><b>${esc(x.t2!=null?x.t2:x.t1??x.total)}</b><span>${esc(x.m)} 「${esc(x.title)}」</span><small class="hint">${x.t2!=null?`1차 ${esc(x.t1)} → 2차 ${esc(x.t2)} · 성장 ${esc(x.growth)}`:`1차 ${esc(x.t1??x.total)} · 2차 도전 전`}</small></div>`).join('')}</div>`
+    :'<p class="hint">아직 구술 테스트 기록이 없어요. 평가를 받으면 여기에 쌓이고, 최근 5회 기록으로 반복되는 습관을 짚어 줘요.</p>'}
+async function orHistOpen(id){
+  S.oralHist={id,loading:true};renderLayers();
+  try{let log;if(id===S.id)log=S.progress.oralLog||[];else{const p=await S.db.doc('progress/'+id).get();log=p.exists?(p.data().oralLog||[]):[]}
+    if(S.oralHist&&S.oralHist.id===id)S.oralHist={id,log:clone(log)}}catch(e){if(S.oralHist)S.oralHist={id,log:[],err:true}}
+  renderLayers();
+}
+function orChart(log){
+  const L=log.filter(x=>x.t1!=null||x.total!=null).slice(-12);if(L.length<1)return '';
+  const W=640,H=200,pl=34,pr=12,pt=14,pb=34;const n=L.length;const X=k=>n===1?(pl+W-pr)/2:pl+(W-pl-pr)*k/(n-1);const Y=v=>pt+(H-pt-pb)*(1-(v-60)/40);
+  const line=(f,c,dash)=>{const pts=L.map((x,k)=>f(x)!=null?[X(k),Y(f(x))]:null).filter(Boolean);return pts.length?`<polyline fill="none" stroke="${c}" stroke-width="2.4" ${dash?'stroke-dasharray="5 4"':''} points="${pts.map(p=>p.join(',')).join(' ')}"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.6" fill="${c}"/>`).join('')}`:''};
+  const grid=[60,70,80,90,100].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(62,47,38,.12)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#6F6155">${v}</text>`).join('');
+  const lab=L.map((x,k)=>`<text x="${X(k)}" y="${H-12}" text-anchor="middle" font-size="11" fill="#6F6155">${esc(String(x.m||'').replace(/^중\d\s*/,''))}</text>`).join('');
+  return `<figure class="orchart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="구술 테스트 점수 변화">${grid}${line(x=>x.t1??x.total,'#B9A58B',true)}${line(x=>x.t2,'#1F5C4A')}${lab}</svg><figcaption><span class="k1"></span>1차 <span class="k2"></span>2차</figcaption></figure>`}
+function oralHistHTML(){
+  const H=S.oralHist;const own=H.id===S.id;const name=own?'나':esc((typeof famName==='function'?famName(H.id):'')||H.id);
+  const head=`<div class="ph"><h2>${own?'나의':name+'의'} 구술 테스트 기록<small>모든 구술 테스트를 모아 성장 흐름을 보여 줘요</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
+  if(H.loading)return `<div class="panel">${head}<div class="sk"></div><div class="sk"></div></div>`;
+  const log=(H.log||[]).slice().sort((a,b)=>a.at-b.at);
+  if(!log.length)return `<div class="panel">${head}<p class="hint">아직 구술 테스트 기록이 없어요.</p></div>`;
+  const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):'-';
+  const t1=log.map(x=>x.t1??x.total).filter(x=>x!=null),t2=log.map(x=>x.t2).filter(x=>x!=null),gr=log.map(x=>x.growth).filter(x=>x!=null);
+  const recent=log.slice(-5);const items6=['이해','논리','근거','표현','전달력','태도'];
+  const iav=(k,f)=>{const v=recent.map(x=>(x[f]||{})[k]).filter(x=>x!=null).map(Number);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null};
+  const tags={};log.slice(-8).forEach(x=>(x.tags||[]).forEach(t=>{tags[t]=(tags[t]||0)+1}));const weak=Object.entries(tags).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const best=log.reduce((a,x)=>Math.max(a,x.t2??x.t1??x.total??0),0);
+  return `<div class="panel">${head}
+    <div class="fstat"><div><b>${log.length}</b><small>구술 테스트</small></div><div><b>${avg(t1)}</b><small>1차 평균</small></div><div><b>${avg(t2)}</b><small>2차 평균</small></div><div><b>${avg(gr)}</b><small>성장 점수 평균</small></div><div><b>${best}</b><small>최고 점수</small></div></div>
+    <div class="sec"><h3>점수 변화</h3>${orChart(log)}</div>
+    <div class="sec"><h3>항목별 평균 <small class="hint">최근 5회 · 연한 막대 1차, 진한 막대 2차</small></h3><div class="orsc">${items6.map(k=>{const a=iav(k,'sc'),b=iav(k,'sc2');return a==null&&b==null?'':`<div class="sc"><span>${k}</span><div class="bar">${a!=null?`<i class="p1" style="width:${a}%"></i>`:''}${b!=null?`<i style="width:${b}%"></i>`:''}</div><b>${b??a}</b></div>`}).join('')}</div></div>
+    ${weak.length?`<div class="sec"><h3>자주 나온 약점</h3><div class="chips">${weak.map(([t,c])=>`<span class="chip">${esc(t)} ${c}회</span>`).join('')}</div><p class="hint">구술 평가를 할 때마다 최근 5회 기록을 함께 보고 반복되는 습관을 짚어 줘요.</p></div>`:''}
+    <div class="sec"><h3>테스트별 기록</h3>${log.slice().reverse().map(x=>`<div class="rv orrow"><b>${esc(x.m)} 「${esc(x.title)}」</b><span class="hint">${fmtD(x.at)} · 1차 ${esc(x.t1??x.total)}점${x.t2!=null?` → 2차 ${esc(x.t2)}점 · 성장 ${esc(x.growth)}점`:' · 2차 도전 전'}</span>${(x.improve||[]).length?`<span class="hint">연습할 점: ${esc(x.improve.join(' / '))}</span>`:''}<span class="row"><button class="chip" data-act="orview" data-r="1" data-uid="${esc(H.id)}" data-key="${esc(x.key)}">1차 평가</button>${x.t2!=null?`<button class="chip" data-act="orview" data-r="2" data-uid="${esc(H.id)}" data-key="${esc(x.key)}">최종 리포트</button>`:''}</span></div>`).join('')}</div></div>`;
+}
+/* ---------- 휴대폰 알림 (Web Push) ---------- */
+const PUSH_OK=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window&&!!(window.__002&&window.__002.server);
+function u8(b64){const s=b64.replace(/-/g,'+').replace(/_/g,'/');const p=s+'='.repeat((4-s.length%4)%4);const r=atob(p);return Uint8Array.from(r,c=>c.charCodeAt(0))}
+async function pushState(){if(!PUSH_OK())return 'na';if(Notification.permission==='denied')return 'denied';try{const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();return sub?'on':'off'}catch(e){return 'off'}}
+async function pushOn(){
+  if(!PUSH_OK()){toast(/iPhone|iPad/.test(navigator.userAgent)?'아이폰은 사파리에서 [공유 → 홈 화면에 추가]로 설치한 앱에서 알림을 켤 수 있어요.':'이 브라우저는 휴대폰 알림을 지원하지 않아요.');return}
+  try{
+    const perm=await Notification.requestPermission();if(perm!=='granted'){toast('알림이 허용되지 않았어요. 브라우저 설정에서 002book.com 알림을 허용해 주세요.');S.pushSt=await pushState();renderLayers();return}
+    const reg=await navigator.serviceWorker.register('/sw.js').then(()=>navigator.serviceWorker.ready);
+    const {pub}=await window.__002.server.call('push.key',{});
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(pub)});
+    await window.__002.server.call('push.sub',{sub:sub.toJSON(),ua:navigator.userAgent.slice(0,120)});
+    S.pushSt='on';renderLayers();toast('휴대폰 알림을 켰어요. 확인 알림을 보냈어요.');
+    window.__002.server.call('push.test',{}).catch(()=>{});
+  }catch(e){toast('알림을 켜지 못했어요. 잠시 뒤 다시 해 주세요.')}
+}
+async function pushOff(){
+  try{const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();
+    if(sub){await window.__002.server.call('push.unsub',{endpoint:sub.endpoint}).catch(()=>{});await sub.unsubscribe()}
+    S.pushSt='off';renderLayers();toast('이 기기의 알림을 껐어요.')}catch(e){toast('알림을 끄지 못했어요.')}
+}
+function pushHTML(why){
+  if(S.pushSt==null){S.pushSt='…';pushState().then(s=>{S.pushSt=s;renderLayers()})}
+  const st=S.pushSt;
+  const btn=st==='on'?'<button class="chip" data-act="pushoff">알림 끄기</button>':st==='denied'?'<span class="hint">알림이 차단돼 있어요. 브라우저(앱) 설정에서 002book.com 알림을 허용해 주세요.</span>':st==='na'?`<span class="hint">${/iPhone|iPad/.test(navigator.userAgent)?'아이폰은 사파리 [공유 → 홈 화면에 추가]로 설치한 앱에서 켤 수 있어요.':'이 브라우저에서는 알림을 받을 수 없어요.'}</span>`:'<button class="btn ghost" data-act="pushon">휴대폰 알림 켜기</button>';
+  return `<div class="note2 orpush"><h3 style="font-size:15px">휴대폰 알림 ${st==='on'?'<span class="tagk">켜짐</span>':''}</h3><p class="hint">${esc(why)}</p><div class="row">${btn}</div></div>`}
 function orAct(d){
   switch(d.act){
-    case 'orrec':orStart(+d.i,+d.n);return true;
+    case 'orrec':orStart(+d.i,+d.n,d.m);return true;
     case 'orstop':orStop();return true;
-    case 'orplay':orPlay(+d.i,+d.n);return true;
+    case 'orplay':orPlay(d.a);return true;
     case 'oreval':oralEval(+d.i);return true;
-    case 'orview':S.oralView={key:nk(+d.i),i:+d.i};renderLayers();return true;
+    case 'oreval2':oralEval2(+d.i);return true;
+    case 'orsend':{const i=+d.i;if(S.orSend&&/중이에요/.test(S.orSend.msg||''))return true;orSendReport(i,true);return true}
+    case 'orview':{if(d.uid&&d.key){orOpen(d.uid,d.key,+d.r===2?2:1,d.i!=null?+d.i:null);return true}const i=+d.i;orOpen(S.id,nk(i),+d.r===2?2:1,i);return true}
     case 'orpdf':oralPdf();return true;
+    case 'orhist':orHistOpen(d.id||S.id);return true;
+    case 'pushon':pushOn();return true;
+    case 'pushoff':pushOff();return true;
     case 'orq1':{const i=+d.i,n=+d.n;const a=orAns(i)[n];const arm=S.orArm&&S.orArm.k===nk(i)+'_'+n&&Date.now()-S.orArm.t<4000;
       if(a&&!arm){S.orArm={k:nk(i)+'_'+n,t:Date.now()};toast('이 질문에 녹음한 답변이 지워져요. 바꾸려면 한 번 더 눌러 주세요.');return true}
       S.orArm=null;genOQs(i,n);return true}
   }
   return false}
-document.addEventListener('input',e=>{const t=e.target;if(!t||t.dataset.ortx==null)return;const i=+t.dataset.i,n=+t.dataset.ortx;const a=orAns(i)[n];if(!a)return;a.text=t.value;clearTimeout(ORT);ORT=setTimeout(()=>orSaveAns(i),900)});
+function orSync(i){const key=nk(i);const D=orD(i);const has=x=>x&&String(x.text||'').trim();const busy=!!OREC||S.oralBusy===key||!S.sample;
+  const b1=document.querySelector('[data-act=oreval]');if(b1){const q=orQ(i);const n=q?q.shown.filter((_,k)=>has(D.ans[k])).length:0;b1.disabled=busy||n<OR_N}
+  const b2=document.querySelector('[data-act=oreval2]');if(b2){const ev=S.orals[key];const n=ev?(ev.answers||[]).filter((_,k)=>has(D.ans2[k])).length:0;b2.disabled=busy||n<OR_N;const h=b2.nextElementSibling;if(h)h.textContent=n<OR_N?`다시 대답 ${n} / ${OR_N}`:'1차와 비교해 평가하고 최종 리포트를 만들어요. 1~2분 걸려요.'}
+  if(b1){const h=b1.nextElementSibling;const q=orQ(i);const n=q?q.shown.filter((_,k)=>has(D.ans[k])).length:0;if(h)h.textContent=n<OR_N?`답변 ${n} / ${OR_N}`:'세 답변을 모아 평가해요. 1~2분 걸려요.'}}
+document.addEventListener('input',e=>{const t=e.target;if(!t||!t.dataset)return;
+  if(t.dataset.ortx!=null){const i=+t.dataset.i,n=+t.dataset.ortx;const D=orD(i);const a=(+t.dataset.m===2?D.ans2:D.ans)[n];if(!a)return;a.text=t.value;orSync(i);clearTimeout(ORT);ORT=setTimeout(()=>orSaveAns(i),900)}
+  else if(t.dataset.ormemo!=null){const i=+t.dataset.i,n=+t.dataset.ormemo;const D=S.odoc[nk(i)];if(!D)return;D.memo=D.memo.slice();D.memo[n]=t.value;clearTimeout(ORT);ORT=setTimeout(()=>orSaveAns(i),900)}});
 /* ---------- 원고지 입력 창 ---------- */
 const WR_FORMS=[['표준 원고지','20×10 · 칸 아래 교정줄'],['큰 칸 원고지','15×10 · 큰 칸'],['줄 원고지','칸 없이 빨간 줄']];
 const WR_DIRS=['가로쓰기','세로쓰기'];
@@ -3945,6 +4216,8 @@ function kidHTML(){
     <div class="sec"><h3>최근 첨삭 점수</h3>${log.length?log.map(x=>`<div class="rv"><b>${esc(x.m||'')} 「${esc(x.title)}」 · ${esc(x.total)}점</b>${(x.improve||[]).length?`<span class="hint">고칠 점: ${esc((x.improve||[]).join(' / '))}</span>`:''}</div>`).join(''):'<p class="hint">아직 첨삭 기록이 없어요.</p>'}
       ${weak.length?`<p class="hint" style="margin-top:6px">자주 나온 약점</p><div class="chips">${weak.map(([t,n])=>`<span class="chip">${esc(t)} ${n}회</span>`).join('')}</div>`:''}</div>
     <div class="sec"><h3>자녀가 쓴 논술</h3>${K.es.length?K.es.map(x=>`<details><summary>${esc(x.g||'')} ${esc(x.m||'')} 「${esc(x.book)}」 · ${fmtD(x.at)}</summary><p class="hint">${esc(x.question||'')}</p><p style="white-space:pre-wrap">${esc(x.text||'')}</p></details>`).join(''):'<p class="hint">아직 제출한 논술이 없어요.</p>'}</div>
+    <div class="sec"><h3>구술 테스트</h3>${orLogMini(K.p.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(id)}" style="align-self:flex-start">구술 테스트 전체 기록과 리포트 보기</button></div>
+    ${pushHTML('자녀가 구술 테스트 2차까지 마치면 최종 리포트를 이메일로 보내고, 알림을 켠 기기로 휴대폰 알림도 보내 드려요.')}
     <p class="note">독서 화면에서 책이나 영화를 누른 뒤 "논술 첨삭자료"를 누르면 문제별 모범 답안과 지도 순서를 볼 수 있어요.</p></div>`;
 }
 
@@ -4459,7 +4732,7 @@ document.addEventListener('click',async e=>{
     case 'custommode':S.sheet={type:isPaid()?'custom':'paywall'};renderLayers();break;
     case 'cvtab':{const i=+d.i;S.cvTab=Object.assign({},S.cvTab,{[i]:d.k});repaintCard(i);cardFill(i,d.k);break}
     case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab='work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();{const qq=qState(i);if((!qq||(qq.v!==3&&!Number.isInteger((S.progress.picks||{})[nk(i)]))||(!qq.ai&&S.sample))&&!S.qBusy[nk(i)])genQs(i)};loadMonthData(i);break}
-    case 'close1':if(S.wr){wrClose()}if(OREC)orStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.admin=null;S.bulk=null;render();break;
+    case 'close1':if(S.wr){wrClose()}if(OREC)orStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
     case 'wropen':if(!svAll(+d.i)){toast('책과 영화 세 작품의 설문을 먼저 끝내 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
     case 'svset':if(S.survey){S.survey.v[d.q]=+d.v;renderLayers()}break;
@@ -4472,7 +4745,7 @@ document.addEventListener('click',async e=>{
     case 'wrset':{const el=$('#wr-set');if(el)el.hidden=!el.hidden;break}
     case 'wrform':case 'wrfont':case 'wrdir':{S.progress.wrPref=Object.assign({},wrPref(),{[d.act==='wrform'?'form':d.act==='wrfont'?'font':'dir']:+d.v});saveProgress();wrApply();const el=$('#wr-set');if(el)el.innerHTML=wrSetHTML();wrDraw();break}
     case 'wrclear':{if(!S._wrc){S._wrc=1;toast('한 번 더 누르면 쓴 글이 모두 지워져요.');setTimeout(()=>{S._wrc=0},3000)}else{S._wrc=0;const ta=$('#wr-ta');ta.value='';wrDraw();wrSave();ta.focus()}break}
-    case 'close2':S.info=null;S.evalView=null;S.oralView=null;renderLayers();break;
+    case 'close2':if(S.oralView&&S.oralHist){S.oralView=null;renderLayers();break}S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;renderLayers();break;
     case 'start':{const key=ik(+d.i,d.k);S.progress.started=S.progress.started||{};if(S.progress.done[key])break;
       if(S.progress.started[key]){delete S.progress.started[key];saveProgress();render();toast('시작을 취소했어요.');break}
       S.progress.started[key]=Date.now();saveProgress();render();rdAlert(+d.i,d.k,'start');toast('시작! 친구와 부모님께 알렸어요.');break}
@@ -4623,7 +4896,7 @@ document.addEventListener('click',async e=>{
     case 'logout':doLogout();break;
   }
 });
-document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(S.wr)wrClose();else if(S.evalView||S.info||S.oralView){S.info=null;S.evalView=null;S.oralView=null;renderLayers()}else if(S.sheet){S.sheet=null;S.admin=null;S.bulk=null;render()}});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(S.wr)wrClose();else if(S.oralView&&S.oralHist){S.oralView=null;renderLayers()}else if(S.evalView||S.info||S.oralView||S.oralHist){S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;renderLayers()}else if(S.sheet){S.sheet=null;S.admin=null;S.bulk=null;render()}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(S.wr)wrSave();clearTimeout(pT);flush();if(mkT)mkFlush()}});
 
 /* ---------- 부팅 ---------- */

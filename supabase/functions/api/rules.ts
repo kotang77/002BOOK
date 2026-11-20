@@ -37,11 +37,23 @@ export async function related(uid: string): Promise<Set<string>> {
   return set;
 }
 export const FRIENDS = 'friends';
+/** 가족(부모·자녀)으로 연결된 회원만 */
+export async function familyOf(uid: string): Promise<Set<string>> {
+  const set = new Set<string>();
+  const { data: fam } = await sb.from('docs').select('data').eq('parent', 'family')
+    .or(`data->>parent.eq.${uid},data->>child.eq.${uid}`);
+  for (const r of fam ?? []) {
+    const d = r.data as Record<string, string>;
+    if (d.status === 'accepted') set.add(d.parent === uid ? d.child : d.parent);
+  }
+  return set;
+}
 
 /* ---------- 읽기 ---------- */
 export async function canRead(ctx: Ctx, path: string, row: Row | null): Promise<boolean> {
   const t = top(path), id = path.split('/')[1] ?? '';
   if (t === 'config') return true;                        // 계획표·공지 등: 로그인 전에도 읽음
+  if (t === 'sys') return false;                          // 서버 전용(푸시 키 등): 누구도 읽지 못함
   if (!ctx.uid) return false;
   if (ctx.admin && t !== 'diaries' && t !== 'dykeys' && t !== 'msgs') return true; // 일기·친구 메시지는 관리자도 못 봄
   const me = ctx.uid, d = (row?.data ?? {}) as Record<string, unknown>;
@@ -54,8 +66,10 @@ export async function canRead(ctx: Ctx, path: string, row: Row | null): Promise<
       return id === me;
     case 'evals': case 'orals':                          // 논술·구술 평가: 본인 + 친구·가족
       return mineByPrefix(id, me) || (await related(me)).has(ownerOf(row));
-    case 'orauds':                                       // 구술 녹음(목소리): 본인만 (관리자는 위에서 허용)
-      return mineByPrefix(id, me);
+    case 'orauds':                                       // 구술 녹음(목소리): 본인과 가족(부모·선생님)만. 친구는 못 들음 (관리자는 위에서 허용)
+      return mineByPrefix(id, me) || (await familyOf(me)).has(ownerOf(row));
+    case 'pushsubs':
+      return id === me;
     case 'works': case 'workimgs': {
       const o = ownerOf(row);
       return o === me || mineByPrefix(id, me) || (await related(me)).has(o);
@@ -106,6 +120,10 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
   const ownerOk = !existing || existing.owner === me || existing.owner == null;
 
   switch (t) {
+    case 'sys':
+      return false;
+    case 'pushsubs':
+      return id === me;
     case 'config': case 'resets':
       return ctx.admin;
     case 'members':

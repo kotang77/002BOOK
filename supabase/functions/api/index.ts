@@ -6,6 +6,7 @@ import {
 import { canRead, canWrite, Ctx, redact, Row, sanitize } from './rules.ts';
 import { sampleAI } from './ai.ts';
 import { payConfirm, payPlans, payReady } from './pay.ts';
+import { addSub, pushTo, removeSub, vapid } from './push.ts';
 
 const SESSION_DAYS = 60;
 const PBKDF2_ITER = 120000;
@@ -214,7 +215,7 @@ async function resetPw(b: Record<string, unknown>) {
 async function deleteAll(id: string) {
   // 회원이 만든 모든 문서와 회원이 관련된 공유 문서를 지운다
   const del = (q: ReturnType<typeof sb.from>) => q;
-  await sb.from('docs').delete().in('path', ['members/' + id, 'progress/' + id, 'custom/' + id, 'dykeys/' + id, 'subs/' + id, 'resets/' + id]);
+  await sb.from('docs').delete().in('path', ['members/' + id, 'progress/' + id, 'custom/' + id, 'dykeys/' + id, 'subs/' + id, 'resets/' + id, 'pushsubs/' + id]);
   for (const col of ['evals', 'orals', 'orauds', 'diaries', 'works', 'essays', 'reviews']) {
     const { data } = await sb.from('docs').select('path, id').eq('parent', col);
     const mine = (data ?? []).filter((r: { id: string }) => (col === 'essays' || col === 'reviews') ? r.id.endsWith('_' + id) : r.id.startsWith(id + '_'));
@@ -268,6 +269,61 @@ async function importDocs(b: { docs: Record<string, Record<string, unknown>> }) 
     n++;
   }
   return { docs: n, accounts: acc };
+}
+
+
+/* ================================================================
+ * 구술 테스트 최종 리포트: 가족으로 연결된 부모·선생님에게 메일(PDF 첨부) + 휴대폰 푸시 + 앱 알림
+ * ================================================================ */
+async function familyAdults(uid: string): Promise<string[]> {
+  const { data } = await sb.from('docs').select('data').eq('parent', 'family').eq('data->>child', uid);
+  const ids = (data ?? []).map((r: { data: Record<string, string> }) => r.data).filter((d) => d.status === 'accepted' && d.parent && d.parent !== uid).map((d) => d.parent);
+  return [...new Set(ids)];
+}
+async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
+  const uid = need(ctx);
+  const key = String(b.key ?? '');
+  if (!/^[bc]\d{1,3}$/.test(key)) fail('bad_request', '잘못된 요청이에요.');
+  const ev = await readRow(`orals/${uid}_${key}_r2`);
+  if (!ev) fail('not_found', '2차 구술 평가를 먼저 마쳐 주세요.', 404);
+  const ids = await familyAdults(uid);
+  const mems = await Promise.all(ids.map((id) => readRow('members/' + id)));
+  const to = ids.map((id, n) => ({ id, nick: String(mems[n]?.data?.nick ?? id) }));
+  if (b.check) return { to: to.map((x) => x.nick) };
+  if (!to.length) return { to: [], mailed: 0, pushed: 0 };
+  const d = ev!.data as Record<string, unknown>;
+  const sentN = Number(d.sentN ?? 0);
+  if (sentN >= 5) fail('rate_limited', '이 리포트는 이미 여러 번 보냈어요.', 429);
+  const pdf = String(b.pdf ?? '');
+  if (!pdf.startsWith('JVBER') || pdf.length > 9_000_000) fail('bad_request', '리포트 파일이 올바르지 않아요.');
+  const me = await readRow('members/' + uid);
+  const nick = String(me?.data?.nick ?? uid);
+  const title = String(d.title ?? ''), gm = `${d.g ?? ''} ${d.m ?? ''}`.trim();
+  const t1 = Number(d.firstTotal ?? 0), t2 = Number(d.total ?? 0), gr = Number(d.growth ?? 0);
+  const fname = String(b.filename ?? 'oral-report.pdf').replace(/[\\/:*?"<>|]/g, '').slice(0, 80) || 'oral-report.pdf';
+  const accs = await Promise.all(ids.map((id) => account(id)));
+  const emails = accs.map((a) => a?.email).filter((e): e is string => !!e && EMAIL_RE.test(e));
+  let mailed = 0;
+  if (emails.length) {
+    await sendMail(emails, `[002BOOK] ${nick}의 구술 테스트 리포트 (${gm} 「${title}」)`, mailShell('구술 테스트 최종 리포트',
+      `<p><b>${escHtml(nick)}</b> 학생이 ${escHtml(gm)} 「${escHtml(title)}」 구술 테스트를 마쳤어요.</p>
+       <table style="border-collapse:collapse;margin:10px 0;font-size:15px"><tr><td style="padding:6px 12px;border:1px solid #DCCFBB">1차 총점</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${t1}</b>점</td></tr>
+       <tr><td style="padding:6px 12px;border:1px solid #DCCFBB">2차 총점</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${t2}</b>점 (${t2 - t1 >= 0 ? '+' : ''}${t2 - t1})</td></tr>
+       <tr><td style="padding:6px 12px;border:1px solid #DCCFBB">대답 성장 점수</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${gr}</b>점</td></tr></table>
+       ${d.teacher ? `<p style="background:#EEF5EC;padding:10px 12px;border-radius:8px">${escHtml(d.teacher)}</p>` : ''}
+       <p>1차·2차 대답 첨삭과 성장 분석은 <b>첨부한 PDF 리포트</b>에 있어요. 002BOOK에 로그인하면 자녀 화면에서 녹음도 들어 볼 수 있어요.</p>
+       <p style="font-size:12px;color:#6F6155">이 리포트는 생성형 AI(Anthropic Claude)가 작성한 평가예요. 가족으로 연결된 보호자에게만 보내요.</p>`),
+      [{ filename: fname, content: pdf }]);
+    mailed = emails.length;
+  }
+  const at = Date.now(); let pushed = 0;
+  for (const x of to) {
+    const text = `${nick} 학생의 ${gm} 「${title}」 구술 테스트: 1차 ${t1}점 → 2차 ${t2}점, 성장 점수 ${gr}점`;
+    await writeRow(`alerts/${x.id}_${uid}_${at}_oral`, { to: x.id, from: uid, fromNick: nick, title: '구술 테스트 리포트', text, at }, uid, null);
+    pushed += await pushTo(x.id, { title: '002BOOK 구술 테스트 리포트', body: text, url: '/', tag: 'oral-' + uid + '-' + key });
+  }
+  await writeRow(ev!.path, { ...d, sentN: sentN + 1, sentAt: at, sentTo: to.map((x) => x.nick) }, uid, ev);
+  return { to: to.map((x) => x.nick), mailed, pushed };
 }
 
 /* ================================================================
@@ -394,6 +450,17 @@ async function handle(req: Request, b: Record<string, unknown>) {
       await sb.from('docs').delete().eq('path', path);
       return { ok: true };
     }
+
+    /* ---- 휴대폰 알림·구술 리포트 ---- */
+    case 'push.key': { need(ctx); return { pub: (await vapid()).pub }; }
+    case 'push.sub': {
+      const uid = need(ctx);
+      try { await addSub(uid, b.sub as never, String(b.ua ?? '')); } catch { fail('bad_request', '알림 정보를 저장하지 못했어요.'); }
+      return { ok: true };
+    }
+    case 'push.unsub': { const uid = need(ctx); await removeSub(uid, b.endpoint ? String(b.endpoint) : undefined); return { ok: true }; }
+    case 'push.test': { const uid = need(ctx); return { sent: await pushTo(uid, { title: '002BOOK 알림 확인', body: '이제 이 기기에서 002BOOK 알림을 받을 수 있어요.', url: '/' }) }; }
+    case 'oral.report': return oralReport(ctx, b);
 
     /* ---- AI ---- */
     case 'ai.sample': {

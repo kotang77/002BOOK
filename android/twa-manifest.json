@@ -12,7 +12,7 @@
   "navigationDividerColor": "#DCCFBB",
   "navigationDividerColorDark": "#2A1F19",
   "backgroundColor": "#F3ECDF",
-  "enableNotifications": false,
+  "enableNotifications": true,
   "startUrl": "/?source=twa",
   "iconUrl": "https://002book.com/icons/icon-512.png",
   "maskableIconUrl": "https://002book.com/icons/maskable-512.png",
