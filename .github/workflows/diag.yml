@@ -14,6 +14,6 @@ jobs:
       - name: 비밀값이 있는지만 확인 (값은 출력하지 않음)
         run: |
           for k in ANTHROPIC_API_KEY RESEND_API_KEY; do [ -n "${!k}" ] && echo "GitHub 비밀값 $k: 있음" || echo "GitHub 비밀값 $k: 없음"; done
-          supabase secrets list --project-ref "$REF" -o json | python3 -c "import sys,json;print('서버 비밀값:',', '.join(sorted(x['name'] for x in json.load(sys.stdin) if not x['name'].startswith('SUPABASE'))))"
+          supabase secrets list --project-ref "$REF" 2>/dev/null | grep -o 'ANTHROPIC_API_KEY\|RESEND_API_KEY' | sed 's/^/서버 비밀값 있음: /' || true
       - name: 구술 평가 요청 시험 (4개 동시 → 1개 단독, 시험 계정은 끝나면 삭제)
         run: timeout 900 python3 scripts/diag/oral_probe.py all
