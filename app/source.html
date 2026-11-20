@@ -3488,8 +3488,8 @@ function orSRText(R){
   segs.forEach(t=>{t=String(t||'').trim();if(!t)return;const p=out[out.length-1];
     if(p&&t.startsWith(p))out[out.length-1]=t;else if(p&&p.startsWith(t))return;else out.push(t)});
   return out.join(' ').replace(/\s+/g,' ').trim()}
-async function orStart(i,n,mode){
-  mode=mode==='s'?'s':+mode===2?2:1;
+async function orStart(i,n,mode,retry){
+  mode=mode==='s'?'s':+mode===2?2:1;retry=+retry||0;
   if(OREC){toast('녹음 중인 것을 먼저 완료해 주세요.');return}
   const key=nk(i);const q=orQ(i);const E1=S.orals[key];if(mode===1&&(!q||!q.shown[n]))return;if(mode!==1&&!(E1&&(E1.answers||[])[n]))return;
   if(mode===1&&S.orals[key]){toast('1차 평가를 마친 대답은 다시 녹음할 수 없어요. 2차 대답으로 이어가요.');return}
@@ -3503,27 +3503,31 @@ async function orStart(i,n,mode){
   const mime=orMime();let rec;
   try{rec=new MediaRecorder(stream,mime?{mimeType:mime,audioBitsPerSecond:32000}:{audioBitsPerSecond:32000})}catch(e){rec=new MediaRecorder(stream)}
   const qt=mode==='s'?String(E1.answers[n].model||''):mode===2?String(E1.answers[n].q||''):q.shown[n];
-  const R={i,key,n,mode,q:qt,max:OR_MAXS[mode],stream,rec,chunks:[],done:[],cur:[],interim:'',t0:Date.now(),mime:rec.mimeType||mime||'audio/webm',sr:null,stop:false};
+  const R={i,key,n,mode,q:qt,max:OR_MAXS[mode],stream,rec,chunks:[],done:[],cur:[],interim:'',t0:Date.now(),mime:rec.mimeType||mime||'audio/webm',sr:null,stop:false,retry};
   rec.ondataavailable=e=>{if(e.data&&e.data.size)R.chunks.push(e.data)};
-  rec.onstop=()=>{orFinish(R)};
-  rec.start(1000);
-  if(OR_SR){try{const sr=new OR_SR();sr.lang='ko-KR';sr.continuous=true;sr.interimResults=true;sr.maxAlternatives=1;
+  /* 마이크가 저절로 끊기면(다른 앱·음성 인식이 마이크를 가져감) 빈 답으로 저장하지 않고 다시 시도한다 */
+  const lost=()=>{if(!R.stop){R.lost=true;orStop()}};
+  rec.onstop=()=>{if(!R.stop)lost();else orFinish(R)};
+  rec.onerror=lost;
+  try{stream.getAudioTracks().forEach(t=>t.addEventListener('ended',lost))}catch(e){}
+  try{rec.start(1000)}catch(e){try{stream.getTracks().forEach(t=>t.stop())}catch(x){}toast('녹음을 시작하지 못했어요. 다시 눌러 주세요.');return}
+  const srGo=()=>{if(OREC!==R||R.stop)return;if(OR_SR&&retry<2){try{const sr=new OR_SR();sr.lang='ko-KR';sr.continuous=true;sr.interimResults=true;sr.maxAlternatives=1;
     sr.onresult=e=>{const fin=[];let im='';for(let k=0;k<e.results.length;k++){const r=e.results[k];if(r.isFinal)fin.push(r[0].transcript);else im+=r[0].transcript}R.cur=fin;R.interim=im;orLive()};
     sr.onerror=e=>{R.srErr=e&&e.error};
     sr.onend=()=>{R.done=R.done.concat(R.cur);R.cur=[];R.interim='';if(!R.stop&&OREC===R&&!['not-allowed','service-not-allowed','audio-capture'].includes(R.srErr)&&(R.srN=(R.srN||0)+1)<40){try{sr.start()}catch(x){}}else if(R.stop&&R.srWait)R.srWait()};
-    sr.start();R.sr=sr}catch(e){R.sr=null}}
-  OREC=R;R.timer=setInterval(()=>{if((Date.now()-R.t0)/1000>=R.max){orStop();toast(R.max/60+'분이 지나 녹음을 마쳤어요.')}else orLive()},250);
+    sr.start();R.sr=sr}catch(e){R.sr=null}}orLive()};
+  OREC=R;if(retry)setTimeout(srGo,700);else srGo();R.timer=setInterval(()=>{if((Date.now()-R.t0)/1000>=R.max){orStop();toast(R.max/60+'분이 지나 녹음을 마쳤어요.')}else orLive()},250);
   renderLayers();
 }
 function orLive(){
   const R=OREC;if(!R)return;const s=Math.min(R.max,(Date.now()-R.t0)/1000);
   const t=$('#or-t'),b=$('#or-b'),l=$('#or-live');
   if(t){t.textContent=orMS(s)+' / '+orMS(R.max);t.classList.toggle('late',s>=R.max-15)}if(b)b.style.width=(s/R.max*100).toFixed(1)+'%';
-  if(l){const tx=(orSRText(R)+' '+R.interim).trim();l.textContent=tx||(R.sr?'말을 시작하면 여기에 글자로 나타나요…':'이 브라우저는 음성 인식을 지원하지 않아요. 녹음이 끝나면 말한 내용을 직접 적어 주세요.')}
+  if(l){const tx=(orSRText(R)+' '+R.interim).trim();l.textContent=tx||(R.sr?'말을 시작하면 여기에 글자로 나타나요…':OR_SR&&R.retry>=2?'마이크 문제로 받아 적기 없이 녹음만 하고 있어요. 녹음이 끝나면 말한 내용을 직접 적어 주세요.':OR_SR&&R.retry?'마이크를 다시 연결했어요. 말을 시작하면 여기에 글자로 나타나요…':'이 브라우저는 음성 인식을 지원하지 않아요. 녹음이 끝나면 말한 내용을 직접 적어 주세요.')}
 }
 function orStop(discard){
   const R=OREC;if(!R||R.stop)return;R.stop=true;R.discard=!!discard;clearInterval(R.timer);R.sec=Math.min(R.max,Math.round((Date.now()-R.t0)/1000));
-  R.srDone=new Promise(res=>{R.srWait=res;setTimeout(res,1500)});
+  R.srDone=new Promise(res=>{R.srWait=res;setTimeout(res,R.lost?300:1500)});
   if(R.sr){try{R.sr.stop()}catch(e){R.srWait()}}else R.srWait();
   try{R.rec.state!=='inactive'?R.rec.stop():orFinish(R)}catch(e){orFinish(R)}
   try{R.stream.getTracks().forEach(t=>t.stop())}catch(e){}
@@ -3531,11 +3535,15 @@ function orStop(discard){
 }
 const orB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const s=String(r.result);res(s.slice(s.indexOf(',')+1))};r.onerror=rej;r.readAsDataURL(b)});
 async function orFinish(R){
-  if(R.fin)return;R.fin=true;
+  if(R.fin)return;R.fin=true;clearInterval(R.timer);
   await R.srDone;
   if(OREC===R)OREC=null;
   if(R.discard){renderLayers();return}
+  if(R.sec==null)R.sec=Math.min(R.max,Math.round((Date.now()-R.t0)/1000));
   const text=orSRText(R);const blob=new Blob(R.chunks,{type:R.mime.split(';')[0]});
+  if(R.lost&&R.sec<3){
+    if(R.retry<2){toast('마이크가 끊겨 다시 연결하고 있어요. 잠시만요…');renderLayers();setTimeout(()=>orStart(R.i,R.n,R.mode,R.retry+1),400);return}
+    toast('마이크가 바로 끊겼어요. 다른 앱이 마이크를 쓰고 있는지 확인하고 다시 눌러 주세요.');renderLayers();return}
   if(R.sec<3||(!blob.size&&!text)){toast('녹음이 너무 짧아요. 다시 해 주세요.');renderLayers();return}
   const key=R.key;const D=S.odoc[key]=orD(R.i);const fld=R.mode==='s'?'sh':R.mode===2?'ans2':'ans';
   const a={q:R.q,text,raw:text,sec:R.sec,at:Date.now(),mime:blob.type||R.mime,audio:false};
@@ -3549,6 +3557,7 @@ async function orFinish(R){
       else toast('녹음 파일이 너무 커서 소리는 저장하지 않았어요. 말한 내용은 저장했어요.')}
   }catch(e){toast('녹음 소리를 저장하지 못했어요. 말한 내용은 저장했어요.')}
   await orSaveAns(R.i);
+  if(R.lost)toast('마이크가 끊겨 녹음이 '+orMS(R.sec)+'에서 멈췄어요. 여기까지 저장했어요.');else
   toast(R.mode==='s'?'따라 읽기를 마쳤어요. 이제 3분 동안 내 대답을 다시 생각해 봐요.':text?'대답을 저장했어요. 잘못 알아들은 낱말이 있으면 고쳐 주세요.':'녹음을 저장했어요. 녹음을 들으며 말한 내용을 직접 적어 주세요.');
   renderLayers();
 }
@@ -3655,7 +3664,7 @@ function oralR1HTML(i){
   <div class="sec"><h3>구술 답하고 평가 받기</h3>${orSteps(i)}
     ${!OR_SR?'<p class="warn">이 브라우저는 음성 인식을 지원하지 않아 녹음만 돼요. 녹음 뒤 말한 내용을 직접 적어 주세요. 크롬이나 사파리에서는 말한 내용이 자동으로 적혀요.</p>':''}
     <p class="hint">세 질문에 모두 답하면 1차 구술 평가를 받아요. 평가가 끝나면 모범 답안을 따라 읽고 3분 생각한 뒤 다시 대답하는 2차 도전이 열려요.</p>
-    <div class="orgo"><button class="btn" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>1차 구술 평가 받기</button><span class="hint">${done<OR_N?`답변 ${done} / ${OR_N}`:'세 답변을 모아 평가해요. 1~2분 걸려요.'}</span></div>
+    <div class="orgo"><button class="btn" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>1차 구술 평가 받기</button><span class="hint">${done<OR_N?'답변 '+orNeed(D,ans,OR_N):'세 답변을 모아 평가해요. 1~2분 걸려요.'}</span></div>
     ${evb?`<p class="hint" role="status" id="or-msg">${esc(S.oralMsg||'')}</p>`:''}
     ${!S.sample?'<p class="warn">Claude 연결이 없어 구술 평가를 받을 수 없어요.</p>':''}
     ${S.oralOff&&S.oralOff.i===i?`<div class="offtopic" role="alert"><b>질문과 맞지 않아요</b><p>${esc(S.oralOff.reason||'답변이 질문과 거리가 멀어 보여요.')}</p><p>질문을 다시 떠올려 내 생각을 담아 다시 녹음한 뒤 평가를 눌러 주세요. 이번 답변은 점수에 반영되지 않았어요.</p></div>`:''}
@@ -3693,7 +3702,7 @@ function oralR2HTML(i){
     <p class="hint">질문마다 1차 대답을 다시 들어 보고, 모범 답안을 소리 내어 따라 읽어요. 따라 읽기를 마치면 3분 생각 시간이 주어지고, 그다음 같은 질문에 다시 대답해요. 세 질문을 모두 다시 대답하면 2차 평가에서 1차와 비교해 대답 성장 점수를 받아요.</p>
     ${(ev.answers||[]).map(card).join('')}
     ${ev2?`<div class="praise"><b>2차 평가 완료 · 1차 ${esc(ev.total)}점 → 2차 ${esc(ev2.total)}점 · 성장 점수 ${esc(ev2.growth)}점</b><p>${ev2.sentAt?`최종 리포트를 ${esc((ev2.sentTo||[]).join(', '))}님께 이메일과 휴대폰 알림으로 보냈어요.`:'가족으로 연결된 부모님·선생님이 있으면 최종 리포트를 이메일과 휴대폰 알림으로 보내 드려요.'}</p></div>`
-      :`<div class="orgo"><button class="btn" data-act="oreval2" data-i="${i}" ${!ready||OREC||evb||!S.sample?'disabled':''}>2차 평가 받기</button><span class="hint">${ready?'1차와 비교해 평가하고 최종 리포트를 만들어요. 1~2분 걸려요.':`다시 대답 ${(ev.answers||[]).filter((a,n)=>D.ans2[n]&&String(D.ans2[n].text||'').trim()).length} / ${OR_N}`}</span></div>`}
+      :`<div class="orgo"><button class="btn" data-act="oreval2" data-i="${i}" ${!ready||OREC||evb||!S.sample?'disabled':''}>2차 평가 받기</button><span class="hint">${ready?'1차와 비교해 평가하고 최종 리포트를 만들어요. 1~2분 걸려요.':'다시 대답 '+orNeed(D,D.ans2,OR_N)}</span></div>`}
     ${evb?`<p class="hint" role="status" id="or-msg">${esc(S.oralMsg||'')}</p>`:''}
     ${S.orSend&&S.orSend.key===key?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:''}
   </div>`;
@@ -4031,10 +4040,15 @@ function orAct(d){
       S.orArm=null;genOQs(i,n);return true}
   }
   return false}
+/* 평가 버튼 옆 안내: 녹음은 했는데 말한 내용이 비어 있는 질문을 짚어 준다 */
+function orNeed(D,list,n){const has=x=>x&&String(x.text||'').trim();const miss=[];const empty=[];
+  for(let k=0;k<n;k++){if(has(list[k]))continue;(list[k]?empty:miss).push(k+1)}
+  const done=n-miss.length-empty.length;
+  return `${done} / ${n}`+(empty.length?` · ${empty.join('·')}번은 녹음은 됐는데 말한 내용이 비어 있어요. 녹음을 들으며 적거나 다시 녹음해 주세요`:'')}
 function orSync(i){const key=nk(i);const D=orD(i);const has=x=>x&&String(x.text||'').trim();const busy=!!OREC||S.oralBusy===key||!S.sample;
   const b1=document.querySelector('[data-act=oreval]');if(b1){const q=orQ(i);const n=q?q.shown.filter((_,k)=>has(D.ans[k])).length:0;b1.disabled=busy||n<OR_N}
-  const b2=document.querySelector('[data-act=oreval2]');if(b2){const ev=S.orals[key];const n=ev?(ev.answers||[]).filter((_,k)=>has(D.ans2[k])).length:0;b2.disabled=busy||n<OR_N;const h=b2.nextElementSibling;if(h)h.textContent=n<OR_N?`다시 대답 ${n} / ${OR_N}`:'1차와 비교해 평가하고 최종 리포트를 만들어요. 1~2분 걸려요.'}
-  if(b1){const h=b1.nextElementSibling;const q=orQ(i);const n=q?q.shown.filter((_,k)=>has(D.ans[k])).length:0;if(h)h.textContent=n<OR_N?`답변 ${n} / ${OR_N}`:'세 답변을 모아 평가해요. 1~2분 걸려요.'}}
+  const b2=document.querySelector('[data-act=oreval2]');if(b2){const ev=S.orals[key];const n=ev?(ev.answers||[]).filter((_,k)=>has(D.ans2[k])).length:0;b2.disabled=busy||n<OR_N;const h=b2.nextElementSibling;if(h)h.textContent=n<OR_N?'다시 대답 '+orNeed(D,D.ans2,OR_N):'1차와 비교해 평가하고 최종 리포트를 만들어요. 1~2분 걸려요.'}
+  if(b1){const h=b1.nextElementSibling;const q=orQ(i);const n=q?q.shown.filter((_,k)=>has(D.ans[k])).length:0;if(h)h.textContent=n<OR_N?'답변 '+orNeed(D,D.ans,OR_N):'세 답변을 모아 평가해요. 1~2분 걸려요.'}}
 document.addEventListener('input',e=>{const t=e.target;if(!t||!t.dataset)return;
   if(t.dataset.ortx!=null){const i=+t.dataset.i,n=+t.dataset.ortx;const D=orD(i);const a=(+t.dataset.m===2?D.ans2:D.ans)[n];if(!a)return;a.text=t.value;orSync(i);clearTimeout(ORT);ORT=setTimeout(()=>orSaveAns(i),900)}
   else if(t.dataset.ormemo!=null){const i=+t.dataset.i,n=+t.dataset.ormemo;const D=S.odoc[nk(i)];if(!D)return;D.memo=D.memo.slice();D.memo[n]=t.value;clearTimeout(ORT);ORT=setTimeout(()=>orSaveAns(i),900)}});
