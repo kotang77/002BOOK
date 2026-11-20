@@ -51,17 +51,25 @@ export async function sampleAI(uid: string, paid: boolean, body: { messages: Msg
     return { role: m.role, content: String(m.content) };
   });
 
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  // Claude 5 세대는 thinking 필드를 빼면 '미리 생각하기'가 켜져 max_tokens를 생각에 다 써 버릴 수 있다(답이 비고 느려짐).
+  // 이 앱은 JSON 한 번 출력이 목적이므로 끈다. Sonnet 5.5는 between_tools, Haiku 5.5는 disabled만 받는다.
+  const model = MODELS[tier];
+  const thinking = /^claude-sonnet-5-5/.test(model) ? { type: 'between_tools' }
+    : /^claude-(haiku-5-5|sonnet-5(?!-5)|opus-5(?!-5)|sonnet-4|opus-4|haiku-4)/.test(model) ? { type: 'disabled' } : null;
+  const send = (th: unknown) => fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model: MODELS[tier], max_tokens: MAX_TOKENS[tier], system: SYSTEM, messages: apiMsgs }),
+    body: JSON.stringify({ model, max_tokens: MAX_TOKENS[tier], system: SYSTEM, messages: apiMsgs, ...(th ? { thinking: th } : {}) }),
   });
-  const j = await r.json().catch(() => null);
+  let r = await send(thinking);
+  let j = await r.json().catch(() => null);
+  // 모델이 이 thinking 값을 받지 않으면(400) thinking 필드 없이 한 번 더
+  if (thinking && r.status === 400 && /thinking/i.test(JSON.stringify(j ?? ''))) { r = await send(null); j = await r.json().catch(() => null); }
   if (!r.ok || !j) {
     if (r.status === 429 || r.status === 529) fail('rate_limited', 'AI가 지금 바빠요. 잠시 뒤 다시 시도해 주세요.', 429);
     fail('ai_failed', 'AI 응답을 받지 못했어요.', 502, j);
   }
   const text = (j.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('');
   await sb.rpc('bump_ai_usage', { p_uid: uid, p_in: j.usage?.input_tokens ?? 0, p_out: j.usage?.output_tokens ?? 0 });
-  return { text, truncated: j.stop_reason === 'max_tokens', model: MODELS[tier] };
+  return { text, truncated: j.stop_reason === 'max_tokens', model };
 }
