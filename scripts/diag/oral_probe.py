@@ -45,8 +45,14 @@ if mode in ('all', 'parallel'):
     t0 = time.time(); th = [threading.Thread(target=run, args=(k,)) for k in range(len(prompts))]
     [t.start() for t in th]; [t.join() for t in th]
     print(f'parallel x{len(prompts)} total {time.time()-t0:.1f}s')
-    for k, o in enumerate(out): print(' ', k, short(o))
-if mode in ('all', 'single'):
+    for k, o in enumerate(out):
+        print(' ', k, short(o))
+        try:
+            x = o['result']['text']; x = x[x.index('{'):x.rindex('}') + 1]; d = json.loads(x)
+            a = d.get('answers', [{}])[0] if 'answers' in d else d
+            print('    JSON OK keys=', sorted(d.keys())[:12], '| model글자=', len(str(d.get('model', ''))), '| scores=', d.get('scores'))
+        except Exception as e: print('    JSON FAIL', repr(e)[:120])
+if mode == 'single':
     print('single main:', short(api('ai.sample', tok, messages=[{'role': 'user', 'content': prompts[0]}], tier='complex', json=True)))
 if mode in ('all', 'cleanup'):
     print('withdraw:', short(api('auth.withdraw', tok, pw=PW)))
