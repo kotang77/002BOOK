@@ -1,23 +1,16 @@
-name: 진단 (구술 평가)
+name: 진단 (서버 비밀값)
 on: workflow_dispatch
 jobs:
   diag:
     runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      REF: ${{ vars.SUPABASE_PROJECT_REF }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
-      - name: 최근 함수 오류 기록 (상태 코드·실행 시간)
+      - uses: supabase/setup-cli@v1
+      - name: 비밀값이 있는지만 확인 (값은 출력하지 않음)
         run: |
-          q() { curl -s -G "https://api.supabase.com/v1/projects/$REF/analytics/endpoints/logs.all" \
-              -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
-              --data-urlencode "iso_timestamp_start=$(date -u -d '-6 hours' +%Y-%m-%dT%H:%M:%SZ)" \
-              --data-urlencode "iso_timestamp_end=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-              --data-urlencode "sql=$1"; echo; }
-          echo '== edge (status >= 400 or slow) =='
-          q "select timestamp, r.status_code, m.execution_time_ms from function_edge_logs cross join unnest(metadata) as m cross join unnest(m.response) as r where r.status_code >= 400 or m.execution_time_ms > 60000 order by timestamp desc limit 40" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x) for x in d.get('result',d) if True] if isinstance(d,dict) else print(d)"
-          echo '== function errors =='
-          q "select timestamp, event_message from function_logs cross join unnest(metadata) as m where m.level in ('error','warning') order by timestamp desc limit 40" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(x.get('timestamp'),str(x.get('event_message'))[:400]) for x in d.get('result',[])] if isinstance(d,dict) and 'result' in d else print(str(d)[:2000])"
-      - name: 평가 요청 시험 (4개 동시 → 1개 단독)
-        run: timeout 900 python3 scripts/diag/oral_probe.py all
+          for k in ANTHROPIC_API_KEY RESEND_API_KEY; do [ -n "${!k}" ] && echo "GitHub 비밀값 $k: 있음" || echo "GitHub 비밀값 $k: 없음"; done
+          echo "서버(Supabase)에 설정된 비밀값 이름:"
+          supabase secrets list --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" | awk -F'|' 'NR>2{gsub(/ /,"",$1);print " - "$1}'
