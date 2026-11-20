@@ -27,7 +27,12 @@ jobs:
         with: { distribution: temurin, java-version: 17 }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - run: echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> "$GITHUB_ENV"
+      - name: 안드로이드 SDK 준비
+        run: |
+          SDK=$HOME/android-sdk
+          mkdir -p $SDK/tools
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK "build-tools;36.1.0" "platforms;android-36" "platform-tools" > /dev/null
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
       - run: npm i -g @bubblewrap/cli@1
 
       - name: 서명 키 준비
