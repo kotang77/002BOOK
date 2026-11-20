@@ -57,7 +57,8 @@ jobs:
 
       - name: Bubblewrap 설정
         run: |
-          mkdir -p ~/.bubblewrap
+          mkdir -p ~/.bubblewrap ~/.gradle
+          printf "org.gradle.logging.level=quiet\norg.gradle.console=plain\nandroid.suppressUnsupportedCompileSdk=36\n" > ~/.gradle/gradle.properties
           echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
 
       - name: 앱 프로젝트 생성·빌드
