@@ -215,7 +215,7 @@ async function deleteAll(id: string) {
   // 회원이 만든 모든 문서와 회원이 관련된 공유 문서를 지운다
   const del = (q: ReturnType<typeof sb.from>) => q;
   await sb.from('docs').delete().in('path', ['members/' + id, 'progress/' + id, 'custom/' + id, 'dykeys/' + id, 'subs/' + id, 'resets/' + id]);
-  for (const col of ['evals', 'diaries', 'works', 'essays', 'reviews']) {
+  for (const col of ['evals', 'orals', 'orauds', 'diaries', 'works', 'essays', 'reviews']) {
     const { data } = await sb.from('docs').select('path, id').eq('parent', col);
     const mine = (data ?? []).filter((r: { id: string }) => (col === 'essays' || col === 'reviews') ? r.id.endsWith('_' + id) : r.id.startsWith(id + '_'));
     for (let i = 0; i < mine.length; i += 100) await sb.from('docs').delete().in('path', mine.slice(i, i + 100).map((r: { path: string }) => r.path));
