@@ -33,6 +33,7 @@ jobs:
           mkdir -p $SDK/tools
           yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK "build-tools;36.1.0" "platforms;android-36" "platform-tools" > /dev/null
           echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
       - run: npm i -g @bubblewrap/cli@1
 
       - name: 서명 키 준비
