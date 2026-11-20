@@ -303,8 +303,8 @@ async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
   const fname = String(b.filename ?? 'oral-report.pdf').replace(/[\\/:*?"<>|]/g, '').slice(0, 80) || 'oral-report.pdf';
   const accs = await Promise.all(ids.map((id) => account(id)));
   const emails = accs.map((a) => a?.email).filter((e): e is string => !!e && EMAIL_RE.test(e));
-  let mailed = 0;
-  if (emails.length) {
+  let mailed = 0, mailErr = '';
+  if (emails.length) try {
     await sendMail(emails, `[002BOOK] ${nick}의 구술 테스트 리포트 (${gm} 「${title}」)`, mailShell('구술 테스트 최종 리포트',
       `<p><b>${escHtml(nick)}</b> 학생이 ${escHtml(gm)} 「${escHtml(title)}」 구술 테스트를 마쳤어요.</p>
        <table style="border-collapse:collapse;margin:10px 0;font-size:15px"><tr><td style="padding:6px 12px;border:1px solid #DCCFBB">1차 총점</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${t1}</b>점</td></tr>
@@ -315,7 +315,7 @@ async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
        <p style="font-size:12px;color:#6F6155">이 리포트는 생성형 AI(Anthropic Claude)가 작성한 평가예요. 가족으로 연결된 보호자에게만 보내요.</p>`),
       [{ filename: fname, content: pdf }]);
     mailed = emails.length;
-  }
+  } catch (e) { mailErr = e instanceof HttpErr ? e.code : 'mail_failed'; console.log('oral report mail failed', String(e)); }
   const at = Date.now(); let pushed = 0;
   for (const x of to) {
     const text = `${nick} 학생의 ${gm} 「${title}」 구술 테스트: 1차 ${t1}점 → 2차 ${t2}점, 성장 점수 ${gr}점`;
@@ -323,7 +323,7 @@ async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
     pushed += await pushTo(x.id, { title: '002BOOK 구술 테스트 리포트', body: text, url: '/', tag: 'oral-' + uid + '-' + key });
   }
   await writeRow(ev!.path, { ...d, sentN: sentN + 1, sentAt: at, sentTo: to.map((x) => x.nick) }, uid, ev);
-  return { to: to.map((x) => x.nick), mailed, pushed };
+  return { to: to.map((x) => x.nick), mailed, pushed, mailErr };
 }
 
 /* ================================================================

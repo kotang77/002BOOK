@@ -3698,7 +3698,7 @@ async function orSendReport(i,manual){
     const data=await orB64(pdf.output('blob'));
     const r=await SV.call('oral.report',{key,pdf:data,filename:fname+'.pdf'});
     ev2.sentAt=Date.now();ev2.sentTo=r.to;ev2.sentN=(ev2.sentN||0)+1;
-    S.orSend={key,msg:`최종 리포트를 ${r.to.join(', ')}님께 보냈어요. (이메일 ${r.mailed}통 · 휴대폰 알림 ${r.pushed}건)`};
+    S.orSend={key,msg:`최종 리포트를 ${r.to.join(', ')}님께 보냈어요. (이메일 ${r.mailed}통 · 휴대폰 알림 ${r.pushed}건 · 앱 알림 ${r.to.length}건)${r.mailErr?' 이메일은 아직 보낼 수 없어 알림으로만 알렸어요.':''}${!r.pushed?' 휴대폰 알림을 받으려면 부모님 기기에서 [내 정보 → 휴대폰 알림 켜기]를 눌러 주세요.':''}`};
     toast('부모님·선생님께 최종 리포트를 보냈어요.');
   }catch(e){console.warn('orSendReport',e);S.orSend={key,msg:e&&e.code==='rate_limited'?'이 리포트는 이미 여러 번 보냈어요.':'리포트를 보내지 못했어요. 최종 리포트 화면에서 [다시 보내기]를 눌러 주세요.'};}
   renderLayers();
