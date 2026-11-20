@@ -3758,7 +3758,7 @@ const OR_SC_JSON='{"이해":0,"논리":0,"근거":0,"표현":0,"전달력":0,"�
 const OR_SW_JSON='{"이해":{"plus":[""],"minus":[""]},"논리":{"plus":[""],"minus":[""]},"근거":{"plus":[""],"minus":[""]},"표현":{"plus":[""],"minus":[""]},"전달력":{"plus":[""],"minus":[""]},"태도":{"plus":[""],"minus":[""]}}';
 const orPrevText=prev=>prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 1차 ${x.t1??x.total}점${x.t2!=null?` → 2차 ${x.t2}점, 성장 점수 ${x.growth}`:''}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 구술 테스트)';
 function orScore(sc){const scores=Object.fromEntries(Object.entries(sc||{}).map(([k,v])=>[k,Math.max(70,Math.min(100,scv(v)))]));const nums=Object.values(scores).map(Number).filter(x=>!isNaN(x));return {scores,total:nums.length?Math.round(nums.reduce((a,b)=>a+b,0)/nums.length):0}}
-function orErr(e,msg){const c=e&&e.code;toast(c==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':c==='invalid_json'||c==='bad_json'?'평가 결과가 중간에 끊겼어요. 한 번 더 눌러 주세요.':msg);renderLayers()}
+function orErr(e,msg){const c=e&&e.code;toast(c==='ai_not_configured'?'AI 연결이 아직 설정되지 않아 평가할 수 없어요. 관리자에게 알려 주세요.':c==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':c==='invalid_json'||c==='bad_json'?'평가 결과가 중간에 끊겼어요. 한 번 더 눌러 주세요.':msg);renderLayers()}
 /* ---------- 2차 평가: 1차와 비교, 대답 성장 점수 ---------- */
 async function oralEval2(i){
   const key=nk(i);const it=items()[i];const ev=S.orals[key];const D=orD(i);
