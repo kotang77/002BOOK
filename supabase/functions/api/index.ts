@@ -7,6 +7,7 @@ import { canRead, canWrite, Ctx, redact, Row, sanitize } from './rules.ts';
 import { sampleAI } from './ai.ts';
 import { payConfirm, payPlans, payReady } from './pay.ts';
 import { addSub, pushTo, removeSub, vapid } from './push.ts';
+import { oralOp } from './oral.ts';
 
 const SESSION_DAYS = 60;
 const PBKDF2_ITER = 120000;
@@ -216,7 +217,7 @@ async function deleteAll(id: string) {
   // 회원이 만든 모든 문서와 회원이 관련된 공유 문서를 지운다
   const del = (q: ReturnType<typeof sb.from>) => q;
   await sb.from('docs').delete().in('path', ['members/' + id, 'progress/' + id, 'custom/' + id, 'dykeys/' + id, 'subs/' + id, 'resets/' + id, 'pushsubs/' + id]);
-  for (const col of ['evals', 'orals', 'orauds', 'diaries', 'works', 'essays', 'reviews']) {
+  for (const col of ['evals', 'orals', 'oralst', 'orauds', 'diaries', 'works', 'essays', 'reviews']) {
     const { data } = await sb.from('docs').select('path, id').eq('parent', col);
     const mine = (data ?? []).filter((r: { id: string }) => (col === 'essays' || col === 'reviews') ? r.id.endsWith('_' + id) : r.id.startsWith(id + '_'));
     for (let i = 0; i < mine.length; i += 100) await sb.from('docs').delete().in('path', mine.slice(i, i + 100).map((r: { path: string }) => r.path));
@@ -460,6 +461,8 @@ async function handle(req: Request, b: Record<string, unknown>) {
     }
     case 'push.unsub': { const uid = need(ctx); await removeSub(uid, b.endpoint ? String(b.endpoint) : undefined); return { ok: true }; }
     case 'push.test': { const uid = need(ctx); return { sent: await pushTo(uid, { title: '002BOOK 알림 확인', body: '이제 이 기기에서 002BOOK 알림을 받을 수 있어요.', url: '/' }) }; }
+    case 'oral.state': case 'oral.save1': case 'oral.shadow': case 'oral.ans2': case 'oral.prep2': case 'oral.finalize':
+      return oralOp(String(b.op), need(ctx), b, { read: readRow, write: writeRow });
     case 'oral.report': return oralReport(ctx, b);
 
     /* ---- AI ---- */

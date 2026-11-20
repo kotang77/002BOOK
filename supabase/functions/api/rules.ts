@@ -64,7 +64,7 @@ export async function canRead(ctx: Ctx, path: string, row: Row | null): Promise<
       return id === me || (await related(me)).has(id);
     case 'custom': case 'subs':
       return id === me;
-    case 'evals': case 'orals':                          // 논술·구술 평가: 본인 + 친구·가족
+    case 'evals': case 'orals': case 'oralst':           // 논술·구술 평가(구술 진행 상태 포함): 본인 + 친구·가족
       return mineByPrefix(id, me) || (await related(me)).has(ownerOf(row));
     case 'orauds':                                       // 구술 녹음(목소리): 본인과 가족(부모·선생님)만. 친구는 못 들음 (관리자는 위에서 허용)
       return mineByPrefix(id, me) || (await familyOf(me)).has(ownerOf(row));
@@ -133,7 +133,11 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
     case 'progress': case 'custom': case 'subs':
       if (t === 'subs' && kind !== 'delete' && !ctx.admin && ['active', 'ended'].includes(String(nd.status)) && od.status !== nd.status && !(od.status === 'cancel_requested' && nd.status === 'active')) return false;
       return id === me || ctx.admin;
-    case 'evals': case 'diaries': case 'works': case 'orals': case 'orauds':
+    case 'oralst':                                       // 구술 진행 상태: 서버(oral.*)만 쓴다
+      return false;
+    case 'orals':                                        // 1차·2차 평가 결과는 서버가 검증해 저장. 회원은 답변 문서(_a)만
+      return (mineByPrefix(id, me) && id.endsWith('_a')) || (ctx.admin && kind === 'delete');
+    case 'evals': case 'diaries': case 'works': case 'orauds':
       return mineByPrefix(id, me) || (ctx.admin && kind === 'delete');
     case 'dykeys':
       return id === me;
