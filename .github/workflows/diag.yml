@@ -1,4 +1,4 @@
-name: 진단 (서버 비밀값)
+name: 진단 (서버 비밀값·AI 시험)
 on: workflow_dispatch
 jobs:
   diag:
@@ -7,10 +7,13 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      REF: ${{ vars.SUPABASE_PROJECT_REF }}
     steps:
+      - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
       - name: 비밀값이 있는지만 확인 (값은 출력하지 않음)
         run: |
           for k in ANTHROPIC_API_KEY RESEND_API_KEY; do [ -n "${!k}" ] && echo "GitHub 비밀값 $k: 있음" || echo "GitHub 비밀값 $k: 없음"; done
-          echo "서버(Supabase)에 설정된 비밀값 이름:"
-          supabase secrets list --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" | awk -F'|' 'NR>2{gsub(/ /,"",$1);print " - "$1}'
+          supabase secrets list --project-ref "$REF" -o json | python3 -c "import sys,json;print('서버 비밀값:',', '.join(sorted(x['name'] for x in json.load(sys.stdin) if not x['name'].startswith('SUPABASE'))))"
+      - name: 구술 평가 요청 시험 (4개 동시 → 1개 단독, 시험 계정은 끝나면 삭제)
+        run: timeout 900 python3 scripts/diag/oral_probe.py all
