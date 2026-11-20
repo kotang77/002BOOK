@@ -19,7 +19,8 @@ self.addEventListener('fetch', (e) => {
 
   // 페이지: 네트워크 우선 → 실패 시 캐시 → 오프라인 안내
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then((r) => { const c = r.clone(); caches.open(CACHE).then((x) => x.put('/index.html', c)); return r; })
+    // 브라우저 캐시를 거치지 않고 서버에 새 버전이 있는지 확인한다(바뀌지 않았으면 304로 가볍게 끝남)
+    e.respondWith(fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then((r) => { const c = r.clone(); caches.open(CACHE).then((x) => x.put('/index.html', c)); return r; })
       .catch(async () => (await caches.match('/index.html')) || caches.match('/offline.html')));
     return;
   }
