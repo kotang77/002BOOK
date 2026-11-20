@@ -26,7 +26,8 @@ def api(op, tok=None, timeout=400, **kw):
 def short(r):
     if 'result' in r:
         t = r['result'].get('text', '') if isinstance(r['result'], dict) else ''
-        return f"OK {r['status']} {r['sec']}s len={len(t)} trunc={r['result'].get('truncated') if isinstance(r['result'], dict) else ''}"
+        R = r['result'] if isinstance(r['result'], dict) else {}
+        return f"OK {r['status']} {r['sec']}s len={len(t)} trunc={R.get('truncated')} out={R.get('out')} thinkBlocks={R.get('think')} fallback={R.get('fb')}"
     return f"ERR {r.get('status')} {r.get('sec')}s {json.dumps(r.get('error') or r.get('raw') or r.get('err'), ensure_ascii=False)[:300]}"
 
 
