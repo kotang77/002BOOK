@@ -116,7 +116,6 @@ async function isPaid(uid: string) {
  * ================================================================ */
 async function hashNew(pw: string) { const salt = randHex(16); return { pw_salt: salt, pw_hash: await pbkdf2(pw, salt, PBKDF2_ITER), pw_algo: 'pbkdf2' }; }
 async function checkPw(acc: { pw_hash: string; pw_salt: string; pw_algo: string }, pw: string) {
-  if (acc.pw_algo === 'legacy-sha256') return safeEq(await sha256hex(acc.pw_salt + pw), acc.pw_hash);
   return safeEq(await pbkdf2(pw, acc.pw_salt, PBKDF2_ITER), acc.pw_hash);
 }
 async function account(id: string) {
@@ -189,7 +188,6 @@ async function login(req: Request, b: Record<string, unknown>) {
   if (acc.guardian_consent?.status === 'pending') fail('guardian_pending', '보호자 동의를 기다리고 있어요. 보호자 이메일의 승인 버튼을 눌러 주세요.');
   const p = await plans();
   if (acc.blocked || (id !== ADMIN_ID && p.blocked[id])) fail('blocked', '이용이 정지된 계정이에요. 관리자에게 문의해 주세요.');
-  if (acc.pw_algo === 'legacy-sha256') await sb.from('accounts').update({ ...(await hashNew(pw)), updated_at: new Date().toISOString() }).eq('id', id);
   const m = await readRow('members/' + id);
   const member = { ...(m?.data ?? { id, nick: id }), mustChange: acc.must_change };
   delete (member as Record<string, unknown>).pw; delete (member as Record<string, unknown>).salt;
@@ -237,41 +235,6 @@ async function deleteAll(id: string) {
   await sb.from('accounts').delete().eq('id', id); // sessions는 cascade로 함께 삭제
   void del;
 }
-
-/* ================================================================
- * 데이터 가져오기 (Claude 게시본 → 002book.com, 관리자 1회)
- * ================================================================ */
-async function importDocs(b: { docs: Record<string, Record<string, unknown>> }) {
-  const docs = b.docs ?? {}; let n = 0, acc = 0;
-  const { data: accs } = await sb.from('accounts').select('id');
-  const memberIds = [...new Set([...(accs ?? []).map((a: { id: string }) => a.id), ...Object.keys(docs).filter((k) => k.startsWith('members/')).map((k) => k.split('/')[1])])];
-  for (const [p, d] of Object.entries(docs)) {
-    const { path } = splitPath(p);
-    const data = { ...d };
-    let owner: string | null = null;
-    if (path.startsWith('members/')) {
-      const id = path.split('/')[1]; owner = id;
-      if (d.pw && d.salt && !(await account(id))) {
-        const { error: ae } = await sb.from('accounts').insert({ id, email: String(d.email ?? '') || null, pw_hash: String(d.pw), pw_salt: String(d.salt), pw_algo: 'legacy-sha256', must_change: !!d.mustChange });
-        if (ae) fail('db_error', '계정을 저장하지 못했어요.', 500, `accounts: ${ae.message}`);
-        acc++;
-      }
-      delete data.pw; delete data.salt;
-    } else {
-      owner = String(d.uid ?? d.by ?? d.from ?? d.parent ?? '') || null;
-      if (!owner) {
-        // evals/<uid>_..., diaries/<uid>_... 처럼 아이디가 앞에 붙은 문서는 가장 긴 회원 아이디로 주인을 찾는다
-        const id = path.split('/')[1];
-        owner = memberIds.filter((m) => id.startsWith(m + '_') || id.endsWith('_' + m) || id === m).sort((a, b) => b.length - a.length)[0] ?? null;
-      }
-    }
-    const prev = await readRow(path);
-    await writeRow(path, data, owner, prev);
-    n++;
-  }
-  return { docs: n, accounts: acc };
-}
-
 
 /* ================================================================
  * 구술 테스트 최종 리포트: 가족으로 연결된 부모·선생님에게 메일(PDF 첨부) + 휴대폰 푸시 + 앱 알림
@@ -387,19 +350,6 @@ async function handle(req: Request, b: Record<string, unknown>) {
       if (!to.length) fail('bad_request', '받는 사람이 없어요.');
       await sendMail(to, '[002BOOK] ' + String(b.subject ?? '').slice(0, 100), mailShell(escHtml(b.subject), `<div style="white-space:pre-wrap">${escHtml(b.text)}</div>`));
       return { ok: true, sent: to.length };
-    }
-    case 'admin.import': {
-      // 첫 이전: 아직 관리자 계정이 없으면, 내보낸 파일 속 관리자 비밀번호(이전 방식 해시)로 확인한다
-      if (!ctx.admin) {
-        if (await account(ADMIN_ID)) fail('forbidden', '관리자로 로그인해 주세요.', 403);
-        const m = ((b.docs ?? {}) as Record<string, Record<string, unknown>>)['members/' + ADMIN_ID];
-        if (!m || !m.salt || !m.pw || !safeEq(await sha256hex(String(m.salt) + String(b.pw ?? '')), String(m.pw))) fail('forbidden', '관리자 비밀번호가 맞지 않아요.', 403);
-      }
-      try { return await importDocs(b as { docs: Record<string, Record<string, unknown>> }); }
-      catch (e) { // 이전 작업은 관리자만 하므로 원인을 화면에 보여 준다
-        if (e instanceof HttpErr && e.extra) fail(e.code, `${e.message} (원인: ${typeof e.extra === 'string' ? e.extra : JSON.stringify(e.extra)})`, e.status);
-        throw e;
-      }
     }
     case 'admin.usage': {
       needAdmin(ctx);

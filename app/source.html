@@ -1006,9 +1006,6 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clone=o=>JSON.parse(JSON.stringify(o));
 function hid(s){let h=5381;for(const ch of String(s)){h=(((h<<5)+h)+ch.charCodeAt(0))>>>0}return h.toString(36)}
-async function sha(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return 'h'+hid(s)+hid([...s].reverse().join(''))}}
-function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
-function lsSet(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
 let tt=null;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>{t.hidden=true},3200)}
 
 const S={db:null,sample:null,dbState:'loading',canWrite:null,authTab:'login',authErr:'',
@@ -2556,7 +2553,7 @@ async function dyRewrap(cur,pw){
   }catch(e){if(S.dy)S.dy.kdStale=true}}
 function dyLock(){S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;if(S.dy){S.dy.list=null;S.dy.sum=null;S.dy.err='';S.dy.code=null}}
 function doLogout(){window.__002.auth.logout();
-  lsSet('ppang.login',null);S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;
+  S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;
   Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,mk:null,gd:{},dy:null,progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
   render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
 async function doWithdraw(fd){
@@ -2916,7 +2913,7 @@ async function enter(id,member){
   S.grade=GR.includes(S.me.grade)?S.me.grade:'중1';S.view='course';S.sheet=null;S.info=null;
   S.adm={tab:'members',members:null,prog:{},open:null,to:'all',resets:[],tmp:{}};
   S.fr=frNew();S.fam=famNew();S.mk=mkNew();S.gd={};S.askDraft='';S.askBusy=false;S.roadOpen=-1;S.dy=dyNew();S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;frLast='';
-  lsSet('ppang.login',id);render();loadCovers();loadFriends(false);loadVideos();
+  render();loadCovers();loadFriends(false);loadVideos();
   S.db.doc('members/'+id).update({seen:Date.now()}).catch(()=>{});
   if(S.me.mustChange){S.sheet={type:'profile'};renderLayers();toast('임시 비밀번호로 들어왔어요. 새 비밀번호로 바꿔 주세요.')}
 }
@@ -4962,7 +4959,7 @@ if(S.db){
     loadConfig().catch(()=>{})
   ]);
   const saved=(window.__002.auth.session()||{}).uid||null;
-  if(saved){try{await enter(saved);return}catch(e){if(e&&e.code==='blocked')lsSet('ppang.login',null)}}
+  if(saved){try{await enter(saved);return}catch(e){}}
 }
 render();
 })();

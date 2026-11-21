@@ -44,11 +44,9 @@
 
 GitHub → Settings → Pages → Custom domain에 `002book.com` 저장 → 몇 분~몇 시간 뒤 **Enforce HTTPS** 체크.
 
-## 5. 기존 데이터 옮기기 — 5분
-1. https://002book.com/admin/import.html 열기
-2. 받아 둔 `002book-export.json` 선택 + kotang77의 **지금 비밀번호** 입력 → 가져오기
-3. 따님·가족은 원래 아이디·비밀번호 그대로 로그인 (첫 로그인 때 비밀번호 저장 방식이 자동으로 더 안전하게 바뀜)
-4. 일기 잠금도 그대로 열려요. 단, **4자리 등 8자 미만 비밀번호**는 로그인은 되지만 다음 비밀번호 변경 때 8자 이상으로 바꿔야 해요.
+## 5. 그랜드 오픈 리셋 (기존 데이터 옮기기 대신)
+베타 기록은 옮기지 않고, 그랜드 오픈 날 모든 데이터를 지우고 새로 시작한다. (예전 '데이터 가져오기' 기능은 2026-11-21에 삭제)
+- 관리자는 아이디로 정해진다(`ADMIN_ID`, 기본 kotang77). **리셋 직후 바로 kotang77로 가입**해 다른 사람이 그 아이디를 먼저 가져가지 못하게 한다.
 
 ## 6. 구글 플레이 앱
 1. GitHub Secrets에 `ANDROID_KEYSTORE_PASSWORD`(8자 이상, 따로 보관) 추가
@@ -78,7 +76,7 @@ GitHub → Settings → Pages → Custom domain에 `002book.com` 저장 → 몇 
 - AI 호출은 서버에서만 (API 키가 화면에 노출되지 않음), 회원별 하루 한도
 
 ## 앱을 고칠 때
-지금처럼 Claude 게시본에서 고치고 → '이전용 내보내기'로 받은 파일의 앱 원본을 저장소 `app/source.html`에 넣으면 자동 배포돼요. (Claude에게 "새 내보내기 파일로 002book 업데이트해 줘"라고 하면 됩니다.)
+저장소의 `app/source.html`이 유일한 원본이다. 직접 고친 뒤 `tests/oral/run.sh`로 시험을 모두 통과하면 main에 올린다(올리면 자동 배포). Claude 게시본·내보내기 방식은 더 이상 쓰지 않는다.
 
 ## 무료 출시 → 유료 전환 (사업자등록 전 단계)
 현재는 **무료 출시 모드**(`site.config.json`의 `freeLaunch: true`, 서버 `FREE_LAUNCH=1`)다.
