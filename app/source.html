@@ -850,6 +850,155 @@ form{display:flex;flex-direction:column;gap:12px}
 .sxs{margin-top:10px}.sxs h4{margin:0 0 6px;font-size:14.5px}.sxs h4 small{font-weight:400;color:var(--gold-ink);font-size:12.5px;margin-left:6px}
 .sxs textarea{width:100%;min-height:76px;box-sizing:border-box}.sxr{display:flex;gap:6px;margin:6px 0}.sxr input{min-width:0}.sxr input:first-child{flex:0 0 72px}.sxr input:last-child{flex:1}
 .sql{margin-top:10px;display:grid;gap:8px}.sq{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:rgba(255,255,255,.6);border-left:3px solid var(--gold);border-radius:4px}.sq b{font-weight:600;line-height:1.5}.sq .chip{align-self:flex-start}
+/* ---------- 논술 탭 (2026-11-21 재디자인: 단계 표시 → 지금 할 일 카드 하나) ---------- */
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;margin:-1px}
+.es{display:flex;flex-direction:column;gap:12px}
+.es-steps{position:sticky;top:-1px;z-index:3;background:var(--bg);padding:8px 0 6px;border-bottom:1px solid var(--line)}
+.es-steps li{min-height:40px;padding:4px 2px 5px}
+.es-now{margin:-4px 0 0;font-size:13.5px;color:var(--ink)}.es-now b{color:var(--rose-ink);font-weight:500}
+.es-q{border-left:3px solid var(--rose);background:var(--paper);border-radius:0 10px 10px 0;padding:8px 12px}
+.es-q>summary{list-style:none;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14.5px;line-height:1.6}
+.es-q>summary::-webkit-details-marker{display:none}
+.es-q[open]>summary{display:block}
+.es-q .qn{display:inline-block;font-size:12px;font-weight:500;color:var(--rose-ink);margin-right:6px}
+.es-q .qtime{margin:6px 0;font-size:12.5px;color:var(--muted)}
+.es-q .link{font-size:13px}
+.es-chg{margin-top:8px;display:flex;flex-direction:column;gap:8px}
+.es-warn{margin:0;font-size:13px;color:var(--brick)}
+.es-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.es-card h3{margin:0;font-size:16px;border:0;padding:0}
+.es-card .qcar{margin:0}
+.es .btn.main{width:100%;min-height:50px;font-size:15.5px;justify-content:center}
+.es-src{margin:0;font-size:12.5px;color:var(--muted)}
+.es-ask{display:flex;gap:8px;align-items:flex-end}.es-ask textarea{flex:1;min-height:52px}
+.es-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px}.es-or::before,.es-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.es-up{justify-content:center;cursor:pointer}
+.es-meta{margin:0;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.es-past{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;font-size:13.5px}
+.es-past>summary{cursor:pointer;color:var(--mint-d);font-weight:500}.es-past>summary span{color:var(--muted);font-weight:400;margin-left:6px}
+.es-pastin{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.es-plan{display:none}
+.es-submit{position:sticky;bottom:0;z-index:2;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 12px -10px var(--shadow);display:flex;flex-direction:column;gap:6px}
+.es-chk{list-style:none;margin:0;padding:0;font-size:12.5px;color:var(--muted);display:grid;gap:2px}
+.es-busy h3{font-size:16px}
+.es-result{background:var(--paper);border:1px solid var(--gold);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.esr-top{display:flex;align-items:center;gap:14px}.esr-top .big{font-family:var(--f-display);font-size:40px;color:var(--gold-ink);line-height:1}.esr-top .big small{font-size:15px;margin-left:2px}
+.esr-2{margin:0;font-size:14px}.esr-2 .up{color:var(--mint-d)}.esr-2 .dn{color:var(--brick)}
+.esr-btns,.es-rw{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.es-rw small{flex-basis:100%}
+.es-resub{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.es-friends h3{font-size:16px;margin:4px 0 6px}.es-friends h3 small{font-weight:400;font-size:12.5px;color:var(--muted)}
+.es-fr{border-top:1px solid var(--line);padding:8px 0}.es-fr summary{cursor:pointer}.es-frt{white-space:pre-wrap;font-family:var(--f-display);font-size:14.5px;line-height:1.8}
+.es .chip,.ev-act .chip{min-height:34px;padding:4px 14px}
+.memo .rd2{display:flex;flex-direction:column;gap:10px}
+.memo textarea{min-height:48px}
+/* 첨삭 결과 */
+.ev-sum{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;margin-bottom:10px}
+.ev-sum .tot{margin:0 0 6px;font-family:var(--f-display);font-size:44px;color:var(--gold-ink);line-height:1}.ev-sum .tot small{font-size:16px;color:var(--muted)}
+.ev-df{font-family:var(--f-body);font-size:13px;padding:2px 8px;border-radius:10px;background:var(--sky-soft);color:var(--mint-d);vertical-align:middle}.ev-df.dn{background:var(--rose-soft);color:var(--rose-ink)}
+.ev .sc .bar{height:6px}
+.ev-t{margin:0;padding:8px 12px;border-left:3px solid var(--gold);font-family:var(--f-display);font-size:14.5px;line-height:1.7;background:#FFFBF0}
+.ev-prog{margin:0;font-size:14px}
+.ev-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:6px 0 10px}.ev-act small{flex-basis:100%}
+.ev-d{border-top:1px solid var(--line);padding:12px 0}
+.ev-d>summary{font-family:var(--f-display);font-size:16px;font-weight:700;cursor:pointer}
+.ev-d>summary .n{font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--muted);background:var(--soft);border-radius:10px;padding:1px 8px;margin-left:6px}
+.ev-db{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.evq{margin:0}.evw b{display:block;margin-top:6px}.evw b span{color:var(--gold-ink)}
+.ev-2c h4{margin:4px 0;font-size:14px}
+.ev-ai{margin:14px 0 4px;font-size:12.5px;color:var(--muted)}
+.mnw{overflow-x:auto}
+/* ---------- 구술 탭 (2026-11-21 재디자인) ---------- */
+.orwrap{display:flex;flex-direction:column;gap:12px}
+.orprog{list-style:none;display:flex;gap:6px;margin:0;padding:0;font-size:12.5px;color:var(--muted)}
+.orprog li{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.orprog li::before{content:"";height:5px;border-radius:3px;background:var(--soft)}
+.orprog li.dn::before{background:var(--mint-d)}.orprog li.on::before{background:var(--primary)}
+.orprog li.on{color:var(--ink);font-weight:700}
+.orprogt{display:none;margin:-4px 0 0;font-size:13px;font-weight:700;color:var(--ink)}
+.btn.orbig{min-height:52px;padding:12px 22px;font-size:16px;border-radius:999px;gap:8px;justify-content:center}
+.btn.orbig:disabled{background:var(--soft);border-color:var(--soft);color:var(--muted)}
+.orgo{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.orgo .btn.ready{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--gold)}
+.ortabs{display:flex;align-items:center;gap:10px}.ortabs>span:first-child{font-size:13px;color:var(--muted)}.ortabs .qdots{display:flex;gap:6px}.ortabs .qok{margin-left:auto}
+.ortabs .qd{width:40px;height:40px}
+.orlisten{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.orlisten.sm{flex-direction:row;justify-content:flex-start;padding:8px 12px;border-style:solid;gap:8px}.orlisten.sm .chip{margin-left:auto}
+.orpips{display:inline-flex;gap:3px;vertical-align:middle}.orpips i{display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--rose)}.orpips i.on{background:var(--rose)}
+.orsv{display:flex;flex-direction:column;align-items:center;gap:6px}
+.orsv.orline{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:8px}
+.ortx.need textarea{border-color:var(--rose)}
+.ornext{align-self:flex-end}
+.ordone1{margin:0;text-align:center;color:var(--mint-d);font-weight:500}
+.orcfoot{display:flex;justify-content:flex-end;border-top:1px dashed var(--line);padding-top:6px;margin-top:2px}
+.orref.link{font-size:12.5px;color:var(--muted)}
+.orrec{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;box-sizing:border-box}
+.orrech{display:flex;align-items:center;gap:8px;font-size:14px}
+.orpill{font-size:11.5px;border-radius:99px;padding:2px 8px;background:var(--rose-soft);color:var(--rose-ink)}
+#or-t{font-variant-numeric:tabular-nums;font-size:22px}
+.orbusy{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px;border-radius:12px;background:var(--paper);border:1px solid var(--line);text-align:center}
+.orbusy p{margin:0;font-size:13.5px}.orbusy small{color:var(--muted)}
+.orbusy.sm{flex-direction:row;justify-content:center;padding:10px}
+.orspin{width:22px;height:22px;border:3px solid var(--soft);border-top-color:var(--gold);border-radius:50%;animation:orsp 1s linear infinite;flex:none}
+@keyframes orsp{to{transform:rotate(360deg)}}
+.orfail{border-left:3px solid var(--rose);background:var(--rose-soft);color:var(--rose-ink);border-radius:0 8px 8px 0;padding:8px 12px;font-size:14px}
+.orfoot{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:-4px}
+.orsum.sm{display:flex;align-items:center;gap:12px;font-size:14px}.orsum.sm b{font-size:18px}
+.orhow{margin:0;font-size:14px;font-weight:500;color:var(--ink)}
+.orq{display:flex;flex-direction:column;gap:8px}
+.orqh{display:flex;align-items:center;gap:8px}
+.orst{margin-left:auto;font-size:12px;border-radius:99px;padding:2px 10px;background:var(--soft);color:var(--muted)}
+.orq.now{border-color:var(--primary);box-shadow:0 0 0 3px rgba(62,47,38,.08)}.orq.now .orst{background:var(--primary);color:var(--on-primary)}
+.orq.ok .orst{background:var(--sky-soft);color:var(--mint-d)}
+.orqb{display:flex;flex-direction:column;gap:10px}.orql,.orqr{display:flex;flex-direction:column;gap:8px;min-width:0}
+details.orq>summary{cursor:pointer;list-style:none}details.orq>summary::-webkit-details-marker{display:none}
+.ormodelw>summary,.orprev>summary,.orswd>summary,.orx>summary{cursor:pointer;color:var(--mint-d);font-weight:500;font-size:13.5px}
+.orthink{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;background:var(--sky-soft);border-radius:12px;padding:16px}
+.orthink .orring{width:110px;height:110px;transform:rotate(-90deg)}
+.orthink .orring circle{fill:none;stroke:rgba(85,114,87,.18);stroke-width:4}
+.orthink .orring .rg{stroke:var(--mint-d);stroke-dasharray:176;stroke-dashoffset:calc(176 * (1 - var(--p)));animation:orring var(--left) linear forwards}
+@keyframes orring{to{stroke-dashoffset:176}}
+.orthink .orcd{position:absolute;top:52px;left:0;right:0;color:var(--mint-d);font-size:28px;font-family:var(--f-display);font-variant-numeric:tabular-nums}
+.orthink b{font-size:14.5px}.orthink small{font-size:12.5px;color:var(--muted)}
+.orthink.done{background:var(--paper);border:1.5px solid var(--mint-d);color:var(--mint-d)}
+.ordone{display:flex;flex-direction:column;gap:8px;align-items:stretch}.ordone .link{align-self:center}
+.ordonep{margin:0;text-align:center}
+.oract{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.ph h2 small{display:block;font-size:14px;font-weight:400;color:var(--muted)}
+.orhero{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.orhero .tot{margin:0;font-family:var(--f-display);font-size:44px;color:var(--gold-ink);line-height:1}.orhero .tot small{font-size:16px;margin-left:2px}
+.orhero>p{margin:0}
+.ornext{background:var(--sky-soft);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;margin-bottom:10px}.ornext p{margin:0}
+details.ora>summary{cursor:pointer;font-size:16px}details.ora>summary span{font-weight:400;color:var(--muted);font-size:14px}
+.orswd{margin-top:6px}
+@media (prefers-reduced-motion:reduce){.orspin,.orthink .orring .rg{animation:none}}
+@media (max-width:719px){
+  .orprog li span{font-size:0}.orprogt{display:block}
+  .orsv .btn.orbig,.orgo .btn.orbig,.orrec .btn.orbig,.ordone .btn.orbig,.ornext .btn.orbig{width:100%}
+  .orgo{position:sticky;bottom:0;z-index:2;background:var(--bg);margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 14px -12px var(--shadow);flex-direction:column;align-items:stretch}
+  .orgo .hint{text-align:center}
+}
+@media (min-width:720px){
+  .orqb{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  .orq.ok .orqb{grid-template-columns:1fr 1fr}
+}
+@media (min-width:1100px){#layer1 .panel:has(.orwrap){width:min(820px,100%)}}
+@media (max-width:720px){
+  .qd{width:40px;height:40px}.es-card{padding:14px}
+  .ev-act{position:sticky;bottom:0;z-index:2;background:var(--bg);box-shadow:0 -10px 12px -10px var(--shadow);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px))}
+  .wrh h2{font-size:16px;white-space:nowrap}.wrh .btn{white-space:nowrap;padding:6px 12px}.wrh .swc small{display:none}
+}
+@media (min-width:720px){
+  .memo .rd2{display:grid;grid-template-columns:1fr 1fr}.memo .rd2 .rd-claim{grid-column:1/-1}
+  .ev-2c{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+}
+@media (min-width:960px){
+  .panel:has(.es),.panel.ev{width:min(860px,100%)}
+  .es-write{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+  .es-plan{display:block}.es-plan .memo{margin-top:0}
+  .es-write~.es-past .memo{display:none}
+  .ev-sum{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .es-submit,.ev-act{position:static;box-shadow:none}
+}
 /* 서가에 꽂을 때 평가(재미·난이도·다시 읽기) */
 .mbrw{margin:6px 0}
 .mbrw>b{font-size:14px}
@@ -1940,8 +2089,7 @@ function qHTML(i){
   const sel=S.essayDraft.i===i?S.essayDraft.q:-1;
   const tags=(q.tags&&q.tags[cur])||[];
   const dots=q.shown.map((_,s)=>`<button class="qd${s===cur?' on':''}${s===sel?' pk':''}" data-act="qgo" data-i="${i}" data-s="${s}" aria-label="질문 ${s+1}${s===sel?' (선택함)':''}" ${s===cur?'aria-current="true"':''}>${s+1}</button>`).join('');
-  return `<p class="hint">질문 세 개를 넘겨 가며 모두 읽어 보고, 쓰고 싶은 질문 하나를 골라 보세요.</p>
-  <div class="qcar" data-i="${i}">
+  return `<div class="qcar" data-i="${i}">
     <div class="qcard${cur===sel?' sel':''}" role="group" aria-label="질문 ${cur+1} / ${n}" aria-live="polite">
       <div class="qtop"><b>질문 ${cur+1} <small>/ ${n}</small></b>${cur===sel?`<span class="qok">${IC.check}선택한 질문</span>`:''}</div>
       ${tags.length?`<div class="qtags">${tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
@@ -1949,9 +2097,9 @@ function qHTML(i){
       ${(()=>{const t=qTime(q.shown[cur]);return `<div class="qtime">${IC.clock}권장 시간 <b>${t.total}분</b> <small>구상 ${t.plan} · 쓰기 ${t.write} · 고치기 ${t.check}</small></div>`})()}
     </div>
     <div class="qnav"><button class="qb" data-act="qnav" data-i="${i}" data-d="-1" aria-label="이전 질문">${IC.back}</button><div class="qdots">${dots}</div><button class="qb" data-act="qnav" data-i="${i}" data-d="1" aria-label="다음 질문">${IC.next}</button></div>
-    <button class="btn qpick" data-act="qpick" data-i="${i}" data-s="${cur}" ${cur===sel?'disabled':''}>${cur===sel?'이 질문을 골랐어요':'이 질문으로 쓸래요'}</button>
+    <button class="btn qpick" data-act="qpick" data-i="${i}" data-s="${cur}" ${cur===sel?'disabled':''}>${cur===sel?'✓ 고른 질문이에요':sel>=0?'이 질문으로 바꿀래요':'이 질문으로 쓸래요'}</button>
   </div>
-  <p class="hint">${q.ai?'책과 두 영화의 주제를 섞어, 외고·자사고·과학고 논술 경향을 반영해 Claude가 새로 낸 질문이에요.':'기본 질문이에요. Claude 연결이 되면 더 다양한 질문이 나와요.'}</p>`;
+  <p class="es-src">${q.ai?'Claude(생성형 AI)가 책과 두 영화를 엮어 새로 낸 질문이에요.':'기본 질문이에요.'}</p>`;
 }
 function monthHTML(i){
   const it=items()[i];const n=S.progress.notes[nk(i)]||{};const tab=S.sheetTab||'work';const p=GP[i%GP.length];
@@ -1973,7 +2121,7 @@ function monthHTML(i){
     ${item('book','책',it.book,'bk2')}
     <div class="two">${item('m1','영화',it.m1,'tk')}${item('m2','영화',it.m2,'tk')}</div>
     <p class="hint">읽기(보기) 전에 시작, 다 끝내면 완료를 눌러요. 걸린 날과 하루 읽은 쪽수를 알려 주고, 친구와 부모님께 알림이 가요. 제목을 누르면 저자·가격·볼 수 있는 곳을 볼 수 있어요.${canGuide()?' 부모님은 제목을 누른 뒤 "논술 첨삭자료"에서 지도 안내서를 볼 수 있어요.':''}</p>`;
-  const essay=svAll(i)?`<div class="sec"><h3>이달의 논술 질문</h3>${qHTML(i)}</div>${essayHTML(i)}`:svLockHTML(i);
+  const essay=svAll(i)?essayHTML(i):svLockHTML(i);
   const note=`<div class="note2"><h3>책에서 가장 인상 깊은 문장</h3>
       <label class="ocr" for="ph-sentence">사진으로 올리기 <small class="hint">글을 읽어서 칸을 채워 줘요</small><input id="ph-sentence" type="file" accept="image/*" data-ocr="sentence"></label>
       <label for="n-sentence">문장<textarea id="n-sentence" data-note="sentence" placeholder="마음에 남은 문장을 그대로 옮겨 적어요">${esc(n.sentence||'')}</textarea></label>
@@ -3148,39 +3296,70 @@ async function loadMonthData(i){
   if(!S.qBusy[key])qFix(i);
   renderLayers();
 }
+/* 논술 탭: 맨 위 단계 표시 → 고른 질문 → 지금 할 일 카드 하나 → 지난 준비(접기) → 친구들의 논술.
+   단계·게이트·저장은 그대로이고 화면 배치만 정리했다(2026-11-21). */
+const ES_STEPS=['질문','묻기','계획','쓰기','첨삭'];
+function esPast(i,P){
+  if(!P.qDone&&!P.roadDone)return '';
+  const asks=P.asks.map(x=>`<div class="askq"><b>나</b><p>${esc(x.q)}</p></div><div class="aska"><b>선생님 <small>AI 선생님의 답이에요</small></b><p style="white-space:pre-wrap">${esc(x.a)}</p></div>`).join('');
+  return `<details class="es-past"><summary>✓ 묻기 ${P.asks.length?P.asks.length+'개':'없이 시작'}${P.roadDone?' · ✓ 계획 완료':''} <span>지난 준비 보기</span></summary>
+    <div class="es-pastin">${asks||'<p class="hint">선생님께 묻지 않고 시작했어요.</p>'}${P.roadDone?roadHTML(i):''}</div></details>`;
+}
 function essayHTML(i){
-  const key=nk(i);const ev=S.evals[key];const q=qState(i);const qs=q?q.shown:[];const d=S.essayDraft.i===i?S.essayDraft:{q:-1,text:'',files:[]};
+  const key=nk(i);const ev=S.evals[key];const ev2=S.evals2[key];const q=qState(i);const qs=q?q.shown:[];const d=S.essayDraft.i===i?S.essayDraft:{q:-1,text:'',files:[]};
   const it=items()[i];const h=hid(it.book);const others=(S.essays[h]||[]).filter(x=>x.uid!==S.id);
   const busy=S.essayBusy===key||S.essayBusy===key+'_r2';
   const picked=d.q>=0&&!!qs[d.q];const P=prepOf(i);const st=!picked?0:!P.qDone?1:!P.roadDone?2:3;
-  const li=(n,t)=>`<li class="${st>n?'dn':st===n?'on':''}"${st===n?' aria-current="step"':''}>${t}</li>`;
-  const wsec=(S.progress.wtime||{})[key]||0;
-  let body;
-  if(st===0)body=qs.length?'<p class="warn">위에서 질문 세 개를 읽어 보고 하나를 골라 주세요. 고르면 다음 단계가 열려요.</p>':'<p class="hint">논술 질문이 나오면 골라 주세요.</p>';
-  else{
-    body=`<div class="qchosen"><b>내가 고른 질문 ${d.q+1}</b><p>${esc(qs[d.q])}</p></div>`;
-    body+=st===1?`<div class="note2"><h3 style="font-size:16px">쓰기 전에, 궁금한 점이 있나요?</h3><p class="hint">문제가 이해되지 않거나 책·영화에서 헷갈리는 것이 있으면 선생님에게 먼저 물어봐요. 없으면 바로 시작해도 돼요.</p>${askHTML(i)}</div>`
-      :`<details class="pd"><summary>궁금한 점 묻기 · ${P.asks.length?'질문 '+P.asks.length+'개':'질문 없이 시작'}</summary><div class="note2" style="margin-top:8px">${askHTML(i)}</div></details>`;
-    if(st>=2)body+=roadHTML(i);
-    if(st<3)body+=`<p class="lockn">${IC.lock}${st===1?'궁금한 점 묻기를 마치면 메모판(로드맵)이 열리고, 로드맵을 완료하면 원고지가 열려요.':'로드맵을 완료하면 원고지가 열려요.'}</p>`;
-    else body+=`<div class="sec" style="margin:8px 0"><h3 style="font-size:16px">직접 쓴 글</h3>
-      <button class="btn ghost" data-act="wropen" data-i="${i}" style="align-self:flex-start">${IC.pen}${d.text&&d.text.trim()?'원고지에 이어서 쓰기':'원고지에 직접 쓰기'}</button>
-      ${d.text&&d.text.trim()?`<div class="wrprev">${esc(d.text.length>260?d.text.slice(0,260)+'…':d.text)}</div><p class="hint">원고지에 쓴 글 ${d.text.replace(/\n/g,'').length}자 · 작성 시간 ${fmtSw(wsec)} · 쓰는 대로 자동 저장돼요.</p>`:'<p class="hint">누르면 원고지 입력 창이 열리고 작성 시간을 재는 초시계가 돌아가요. 노트 사진만 올려도 돼요.</p>'}</div>
-    <label for="es-files">노트 사진 <small class="hint">여러 장 가능. 손글씨가 또렷하게 나오게 밝은 곳에서 찍어 주세요</small><input id="es-files" type="file" accept="image/*" multiple></label>
-    ${d.files.length?`<p class="hint">사진 ${d.files.length}장을 골랐어요. <button class="chip" data-act="clearfiles">사진 지우기</button></p>`:''}
-    <p class="hint">제출한 글은 같은 책의 첨삭을 마친 친구들에게 닉네임으로 공개돼요. 글에 이름이나 학교를 쓰지 않았는지 확인해 주세요. 질문하기와 로드맵, 작성 시간은 '적극성' 점수에 반영돼요.</p>
-    <button class="btn" data-act="evaluate" data-i="${i}" ${busy||!S.sample?'disabled':''}>제출하고 평가 받기</button>`;
+  const stv=ev?5:st;  // 보기용: 첨삭을 받았으면 다섯 칸 모두 ✓
+  const li=(n,t)=>`<li class="${stv>n?'dn':stv===n?'on':''}"${stv===n?' aria-current="step"':''}>${t}</li>`;
+  const wsec=(S.progress.wtime||{})[key]||0;const has=!!(d.text&&d.text.trim());const off=S.essayOff&&S.essayOff.i===i;
+  const now=busy?'첨삭을 기다려요':ev?(ev2?'2차 첨삭까지 마쳤어요':'첨삭 완료! 결과를 확인해요'):['세 질문을 읽고 하나를 골라요','헷갈리는 게 있으면 선생님께 물어봐요 (없으면 넘어가도 돼요)','글의 길을 메모로 짜요',has||d.files.length?'다 썼으면 제출해요':'원고지에 글을 써요'][st];
+  const head=`<ol class="steps es-steps" aria-label="논술 순서">${ES_STEPS.map((t,n)=>li(n,t)).join('')}</ol><p class="es-now"><b>지금 할 일</b> · ${now}</p>`;
+  const tm=picked?qTime(qs[d.q]):null;
+  const chg=!ev&&!busy&&st>=1&&S.esQChg===i;
+  const qline=picked?`<details class="es-q"${chg?' open':''}><summary><span class="qn">질문 ${d.q+1}</span>${esc(qs[d.q])}</summary>
+      <p class="qtime">${IC.clock}권장 <b>${tm.total}분</b> <small>구상 ${tm.plan} · 쓰기 ${tm.write} · 고치기 ${tm.check}</small></p>
+      ${!ev&&!busy?(chg?`<div class="es-chg">${P.qDone||P.roadDone?'<p class="es-warn">다른 질문으로 바꾸면 묻기와 계획을 처음부터 다시 해요.</p>':''}${qHTML(i)}<button class="link" data-act="esqchg" data-i="${i}">바꾸지 않을래요</button></div>`
+        :`<button class="link" data-act="esqchg" data-i="${i}">다른 질문 보기</button>`):''}</details>`:'';
+  const friends=`<div class="es-friends"><h3>친구들은 이렇게 썼어요 <small>같은 책 · 닉네임으로만 보여요</small></h3>
+    ${ev?(others.length?others.map((x,n)=>`<details class="es-fr"${n>2?' hidden':''}><summary>${esc(x.nick)} · ${new Date(x.at).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}</summary><p class="hint">${esc(x.question||'')}</p><p class="es-frt">${esc(x.text)}</p></details>`).join('')+(others.length>3?`<button class="link" data-act="esfrmore">친구 글 ${others.length-3}개 더 보기</button>`:''):'<p class="hint">아직 친구 글이 없어요.</p>'):`<p class="lockn">${IC.lock}내 첨삭을 받으면 친구들의 글이 열려요.</p>`}</div>`;
+  const nos=!S.sample?'<p class="warn">지금은 Claude에 연결되지 않아 첨삭을 받을 수 없어요.</p>':'';
+  let card='';
+  if(busy){
+    card=`<div class="es-card es-busy"><div class="sk"></div><h3>${S.essayBusy===key+'_r2'?'2차 첨삭을 하고 있어요':'선생님이 첨삭하고 있어요'}</h3><p class="hint" role="status" id="es-msg">${esc(S.essayMsg)}</p><p class="hint">1~2분 걸려요. 이 창을 닫지 말아 주세요.</p></div>`;
+  }else if(ev){
+    const open=!rwLeft(ev);const at=new Date(ev.at).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'});
+    const left=rwLeft(ev),lh=Math.ceil(left/3600000);
+    card=`<div class="es-result"><div class="esr-top"><span class="big">${esc(ev.total)}<small>점</small></span><span><b>1차 첨삭</b><br><small class="hint">「${esc(bTitle(it.book))}」 · ${at}</small></span></div>
+      ${ev2?(()=>{const df=Number(ev2.total)-Number(ev.total);return `<p class="esr-2">1차 ${esc(ev.total)} → 2차 <b>${esc(ev2.total)}</b> <span class="${df>=0?'up':'dn'}">${df>=0?'▲':'▼'} ${Math.abs(df)}</span></p>`})():''}
+      <div class="esr-btns"><button class="btn${open&&!ev2?' ghost':''}" data-act="vieweval" data-i="${i}">첨삭 보기</button>${ev2?`<button class="btn ghost" data-act="viewe2" data-i="${i}">2차 첨삭 보기</button>`:''}</div>
+      <div class="es-rw">${rwBtn(i,ev,open?(ev2?'다시 고쳐 쓰기':'고쳐 쓰고 2차 점수 받기'):'다시 쓰기',open&&!ev2?'':'ghost')}${left?`<small class="hint">${new Date(rwAt(ev)).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'})}부터 다시 쓸 수 있어요 (${lh>=24?Math.floor(lh/24)+'일 '+(lh%24?lh%24+'시간 ':''):lh+'시간 '}남음)</small>`:''}</div></div>
+      <details class="es-past"><summary>내 글과 준비 기록 보기</summary><div class="es-pastin">
+        ${has?`<div class="wrprev">${esc(d.text.length>400?d.text.slice(0,400)+'…':d.text)}</div>`:''}
+        ${esPast(i,P)}
+        <div class="es-resub"><button class="btn ghost small" data-act="evaluate" data-i="${i}" ${busy||!S.sample?'disabled':''}>1차로 다시 제출하기</button><small class="hint">다시 제출하면 지금 1차 첨삭이 새 첨삭으로 바뀌어요.</small></div></div></details>`;
+  }else if(st===0){
+    card=`<div class="es-card es-pick">${qHTML(i)}</div>`;
+  }else if(st===1){
+    card=`<div class="es-card"><h3>쓰기 전에 물어볼까요?</h3>${askHTML(i)}</div>`;
+  }else if(st===2){
+    card=`<div class="es-card es-roadc">${roadHTML(i)}</div>${esPast(i,P)}`;
+  }else{
+    const files=d.files.length;
+    card=`${off?`<div class="offtopic" role="alert"><b>질문과 조금 멀어요</b><p>${esc(S.essayOff.reason||'글이 논술 질문과 거리가 멀어 보여요.')}</p><p>질문을 다시 읽고 내 생각을 담아 고쳐 써 볼까요? 이번 글은 점수에 들어가지 않았어요.</p></div>`:''}
+      <div class="es-write"><div class="es-card">
+      ${has?`<div class="wrprev">${esc(d.text.length>260?d.text.slice(0,260)+'…':d.text)}</div><p class="es-meta">${d.text.replace(/\n/g,'').length}자 · 쓴 시간 ${fmtSw(wsec)} · 자동 저장</p>
+        <button class="btn${off?'':' ghost'}" data-act="wropen" data-i="${i}">${IC.pen}이어서 쓰기</button>`
+        :`<button class="btn main" data-act="wropen" data-i="${i}">${IC.pen}원고지에 쓰기</button><p class="es-meta">쓰는 시간을 재요 · 권장 ${tm.total}분 · 자동 저장</p>`}
+      <div class="es-or">또는</div>
+      <label class="btn ghost es-up" for="es-files">📷 ${files?'노트 사진 다시 고르기':'손으로 쓴 노트 사진 올리기'}<input id="es-files" class="sr-only" type="file" accept="image/*" multiple></label>
+      ${files?`<p class="es-meta">📷 사진 ${files}장 <button class="chip" data-act="clearfiles">지우기</button></p>`:'<p class="es-meta">여러 장 가능 · 밝은 곳에서 또렷하게</p>'}
+      </div><div class="es-plan">${roadHTML(i)}</div></div>
+      ${esPast(i,P)}
+      ${has||files?`<div class="es-submit"><ul class="es-chk"><li>🔒 제출한 글은 첨삭을 마친 친구들에게 닉네임으로 보여요. 이름·학교는 쓰지 마세요.</li><li>⭐ 묻기·계획·쓴 시간도 '적극성' 점수에 들어가요.</li></ul>
+        <button class="btn main" data-act="evaluate" data-i="${i}" ${busy||!S.sample?'disabled':''}>제출하고 첨삭 받기</button><small class="hint">첨삭은 생성형 AI(Claude)가 해요 · 1~2분 걸려요</small></div>`:''}`;
   }
-  return `<div class="sec"><h3>논술 쓰고 첨삭 받기</h3>
-    <ol class="steps" aria-label="논술 과제 순서">${li(0,'질문 고르기')}${li(1,'궁금한 점 묻기')}${li(2,'로드맵 짜기')}${li(3,'원고지 쓰기')}</ol>
-    ${body}
-    ${busy?`<p class="hint" role="status" id="es-msg">${esc(S.essayMsg)}</p>`:''}
-    ${!S.sample?'<p class="warn">Claude 연결이 없어 첨삭을 받을 수 없어요.</p>':''}
-    ${S.essayOff&&S.essayOff.i===i?`<div class="offtopic" role="alert"><b>주제와 맞지 않아요</b><p>${esc(S.essayOff.reason||'글이 논술 질문과 거리가 멀어 보여요.')}</p><p>선택한 질문을 다시 읽고, 질문에 대한 내 생각을 담아 다시 써서 평가를 눌러 주세요. 이번 글은 점수에 반영되지 않았어요.</p></div>`:''}
-    ${ev?`<div class="row"><span class="tagk">첨삭 완료</span><button class="link" data-act="vieweval" data-i="${i}">내 첨삭 보기 · 총점 ${esc(ev.total)}점 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</button></div>`:''}
-    ${ev?`<div class="row">${rwBtn(i,ev,'다시 쓰기','ghost')}${S.evals2[key]?`<button class="link" data-act="viewe2" data-i="${i}">2차 첨삭 보기 · 총점 ${esc(S.evals2[key].total)}점</button>`:''}</div>${rwLeft(ev)?`<p class="hint">${esc(rwHint(ev))}</p>`:''}`:''}
-    <h3 style="margin-top:8px">같은 책을 읽은 친구들의 논술</h3>
-    ${ev?(others.length?others.map(x=>`<details><summary>${esc(x.nick)} · ${new Date(x.at).toLocaleDateString('ko-KR')}</summary><p class="hint">${esc(x.question||'')}</p><p style="white-space:pre-wrap">${esc(x.text)}</p></details>`).join(''):'<p class="hint">아직 다른 친구의 글이 없어요.</p>'):'<p class="hint">내 논술 첨삭을 받으면 친구들의 글을 볼 수 있어요.</p>'}</div>`;
+  return `<div class="sec es" data-st="${stv}">${head}${nos}${st>=1&&!busy?qline:''}${card}${friends}</div>`;
 }
 async function evaluate(i,round){
   const r2=round===2;
@@ -3342,38 +3521,45 @@ function mnPage(ev,lines,marks,p,total,geo){
       <div class="mgrid" style="left:${GL}px;top:0;width:${cols*cw+1}px;height:${rows*RH}px">${cells}${over}</div>
       <div class="mcb" style="left:${GL+cols*cw+11}px;top:0;width:${794-23-(GL+cols*cw+11)}px;height:${rows*RH}px"><h4>첨삭 지도</h4>${cm}</div></div>${box}</div>`;
 }
-function fitMn(){document.querySelectorAll('.mnw').forEach(w=>{const p=w.firstElementChild;if(p)p.style.zoom=Math.max(w.clientWidth/794,.72)})}
+function fitMn(){document.querySelectorAll('.mnw').forEach(w=>{const p=w.firstElementChild;if(p)p.style.zoom=Math.max(w.clientWidth/794,innerWidth<720?.4:.72)})}
 window.addEventListener('resize',fitMn);
+document.addEventListener('toggle',e=>{if(e.target&&e.target.classList&&e.target.classList.contains('ev-d'))fitMn()},true);  // 접었던 원고지 첨삭을 펼치면 크기를 다시 맞춘다
 function rewriteAll(ev){return Array.isArray(ev.paraReview)?ev.paraReview.map(x=>String(x.rewrite||'').trim()).filter(Boolean).join('\n\n'):''}
 function swList(ev,k){const w=ev&&ev.scoreWhy&&ev.scoreWhy[k];if(!w||typeof w!=='object')return null;const f=a=>(Array.isArray(a)?a:[]).map(x=>String(x||'').trim()).filter(Boolean).slice(0,3);const plus=f(w.plus),minus=f(w.minus);return plus.length||minus.length?{plus,minus}:null}
 function scv(v){v=Math.round(Number(v))||0;return v>0&&v<=10?v*10:v}
-function grd(v){v=scv(v);return v>=95?'최상':v>=85?'상':v>=75?'중':'하'}
+/* 점수 옆 말 표시: 상·중·하 같은 등급은 쓰지 않는다(운영 규칙). 95점 이상만 '최고예요' */
+function grd(v){return scv(v)>=95?'최고예요':''}
+/* 첨삭 결과: 요약(총점·칭찬) → 할 일(PDF·다시 쓰기) → 자세히(펼치기) */
 function evalHTML(){
   const v=S.evalView;const ev=v.r===2?S.evals2[v.key]:S.evals[v.key];
   if(!ev)return `<div class="panel"><div class="ph"><h2>첨삭</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div><p>첨삭을 찾지 못했어요.</p></div>`;
-  const sc=ev.scores||{};
+  const sc=ev.scores||{};const r2=ev.round===2;
   const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p class="hint">없음</p>';
+  const cnt=a=>Array.isArray(a)&&a.length?`<span class="n">${a.length}</span>`:'';
   const pr=a=>Array.isArray(a)&&a.length?a.map(x=>`<div class="rv"><span><s>${esc(x.orig)}</s> → <b>${esc(x.fix)}</b></span><span class="hint">${esc(x.why)}</span></div>`).join(''):'<p class="hint">지적할 곳이 없어요.</p>';
   const gc=g=>g==='잘함'?'ok':g==='고침'?'rev':'md';
   const sr=a=>Array.isArray(a)&&a.length?a.map(x=>`<div class="rv"><span><span class="gr ${gc(x.grade)}">${esc(x.grade||'보통')}</span> ${esc(x.orig)}</span><span class="hint">${esc(x.why)}</span>${x.fix?`<span class="rw">고쳐 쓰기 · ${esc(x.fix)}</span>`:''}</div>`).join(''):'<p class="hint">평가한 문장이 없어요.</p>';
   const prv=a=>Array.isArray(a)&&a.length?a.map(x=>`<div class="rv"><b>${esc(x.no)}문단 · ${esc(x.role)}</b><span class="hint">잘한 점: ${esc(x.good)}</span><span class="hint">고칠 점: ${esc(x.problem)}</span>${x.rewrite?`<details><summary>다시 쓴 문단 보기</summary><p class="rw" style="white-space:pre-wrap">${esc(x.rewrite)}</p></details>`:''}</div>`).join(''):'';
-  return `<div class="panel ev"><div class="ph"><h2>${esc(ev.g)} ${esc(ev.m)} 논술 ${ev.round===2?'2차 ':''}첨삭<br><small style="font-size:15px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${ev.round===2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,'다시 쓰기','ghost')}${S.downloads?'<span class="hint">저장한 PDF를 열어 인쇄할 수 있어요.</span>':'<span class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</span>'}</div>
-  <div class="sec"><h3>논술 질문</h3><p>${qShowHTML(ev)}</p>${ev.writeSec||ev.asked!=null?`<p class="hint">${ev.asked!=null?'쓰기 전 질문 '+ev.asked+'개 · 로드맵 작성 · ':''}작성 시간 ${ev.writeSec?fmtSw(ev.writeSec):'기록 없음'}</p>`:''}</div>
-  <div class="sec"><h3>원고지 첨삭</h3><p class="hint">내가 쓴 글을 원고지에 옮겨 선생님이 직접 고쳐 쓴 모습이에요. 파란색은 고친 곳, 초록색은 선생님 말씀이에요. 좌우로 밀어서 볼 수 있어요.</p>${mnSheets(ev).map(h=>`<div class="mnw">${h}</div>`).join('')}</div>
-  ${ev.round===2?(()=>{const df=Number(ev.total)-Number(ev.firstTotal);return `<div class="praise"><b>1차 ${esc(ev.firstTotal)}점 → 2차 ${esc(ev.total)}점 ${df>=0?'▲':'▼'} ${Math.abs(df)}</b>${ev.progress?`<p>${esc(ev.progress)}</p>`:''}</div>`})():''}
-  <div class="sec"><h3>총점 <span class="big">${esc(ev.total)}</span> / 100</h3>
-    ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])} <small>${grd(sc[k])}</small></b></div>${(w=>w?`<div class="swy">${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:'')(swList(ev,k))}`).join('')}
-    <p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
-  <div class="sec"><h3>오탈자와 맞춤법</h3>${pr(ev.spelling)}</div>
-  <div class="sec"><h3>문장 평가와 다시 쓰기</h3>${sr(ev.sentences)}</div>
-  <div class="sec"><h3>문단 평가와 다시 쓰기</h3><p>${esc(ev.paragraphs)}</p>${prv(ev.paraReview)}</div>
-  ${rewriteAll(ev)?`<div class="sec"><h3>다시 쓴 글 (전체)</h3><details><summary>펼쳐 보기</summary><p style="white-space:pre-wrap">${esc(rewriteAll(ev))}</p></details></div>`:''}
-  <div class="sec"><h3>잘한 점</h3>${ul(ev.strengths)}<h3>고칠 점</h3>${ul(ev.improvements)}</div>
-  <div class="sec"><h3>누적 분석 (최근 5회)</h3><p>${esc(ev.cumulative)}</p></div>
-  <div class="sec"><h3>모범 답안</h3>${(ev.models||[]).map((m,n)=>`<details ${n===0?'open':''}><summary>${esc(m.title||'모범 답안 '+(n+1))}</summary><p style="white-space:pre-wrap">${esc(m.text)}</p></details>`).join('')}</div>
-  ${ev.round===2?'':`<div class="sec"><h3>다시 쓰기</h3><p class="hint">${rwLeft(ev)?esc(rwHint(ev)):'첨삭과 모범 답안을 읽고 내 글을 고쳐 써 보세요. 원고지에서 다시 쓰고 제출하면 2차 점수를 받아요.'}</p><div style="display:flex;gap:10px;flex-wrap:wrap">${rwBtn(v.i,ev,'원고지에서 다시 쓰기','')}${S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기 · ${esc(S.evals2[v.key].total)}점</button>`:''}</div></div>`}
-  ${ev.unreadable&&ev.unreadable.length?`<div class="sec"><p class="hint">판독이 불확실한 곳: ${esc(ev.unreadable.join(', '))}</p></div>`:''}</div>`;
+  const why=Object.keys(sc).map(k=>{const w=swList(ev,k);return w?`<div class="evw"><b>${esc(k)} <span>${scv(sc[k])}</span></b>${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}).join('');
+  const D=(t,body,n,open)=>`<details class="ev-d"${open?' open':''}><summary>${t}${n||''}</summary><div class="ev-db">${body}</div></details>`;
+  const df=r2?Number(ev.total)-Number(ev.firstTotal):0;
+  return `<div class="panel ev"><div class="ph"><h2>${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭<br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
+  <div class="ev-sum"><div class="ev-s1">
+      <p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
+      ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
+    <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${esc(ev.progress)}</p>`:''}${ev.teacher?`<blockquote class="ev-t">${esc(ev.teacher)}</blockquote>`:''}</div></div>
+  <div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
+    ${!r2&&rwLeft(ev)?`<small class="hint">${esc(rwHint(ev))}</small>`:''}${S.downloads?'':'<small class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</small>'}</div>
+  ${D('원고지 첨삭',`<p class="evq">${qShowHTML(ev)}</p>${ev.writeSec||ev.asked!=null?`<p class="hint">${ev.asked!=null?'쓰기 전 질문 '+ev.asked+'개 · 계획 작성 · ':''}쓴 시간 ${ev.writeSec?fmtSw(ev.writeSec):'기록 없음'}</p>`:''}<p class="hint">파란색은 고친 곳, 초록색은 선생님 메모예요. 손가락으로 크게 볼 수 있어요.</p>${mnSheets(ev).map(h=>`<div class="mnw">${h}</div>`).join('')}`,'',innerWidth>=720)}
+  ${D('점수 이유',`${ev.comment?`<p>${esc(ev.comment)}</p>`:''}${why||'<p class="hint">항목별 이유가 없어요.</p>'}`)}
+  ${D('맞춤법',pr(ev.spelling),cnt(ev.spelling))}
+  ${D('문장 고치기',sr(ev.sentences),cnt(ev.sentences))}
+  ${D('문단 고치기',`<p>${esc(ev.paragraphs)}</p>${prv(ev.paraReview)}${rewriteAll(ev)?`<details><summary>다시 쓴 글 전체 보기</summary><p style="white-space:pre-wrap">${esc(rewriteAll(ev))}</p></details>`:''}`)}
+  ${D('잘한 점 · 고칠 점',`<div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev.strengths)}</div><div><h4>고칠 점</h4>${ul(ev.improvements)}</div></div>`)}
+  ${ev.cumulative?D('나의 반복 실수 (최근 5회)',`<p>${esc(ev.cumulative)}</p>`):''}
+  ${(ev.models||[]).length?D('모범 답안',(ev.models||[]).map((m,n)=>`<details ${n===0?'open':''}><summary>${esc(m.title||'모범 답안 '+(n+1))}</summary><p style="white-space:pre-wrap">${esc(m.text)}</p></details>`).join(''),cnt(ev.models)):''}
+  ${ev.unreadable&&ev.unreadable.length?`<p class="hint">판독이 불확실한 곳: ${esc(ev.unreadable.join(', '))}</p>`:''}
+  <p class="ev-ai">이 첨삭은 생성형 AI(Anthropic Claude)가 작성했어요. 사실과 다를 수 있어요.</p></div>`;
 }
 const PDF_CSS=`<style>.pd{font-family:'Nanum Myeongjo','Batang','바탕',serif;color:#111;line-height:1.7;font-size:15px}.pd h1{font-size:26px;margin:0 0 4px}.pd h2{font-size:18px;margin:0;border-bottom:2px solid #1F5C4A;padding-bottom:3px;color:#1F5C4A}.pd p{margin:0}.pd table{border-collapse:collapse;width:100%}.pd td{border:1px solid #bbb;padding:5px 10px}.pd ul{margin:0;padding-left:22px}.pb{padding-bottom:10px}.pb.hd{padding-top:14px;padding-bottom:8px}.pf{position:absolute;left:0;right:0;bottom:24px;text-align:center;font-size:12px;color:#888}</style>`;
 function pdfBlocks(ev){
@@ -3385,8 +3571,8 @@ function pdfBlocks(ev){
   add(`<h1>002BOOK 논술 ${ev.round===2?'2차 ':''}첨삭 평가서</h1><p style="color:#555">${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」 · ${esc(S.id||'')} · ${new Date(ev.at).toLocaleDateString('ko-KR')}</p>`);
   H('논술 질문');add(`<p>${qShowHTML(ev)}</p>`);
   H('총점 '+ev.total+' / 100');
-  add(`<table>${Object.keys(sc).map(k=>`<tr><td style="width:30%">${esc(k)}</td><td>${scv(sc[k])} / 100 (${grd(sc[k])})</td></tr>`).join('')}</table>`);
-  if(Object.keys(sc).some(k=>swList(ev,k))){H('항목별 점수 이유');Object.keys(sc).forEach(k=>{const w=swList(ev,k);if(!w)return;add(`<p><b>${esc(k)} ${scv(sc[k])}점 (${grd(sc[k])})</b></p><ul>${w.plus.map(x=>`<li><b style="color:#2f6b3a">＋ 가점</b> ${esc(x)}</li>`).join('')}${w.minus.map(x=>`<li><b style="color:#a04a1a">－ 감점</b> ${esc(x)}</li>`).join('')}</ul>`)})}
+  add(`<table>${Object.keys(sc).map(k=>`<tr><td style="width:30%">${esc(k)}</td><td>${scv(sc[k])} / 100${grd(sc[k])?' · '+grd(sc[k]):''}</td></tr>`).join('')}</table>`);
+  if(Object.keys(sc).some(k=>swList(ev,k))){H('항목별 점수 이유');Object.keys(sc).forEach(k=>{const w=swList(ev,k);if(!w)return;add(`<p><b>${esc(k)} ${scv(sc[k])}점</b></p><ul>${w.plus.map(x=>`<li><b style="color:#2f6b3a">＋ 가점</b> ${esc(x)}</li>`).join('')}${w.minus.map(x=>`<li><b style="color:#a04a1a">－ 감점</b> ${esc(x)}</li>`).join('')}</ul>`)})}
   if(ev.round===2)add(`<p><b>1차 ${esc(ev.firstTotal)}점 → 2차 ${esc(ev.total)}점</b>${ev.progress?'<br>'+esc(ev.progress):''}</p>`);
   paras(ev.comment).forEach(t=>add(`<p>${esc(t)}</p>`));
   if(ev.praise)add(`<p style="background:#EEF5EC;border-left:4px solid #557257;padding:8px 12px"><b>칭찬과 응원</b><br>${esc(ev.praise)}</p>`);
@@ -3623,9 +3809,9 @@ async function orFinish(R){
     try{
       if(R.mode==='s'){
         const r=await orSrv('shadow',{key,n:R.n,text,raw:text,sec:R.sec,mime:a.mime,audio:a.audio});
-        if(!r.ok){S.oPending=null;toast(r.acc!=null?`모범 답안과 ${r.acc}% 같게 읽었어요. ${r.need}% 이상이 되도록 또박또박 다시 읽어 주세요.`:'따라 읽기가 너무 짧아요. 모범 답안을 끝까지 소리 내어 읽어 주세요.');renderLayers();return}
+        if(!r.ok){S.oPending=null;S.orShFail={k:key+'_'+R.n,acc:r.acc,need:r.need};toast(r.acc!=null?`모범 답안과 ${r.acc}% 같게 읽었어요. ${r.need}% 이상이 되도록 또박또박 다시 읽어 주세요.`:'따라 읽기가 너무 짧아요. 모범 답안을 끝까지 소리 내어 읽어 주세요.');renderLayers();return}
         if(r.now)S.oskew=r.now-Date.now();if(r.think)S.othink=r.think;
-        D.sh=D.sh.slice();D.sh[R.n]={...a,acc:r.acc,at:r.at};
+        S.orShFail=null;D.sh=D.sh.slice();D.sh[R.n]={...a,acc:r.acc,at:r.at};
         {const t=orThink();toast(`${r.acc!=null?`따라 읽기 정확도 ${r.acc}%. `:'따라 읽기를 마쳤어요. '}이제 ${t>=60&&t%60===0?t/60+'분':t+'초'} 동안 내 대답을 다시 생각해 봐요.`)}
       }else{
         const r=await orSrv('ans2',{key,n:R.n,text,raw:text,sec:R.sec,mime:a.mime,audio:a.audio});
@@ -3662,19 +3848,24 @@ function orTick(){
 }
 function orTickOn(){if(!ORTICK)ORTICK=setInterval(orTick,1000);setTimeout(orTick,0)}
 /* ---------- 구술 탭 ---------- */
+/* 구술 탭 (2026-11-21 재디자인): 맨 위 4단계 진행 줄 → 지금 할 일 → 평가 바. 녹음·판정·잠금·평가 로직은 그대로 */
+const orThinkL=()=>{const t=orThink();return t>=60&&t%60===0?t/60+'분':t+'초'};
 function oralHTML(i){
   if(!svAll(i))return svLockHTML(i).replace('논술은 설문을','구술은 설문을');
   const key=nk(i);
   if(!S.odoc[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
-  const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];
-  const hist0=`<div class="sec"><h3>구술 테스트 기록</h3>${orLogMini(S.progress.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(S.id)}" style="align-self:flex-start">전체 구술 기록 보기</button></div>`;
-  if(ev)return oralR2HTML(i)+hist0;
+  const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];const ev2=S.orals2[key];
+  const foot=ev2?`<div class="sec orhistsec"><h3>지난 구술 기록</h3>${orLogMini(S.progress.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(S.id)}" style="align-self:flex-start">전체 구술 기록 보기</button></div>`
+    :`<div class="orfoot"><button class="link" data-act="orhist" data-id="${esc(S.id)}">지난 구술 기록 ›</button>${!ev&&q&&q.ai?'<small>Claude(생성형 AI)가 이달 작품으로 낸 질문이에요</small>':''}</div>`;
+  const wrap=(st,body)=>`<div class="sec orwrap" data-st="${st}">${orSteps(i)}${body}</div>${foot}`;
+  if(ev)return wrap(ev2?'done':'r2',oralR2HTML(i));
   if((!q||!Array.isArray(q.shown)||q.shown.length<OR_N)&&!busy){setTimeout(()=>genOQs(i),0)}
-  if(busy==='all'||!q||!q.shown||q.shown.length<OR_N)return '<div class="sec"><h3>이달의 구술 질문</h3><div class="sk"></div><div class="sk"></div><p class="hint">구술 질문을 만들고 있어요. 잠시만 기다려 주세요.</p></div>';
-  return oralR1HTML(i)+hist0;
+  if(busy==='all'||!q||!q.shown||q.shown.length<OR_N)return wrap('r1','<div class="orcard orprep"><h3>질문을 준비하고 있어요</h3><div class="sk"></div><div class="sk"></div></div>');
+  return wrap('r1',oralR1HTML(i));
 }
-function orRecBox(R){return `<div class="orrec" role="status"><span class="ordot" aria-hidden="true"></span><b id="or-t">${R.stop?'저장하는 중…':'0:00 / '+orMS(R.max)}</b><div class="orbar"><i id="or-b"></i></div><button class="btn" data-act="orstop" ${R.stop?'disabled':''}>완료</button></div><p class="orlive" id="or-live" aria-live="polite"></p>`}
-function orTxBox(i,n,a,mode){return `<label class="ortx">${mode===2?'다시 말한 내용':'내가 말한 내용'} <small class="hint">${a.raw?'음성 인식 결과예요. 잘못 알아들은 낱말만 고쳐 주세요.':'음성 인식이 되지 않았어요. 녹음을 들으며 말한 그대로 적어 주세요.'}</small><textarea data-ortx="${n}" data-m="${mode}" data-i="${i}" rows="4" placeholder="말한 내용을 그대로 적어 주세요">${esc(a.text||'')}</textarea></label>`}
+function orRecBox(R){const t=R.mode==='s'?'따라 읽는 중':R.mode===2?'다시 대답하는 중':'대답하는 중';
+  return `<div class="orrec" role="status"><div class="orrech"><span class="ordot" aria-hidden="true"></span><b>${t}</b>${R.retry>0?'<span class="orpill">마이크 다시 연결됨</span>':''}</div><b id="or-t">${R.stop?'저장하는 중…':'0:00 / '+orMS(R.max)}</b><div class="orbar"><i id="or-b"></i></div><button class="btn orbig" data-act="orstop" ${R.stop?'disabled':''}>다 말했어요</button></div><p class="orlive" id="or-live" aria-live="polite"></p>`}
+function orTxBox(i,n,a,mode){const e=!String(a.text||'').trim();return `<label class="ortx${e?' need':''}">${mode===2?'다시 한 말 확인하기':'내가 한 말 확인하기'} <small class="hint">${a.raw?'잘못 알아들은 낱말만 고쳐요':'들어 보면서 말한 그대로 적어 주세요'}</small><textarea data-ortx="${n}" data-m="${mode}" data-i="${i}" rows="3" placeholder="말한 내용을 그대로 적어 주세요">${esc(a.text||'')}</textarea></label>`}
 /* ---------- 질문을 AI 목소리로 읽어 주기 (브라우저 음성 합성) · 처음 듣기 + 다시 듣기 1회 ---------- */
 const OR_TTS=!!(window.speechSynthesis&&window.SpeechSynthesisUtterance);
 const OR_HEAR=2;
@@ -3713,77 +3904,89 @@ function oralR1HTML(i){
   const has=x=>x&&String(x.text||'').trim();const done=q.shown.filter((_,n)=>has(ans[n])).length;const evb=S.oralBusy===key;
   const tts=orTTSok();const h=+heard[cur]||0;const a=ans[cur];const rec=R&&R.n===cur;const saying=ORSAY&&ORSAY.key===key&&ORSAY.n===cur;
   const fr=(q.from||[])[cur]||[];const aid=orAud(S.id,key,cur,1);
-  const listen=tts?`<div class="orlisten${saying?' on':''}">
-      <div class="orwave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-      <p>${saying?'질문을 읽어 주고 있어요. 잘 들어 보세요.':h?'질문을 들었어요. 생각을 정리한 뒤 답해 보세요.':'질문은 글이 아니라 목소리로 들려줘요. 면접처럼 잘 듣고 답해 보세요.'}</p>
-      <div class="orlr">${h===0?`<button class="btn" data-act="orsay" data-i="${i}" data-n="${cur}" ${OREC?'disabled':''}>${saying?'■ 멈추기':'🔊 질문 듣기'}</button>`
-        :`<button class="btn ghost" data-act="orsay" data-i="${i}" data-n="${cur}" ${(h>=OR_HEAR&&!saying)||OREC?'disabled':''}>${saying?'■ 멈추기':h>=OR_HEAR?'다시 듣기를 썼어요':'↺ 다시 듣기 (1회)'}</button>`}<small class="hint">${h>=OR_HEAR?'질문 듣기를 모두 썼어요':h?'다시 듣기 1회 남음':'처음 듣기 + 다시 듣기 1회'}</small></div></div>`
-    :`<p class="warn">이 기기에는 한국어 음성이 없어 질문을 글로 보여 드려요. 크롬이나 사파리에서는 목소리로 들려줘요.</p><p class="qtx">${esc(q.shown[cur])}</p>`;
+  const pips=`<span class="orpips" aria-label="질문 듣기 ${h}번 / ${OR_HEAR}번">${Array.from({length:OR_HEAR},(_,k)=>`<i class="${k<h?'on':''}"></i>`).join('')}</span>`;
+  const from=fr.length?` · ${esc(fr.join('·'))}에서 나온 질문`:'';
+  const listen=!tts?`<p class="warn">이 기기는 한국어 음성이 없어 질문을 글로 보여 줘요. 크롬이나 사파리에서는 목소리로 들려줘요.</p><p class="qtx">${esc(q.shown[cur])}</p>`
+    :h===0||saying?`<div class="orlisten${saying?' on':''}"><div class="orwave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <p>${saying?'질문을 읽어 주고 있어요…':'<b>질문은 목소리로만 들려줘요.</b> 면접처럼 잘 들어 보세요.'}</p>
+        <button class="btn orbig" data-act="orsay" data-i="${i}" data-n="${cur}" ${OREC?'disabled':''}>${saying?'■ 멈추기':'🔊 질문 듣기'}</button>
+        <small class="hint">${pips} ${h?OR_HEAR-h+'번 남음':OR_HEAR+'번까지 들을 수 있어요'}${from}</small></div>`
+    :`<div class="orlisten sm">${pips}<small>${h>=OR_HEAR?'질문 듣기 끝':(OR_HEAR-h)+'번 남음'}</small><button class="chip" data-act="orsay" data-i="${i}" data-n="${cur}" ${h>=OR_HEAR||OREC?'disabled':''}>${h>=OR_HEAR?'다 들었어요':'↺ 한 번 더 듣기'}</button></div>`;
   const canAns=!tts||h>0;
+  const next=q.shown.findIndex((_,s)=>s!==cur&&!has(ans[s]));
   let body;
   if(rec)body=orRecBox(R);
-  else if(a){const st=orStat(a);
-    body=`<div class="orsv"><span class="tagk">저장됨 · ${orMS(a.sec)}</span>${a.audio?orPB(aid,'내 대답 듣기'):''}<button class="chip" data-act="orrec" data-i="${i}" data-n="${cur}" data-m="1" ${OREC||evb||saying?'disabled':''}>${OR_MIC}다시 녹음</button>${st.ch?`<small class="hint">${st.ch}자 · 1분에 ${st.cpm}자</small>`:''}</div>${orTxBox(i,cur,a,1)}`}
-  else body=`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${cur}" data-m="1" ${OREC||evb||saying||!canAns?'disabled':''}>${OR_MIC}답변하기</button><small class="hint">${canAns?'누르면 녹음이 바로 시작돼요 · 최대 2분':'질문을 먼저 들어 주세요'}</small></div>`;
-  const dots=q.shown.map((_,s)=>`<button class="qd${s===cur?' on':''}${has(ans[s])?' pk':''}" data-act="orgo" data-i="${i}" data-s="${s}" aria-label="질문 ${s+1}${has(ans[s])?' (답함)':''}" ${s===cur?'aria-current="true"':''} ${OREC?'disabled':''}>${s+1}</button>`).join('');
-  return `<div class="sec"><h3>이달의 구술 질문</h3>
-    <p class="hint">질문 세 개를 넘겨 가며 하나씩 듣고 답해요. 질문은 AI 목소리로 들려주고, 다시 듣기는 한 번만 할 수 있어요.</p>
-    <div class="qcar">
-      <div class="qcard orcard${a?' sel':''}" role="group" aria-label="질문 ${cur+1} / ${n0}" aria-live="polite">
-        <div class="qtop"><b>질문 ${cur+1} <small>/ ${n0}</small></b>${a?`<span class="qok">${IC.check}답했어요</span>`:''}<button class="chip orref" data-act="orq1" data-i="${i}" data-n="${cur}" ${OREC||busy||evb||saying?'disabled':''} aria-label="질문 ${cur+1} 다른 질문으로 바꾸기">${busy==='q'+cur?'만드는 중…':'↻ 다른 질문'}</button></div>
-        ${fr.length?`<div class="qtags">${fr.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
-        ${listen}
-        ${(q.tips||[])[cur]&&(h>0||!tts)?`<p class="hint ortip">💡 ${esc(q.tips[cur])}</p>`:''}
-        ${body}
-      </div>
-      <div class="qnav"><button class="qb" data-act="ornav" data-i="${i}" data-d="-1" aria-label="이전 질문" ${OREC?'disabled':''}>${IC.back}</button><div class="qdots">${dots}</div><button class="qb" data-act="ornav" data-i="${i}" data-d="1" aria-label="다음 질문" ${OREC?'disabled':''}>${IC.next}</button></div>
+  else if(a){
+    body=`<div class="orsv orline"><span class="tagk">녹음 ${orMS(a.sec)}</span>${a.audio?orPB(aid,'들어 보기'):''}<button class="chip" data-act="orrec" data-i="${i}" data-n="${cur}" data-m="1" ${OREC||evb||saying?'disabled':''}>${OR_MIC}다시 녹음</button></div>${orTxBox(i,cur,a,1)}
+      ${next>=0?`<button class="btn ornext" data-act="orgo" data-i="${i}" data-s="${next}" ${OREC?'disabled':''}>질문 ${next+1}로 →</button>`:done>=OR_N?'<p class="ordone1">세 질문 모두 답했어요 👏 아래에서 평가를 받아요</p>':''}`}
+  else body=`<div class="orsv"><button class="btn orbig" data-act="orrec" data-i="${i}" data-n="${cur}" data-m="1" ${OREC||evb||saying||!canAns?'disabled':''}>${OR_MIC}답하기</button><small class="hint">${canAns?'누르면 바로 녹음돼요 · 최대 '+Math.round(OR_MAXS[1]/60)+'분':'질문을 먼저 들어요'}</small></div>`;
+  const tabs=q.shown.map((_,s)=>`<button class="qd${s===cur?' on':''}${has(ans[s])?' pk':''}" data-act="orgo" data-i="${i}" data-s="${s}" aria-label="질문 ${s+1}${has(ans[s])?' (답함)':''}" ${s===cur?'aria-current="true"':''} ${OREC?'disabled':''}>${has(ans[s])?'✓':s+1}</button>`).join('');
+  const off=S.oralOff&&S.oralOff.i===i?`<div class="offtopic" role="alert"><b>질문과 맞지 않아요</b><p>${esc(S.oralOff.reason||'답변이 질문과 거리가 멀어 보여요.')}</p><p>질문을 떠올리며 다시 녹음해 주세요. 이번 답은 점수에 들어가지 않았어요.</p></div>`:'';
+  return `${!OR_SR?'<p class="warn">이 브라우저는 받아 적기가 안 돼요. 녹음한 뒤 말한 내용을 직접 적어 주세요. (크롬·사파리는 자동으로 적어 줘요)</p>':''}
+    <div class="qcard orcard${a?' sel':''}" role="group" aria-label="질문 ${cur+1} / ${n0}" aria-live="polite">
+      <div class="ortabs"><span>질문</span><div class="qdots">${tabs}</div>${a?`<span class="qok">${IC.check}답했어요</span>`:''}</div>
+      ${listen}
+      ${(q.tips||[])[cur]&&(h>0||!tts)&&!rec?`<p class="hint ortip">💡 ${esc(q.tips[cur])}</p>`:''}
+      ${body}
+      <div class="orcfoot"><button class="link orref" data-act="orq1" data-i="${i}" data-n="${cur}" ${OREC||busy||evb||saying?'disabled':''} aria-label="질문 ${cur+1} 다른 질문으로 바꾸기">${busy==='q'+cur?'새 질문을 만드는 중…':'이 질문 바꾸기'}</button></div>
     </div>
-    <p class="hint">${q.ai?'책과 두 영화의 주제로, 외고·자사고 구술면접 경향을 반영해 학년 수준에 맞춰 Claude가 새로 낸 질문이에요.':'기본 질문이에요. Claude 연결이 되면 더 다양한 질문이 나와요.'}</p></div>
-  <div class="sec"><h3>구술 답하고 평가 받기</h3>${orSteps(i)}
-    ${!OR_SR?'<p class="warn">이 브라우저는 음성 인식을 지원하지 않아 녹음만 돼요. 녹음 뒤 말한 내용을 직접 적어 주세요. 크롬이나 사파리에서는 말한 내용이 자동으로 적혀요.</p>':''}
-    <p class="hint">세 질문에 모두 답하면 1차 구술 평가를 받아요. 평가가 끝나면 모범 답안을 따라 읽고 3분 생각한 뒤 다시 대답하는 2차 도전이 열려요.</p>
-    <div class="orgo"><button class="btn" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>1차 구술 평가 받기</button><span class="hint">${done<OR_N?'답변 '+orNeed(D,ans,OR_N):'세 답변을 모아 평가해요. 1분 안팎 걸려요.'}</span></div>
-    ${evb?`<p class="hint" role="status" id="or-msg">${esc(S.oralMsg||'')}</p>`:''}
-    ${!S.sample?'<p class="warn">Claude 연결이 없어 구술 평가를 받을 수 없어요.</p>':''}
-    ${S.oralOff&&S.oralOff.i===i?`<div class="offtopic" role="alert"><b>질문과 맞지 않아요</b><p>${esc(S.oralOff.reason||'답변이 질문과 거리가 멀어 보여요.')}</p><p>질문을 다시 떠올려 내 생각을 담아 다시 녹음한 뒤 평가를 눌러 주세요. 이번 답변은 점수에 반영되지 않았어요.</p></div>`:''}
-  </div>`;
+    ${off}
+    ${evb?`<div class="orbusy" role="status"><span class="orspin" aria-hidden="true"></span><b>1차 평가 중이에요</b><p id="or-msg">${esc(S.oralMsg||'')}</p><small>1분쯤 걸려요 · 이 창을 닫지 말아 주세요</small></div>`:''}
+    <div class="orgo"><button class="btn orbig${done>=OR_N?' ready':''}" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>1차 평가 받기</button><span class="hint">${done<OR_N?'답변 '+orNeed(D,ans,OR_N):'세 답변을 모아 평가해요. 1분 안팎 걸려요.'}</span></div>
+    ${!S.sample?'<p class="warn">Claude 연결이 없어 구술 평가를 받을 수 없어요.</p>':''}`;
 }
 function orSteps(i){
   const key=nk(i);const D=orD(i);const ev=S.orals[key],ev2=S.orals2[key];const has=x=>x&&String(x.text||'').trim();
-  const st=!ev?(D.ans.filter(has).length<OR_N?0:1):ev2?4:(ev.answers||[]).every((_,n)=>D.sh[n])?3:2;
-  const li=(k,t)=>`<li class="${st>k?'dn':st===k?'on':''}"${st===k?' aria-current="step"':''}>${t}</li>`;
-  return `<ol class="steps" aria-label="구술 테스트 순서">${li(0,'듣고 답하기')}${li(1,'1차 평가')}${li(2,'따라 읽기')}${li(3,'다시 대답')}${li(4,'최종 리포트')}</ol>`}
+  const q=orQ(i);const st=ev2?4:ev?2:(q&&q.shown&&q.shown.every((_,n)=>has(D.ans[n]))?1:0);
+  const L=['듣고 답하기','1차 평가','2차 도전','최종 리포트'];
+  return `<ol class="orprog" aria-label="구술 테스트 순서">${L.map((t,k)=>`<li class="${st>k?'dn':st===k?'on':''}"${st===k?' aria-current="step"':''}><span>${t}</span></li>`).join('')}</ol>${st<4?`<p class="orprogt">${st+1}/4 · ${L[st]}</p>`:''}`}
 
 function oralR2HTML(i){
   const key=nk(i);const ev=S.orals[key];const ev2=S.orals2[key];const D=orD(i);const evb=S.oralBusy===key;
-  let cd=false;
+  let cd=false,nowSet=false;
   const card=(a1,n)=>{
     const sh=D.sh[n],a2=D.ans2[n];const model=String(a1.model||'');const recS=OREC&&OREC.key===key&&OREC.n===n&&OREC.mode==='s';const rec2=OREC&&OREC.key===key&&OREC.n===n&&OREC.mode===2;
     const left=sh?Math.ceil((sh.at+orThink()*1000-orNow())/1000):orThink();const thinkOk=sh&&left<=0;
-    const st=a2?3:thinkOk?2:sh?1:0;
-    const li=(k,t)=>`<li class="${st>k?'dn':st===k?'on':''}">${t}</li>`;
-    let body=`<div class="orpair"><span>1차 대답 · ${orMS(a1.sec||0)}</span>${a1.audio?orPB(orAud(S.id,key,n,1),'1차 대답 다시 듣기'):''}</div>
-      <details class="orprev"><summary>1차에 말한 내용과 선생님 지적</summary><p>${esc(a1.text)}</p>${a1.problem?`<p class="swm"><i>－</i>${esc(a1.problem)}</p>`:''}</details>
-      <div class="ormodel"><b>모범 답안</b><p>${esc(model)}</p></div>`;
-    if(st===0)body+=recS?orRecBox(OREC):`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${n}" data-m="s" ${OREC||evb?'disabled':''}>${OR_MIC}모범 답안 따라 읽기</button><small class="hint">소리 내어 또박또박 읽어요 · 모범 답안과 50% 이상 같게 읽으면 생각 시간이 시작돼요 · 최대 3분</small></div>`;
-    else body+=`<div class="orsv"><span class="tagk">따라 읽기 · ${orMS(sh.sec)}</span>${sh.audio?orPB(orAud(S.id,key,n,'s'),'따라 읽기 듣기'):''}${sh.acc!=null?`<small class="hint">모범 답안과 ${sh.acc}% 같게 읽었어요</small>`:''}</div>`;
-    if(st===1){cd=true;body+=`<div class="orthink" role="timer"><b>생각 시간</b><span class="orcd" data-cd="${sh.at+orThink()*1000-(S.oskew||0)}">${orMS(left)}</span><small class="hint">모범 답안에서 배운 점을 살려 내 생각으로 다시 말할 내용을 정리해요. 3분이 지나면 다시 대답하기가 열려요.</small></div>`}
-    if(st>=1&&!a2)body+=`<label class="ortx">생각 메모 <small class="hint">선택 · 나만 봐요</small><textarea data-ormemo="${n}" data-i="${i}" rows="3" placeholder="결론 → 근거 두 가지 → 마무리 순서로 적어 봐요">${esc(D.memo[n]||'')}</textarea></label>`;
-    if(st===2)body+=rec2?orRecBox(OREC):`<div class="orsv"><button class="btn" data-act="orrec" data-i="${i}" data-n="${n}" data-m="2" ${OREC||evb?'disabled':''}>${OR_MIC}다시 대답하기</button><small class="hint">같은 질문에 다시 답해요 · 최대 2분</small></div>`;
-    if(st===3){const s2=orStat(a2);body+=rec2?orRecBox(OREC):`<div class="orsv"><span class="tagk">2차 대답 · ${orMS(a2.sec)}</span>${a2.audio?orPB(orAud(S.id,key,n,2),'2차 대답 듣기'):''}${ev2?'':`<button class="chip" data-act="orrec" data-i="${i}" data-n="${n}" data-m="2" ${OREC||evb?'disabled':''}>${OR_MIC}다시 녹음</button>`}${s2.ch?`<small class="hint">${s2.ch}자 · 1분에 ${s2.cpm}자</small>`:''}</div>${ev2?`<p class="orprevt">${esc(a2.text)}</p>`:orTxBox(i,n,a2,2)}`}
-    return `<div class="orq${recS||rec2?' on':''}${st===3?' ok':''}"><div class="orqh"><b>질문 ${n+1}</b></div><p class="orqt">${esc(a1.q)}</p>
-      <ol class="steps orsteps" aria-label="2차 도전 순서">${li(0,'따라 읽기')}${li(1,'3분 생각')}${li(2,'다시 대답')}</ol>${body}</div>`};
+    const st=a2?3:thinkOk?2:sh?1:0;const pend=S.oPending===key+'_'+n;const fail=S.orShFail&&S.orShFail.k===key+'_'+n&&!sh?S.orShFail:null;
+    const pill=pend?'확인하는 중…':['따라 읽기 차례','생각하는 중','다시 대답 차례','✓ 다 했어요'][st];
+    const isNow=!ev2&&(recS||rec2||(!nowSet&&(st===0||st===2)&&!OREC));if(isNow)nowSet=true;
+    const prev=`<details class="orprev"><summary>내 1차 대답 돌아보기</summary>${a1.audio?orPB(orAud(S.id,key,n,1),'1차 대답 듣기'):''}<p>${esc(a1.text)}</p>${a1.problem?`<p class="swm"><i>－</i>${esc(a1.problem)}</p>`:''}</details>`;
+    const mdl=`<div class="ormodel"><b>모범 답안</b><p>${esc(model)}</p></div>`;
+    let L='',Rt='';
+    if(ev2){
+      return `<details class="orq ok"><summary><b>질문 ${n+1}</b> · ✓ 따라 읽기 ${sh&&sh.acc!=null?sh.acc+'%':''} · 다시 대답 ${a2?orMS(a2.sec):''}</summary><p class="orqt">${esc(a1.q)}</p>
+        <div class="orsv orline">${sh&&sh.audio?orPB(orAud(S.id,key,n,'s'),'따라 읽기 듣기'):''}${a2&&a2.audio?orPB(orAud(S.id,key,n,2),'2차 대답 듣기'):''}</div>${a2?`<p class="orprevt">${esc(a2.text)}</p>`:''}${mdl}</details>`;
+    }
+    if(st===0){
+      L=mdl+prev;
+      Rt=recS?orRecBox(OREC):pend?'<div class="orbusy sm" role="status"><span class="orspin" aria-hidden="true"></span><b>정확도를 확인하는 중이에요…</b></div>'
+        :`${fail?`<div class="orfail" role="alert">${fail.acc!=null?`<b>${fail.acc}% 같았어요 — ${fail.need}%가 넘어야 해요.</b> 모범 답안을 보며 천천히 다시 읽어 봐요.`:'<b>모범 답안을 끝까지 소리 내어 읽어 주세요.</b>'}</div>`:''}
+          <div class="orsv"><button class="btn orbig" data-act="orrec" data-i="${i}" data-n="${n}" data-m="s" ${OREC||evb?'disabled':''}>${OR_MIC}따라 읽기 시작</button><small class="hint">또박또박 소리 내어 읽어요 · 50% 넘게 같으면 통과 · 최대 3분</small></div>`;
+    }else{
+      L=`<div class="orsv orline"><span class="tagk">따라 읽기 ${sh.acc!=null?sh.acc+'% ✓':orMS(sh.sec)+' ✓'}</span>${sh.audio?orPB(orAud(S.id,key,n,'s'),'들어 보기'):''}</div>
+        <details class="ormodelw"><summary>모범 답안 다시 보기</summary>${mdl}</details>${prev}`;
+      if(st===1){cd=true;const tot=orThink();Rt=`<div class="orthink" role="timer" style="--left:${Math.max(0,left)}s;--tot:${tot}s;--p:${Math.max(0,Math.min(1,left/tot))}"><svg class="orring" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><circle class="rg" cx="32" cy="32" r="28"/></svg><span class="orcd" data-cd="${sh.at+orThink()*1000-(S.oskew||0)}">${orMS(left)}</span><b>생각하는 시간</b><small>모범 답안의 짜임을 빌려 내 생각을 정리해요.</small></div>`}
+      if(st===2)Rt=`<div class="orthink done"><b>✓ 생각 끝! 이제 내 말로 다시 대답해요.</b></div>`;
+      if(st>=1&&!a2)Rt+=`<label class="ortx">생각 메모 <small class="hint">나만 봐요</small><textarea data-ormemo="${n}" data-i="${i}" rows="3" placeholder="결론 → 근거 두 개 → 마무리">${esc(D.memo[n]||'')}</textarea></label>`;
+      if(st===2)Rt+=rec2?orRecBox(OREC):`<div class="orsv"><button class="btn orbig" data-act="orrec" data-i="${i}" data-n="${n}" data-m="2" ${OREC||evb?'disabled':''}>${OR_MIC}다시 대답하기</button><small class="hint">같은 질문에 다시 답해요 · 최대 2분</small></div>`;
+      if(st===3)Rt=rec2?orRecBox(OREC):`<div class="orsv orline"><span class="tagk">2차 대답 ${orMS(a2.sec)}</span>${a2.audio?orPB(orAud(S.id,key,n,2),'들어 보기'):''}<button class="chip" data-act="orrec" data-i="${i}" data-n="${n}" data-m="2" ${OREC||evb?'disabled':''}>${OR_MIC}다시 녹음</button></div>${orTxBox(i,n,a2,2)}`;
+    }
+    return `<div class="orq${recS||rec2?' on':''}${isNow?' now':''}${st===3?' ok':''}"><div class="orqh"><b>질문 ${n+1}</b><span class="orst">${pill}</span></div><p class="orqt">${esc(a1.q)}</p><div class="orqb"><div class="orql">${L}</div><div class="orqr">${Rt}</div></div></div>`};
+  const cards=(ev.answers||[]).map(card).join('');
+  if(cd)setTimeout(orTickOn,0);  // 카드를 다 그린 뒤 생각 시간 초시계를 켠다(예전에는 순서가 거꾸로라 멈춰 있었다)
   const ready=(ev.answers||[]).every((a,n)=>D.ans2[n]&&String(D.ans2[n].text||'').trim());
-  if(cd)setTimeout(orTickOn,0);
-  return `<div class="sec"><div class="orsum"><div><small>1차 총점</small><b>${esc(ev.total)}</b></div>${ev2?`<div><small>2차 총점</small><b>${esc(ev2.total)}</b></div><div class="g"><small>성장 점수</small><b>${esc(ev2.growth)}</b></div>`:''}<button class="link" data-act="orview" data-i="${i}" data-r="1">1차 평가 보기</button>${ev2?`<button class="link" data-act="orview" data-i="${i}" data-r="2">최종 리포트 보기</button>`:''}</div></div>
-  <div class="sec"><h3>2차 도전 <small class="orstep">따라 읽고, 생각하고, 다시 대답하기</small></h3>${orSteps(i)}
-    <p class="hint">질문마다 1차 대답을 다시 들어 보고, 모범 답안을 소리 내어 따라 읽어요. 따라 읽기를 마치면 3분 생각 시간이 주어지고, 그다음 같은 질문에 다시 대답해요. 세 질문을 모두 다시 대답하면 2차 평가에서 1차와 비교해 대답 성장 점수를 받아요.</p>
-    ${(ev.answers||[]).map(card).join('')}
-    ${ev2?`<div class="praise"><b>2차 평가 완료 · 1차 ${esc(ev.total)}점 → 2차 ${esc(ev2.total)}점 · 성장 점수 ${esc(ev2.growth)}점</b><p>${ev2.sentAt?`최종 리포트를 ${esc((ev2.sentTo||[]).join(', '))}님께 이메일과 휴대폰 알림으로 보냈어요.`:'가족으로 연결된 부모님·선생님이 있으면 최종 리포트를 이메일과 휴대폰 알림으로 보내 드려요.'}</p></div>`
-      :`<div class="orgo"><button class="btn" data-act="oreval2" data-i="${i}" ${!ready||OREC||evb||!S.sample?'disabled':''}>2차 평가 받기</button><span class="hint">${ready?'1차와 비교해 평가하고 최종 리포트를 만들어요. 1분 안팎 걸려요.':'다시 대답 '+orNeed(D,D.ans2,OR_N)}</span></div>`}
-    ${evb?`<p class="hint" role="status" id="or-msg">${esc(S.oralMsg||'')}</p>`:''}
-    ${S.orSend&&S.orSend.key===key?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:''}
-  </div>`;
+  if(ev2){
+    const df=ev2.total-ev.total;const sendMsg=S.orSend&&S.orSend.key===key&&/중이에요|못했어요|여러 번/.test(S.orSend.msg)?S.orSend.msg:'';
+    return `<div class="ordone"><div class="orsum big"><div><small>1차</small><b>${esc(ev.total)}</b></div><div><small>2차</small><b>${esc(ev2.total)}</b><em class="${df>=0?'up':'dn'}">${df>=0?'▲':'▼'} ${Math.abs(df)}</em></div><div class="g"><small>성장 점수</small><b>${esc(ev2.growth)}</b></div></div>
+      <p class="ordonep">${esc(ev2.growthComment||'끝까지 해냈어요! 정말 잘했어요 👏')}</p>
+      <button class="btn orbig" data-act="orview" data-i="${i}" data-r="2">최종 리포트 보기</button><button class="link" data-act="orview" data-i="${i}" data-r="1">1차 평가 보기</button>
+      ${ev2.sentAt?`<p class="hint">✓ ${esc((ev2.sentTo||[]).join(', '))}님께 보냈어요 · 최종 리포트 · ${new Date(ev2.sentAt).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}</p>`:''}${sendMsg?`<p class="hint" role="status">${esc(sendMsg)}</p>`:''}</div>${cards}`;
+  }
+  return `<div class="orsum sm"><span>1차 <b>${esc(ev.total)}</b>점</span><button class="link" data-act="orview" data-i="${i}" data-r="1">1차 평가 다시 보기 ›</button></div>
+    <p class="orhow">① 따라 읽기 → ② ${orThinkL()} 생각 → ③ 다시 대답</p>
+    ${cards}
+    ${evb?`<div class="orbusy" role="status"><span class="orspin" aria-hidden="true"></span><b>2차 평가 중이에요</b><p id="or-msg">${esc(S.oralMsg||'')}</p><small>1분쯤 걸려요 · 이 창을 닫지 말아 주세요</small></div>`:''}
+    <div class="orgo"><button class="btn orbig${ready?' ready':''}" data-act="oreval2" data-i="${i}" ${!ready||OREC||evb||!S.sample?'disabled':''}>2차 평가 받기</button><span class="hint">${ready?'1차와 비교해 평가하고 최종 리포트를 만들어요. 1분 안팎 걸려요.':'다시 대답 '+orNeed(D,D.ans2,OR_N)}</span></div>`;
 }
 /* ---------- 1차 평가 ---------- */
 async function oralEval(i){
@@ -3913,7 +4116,10 @@ function orOpen(uid,key,r,i){
     S.oralView={uid,key,r,i,ev1:a.exists?clone(a.data()):null,ev2:b.exists?clone(b.data()):null};renderLayers()}).catch(()=>{if(S.oralView){S.oralView.loading=false;S.oralView.err=true;renderLayers()}});
 }
 const orScoreRows=(ev,prevSc)=>{const sc=ev.scores||{};return '<div class="orsc">'+Object.keys(sc).map(k=>{const p=prevSc&&prevSc[k]!=null?scv(prevSc[k]):null;const v=scv(sc[k]);
-  return `<div class="sc"><span>${esc(k)}</span><div class="bar">${p!=null?`<i class="p1" style="width:${Math.max(0,Math.min(100,p))}%"></i>`:''}<i style="width:${Math.max(0,Math.min(100,v))}%"></i></div><b>${v}${p!=null?` <small class="${v>=p?'up':'dn'}">${v-p>=0?'+':''}${v-p}</small>`:''}</b></div>${(w=>w?`<div class="swy">${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:'')(swList(ev,k))}`}).join('')+'</div>'};
+  return `<div class="sc"><span>${esc(k)}</span><div class="bar">${p!=null?`<i class="p1" style="width:${Math.max(0,Math.min(100,p))}%"></i>`:''}<i style="width:${Math.max(0,Math.min(100,v))}%"></i></div><b>${v}${p!=null?` <small class="${v>=p?'up':'dn'}">${v-p>=0?'+':''}${v-p}</small>`:''}</b></div>`}).join('')+'</div>'+orWhy(ev)};
+/* 항목별 점수 이유(＋/－)는 한 덩어리로 접어 둔다 */
+const orWhy=ev=>{const sc=ev.scores||{};const h=Object.keys(sc).map(k=>{const w=swList(ev,k);return w?`<div class="evw"><b>${esc(k)} <span>${scv(sc[k])}</span></b>${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}).join('');
+  return h?`<details class="orswd"><summary>왜 이 점수예요?</summary>${h}</details>`:''};
 function oralEvalHTML(){
   const v=S.oralView;const head=t=>`<div class="ph"><h2>${t}</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
   if(v.loading)return `<div class="panel">${head('구술 평가')}<div class="sk"></div><div class="sk"></div></div>`;
@@ -3924,42 +4130,44 @@ function oralEvalHTML(){
   const sent=a=>Array.isArray(a)&&a.length?`<h4>문장 지도</h4>${a.map(x=>`<div class="rv"><span><span class="gr ${gc(x.grade)}">${esc(x.grade||'보통')}</span> ${esc(x.orig)}</span><span class="hint">${esc(x.why)}</span>${x.fix?`<span class="rw">이렇게 말해요 · ${esc(x.fix)}</span>`:''}</div>`).join('')}`:'';
   const chips=(a,aid,label)=>`<div class="orchips"><span>말한 시간 <b>${orMS(a.sec)}</b></span><span>${esc(a.chars)}자</span><span>1분에 ${esc(a.cpm)}자 · ${a.cpm<200?'조금 느려요':a.cpm>380?'조금 빨라요':'알맞아요'}</span>${a.fill?`<span>군말 ${esc(a.fill)}회</span>`:''}${a.audio?orPB(aid,label):''}</div>`;
   const marked=a=>{const mk=orMarked(a.text,a.marks);return `<div class="ormk"><small class="hint">말한 내용 첨삭 · 빨간 줄은 뺄 말, 파란 글씨는 고친 말, 초록 밑줄은 잘한 표현이에요.</small><p>${mk.h}</p>${mk.notes?`<ol class="ornotes">${mk.notes}</ol>`:''}</div>`};
-  const top=t=>`${head(t)}<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="orpdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${v.r===2&&uid===S.id?`<button class="btn ghost" data-act="orsend" data-i="${v.i}">${ev2.sentAt?'부모님·선생님께 다시 보내기':'부모님·선생님께 보내기'}</button>`:''}${v.r===2?`<button class="btn ghost" data-act="orview" data-r="1" data-uid="${esc(uid)}" data-key="${esc(v.key)}">1차 평가 보기</button>`:ev2?`<button class="btn ghost" data-act="orview" data-r="2" data-uid="${esc(uid)}" data-key="${esc(v.key)}">최종 리포트 보기</button>`:''}</div>`;
+  const top=t=>`${head(t)}<div class="oract"><button class="btn${v.r===2?'':' ghost'}" data-act="orpdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${v.r===2&&uid===S.id?`<button class="btn ghost" data-act="orsend" data-i="${v.i}">${ev2.sentAt?'부모님·선생님께 다시 보내기':'부모님·선생님께 보내기'}</button>`:''}${v.r===2?`<button class="btn ghost" data-act="orview" data-r="1" data-uid="${esc(uid)}" data-key="${esc(v.key)}">1차 평가 보기</button>`:ev2?`<button class="btn ghost" data-act="orview" data-r="2" data-uid="${esc(uid)}" data-key="${esc(v.key)}">최종 리포트 보기</button>`:''}</div>`;
   if(v.r!==2){
-    const ans=(a,n)=>`<div class="sec ora"><h3>질문 ${n+1}</h3><p class="orqt">${esc(a.q)}</p>${chips(a,orAud(uid,v.key,n,1),'내 대답 다시 듣기')}
-      ${a.summary?`<p><b>핵심 주장</b> ${esc(a.summary)}</p>`:''}${marked(a)}
-      <div class="swy"><p class="swp"><i>＋</i>${esc(a.good||'')}</p><p class="swm"><i>－</i>${esc(a.problem||'')}</p></div>${sent(a.sentences)}
+    const ans=(a,n)=>`<details class="sec ora"${n===0?' open':''}><summary><b>질문 ${n+1}</b>${a.summary?` <span>${esc(a.summary)}</span>`:''}</summary><p class="orqt">${esc(a.q)}</p>${chips(a,orAud(uid,v.key,n,1),'내 대답 다시 듣기')}
+      ${marked(a)}
+      <div class="swy"><p class="swp"><i>＋</i>${esc(a.good||'')}</p><p class="swm"><i>－</i>${esc(a.problem||'')}</p></div>
       ${a.better?`<details open><summary>내 답을 다듬으면</summary><p class="rw" style="white-space:pre-wrap">${esc(a.better)}</p></details>`:''}
+      ${a.sentences&&a.sentences.length?`<details><summary>문장 지도</summary>${sent(a.sentences)}</details>`:''}
       ${a.model?`<details><summary>모범 답안</summary><p style="white-space:pre-wrap">${esc(a.model)}</p></details>`:''}
-      ${a.followUp?`<p class="orfu"><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`:''}</div>`;
-    return `<div class="panel ev">${top(`${esc(ev.g)} ${esc(ev.m)} 1차 구술 평가<br><small style="font-size:15px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」</small>`)}
-    <div class="sec"><h3>1차 총점 <span class="big">${esc(ev.total)}</span> / 100</h3>${orScoreRows(ev)}
-      <p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
+      ${a.followUp?`<p class="orfu"><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`:''}</details>`;
+    return `<div class="panel ev">${top(`1차 구술 평가<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」</small>`)}
+    <div class="orhero"><p class="tot">${esc(ev.total)}<small>점</small></p><p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
+    ${uid===S.id&&!ev2?`<div class="ornext"><b>이제 2차 도전!</b><p>모범 답안을 따라 읽고, ${orThinkL()} 생각한 뒤 다시 대답해요.</p><button class="btn orbig" data-act="close2">2차 도전 시작하기</button></div>`:''}
+    <div class="sec"><h3>항목 점수</h3>${orScoreRows(ev)}</div>
     ${(ev.answers||[]).map(ans).join('')}
-    <div class="sec"><h3>잘한 점</h3>${ul(ev.strengths)}<h3>고칠 점</h3>${ul(ev.improvements)}</div>
-    <div class="sec"><h3>누적 분석 (최근 5회)</h3><p>${esc(ev.cumulative)}</p></div>
-    ${ev.teacher?`<div class="sec"><h3>선생님 한마디</h3><p>${esc(ev.teacher)}</p></div>`:''}
-    ${uid===S.id&&!ev2?'<p class="note">이제 구술 탭에서 모범 답안을 따라 읽고, 3분 생각한 뒤 다시 대답하는 2차 도전을 해 봐요.</p>':''}</div>`;
+    <div class="sec"><div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev.strengths)}</div><div><h4>고칠 점</h4>${ul(ev.improvements)}</div></div></div>
+    ${ev.cumulative?`<details class="sec orx"><summary>누적 분석 (최근 5회)</summary><p>${esc(ev.cumulative)}</p></details>`:''}
+    ${ev.teacher?`<details class="sec orx"><summary>선생님 한마디</summary><p>${esc(ev.teacher)}</p></details>`:''}
+    <p class="ev-ai">이 평가는 생성형 AI(Anthropic Claude)가 작성했어요. 사실과 다를 수 있어요.</p></div>`;
   }
   const d=ev2.total-ev.total;const gw=ev2.growthWhy||{};
   const ans2=(a,n)=>{const a1=(ev.answers||[])[n]||{};
-    return `<div class="sec ora"><h3>질문 ${n+1} <small class="orgrow">성장 ${esc(a.growth)}점</small></h3><p class="orqt">${esc(a.q)}</p>
+    return `<details class="sec ora"${n===0?' open':''}><summary><b>질문 ${n+1}</b> <small class="orgrow">성장 ${esc(a.growth)}점</small></summary><p class="orqt">${esc(a.q)}</p>
       <div class="or12"><div><b>1차 대답</b>${a1.audio?orPB(orAud(uid,v.key,n,1),'1차 듣기'):''}<p>${esc(a1.text||'')}</p></div><div><b>2차 대답</b>${a.audio?orPB(orAud(uid,v.key,n,2),'2차 듣기'):''}<p>${esc(a.text)}</p></div></div>
       <div class="orchips">${a.shAcc!=null?`<span>따라 읽기 정확도 <b>${esc(a.shAcc)}%</b></span>`:''}${a.shAudio?orPB(orAud(uid,v.key,n,'s'),'따라 읽기 듣기'):''}<span>1차 ${orMS(a1.sec||0)} → 2차 <b>${orMS(a.sec)}</b></span><span>1분에 ${esc(a.cpm)}자</span>${a.fill?`<span>군말 ${esc(a.fill)}회</span>`:''}</div>
       <div class="swy"><p class="swp"><i>＋</i>${esc(a.improved||'')}</p><p class="swm"><i>－</i>${esc(a.still||'')}</p></div>
       ${a.copied?'<p class="warn">이번 대답은 모범 답안을 거의 그대로 외워 말했어요. 다음에는 모범 답안의 구조만 빌리고 내 생각과 경험으로 채워 보세요.</p>':''}
-      ${orMemBox(a)}${marked(a)}${sent(a.sentences)}</div>`};
-  return `<div class="panel ev">${top(`${esc(ev.g)} ${esc(ev.m)} 구술 테스트 최종 리포트<br><small style="font-size:15px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · 1·2차 종합</small>`)}
+      ${orMemBox(a)}${marked(a)}${a.sentences&&a.sentences.length?`<details><summary>문장 지도</summary>${sent(a.sentences)}</details>`:''}</details>`};
+  return `<div class="panel ev">${top(`구술 테스트 최종 리포트<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」 · 1·2차 종합</small>`)}
   <div class="sec"><div class="orsum big"><div><small>1차 총점</small><b>${esc(ev.total)}</b></div><div><small>2차 총점</small><b>${esc(ev2.total)}</b><em class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'} ${Math.abs(d)}</em></div><div class="g"><small>대답 성장 점수</small><b>${esc(ev2.growth)}</b></div></div>
-    ${ev2.sentAt?`<p class="hint">${new Date(ev2.sentAt).toLocaleDateString('ko-KR')} ${esc((ev2.sentTo||[]).join(', '))}님께 이메일과 휴대폰 알림으로 보냈어요.</p>`:''}
-    ${S.orSend&&S.orSend.key===v.key?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:''}
+    ${S.orSend&&S.orSend.key===v.key&&/중이에요|못했어요|여러 번/.test(S.orSend.msg)?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:ev2.sentAt?`<p class="hint">✓ ${esc((ev2.sentTo||[]).join(', '))}님께 보냈어요 · 최종 리포트 · ${new Date(ev2.sentAt).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}</p>`:''}
     <div class="praise"><b>성장 총평</b><p>${esc(ev2.growthComment||'')}</p></div>
     ${(gw.plus||[]).length||(gw.minus||[]).length?`<div class="swy">${(gw.plus||[]).map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${(gw.minus||[]).map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}</div>
   <div class="sec"><h3>항목 점수 <small class="hint">연한 막대 1차 · 진한 막대 2차</small></h3>${orScoreRows(ev2,ev.scores)}<p>${esc(ev2.comment||'')}</p>${ev2.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev2.praise)}</p></div>`:''}</div>
   ${(ev2.answers||[]).map(ans2).join('')}
-  <div class="sec"><h3>잘한 점</h3>${ul(ev2.strengths)}<h3>다음까지 연습할 점</h3>${ul(ev2.improvements)}${ev2.nextGoal?`<p class="orfu"><b>다음 목표</b> ${esc(ev2.nextGoal)}</p>`:''}</div>
-  <div class="sec"><h3>누적 분석 (최근 5회)</h3><p>${esc(ev2.cumulative||'')}</p></div>
-  ${ev2.teacher?`<div class="sec"><h3>선생님 한마디</h3><p>${esc(ev2.teacher)}</p></div>`:''}</div>`;
+  <div class="sec"><div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev2.strengths)}</div><div><h4>다음까지 연습할 점</h4>${ul(ev2.improvements)}</div></div>${ev2.nextGoal?`<p class="orfu"><b>다음 목표</b> ${esc(ev2.nextGoal)}</p>`:''}</div>
+  ${ev2.cumulative?`<details class="sec orx"><summary>누적 분석 (최근 5회)</summary><p>${esc(ev2.cumulative)}</p></details>`:''}
+  ${ev2.teacher?`<details class="sec orx"><summary>선생님 한마디</summary><p>${esc(ev2.teacher)}</p></details>`:''}
+  <p class="ev-ai">이 리포트는 생성형 AI(Anthropic Claude)가 작성했어요. 사실과 다를 수 있어요.</p></div>`;
 }
 /* ---------- PDF ---------- */
 function orPdfBase(){const B=[];const add=(h,hd)=>B.push({h:`<div class="pb${hd?' hd':''}">${h}</div>`,hd:!!hd});const H=t=>add(`<h2>${esc(t)}</h2>`,true);
@@ -4060,11 +4268,11 @@ async function orHistOpen(id){
 }
 function orChart(log){
   const L=log.filter(x=>x.t1!=null||x.total!=null).slice(-12);if(L.length<1)return '';
-  const W=640,H=200,pl=34,pr=12,pt=14,pb=34;const n=L.length;const X=k=>n===1?(pl+W-pr)/2:pl+(W-pl-pr)*k/(n-1);const Y=v=>pt+(H-pt-pb)*(1-(v-60)/40);
+  const W=innerWidth<720?360:640,H=innerWidth<720?190:200,pl=30,pr=10,pt=14,pb=34;const n=L.length;const X=k=>n===1?(pl+W-pr)/2:pl+(W-pl-pr)*k/(n-1);const Y=v=>pt+(H-pt-pb)*(1-(Math.max(70,v)-70)/30);  // 점수 바닥이 70이라 70부터 그린다
   const line=(f,c,dash)=>{const pts=L.map((x,k)=>f(x)!=null?[X(k),Y(f(x))]:null).filter(Boolean);return pts.length?`<polyline fill="none" stroke="${c}" stroke-width="2.4" ${dash?'stroke-dasharray="5 4"':''} points="${pts.map(p=>p.join(',')).join(' ')}"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.6" fill="${c}"/>`).join('')}`:''};
-  const grid=[60,70,80,90,100].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(62,47,38,.12)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#6F6155">${v}</text>`).join('');
+  const grid=[70,80,90,100].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(62,47,38,.12)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#6F6155">${v}</text>`).join('');
   const lab=L.map((x,k)=>`<text x="${X(k)}" y="${H-12}" text-anchor="middle" font-size="11" fill="#6F6155">${esc(String(x.m||'').replace(/^중\d\s*/,''))}</text>`).join('');
-  return `<figure class="orchart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="구술 테스트 점수 변화">${grid}${line(x=>x.t1??x.total,'#B9A58B',true)}${line(x=>x.t2,'#1F5C4A')}${lab}</svg><figcaption><span class="k1"></span>1차 <span class="k2"></span>2차</figcaption></figure>`}
+  return `<figure class="orchart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="구술 테스트 점수 변화">${grid}${line(x=>x.t1??x.total,'#B9A58B',true)}${line(x=>x.t2,'#1F5C4A')}${lab}</svg><figcaption><span class="k1"></span>1차 <span class="k2"></span>2차${L.length<2?' · 기록이 쌓이면 선으로 이어져요':''}</figcaption></figure>`}
 function oralHistHTML(){
   const H=S.oralHist;const own=H.id===S.id;const name=own?'나':esc((typeof famName==='function'?famName(H.id):'')||H.id);
   const head=`<div class="ph"><h2>${own?'나의':name+'의'} 구술 테스트 기록<small>모든 구술 테스트를 모아 성장 흐름을 보여 줘요</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
@@ -4511,20 +4719,21 @@ async function askTeacher(i,text){
 }
 function askHTML(i){
   const P=prepOf(i);const n=P.asks.length;
-  const list=P.asks.map(x=>`<div class="askq"><b>내 질문</b><p>${esc(x.q)}</p></div><div class="aska"><b>선생님</b><p style="white-space:pre-wrap">${esc(x.a)}</p></div>`).join('');
+  const list=P.asks.map(x=>`<div class="askq"><b>나</b><p>${esc(x.q)}</p></div><div class="aska"><b>선생님 <small>AI 선생님의 답이에요</small></b><p style="white-space:pre-wrap">${esc(x.a)}</p></div>`).join('');
   const form=!S.sample?'<p class="hint">Claude 연결이 없어 지금은 질문할 수 없어요.</p>':n>=6?'<p class="hint">질문은 여섯 번까지 할 수 있어요.</p>'
-    :`<label for="ask-in">궁금한 점 <small class="hint">논술 문제, 책, 영화 무엇이든 물어봐요</small><textarea id="ask-in" maxlength="300" placeholder="예: 문제에서 '설득력 있다'는 게 무슨 뜻이에요?">${esc(S.askDraft||'')}</textarea></label>
-      <div class="brow"><button class="btn small" data-act="ask" data-i="${i}" ${S.askBusy?'disabled':''}>질문하기</button><button class="chip" data-act="askeasy" data-i="${i}" ${S.askBusy?'disabled':''}>문제가 어려워요. 쉽게 설명해 주세요</button></div>`;
-  return `${list}${S.askBusy?'<div class="sk"></div><p class="hint" role="status">선생님이 답을 쓰고 있어요…</p>':''}${form}
-    ${P.qDone?'':`<div class="brow" style="margin-top:4px"><button class="btn" data-act="askdone" data-i="${i}" ${S.askBusy?'disabled':''}>${n?'궁금증이 풀렸어요 · 과제 시작하기':'질문 없어요 · 과제 시작하기'}</button></div>`}`;
+    :S.askBusy?'<div class="sk"></div><p class="hint" role="status">선생님이 답을 쓰고 있어요…</p>'
+    :`<div class="es-ask"><label for="ask-in" class="sr-only">선생님께 물어볼 내용</label><textarea id="ask-in" maxlength="300" rows="2" placeholder="예: 문제에서 '설득력 있다'는 게 무슨 뜻이에요?">${esc(S.askDraft||'')}</textarea><button class="btn small" data-act="ask" data-i="${i}">보내기</button></div>
+      <small class="hint">문제·책·영화 무엇이든 물어봐요 · ${6-n}번 남았어요</small>
+      <div><button class="chip" data-act="askeasy" data-i="${i}">문제를 쉽게 풀어 주세요</button></div>`;
+  return `${list}${form}
+    ${P.qDone?'':`<button class="btn main" data-act="askdone" data-i="${i}" ${S.askBusy?'disabled':''}>${n?'궁금증이 풀렸어요 · 계획 짜기':'질문 없이 다음으로 · 계획 짜기'}</button>`}`;
 }
 function roadHTML(i){
   const P=prepOf(i);const r=P.road;
-  if(P.roadDone)return `<div class="memo done"><b class="mt">나의 논술 로드맵</b>${ROAD.filter(x=>String(r[x[0]]||'').trim()).map(x=>`<p><small>${x[1]}</small>${esc(r[x[0]])}</p>`).join('')}<div><button class="chip" data-act="roadedit" data-i="${i}">로드맵 고치기</button></div></div>`;
-  if(S.roadOpen!==i)return `<div class="brow"><button class="btn" data-act="roadopen" data-i="${i}">메모판 열기 · 논술 로드맵 짜기</button></div><p class="hint">원고지에 쓰기 전에 메모판에서 글의 길(로드맵)을 먼저 짜요. 완료해야 원고지가 열려요.</p>`;
-  return `<div class="memo"><b class="mt">메모판 · 논술 로드맵</b><p class="hint">글을 쓰기 전에 가는 길을 먼저 그려요. 짧게 적어도 괜찮아요.</p>
-    ${ROAD.map(([k,l,ph,need])=>`<label for="rd-${k}">${l}${need?'':' <small class="hint">선택</small>'}<textarea id="rd-${k}" data-road="${k}" maxlength="300" placeholder="${esc(ph)}">${esc(r[k]||'')}</textarea></label>`).join('')}
-    <div class="brow"><button class="btn" data-act="roaddone" data-i="${i}">로드맵 완료</button><span class="hint">쓰는 대로 자동 저장돼요.</span></div></div>`;
+  if(P.roadDone)return `<div class="memo done"><b class="mt">나의 글 계획</b>${ROAD.filter(x=>String(r[x[0]]||'').trim()).map(x=>`<p><small>${x[1]}</small>${esc(r[x[0]])}</p>`).join('')}<div><button class="chip" data-act="roadedit" data-i="${i}">계획 고치기</button></div></div>`;
+  return `<div class="memo"><b class="mt">나의 글 계획</b><p class="hint">칸마다 한 문장이면 충분해요 (8자 이상). '선택' 칸은 비워도 돼요.</p>
+    <div class="rd2">${ROAD.map(([k,l,ph,need])=>`<label for="rd-${k}" class="rd-${k}">${l}${need?'':' <small class="hint">선택</small>'}<textarea id="rd-${k}" data-road="${k}" maxlength="300" rows="2" placeholder="${esc(ph)}">${esc(r[k]||'')}</textarea></label>`).join('')}</div>
+    <button class="btn main" data-act="roaddone" data-i="${i}">계획 완료 · 원고지 열기</button><small class="hint">쓰는 대로 저장돼요.</small></div>`;
 }
 function prepText(i,r2){
   const P=prepOf(i);const key=nk(i);const q=qState(i);const e1=S.evals[key];
@@ -4939,8 +5148,10 @@ document.addEventListener('click',async e=>{
         S.reviews=null;toast('후기를 남겼어요.');loadInfo()}catch(err){toast('후기를 저장하지 못했어요.')}
       break}
     case 'qnav':shiftQ(+d.i,+d.d);break;
+    case 'esqchg':{const i=+d.i;if(S.esQChg===i)S.esQChg=null;else{S.esQChg=i;S.qIdx=S.qIdx||{};const dr=S.essayDraft.i===i?S.essayDraft.q:-1;if(dr>=0)S.qIdx[nk(i)]=dr}renderLayers();break}  // 화면만: 고른 질문 바꾸기 펼치기
+    case 'esfrmore':document.querySelectorAll('.es-fr[hidden]').forEach(x=>x.hidden=false);if(t)t.remove();break;
     case 'qgo':{const i=+d.i;S.qIdx=S.qIdx||{};S.qIdx[nk(i)]=+d.s;renderLayers();break}
-    case 'qpick':{const i=+d.i;if(S.essayDraft.i!==i)S.essayDraft=draftOf(i);{const P=prepOf(i);if(S.essayDraft.q!==+d.s&&(P.qDone||P.roadDone)){P.qDone=false;P.roadDone=false}}S.essayDraft.q=+d.s;S.progress.picks=S.progress.picks||{};S.progress.picks[nk(i)]=+d.s;saveProgress();renderLayers();toast('질문 '+(+d.s+1)+'번을 골랐어요.');break}
+    case 'qpick':{const i=+d.i;if(S.essayDraft.i!==i)S.essayDraft=draftOf(i);{const P=prepOf(i);if(S.essayDraft.q!==+d.s&&(P.qDone||P.roadDone)){P.qDone=false;P.roadDone=false}}S.essayDraft.q=+d.s;S.esQChg=null;S.progress.picks=S.progress.picks||{};S.progress.picks[nk(i)]=+d.s;saveProgress();renderLayers();toast('질문 '+(+d.s+1)+'번을 골랐어요.');break}
     case 'pref1':S.me.prefs=Object.assign({},S.me.prefs,{[d.f]:d.v});renderLayers();break;
     case 'prefg':{const g=new Set((S.me.prefs||{}).genres||[]);g.has(d.v)?g.delete(d.v):g.add(d.v);S.me.prefs=Object.assign({},S.me.prefs,{genres:[...g]});renderLayers();break}
     case 'prefaward':S.me.prefs=Object.assign({},S.me.prefs,{award:!(S.me.prefs||{}).award});renderLayers();break;

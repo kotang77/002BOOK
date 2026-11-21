@@ -99,6 +99,8 @@ with sync_playwright() as p:
     r=api('oral.shadow',tok,key='b0',n=0,text='전혀 상관없는 엉뚱한 말만 길게 늘어놓았어요 오늘 날씨가 좋네요',sec=5); ok('따라 읽기 정확도 미달 거부',r.get('result',{}).get('ok') is False and r['result'].get('need')==50,r)
     st2=api('oral.state',tok,key='b0')['result']['state']; ok('미달 시 기존 통과 기록 유지',st2['sh'][0]['at']==st['state']['sh'][0]['at'])
     left=max(0,(max(x['at'] for x in st['state']['sh'])+st['think']*1000-st['now'])/1000)+1; time.sleep(left)
+    ok('생각 시간이 끝나면 새로고침 없이 다시 대답하기 열림',pg.locator('[data-act=orrec][data-m="2"]').count()==3, pg.locator('[data-act=orrec][data-m="2"]').count())
+    ok('생각 끝 안내',pg.locator('.orthink.done').count()==3)
     pg.reload(); pg.wait_for_selector('.who',timeout=20000); time.sleep(1); openOral(pg)
     ok('3분 뒤 다시 대답하기 열림',pg.locator('[data-act=orrec][data-m="2"]').count()==3)
     for n in range(3):
