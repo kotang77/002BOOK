@@ -21,7 +21,7 @@ const SYSTEM = `너는 한국 중학생을 위한 독서·영화 인문 교육 �
 export async function sampleAI(uid: string, paid: boolean, body: { messages: Msg[]; images?: Img[]; tier?: string; json?: boolean }) {
   if (env('FAKE_AI')) { // 시험용 가짜 AI. FAKE_AI_MAP(JSON: {요청에 든 글자: 응답})이 맞으면 그 응답을 쓴다
     let text = env('FAKE_AI');
-    try { const last = String(body.messages?.[body.messages.length - 1]?.content ?? ''); for (const [k, v] of Object.entries(JSON.parse(env('FAKE_AI_MAP') || '{}'))) if (last.includes(k)) { text = JSON.stringify(v); break; } } catch { /* 기본 응답 */ }
+    try { const last = String(body.messages?.[body.messages.length - 1]?.content ?? ''); for (const [k, v] of Object.entries(JSON.parse(env('FAKE_AI_MAP') || '{}'))) if (last.includes(k)) { text = typeof v === 'string' ? v : JSON.stringify(v); break; } } catch { /* 기본 응답 */ }
     return { text, truncated: false, model: 'fake' };
   }
   const key = env('ANTHROPIC_API_KEY');
