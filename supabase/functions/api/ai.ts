@@ -72,6 +72,6 @@ export async function sampleAI(uid: string, paid: boolean, body: { messages: Msg
   }
   const text = (j.content ?? []).filter((c: { type: string }) => c.type === 'text').map((c: { text: string }) => c.text).join('');
   await sb.rpc('bump_ai_usage', { p_uid: uid, p_in: j.usage?.input_tokens ?? 0, p_out: j.usage?.output_tokens ?? 0 });
-  const think = (j.content ?? []).filter((c: { type: string }) => c.type === 'thinking').length;
-  return { text, truncated: j.stop_reason === 'max_tokens', model, out: j.usage?.output_tokens ?? 0, think, fb };
+  if (fb) console.warn('ai: thinking 설정 거부로 생각 없이 다시 요청함', model);
+  return { text, truncated: j.stop_reason === 'max_tokens', model };
 }

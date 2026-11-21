@@ -136,7 +136,7 @@ export const STRINGS = [
   ['profile: 새 비밀번호 8자', `<label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small>`, `<label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small>`],
   ['signup: 한 줄 소개 안내', `<small class="hint">친구들에게 보여요. 비워도 돼요</small>`, `<small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small>`],
   ['friends: 다른 회원 아이디 숨김', "\${esc([m.id,sub(m.id)].filter(Boolean).join(' · '))}", "\${esc(sub(m.id))}"],
-  ['AI 표시: 첨삭 PDF 쪽 바닥글', "첨삭 평가서 · \${nSheets+k+1} / \${all}</div>", "첨삭 평가서 · 생성형 AI(Claude)가 작성한 첨삭 · \${nSheets+k+1} / \${all}</div>"],
+  ['AI 표시: 첨삭 PDF 쪽 바닥글', "첨삭 평가서 · \${nSheets+k+1} / \${all}`", "첨삭 평가서 · 생성형 AI(Claude)가 작성한 첨삭 · \${nSheets+k+1} / \${all}`"],
   ['AI 표시: 첨삭 PDF 메타데이터', "await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});", "pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 첨삭 결과',creator:'002BOOK · AI 생성',keywords:'AI-generated'});await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});"],
   ['AI 표시: 비전보드 저장 안내', "toast('비전보드를 저장했어요.')", "toast('비전보드를 저장했어요. 문구 일부는 생성형 AI가 다듬었어요.')"],
   ['html lang', `<!doctype html><html><head>`, `<!doctype html><html lang="ko"><head>`],

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # 구술 테스트 회귀 시험: 빌드 → 가짜 서버(:8000, 생각 시간 25초) + 웹(:8080) → 휴대폰·PC·마이크 끊김 흐름
+# 일부만: run.sh smoke.py  /  run.sh "flow.py mobile"
 # 필요: deno, python3 + playwright, google-chrome, PDFLIB(html2canvas·jspdf가 든 node_modules 경로)
 set -u
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -14,7 +15,8 @@ sed -i 's#"api":"[^"]*"#"api":"http://localhost:8000"#' "$WEB/runtime/config.js"
 ( cd "$WEB" && setsid nohup python3 -m http.server 8080 > /tmp/web.log 2>&1 < /dev/null & ) > /dev/null 2>&1
 for i in $(seq 30); do curl -s -o /dev/null -X POST localhost:8000 -d '{}' && break; sleep 1; done
 fail=0
-for t in "flow.py mobile" "flow.py desktop" "miclost.py"; do
+TESTS=("${@}"); [ ${#TESTS[@]} = 0 ] && TESTS=("smoke.py" "flow.py mobile" "flow.py desktop" "miclost.py")
+for t in "${TESTS[@]}"; do
   echo "=== $t"; python3 "$ROOT/tests/oral/"$t 2>&1 | grep -E '^(PASS|FAIL)|^[0-9]+/[0-9]+|^errors' | grep -vE '^PASS' ; r=${PIPESTATUS[0]}
   [ "$r" = 0 ] || fail=1
 done

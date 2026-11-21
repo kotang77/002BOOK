@@ -88,6 +88,21 @@ if (errors.length) { console.error('\n빌드 실패:\n - ' + errors.join('\n - '
 /* ---------- 5) dist 만들기 ---------- */
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.cpSync(path.join(ROOT, 'web'), DIST, { recursive: true });
+// 아이콘 생성(6단계)에 쓸 로고 원본을 먼저 꺼내 둔다
+const m = html.match(/LOGO_ICON='data:image\/png;base64,([A-Za-z0-9+/=]+)'/);
+const m2 = html.match(/LOGO_FULL='data:image\/png;base64,([A-Za-z0-9+/=]+)'/);
+// 앱 안에 글자로 들어 있는 큰 그림(로고·캐릭터)을 별도 파일로 꺼낸다. 이름에 내용 해시를 넣어 브라우저가 오래 저장해도 안전하다
+{
+  const dir = path.join(DIST, 'img'); fs.mkdirSync(dir, { recursive: true });
+  let n = 0, saved = 0;
+  html = html.replace(/data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=]{4000,})/g, (all, ext, b64) => {
+    const buf = Buffer.from(b64, 'base64');
+    const name = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 12) + '.' + (ext === 'jpeg' ? 'jpg' : ext);
+    fs.writeFileSync(path.join(dir, name), buf); n++; saved += all.length - ('/img/' + name).length;
+    return '/img/' + name;
+  });
+  console.log(`내장 그림 ${n}개를 파일로 분리 (HTML ${Math.round(saved / 1024)}KB 줄임)`);
+}
 fs.writeFileSync(path.join(DIST, 'index.html'), html);
 fs.writeFileSync(path.join(DIST, '404.html'), html);
 fs.writeFileSync(path.join(DIST, 'runtime/config.js'),
@@ -111,8 +126,6 @@ if (cfg.domain) fs.writeFileSync(path.join(DIST, 'CNAME'), cfg.domain + '\n');
 fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
 
 /* ---------- 6) 아이콘 (앱 안의 로고에서 생성) ---------- */
-const m = html.match(/LOGO_ICON='data:image\/png;base64,([A-Za-z0-9+/=]+)'/);
-const m2 = html.match(/LOGO_FULL='data:image\/png;base64,([A-Za-z0-9+/=]+)'/);
 try {
   const sharp = (await import('sharp')).default;
   const icon = Buffer.from(m[1], 'base64'); const full = Buffer.from(m2[1], 'base64');
