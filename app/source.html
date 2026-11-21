@@ -853,9 +853,6 @@ form{display:flex;flex-direction:column;gap:12px}
 /* ---------- 논술 탭 (2026-11-21 재디자인: 단계 표시 → 지금 할 일 카드 하나) ---------- */
 .sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;margin:-1px}
 .es{display:flex;flex-direction:column;gap:12px}
-.es-steps{position:sticky;top:-1px;z-index:3;background:var(--bg);padding:8px 0 6px;border-bottom:1px solid var(--line)}
-.es-steps li{min-height:40px;padding:4px 2px 5px}
-.es-now{margin:-4px 0 0;font-size:13.5px;color:var(--ink)}.es-now b{color:var(--rose-ink);font-weight:500}
 .es-q{border-left:3px solid var(--rose);background:var(--paper);border-radius:0 10px 10px 0;padding:8px 12px}
 .es-q>summary{list-style:none;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14.5px;line-height:1.6}
 .es-q>summary::-webkit-details-marker{display:none}
@@ -907,14 +904,23 @@ form{display:flex;flex-direction:column;gap:12px}
 .ev-2c h4{margin:4px 0;font-size:14px}
 .ev-ai{margin:14px 0 4px;font-size:12.5px;color:var(--muted)}
 .mnw{overflow-x:auto}
+/* 논술·구술 공통 진행 표시 */
+.flow{position:sticky;top:-1px;z-index:3;background:var(--bg);padding:10px 0 8px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.flow-s{list-style:none;display:grid;grid-template-columns:repeat(var(--n),1fr);margin:0;padding:0}
+.flow-s li{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
+.flow-s li::before{content:"";position:absolute;top:15px;right:50%;width:100%;height:3px;background:var(--soft);z-index:0}
+.flow-s li:first-child::before{display:none}
+.flow-s li.dn::before,.flow-s li.on::before{background:var(--mint-d)}
+.flow-s .fd{position:relative;z-index:1;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:700;font-size:14px;background:var(--paper);border:2px solid var(--line);color:var(--muted);box-sizing:border-box}
+.flow-s li.dn .fd{background:var(--mint-d);border-color:var(--mint-d);color:#fff}
+.flow-s li.on .fd{background:var(--primary);border-color:var(--primary);color:var(--on-primary);box-shadow:0 0 0 4px rgba(62,47,38,.14)}
+.flow-s .fl{font-size:11.5px;line-height:1.3;color:var(--muted);word-break:keep-all}
+.flow-s li.on .fl{color:var(--ink);font-weight:700}.flow-s li.dn .fl{color:var(--mint-d)}
+.flow-now{margin:0;display:flex;flex-direction:column;gap:2px;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--primary);border-radius:0 10px 10px 0;padding:8px 12px}
+.flow-now b{font-size:14.5px;color:var(--ink)}.flow-now span{font-size:13.5px;color:var(--muted);line-height:1.5}
+@media (min-width:720px){.flow-s .fl{font-size:12.5px}.flow-s .fd{width:34px;height:34px}.flow-s li::before{top:16px}}
 /* ---------- 구술 탭 (2026-11-21 재디자인) ---------- */
 .orwrap{display:flex;flex-direction:column;gap:12px}
-.orprog{list-style:none;display:flex;gap:6px;margin:0;padding:0;font-size:12.5px;color:var(--muted)}
-.orprog li{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
-.orprog li::before{content:"";height:5px;border-radius:3px;background:var(--soft)}
-.orprog li.dn::before{background:var(--mint-d)}.orprog li.on::before{background:var(--primary)}
-.orprog li.on{color:var(--ink);font-weight:700}
-.orprogt{display:none;margin:-4px 0 0;font-size:13px;font-weight:700;color:var(--ink)}
 .btn.orbig{min-height:52px;padding:12px 22px;font-size:16px;border-radius:999px;gap:8px;justify-content:center}
 .btn.orbig:disabled{background:var(--soft);border-color:var(--soft);color:var(--muted)}
 .orgo{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -973,7 +979,6 @@ details.ora>summary{cursor:pointer;font-size:16px}details.ora>summary span{font-
 .orswd{margin-top:6px}
 @media (prefers-reduced-motion:reduce){.orspin,.orthink .orring .rg{animation:none}}
 @media (max-width:719px){
-  .orprog li span{font-size:0}.orprogt{display:block}
   .orsv .btn.orbig,.orgo .btn.orbig,.orrec .btn.orbig,.ordone .btn.orbig,.ornext .btn.orbig{width:100%}
   .orgo{position:sticky;bottom:0;z-index:2;background:var(--bg);margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 14px -12px var(--shadow);flex-direction:column;align-items:stretch}
   .orgo .hint{text-align:center}
@@ -3320,7 +3325,13 @@ async function loadMonthData(i){
 }
 /* 논술 탭: 맨 위 단계 표시 → 고른 질문 → 지금 할 일 카드 하나 → 지난 준비(접기) → 친구들의 논술.
    단계·게이트·저장은 그대로이고 화면 배치만 정리했다(2026-11-21). */
-const ES_STEPS=['질문','묻기','계획','쓰기','첨삭'];
+/* 논술·구술 공통 진행 표시: 번호 동그라미 + 선 + 쉬운 이름, 아래에 '지금 N단계 · 할 일' 한 줄.
+   steps: [[아이콘, 이름], …], cur: 지금 단계 번호(다 끝났으면 steps.length), now: 지금 할 일 문장 */
+function flowHTML(label,steps,cur,now){
+  const n=steps.length,doneAll=cur>=n;
+  return `<div class="flow" role="group" aria-label="${esc(label)}"><ol class="flow-s" style="--n:${n}">${steps.map(([ic,t],k)=>`<li class="${cur>k?'dn':cur===k?'on':''}"${cur===k?' aria-current="step"':''}><span class="fd" aria-hidden="true">${cur>k?'✓':k+1}</span><span class="fl">${t}</span></li>`).join('')}</ol>
+    <p class="flow-now">${doneAll?'<b>🎉 모든 단계 끝</b>':`<b>${steps[cur][0]} ${cur+1}단계 · ${steps[cur][1]}</b>`}<span>${now}</span></p></div>`}
+const ES_FLOW=[['📝','질문 고르기'],['🙋','선생님께 묻기'],['🗺️','글 계획 짜기'],['✏️','원고지 쓰기'],['📮','첨삭 받기']];
 function esPast(i,P){
   if(!P.qDone&&!P.roadDone)return '';
   const asks=P.asks.map(x=>`<div class="askq"><b>나</b><p>${esc(x.q)}</p></div><div class="aska"><b>선생님 <small>AI 선생님의 답이에요</small></b><p style="white-space:pre-wrap">${esc(x.a)}</p></div>`).join('');
@@ -3333,10 +3344,9 @@ function essayHTML(i){
   const busy=S.essayBusy===key||S.essayBusy===key+'_r2';
   const picked=d.q>=0&&!!qs[d.q];const P=prepOf(i);const st=!picked?0:!P.qDone?1:!P.roadDone?2:3;
   const stv=ev?5:st;  // 보기용: 첨삭을 받았으면 다섯 칸 모두 ✓
-  const li=(n,t)=>`<li class="${stv>n?'dn':stv===n?'on':''}"${stv===n?' aria-current="step"':''}>${t}</li>`;
   const wsec=(S.progress.wtime||{})[key]||0;const has=!!(d.text&&d.text.trim());const off=S.essayOff&&S.essayOff.i===i;
-  const now=busy?'첨삭을 기다려요':ev?(ev2?'2차 첨삭까지 마쳤어요':'첨삭 완료! 결과를 확인해요'):['세 질문을 읽고 하나를 골라요','헷갈리는 게 있으면 선생님께 물어봐요 (없으면 넘어가도 돼요)','글의 길을 메모로 짜요',has||d.files.length?'다 썼으면 제출해요':'원고지에 글을 써요'][st];
-  const head=`<ol class="steps es-steps" aria-label="논술 순서">${ES_STEPS.map((t,n)=>li(n,t)).join('')}</ol><p class="es-now"><b>지금 할 일</b> · ${now}</p>`;
+  const now=busy?'선생님이 첨삭하고 있어요. 1~2분만 기다려요.':ev?(ev2?'2차 첨삭까지 마쳤어요. 결과를 확인해요.':'첨삭이 끝났어요. 결과를 확인하고, 3일 뒤 고쳐 쓰면 2차 점수를 받아요.'):['질문 세 개를 넘겨 읽고, 쓰고 싶은 질문 하나를 골라요.','헷갈리는 게 있으면 선생님께 물어봐요. 없으면 바로 다음으로 넘어가요.','주장·근거·맺음말을 한 문장씩 메모해요.',has||d.files.length?'다 썼으면 아래 \'제출하고 첨삭 받기\'를 눌러요.':'원고지를 열어 계획대로 글을 써요. 노트 사진으로 내도 돼요.'][st];
+  const head=flowHTML('논술 순서',ES_FLOW,busy?4:stv>=5?5:stv===3&&(has||d.files.length)?4:stv,now);
   const tm=picked?qTime(qs[d.q]):null;
   const chg=!ev&&!busy&&st>=1&&S.esQChg===i;
   const qline=picked?`<details class="es-q"${chg?' open':''}><summary><span class="qn">질문 ${d.q+1}</span>${esc(qs[d.q])}</summary>
@@ -3957,11 +3967,23 @@ function oralR1HTML(i){
     <div class="orgo"><button class="btn orbig${done>=OR_N?' ready':''}" data-act="oreval" data-i="${i}" ${done<OR_N||OREC||evb||!S.sample?'disabled':''}>1차 평가 받기</button><span class="hint">${done<OR_N?'답변 '+orNeed(D,ans,OR_N):'세 답변을 모아 평가해요. 1분 안팎 걸려요.'}</span></div>
     ${!S.sample?'<p class="warn">Claude 연결이 없어 구술 평가를 받을 수 없어요.</p>':''}`;
 }
+const OR_FLOW=[['🎧','듣고 답하기'],['📊','1차 평가'],['📖','따라 읽기'],['🤔','생각하기'],['🎙','다시 대답'],['🏆','최종 리포트']];
 function orSteps(i){
   const key=nk(i);const D=orD(i);const ev=S.orals[key],ev2=S.orals2[key];const has=x=>x&&String(x.text||'').trim();
-  const q=orQ(i);const st=ev2?4:ev?2:(q&&q.shown&&q.shown.every((_,n)=>has(D.ans[n]))?1:0);
-  const L=['듣고 답하기','1차 평가','2차 도전','최종 리포트'];
-  return `<ol class="orprog" aria-label="구술 테스트 순서">${L.map((t,k)=>`<li class="${st>k?'dn':st===k?'on':''}"${st===k?' aria-current="step"':''}><span>${t}</span></li>`).join('')}</ol>${st<4?`<p class="orprogt">${st+1}/4 · ${L[st]}</p>`:''}`}
+  const q=orQ(i);let st,now;
+  if(ev2){st=6;now='모든 단계를 마쳤어요! 최종 리포트를 확인해요.'}
+  else if(ev){
+    // 질문마다 따로 진행되므로 가장 덜 끝난 질문을 기준으로 보여 준다
+    const ns=(ev.answers||[]).map((_,n)=>{const sh=D.sh[n],a2=D.ans2[n];if(has(a2))return 3;if(!sh)return 0;return Math.ceil((sh.at+orThink()*1000-orNow())/1000)<=0?2:1});
+    const m=ns.length?Math.min(...ns):0;const c=k=>ns.filter(x=>x>k).length;
+    st=m+2;now=[`모범 답안을 보며 소리 내어 따라 읽어요. 50% 넘게 같으면 통과! (${c(0)}/${ns.length})`,`${orThinkL()} 동안 내 대답을 어떻게 고칠지 메모해요. 시간이 끝나면 다시 대답할 수 있어요.`,`같은 질문에 이번에는 내 말로 다시 대답해요. (${c(2)}/${ns.length})`,`세 질문에 다시 대답했어요. 아래 '2차 평가 받기'를 누르면 최종 리포트가 나와요.`][m];
+  }else{
+    const n=q&&q.shown?q.shown.filter((_,k)=>has(D.ans[k])).length:0;
+    st=n>=OR_N?1:0;now=st?`세 대답을 모았어요. 아래 '1차 평가 받기'를 눌러요.`:`질문을 듣고 하나씩 목소리로 대답해요. (${n}/${OR_N})`;
+    if(S.oralBusy===key)now='1차 평가 중이에요. 1분쯤 기다려요.';
+  }
+  if(ev&&!ev2&&S.oralBusy===key){st=5;now='2차 평가 중이에요. 1분쯤 기다려요.'}
+  return flowHTML('구술 테스트 순서',OR_FLOW,st,now)}
 
 function oralR2HTML(i){
   const key=nk(i);const ev=S.orals[key];const ev2=S.orals2[key];const D=orD(i);const evb=S.oralBusy===key;
