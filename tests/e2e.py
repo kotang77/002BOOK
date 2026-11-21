@@ -1,10 +1,10 @@
-"""002BOOK 끝-끝 테스트: 데이터 가져오기 → 관리자 로그인 → 화면 확인 → 회원가입(성인/만14세 미만) → 권한 확인"""
+"""002BOOK 끝-끝 테스트(가짜 서버): 관리자 로그인 → 화면 확인 → 회원가입(성인/만14세 미만) → 보호자 동의 → 비밀번호 찾기 → 탈퇴 → 권한 확인
+실행: tests/oral/run.sh ../e2e.py"""
 import json, re, sys, time, urllib.request
 from playwright.sync_api import sync_playwright
 
 WEB = 'http://localhost:8080'
 API = 'http://localhost:8000'
-EXPORT = sys.argv[1]
 errors, results = [], []
 
 def ok(name, cond, extra=''):
@@ -27,19 +27,13 @@ with sync_playwright() as p:
     page.on('pageerror', lambda e: errors.append('pageerror: ' + str(e)))
     page.on('console', lambda m: m.type == 'error' and errors.append('console: ' + m.text))
 
-    # 1) 가져오기
-    page.goto(WEB + '/admin/import.html')
-    page.set_input_files('#file', EXPORT)
-    page.fill('#pw', 'testpass1234')
-    page.click('button[type=submit]')
-    page.wait_for_function("document.getElementById('log').textContent.match(/완료!|실패/)", timeout=60000)
-    log = page.inner_text('#log'); print(log)
-    ok('데이터 가져오기', '완료!' in log)
-
-    # 가져오기 페이지에서 관리자로 로그인했으므로 바로 서재로 들어가야 함
-    page.goto(WEB + '/'); page.wait_for_selector('.who', timeout=15000)
-    ok('가져오기 후 자동 입장', True)
-    page.evaluate("localStorage.clear()")
+    # 1) 관리자·회원 준비 (그랜드 오픈 리셋 뒤처럼 빈 서버에서 가입)
+    for uid, nick in [('kotang77', '관리자'), ('rich_claire', '클레어')]:
+        r = api('auth.login', None, id=uid, pw='testpass1234')
+        if 'result' in r: api('auth.withdraw', r['result']['session']['token'], pw='testpass1234')
+        r = api('auth.signup', None, id=uid, pw='testpass1234', email=uid + '@ex.com', agreeTerms=True, agreePrivacy=True, birth='1980-01', grade='중1', nick=nick, gender='여')
+        ok(f'가입 {uid}', 'result' in r, str(r)[:120])
+    page.goto(WEB + '/'); page.evaluate("localStorage.clear()")
     # 2) 관리자 로그인 → 메인 화면
     page.goto(WEB + '/')
     page.wait_for_selector('form[data-form=login]', timeout=15000)
@@ -153,18 +147,6 @@ with sync_playwright() as p:
     r = api('auth.withdraw', ks, pw='kidpass123'); ok('탈퇴', 'result' in r)
     r = api('auth.login', None, id='kid01', pw='kidpass123'); ok('탈퇴 후 계정 없음', r.get('error', {}).get('code') == 'no_user')
 
-    # 6-2) 옮겨 온 회원 각각: 자기 기록은 모두 보이고, 남의 것은 안 보임
-    exp = json.load(open(EXPORT))['docs']
-    for uid in [k.split('/')[1] for k in exp if k.startswith('members/')]:
-        r = api('auth.login', None, id=uid, pw='testpass1234'); t = r['result']['session']['token']
-        for col in ['evals', 'diaries', 'works']:
-            want = sorted(k.split('/', 1)[1] for k in exp if k.startswith(col + '/') and k.split('/', 1)[1].startswith(uid + '_'))
-            got = sorted(x['id'] for x in api('db.query', t, collection=col)['result'])
-            mine = [g for g in got if g.startswith(uid + '_')]
-            ok(f'{uid}: 내 {col} {len(want)}건 모두 보임', mine == want, f'{len(mine)}/{len(want)}')
-        r = api('db.get', t, path='dykeys/' + uid); ok(f'{uid}: 내 일기 키', (r['result'] is not None) == (('dykeys/' + uid) in exp))
-        own = api('db.get', t, path='progress/' + uid); ok(f'{uid}: 내 진도', (own['result'] is not None) == (('progress/' + uid) in exp))
-
     # 7) 데스크톱 화면
     d = b.new_page(viewport={'width': 1280, 'height': 860})
     d.goto(WEB + '/'); d.wait_for_selector('form[data-form=login]'); d.fill('#li-id', 'kotang77'); d.fill('#li-pw', 'testpass1234')
@@ -174,4 +156,6 @@ with sync_playwright() as p:
 
 errs = [e for e in errors if 'fonts.g' not in e and 'cdnjs' not in e and 'favicon' not in e]
 print('\n브라우저 오류:', len(errs)); [print(' ', e[:200]) for e in errs[:15]]
-print('\n결과: %d/%d 통과' % (sum(1 for r in results if r[1]), len(results)))
+print('%d/%d' % (sum(1 for r in results if r[1]), len(results)))
+
+sys.exit(0 if all(r[1] for r in results) else 1)

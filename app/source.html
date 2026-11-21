@@ -1,7 +1,18 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="ko"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>002BOOK</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&family=Gaegu:wght@400;700&family=Hi+Melody&family=Gowun+Dodum&family=Permanent+Marker&family=Abril+Fatface&display=swap" rel="stylesheet">
+<meta name="description" content="중학생을 위한 책·영화 인생교육과 논술 첨삭, 002BOOK">
+<meta name="theme-color" content="#3E2F26">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="002BOOK">
+<meta property="og:title" content="002BOOK — 꿈이 이루어지는 서재"><meta property="og:description" content="한 달에 책 한 권, 영화 두 편. 읽고 보고 쓰면서 중학교 3년을 채워 가는 나만의 서재">
+<meta property="og:image" content="https://002book.com/icons/og.png"><meta property="og:url" content="https://002book.com/">
+<script src="/runtime/config.js"></script>
+<script src="/runtime/claude-shim.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1010,7 +1021,7 @@ const ADMIN='kotang77';
 const isAdmin=()=>S.id===ADMIN;
 const paidOf=id=>id===ADMIN||!!((S.plans.paid||{})[id]);
 const blockedOf=id=>id!==ADMIN&&!!((S.plans.blocked||{})[id]);
-const isPaid=()=>paidOf(S.id);
+const isPaid=()=>!!(window.__002CFG&&window.__002CFG.free)||paidOf(S.id);
 const myNotices=()=>(S.notices||[]).filter(n=>n.to==='all'||n.to===S.id||(n.to==='paid'&&isPaid())||(n.to==='free'&&!isPaid())).concat((S.alerts||[]).map(a=>({title:(a.title||'알림')+' · '+(a.fromNick||a.from),text:a.text,at:a.at,to:S.id}))).sort((a,b)=>b.at-a.at);
 const SVQ=[['fun','재미','얼마나 재미있었나요?'],['diff','난이도','얼마나 어려웠나요? (별이 많을수록 어려움)'],['again','다시 보기','어른이 되어서도 다시 @고 싶나요?']];
 const svOf=(i,k)=>(S.progress.survey||{})[ik(i,k)];
@@ -1450,7 +1461,7 @@ async function vbSave(all){
     host=document.createElement('div');host.style.cssText=`position:fixed;left:-12000px;top:0;width:${all?390:960}px`;host.innerHTML=all?vbPhoneHTML(v):vbPosterHTML(v);document.body.appendChild(host);el=host.querySelector(all?'.vph':'.vpo');if(el)el.style.transform='none';if(all)vbScatter(host);
     if(!el)return;
     const blob=await vbShot(el,all?3:2);
-    await S.downloads.save({filename:`비전보드${all?' 바탕화면':''} ${(S.me&&S.me.nick)||S.id}.png`,data:blob});toast('비전보드를 저장했어요.');
+    await S.downloads.save({filename:`비전보드${all?' 바탕화면':''} ${(S.me&&S.me.nick)||S.id}.png`,data:blob});toast('비전보드를 저장했어요. 문구 일부는 생성형 AI가 다듬었어요.');
   }catch(e){if(!e||e.code!=='declined')toast('저장하지 못했어요. 다시 눌러 주세요.')}finally{if(host)host.remove()}
 }
 function bqItem(){const it=(typeof items==='function'&&S.course)?items():null;return it?it.find(x=>x.g===S.grade&&x.m===monthNow()+'월'):null}
@@ -1511,7 +1522,7 @@ function authHTML(){
   const t=S.authTab;
   let body;
   if(S.dbState==='loading')body='<p class="hint">서재 문을 여는 중이에요…</p>';
-  else if(S.dbState==='none')body='<p class="warn">이 페이지는 Claude에 로그인한 상태로 열어야 해요. 초대받은 계정으로 다시 열어 주세요.</p>';
+  else if(S.dbState==='none')body='<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>';
   else if(t==='login')body=`<form data-form="login"><label for="li-id">아이디<input id="li-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="li-pw">비밀번호<input id="li-pw" name="pw" type="password" autocomplete="current-password" required></label>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">서재 들어가기</button>
@@ -1525,12 +1536,29 @@ function authHTML(){
     <label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>
     <label for="su-nick">닉네임 <small class="hint">다른 회원에게 보이는 이름이에요. 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12"></label>
     <label for="su-region">거주지역<select id="su-region" name="region">${REGIONS.map(r=>`<option${r==='경기'?' selected':''}>${r}</option>`).join('')}</select></label>
-    <label for="su-bio">한 줄 소개 <small class="hint">친구들에게 보여요. 비워도 돼요</small><input id="su-bio" name="bio" maxlength="40" placeholder="예: 책 읽는 걸 좋아하는 호기심 많은 사람"></label>
+    <label for="su-bio">한 줄 소개 <small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small><input id="su-bio" name="bio" maxlength="40" placeholder="예: 책 읽는 걸 좋아하는 호기심 많은 사람"></label>
     <label for="su-buddy">나의 가상 친구 이름 <small class="hint">일기와 책쓰기를 함께해 주는 친구예요. 비우면 '${BUDDY0}'예요. 나중에 바꿀 수 있어요</small><input id="su-buddy" name="buddy" maxlength="10" placeholder="${BUDDY0}"></label>${budPickHTML(null)}
     <label for="su-gender">성별<select id="su-gender" name="gender" required>${genderOpts('')}</select></label>
     ${gradeFields('중1','su')}
     <label for="su-email">이메일 <small class="hint">비밀번호를 잊었을 때 임시 비밀번호를 받을 주소예요</small><input id="su-email" name="email" type="email" autocomplete="email" required></label>
-    <p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">가입하고 시작하기</button></form>`;
+    <label for="su-birth">태어난 연월 <small class="hint">만 14세 미만은 보호자 동의가 필요해요</small><input id="su-birth" name="birth" type="month" min="1940-01" max="${new Date().toISOString().slice(0,7)}" required></label>
+      <fieldset style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0;display:flex;flex-direction:column;gap:8px"><legend class="hint" style="padding:0 4px">만 14세 미만이면 보호자 정보도 적어 주세요</legend>
+        <label for="su-gname">보호자 이름<input id="su-gname" name="gname" maxlength="30" autocomplete="off"></label>
+        <label for="su-gemail">보호자 이메일 <small class="hint">이 주소로 동의 요청 메일이 가요</small><input id="su-gemail" name="gemail" type="email" autocomplete="off"></label></fieldset>
+      <details style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--field)"><summary style="cursor:pointer;font-weight:500">개인정보 처리·AI 이용 안내 (꼭 읽어 주세요)</summary>
+        <ul class="hint" style="margin:6px 0 0;padding-left:18px">
+          <li><b>목적</b>: 회원 관리, 학년별 책·영화 코스와 논술 AI 첨삭 제공, 친구·가족 기능</li>
+          <li><b>항목</b>: 아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역, 학년, 성별, 태어난 연월, 학습 기록 (만 14세 미만은 보호자 이름·이메일)</li>
+          <li><b>보유 기간</b>: 탈퇴하면 바로 삭제${(window.__002CFG&&window.__002CFG.free)?'':' (법령상 결제 기록은 5년)'}</li>
+          <li><b>생성형 AI</b>: 첨삭·추천·일기 답장은 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
+          <li><b>국외 이전</b>: 서비스 운영을 위해 Supabase·Anthropic·Resend·GitHub(미국)에 처리를 맡겨요.</li>
+          <li><b>공개 범위</b>: 다른 회원에게는 닉네임만 보여요. 나머지는 내가 공개를 켠 것만 보여요.</li>
+          <li>선택 항목(소개·사진·마케팅)은 동의하지 않아도 이용에 제한이 없어요. 자세한 내용은 <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">개인정보처리방침</a>을 봐 주세요.</li>
+        </ul></details>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agt" required style="width:auto"> [필수] <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">이용약관</a>(생성형 AI 이용 고지 포함)에 동의해요</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agp" required style="width:auto"> [필수] 위 개인정보 처리·국외 이전 안내를 확인했어요</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agm" style="width:auto"> [선택] 새 소식 이메일 받기 <small class="hint">만 14세 이상만</small></label>
+      <p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">가입하고 시작하기</button></form>`;
   return `<div class="wrap auth"><section class="hero"><img class="biglogo" src="${LOGO_FULL}" width="473" height="528" alt="002BOOK 로고. 책을 읽는 소녀">
     <h1 class="sr">002BOOK</h1><p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p>${seasonScene(monthNow())}</section>
     <section class="authcard"><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'}">회원가입</button></div>${body}</section></div>`;
@@ -1555,7 +1583,7 @@ function shellHTML(){
   const tabs=[['course','독서'],['me','내 서재'],['friends','친구'],['write','책만들기'],['diary','일기']];if(isAdmin())tabs.push(['admin','관리']);
   return `<div class="wrap"><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기"><img src="${avatarSrc()||LOGO_ICON}" width="36" height="36" alt=""></button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
-    <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${isPaid()?'paid':''}" style="flex:none">${isAdmin()?'관리자':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
+    <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
     <div class="seg" role="group" aria-label="코스 선택"><button data-act="basemode" aria-pressed="${S.mode==='base'}">기본</button><button data-act="custommode" aria-pressed="${S.mode==='custom'}">${isPaid()?'':IC.lock}맞춤</button></div></header>
     <div class="dtabs">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${n}${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</div>
@@ -2413,7 +2441,7 @@ function noticesHTML(){
 }
 const payUrl=u=>/^https:\/\/[^\s"'<>]+$/.test(String(u||'').trim())?String(u).trim():'';
 function subStatus(){const st=S.sub&&S.sub.status;return isAdmin()?'admin':isPaid()?(st==='cancel_requested'?'cancel':'paid'):(st==='requested'?'req':'free')}
-function subSecHTML(){
+function subSecHTML(){if(window.__002CFG&&window.__002CFG.free)return '';
   if(isAdmin())return '';
   const k=subStatus();const t={free:'유료회원이 되면 맞춤형코스를 쓸 수 있어요.',req:'신청이 접수됐어요. 결제가 확인되면 유료회원이 돼요.',paid:'유료회원으로 이용 중이에요.',cancel:'해지 신청이 접수됐어요. 확인 후 처리돼요.'}[k];
   return `<div class="sec" style="margin-top:0"><h3>유료회원</h3><p class="hint">${t}</p><div><button class="btn${k==='free'?'':' ghost'} small" data-act="subopen">${k==='free'?'유료회원 신청':k==='req'?'신청 현황 보기':'이용 안내·해지'}</button></div></div>`}
@@ -2462,14 +2490,8 @@ async function loadConfig(){
   if(nt&&nt.exists){const d=nt.data();S.notices=Array.isArray(d.items)?d.items:[]}
 }
 async function deleteMember(id){
-  const tasks=[S.db.doc('resets/'+id).delete().catch(()=>{}),S.db.doc('members/'+id).delete(),S.db.doc('progress/'+id).delete().catch(()=>{}),S.db.doc('custom/'+id).delete().catch(()=>{}),S.db.doc('dykeys/'+id).delete().catch(()=>{}),S.db.doc('subs/'+id).delete().catch(()=>{})];
-  await Promise.all(tasks);
-  for(const [col,f] of [['friends','from'],['friends','to'],['msgs','from'],['msgs','to'],['family','parent'],['family','child'],['alerts','from'],['alerts','to']]){
-    try{const q=await S.db.collection(col).where(f,'==',id).get();await Promise.all(q.docs.map(d=>S.db.doc(col+'/'+d.id).delete().catch(()=>{})))}catch(e){}}
-  for(const col of ['reviews','essays','diaries','works','workimgs']){
-    try{const q=await S.db.collection(col).where('uid','==',id).get();await Promise.all(q.docs.map(d=>S.db.doc(col+'/'+d.id).delete().catch(()=>{})))}catch(e){}}
-  try{const q=await S.db.collection('evals').get();await Promise.all(q.docs.filter(d=>d.id.startsWith(id+'_')).map(d=>S.db.doc('evals/'+d.id).delete().catch(()=>{})))}catch(e){}
-  if((S.plans.paid||{})[id]||(S.plans.blocked||{})[id]){delete S.plans.paid[id];delete S.plans.blocked[id];try{await savePlans()}catch(e){}}
+  await window.__002.server.adminDelete(id);
+  if((S.plans.paid||{})[id])delete S.plans.paid[id];if((S.plans.blocked||{})[id])delete S.plans.blocked[id];
 }
 
 
@@ -2488,7 +2510,7 @@ async function dyEnc(obj){const iv=rnd(12);const ct=await crypto.subtle.encrypt(
 async function dyDec(d){return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(d.iv)},S.dyKey,unb64(d.ct))))}
 const normCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 function genCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const r=rnd(20);let c='';for(let i=0;i<20;i++){c+=A[r[i]%32];if(i%5===4&&i<19)c+='-'}return c}
-const pwOK=async pw=>(await sha(S.me.salt+pw))===S.me.pw;
+const pwOK=async pw=>{try{await window.__002.server.call('auth.verify',{pw});return true}catch(e){return false}};
 async function dyPut(x){
   const e=await dyEnc({text:x.text,feedback:x.feedback||'',mood:x.mood||'',care:!!x.care,fbAt:x.fbAt||0});
   await S.db.doc('diaries/'+S.id+'_'+x.date).set({uid:S.id,date:x.date,at:x.at,upd:x.upd||x.at,v:1,iv:e.iv,ct:e.ct})}
@@ -2533,7 +2555,7 @@ async function dyRewrap(cur,pw){
     if(S.dy)S.dy.kd=kd;
   }catch(e){if(S.dy)S.dy.kdStale=true}}
 function dyLock(){S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;if(S.dy){S.dy.list=null;S.dy.sum=null;S.dy.err='';S.dy.code=null}}
-function doLogout(){
+function doLogout(){window.__002.auth.logout();
   lsSet('ppang.login',null);S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;
   Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,mk:null,gd:{},dy:null,progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
   render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
@@ -2541,9 +2563,10 @@ async function doWithdraw(fd){
   const er=m=>{const e=$('#wderr');if(e)e.textContent=m};
   if(isAdmin())return er('관리자 계정은 탈퇴할 수 없어요.');
   if(!fd.get('ok'))return er('안내를 읽고 체크해 주세요.');
-  if(!(await pwOK(String(fd.get('pw')||''))))return er('비밀번호가 맞지 않아요.');
-  try{await deleteMember(S.id)}catch(e){return er('탈퇴 처리를 마치지 못했어요. 잠시 뒤 다시 해 주세요.')}
-  doLogout();toast('탈퇴했어요. 모든 기록이 지워졌어요.')}
+  try{await window.__002.auth.withdraw(String(fd.get('pw')||''))}
+  catch(e){return er(e&&e.code==='bad_password'?'비밀번호가 맞지 않아요.':'탈퇴 처리를 마치지 못했어요. 잠시 뒤 다시 해 주세요.')}
+  doLogout();toast('탈퇴했어요. 모든 기록이 지워졌어요.')
+}
 
 /* ---------- 일기 ---------- */
 const MOODS=['기쁨','평온','설렘','뿌듯','피곤','속상','불안','외로움','화남'];
@@ -2735,7 +2758,7 @@ function friendsHTML(){
     body=`<label for="fr-q" style="margin-bottom:8px">회원 찾기<input id="fr-q" placeholder="닉네임이나 아이디로 찾기" autocomplete="off"></label>
     ${ms.length?ms.slice(0,300).map(m=>{const rel=frRel(m.id);
       const btn=rel==='friend'?'<span class="tagk">친구</span>':rel==='sent'?'<span class="hint">요청 보냄</span>':rel==='recv'?`<button class="btn small" data-act="fra" data-id="${esc(m.id)}">요청 수락</button>`:`<button class="btn small" data-act="frreq" data-id="${esc(m.id)}">친구 맺기</button>`;
-      return `<div class="frr" data-k="${esc((m.nick+' '+m.id).toLowerCase())}">${frAv(m.id)}<div class="fi"><b>${esc(m.nick)}</b><small>${esc([m.id,sub(m.id)].filter(Boolean).join(' · '))}</small>${m.bio?`<small style="display:block;color:var(--ink)">${esc(m.bio)}</small>`:''}</div><div class="fa">${btn}</div></div>`}).join(''):'<p class="hint">다른 회원이 아직 없어요.</p>'}`;
+      return `<div class="frr" data-k="${esc((m.nick+' '+m.id).toLowerCase())}">${frAv(m.id)}<div class="fi"><b>${esc(m.nick)}</b><small>${esc(sub(m.id))}</small>${m.bio?`<small style="display:block;color:var(--ink)">${esc(m.bio)}</small>`:''}</div><div class="fa">${btn}</div></div>`}).join(''):'<p class="hint">다른 회원이 아직 없어요.</p>'}`;
   }
   return `<div class="lead"><div><h2>친구</h2><p>함께 읽고 서로 응원해요.</p></div></div>${tabs}${body}`;
 }
@@ -2907,23 +2930,20 @@ async function loadCovers(){
 }
 async function doLogin(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
+  if(!id||!pw){S.authErr='아이디와 비밀번호를 넣어 주세요.';return render()}
   try{
-    const m=await S.db.doc('members/'+id).get();
-    if(!m.exists){S.authErr='없는 아이디예요. 아이디를 다시 확인해 주세요.';return render()}
-    const d=m.data();
-    if(await sha(d.salt+pw)!==d.pw){S.authErr='비밀번호가 맞지 않아요.';return render()}
-    S.authErr='';S.authMsg='';await enter(id,d);
-  }catch(e){S.authErr=e&&e.code==='blocked'?'이용이 정지된 계정이에요. 관리자에게 문의해 주세요.':'로그인하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
+    const r=await window.__002.auth.login(id,pw);
+    S.authErr='';S.authMsg='';await enter(id,r.member);
+  }catch(e){S.authErr=(e&&e.code==='blocked')?'이용이 정지된 계정이에요. 관리자에게 문의해 주세요.':(e&&e.code&&e.code!=='server_error'&&e.message)?e.message:'로그인하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
 }
 const EMAILRE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 async function doFind(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const email=String(fd.get('email')||'').trim().toLowerCase();
+  if(!id||!EMAILRE.test(email)){S.authErr='아이디와 가입한 이메일을 정확히 적어 주세요.';return render()}
   try{
-    const m=await S.db.doc('members/'+id).get();const d=m.exists?m.data():null;
-    if(!d||!email||String(d.email||'').trim().toLowerCase()!==email){S.authErr='아이디와 가입한 이메일이 맞지 않아요. 이메일을 등록하지 않았다면 관리자에게 직접 말해 주세요.';return render()}
-    await S.db.doc('resets/'+id).set({id,email:String(d.email).trim(),nick:d.nick||id,at:Date.now()});
-    S.authErr='';S.authTab='login';S.authMsg='요청을 보냈어요. 관리자가 확인하면 가입한 이메일로 임시 비밀번호를 보내 드려요.';render();
-  }catch(e){S.authErr='요청하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
+    await window.__002.auth.resetPassword(id,email);
+    S.authErr='';S.authTab='login';S.authMsg='아이디와 이메일이 맞으면 몇 분 안에 임시 비밀번호가 메일로 와요. 스팸함도 확인해 주세요.';render();
+  }catch(e){S.authErr=(e&&e.message)||'요청하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
 }
 async function saveProfile(fd){
   const er=m=>{const e=$('#pferr');if(e)e.textContent=m};
@@ -2932,12 +2952,12 @@ async function saveProfile(fd){
   const cur=String(fd.get('cur')||''),pw=String(fd.get('pw')||'');
   if(!EMAILRE.test(email))return er('이메일 주소를 정확히 적어 주세요.');
   const gender=String(fd.get('gender')||'');
-  const up={nick,email,region,grade:SCODES.includes(grade)?grade:S.me.grade,bio:String(fd.get('bio')||'').trim().slice(0,40),buddy:String(fd.get('buddy')||'').trim().slice(0,10)||BUDDY0,...budFields()};if(GENDERS.includes(gender))up.gender=gender;
+  const up={pub:{bio:!!fd.get('pub_bio'),grade:!!fd.get('pub_grade'),region:!!fd.get('pub_region'),photo:!!fd.get('pub_photo')},nick,email,region,grade:SCODES.includes(grade)?grade:S.me.grade,bio:String(fd.get('bio')||'').trim().slice(0,40),buddy:String(fd.get('buddy')||'').trim().slice(0,10)||BUDDY0,...budFields()};if(GENDERS.includes(gender))up.gender=gender;
   try{
     if(pw){
       if(pw.length<8)return er('새 비밀번호는 8자 이상이어야 해요.');
-      if(await sha(S.me.salt+cur)!==S.me.pw)return er('현재 비밀번호가 맞지 않아요.');
-      up.pw=await sha(S.me.salt+pw);up.mustChange=false;
+        try{await window.__002.auth.changePassword(cur,pw)}catch(e){return er((e&&e.message)||'비밀번호를 바꾸지 못했어요.')}
+        up.mustChange=false;
     }else if(S.me.mustChange)return er('임시 비밀번호로 들어왔어요. 새 비밀번호를 정해 주세요.');
     await S.db.doc('members/'+S.id).update(up);
     if(pw&&CRY())await dyRewrap(cur,pw);
@@ -2946,17 +2966,22 @@ async function saveProfile(fd){
 }
 function profileHTML(){
   const m=S.me;
-  return `<div class="panel"><div class="ph"><h2>내 정보<small>${esc(S.id)} · ${isAdmin()?'관리자':isPaid()?'유료회원':'무료회원'} · 가입 ${fmtD(m.at)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
+  return `<div class="panel"><div class="ph"><h2>내 정보<small>${esc(S.id)} · ${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'} · 가입 ${fmtD(m.at)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   ${m.mustChange?'<p class="warn">임시 비밀번호로 들어왔어요. 아래에서 새 비밀번호로 바꿔 주세요.</p>':''}
   ${subSecHTML()}${pushHTML('자녀의 구술 테스트 리포트, 친구·가족 알림을 이 기기에서 휴대폰 알림으로 받아요.')}
   <form data-form="profile">
     <label for="pf-nick">닉네임<input id="pf-nick" name="nick" maxlength="12" value="${esc(m.nick||'')}"></label>
     <label for="pf-email">이메일<input id="pf-email" name="email" type="email" autocomplete="email" value="${esc(m.email||'')}" required></label>
-    <label for="pf-bio">한 줄 소개 <small class="hint">친구들에게 보여요</small><input id="pf-bio" name="bio" maxlength="40" value="${esc(m.bio||'')}"></label>
+    <label for="pf-bio">한 줄 소개 <small class="hint">아래 공개 설정을 켜야 다른 회원에게 보여요</small><input id="pf-bio" name="bio" maxlength="40" value="${esc(m.bio||'')}"></label>
     <label for="pf-buddy">나의 가상 친구 이름 <small class="hint">일기와 책쓰기를 함께해 주는 친구예요</small><input id="pf-buddy" name="buddy" maxlength="10" value="${esc(buddyOf(m))}"></label>${budPickHTML(m)}
     <label for="pf-region">거주지역<select id="pf-region" name="region">${REGIONS.map(r=>`<option${r===m.region?' selected':''}>${r}</option>`).join('')}</select></label>
     <label for="pf-gender">성별<select id="pf-gender" name="gender">${genderOpts(m.gender||'')}</select></label>
     ${gradeFields(m.grade,'pf')}
+    <div class="sec" style="margin-top:6px"><h3>공개 설정</h3><p class="hint">다른 회원에게는 <b>닉네임</b>만 보여요. 아래에서 켠 정보만 함께 보여요. 이메일·성별·태어난 연월은 항상 비공개예요.</p>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_bio" style="width:auto" ${(m.pub||{}).bio?'checked':''}> 한 줄 소개 공개</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_grade" style="width:auto" ${(m.pub||{}).grade?'checked':''}> 학년 공개</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_region" style="width:auto" ${(m.pub||{}).region?'checked':''}> 거주지역(시·도) 공개</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_photo" style="width:auto" ${(m.pub||{}).photo?'checked':''}> 내가 올린 프로필 사진 공개 <small class="hint">끄면 다른 회원에게는 기본 캐릭터로 보여요</small></label></div>
     <div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3><p class="hint">바꾸지 않으려면 비워 두세요.</p>
       <label for="pf-cur">현재 비밀번호<input id="pf-cur" name="cur" type="password" autocomplete="current-password"></label>
       <label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small><input id="pf-pw" name="pw" type="password" autocomplete="new-password"></label></div>
@@ -2967,19 +2992,26 @@ function profileHTML(){
     <p class="err" id="wderr"></p><div><button class="btn danger" type="submit">회원 탈퇴</button></div></form>`}</div>`;
 }
 async function doSignup(fd){
-  const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
-  const nick=String(fd.get('nick')||'').trim()||id;
-  if(!/^[a-z0-9_-]{3,20}$/.test(id)){S.authErr='아이디는 영문 소문자와 숫자로 3~20자여야 해요.';return render()}
-  if(pw.length<8){S.authErr='비밀번호는 8자 이상이어야 해요.';return render()}
-  if(!EMAILRE.test(String(fd.get('email')||'').trim())){S.authErr='이메일 주소를 정확히 적어 주세요.';return render()}
-  if(!GENDERS.includes(String(fd.get('gender')||''))){S.authErr='성별을 골라 주세요.';return render()}
+  // 오류가 나도 입력한 내용이 지워지지 않도록 화면을 다시 그리지 않고 오류 문구만 바꾼다
+  const er=m=>{S.authErr=m;const e=$('#autherr');if(e){e.textContent=m;e.scrollIntoView({block:'center',behavior:'smooth'})}else render()};
+  const g=k=>String(fd.get(k)||'').trim();
+  const id=g('id').toLowerCase();const pw=String(fd.get('pw')||'');const nick=g('nick')||id;
+  if(!/^[a-z0-9_-]{3,20}$/.test(id))return er('아이디는 영문 소문자와 숫자로 3~20자여야 해요.');
+  if(pw.length<8)return er('비밀번호는 8자 이상이어야 해요.');
+  if(!EMAILRE.test(g('email')))return er('이메일 주소를 정확히 적어 주세요.');
+  if(!GENDERS.includes(g('gender')))return er('성별을 골라 주세요.');
+  const bm=/^(\d{4})-(\d{2})$/.exec(g('birth'));if(!bm)return er('태어난 연도와 월을 골라 주세요.');
+  const now=new Date();let age=now.getFullYear()-(+bm[1]);if(now.getMonth()+1<+bm[2])age--;
+  if(age<14&&(!g('gname')||!EMAILRE.test(g('gemail'))))return er('만 14세 미만은 보호자 이름과 보호자 이메일을 적어 주세요.');
+  if(!fd.get('agt')||!fd.get('agp'))return er('이용약관 동의와 개인정보 처리 안내 확인에 체크해 주세요.');
+  const p={id,pw,nick,region:g('region'),grade:SCODES.includes(g('grade'))?g('grade'):'중1',gender:g('gender'),bio:g('bio').slice(0,40),buddy:g('buddy').slice(0,10)||BUDDY0,...budFields(),
+    email:g('email').slice(0,120),birth:g('birth'),guardianName:g('gname'),guardianEmail:g('gemail'),agreeTerms:!!fd.get('agt'),agreePrivacy:!!fd.get('agp'),agreeMarketing:!!fd.get('agm')};
+  const btn=$('form[data-form=signup] button[type=submit]');if(btn)btn.disabled=true;
   try{
-    const ex=await S.db.doc('members/'+id).get();
-    if(ex.exists){S.authErr='이미 있는 아이디예요. 다른 아이디를 써 주세요.';return render()}
-    const salt=hid(id+Date.now()+Math.random());
-    await S.db.doc('members/'+id).set({id,nick,region:String(fd.get('region')),grade:SCODES.includes(String(fd.get('grade')))?String(fd.get('grade')):'중1',gender:GENDERS.includes(String(fd.get('gender')))?String(fd.get('gender')):'',bio:String(fd.get('bio')||'').trim().slice(0,40),buddy:String(fd.get('buddy')||'').trim().slice(0,10)||BUDDY0,...budFields(),email:String(fd.get('email')||'').trim().slice(0,120),salt,pw:await sha(salt+pw),mode:'base',prefs:{},at:Date.now()});
-    S.authErr='';S.bpk=null;await enter(id);toast('가입했어요. 환영해요, '+nick+'!');
-  }catch(e){S.authErr=(e&&e.code==='invalid_argument')?'이 계정에는 기록 권한이 없어요. 서재 주인에게 기여자로 초대해 달라고 해 주세요.':'가입하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
+    const r=await window.__002.auth.signup(p);S.bpk=null;
+    if(r.pending==='guardian'){S.authErr='';S.authTab='login';S.authMsg='보호자 이메일로 동의 요청을 보냈어요. 보호자가 승인하면 바로 로그인할 수 있어요.';return render()}
+    S.authErr='';await enter(id,r.member);toast('가입했어요. 환영해요, '+nick+'!');
+  }catch(e){if(btn)btn.disabled=false;er((e&&e.code&&e.code!=='server_error'&&e.message)?e.message:'가입하지 못했어요. 잠시 뒤 다시 해 주세요.')}
 }
 
 /* ---------- 논술 제출·첨삭 ---------- */
@@ -3294,11 +3326,11 @@ async function makePdf(){
     const sheets=mnSheets(ev);
     for(let n=0;n<sheets.length;n++){host.style.cssText=PDF_HOST;host.innerHTML=sheets[n];await pdfShot(pdf,host,n===0)}
     const nSheets=sheets.length;
-    await pdfBlockPages(pdf,host,pdfBlocks(ev),(k,np)=>{const all=nSheets+np;return `002BOOK · ${esc(ev.g)} ${esc(ev.m)} 첨삭 평가서 · ${nSheets+k+1} / ${all}`},false);
+    await pdfBlockPages(pdf,host,pdfBlocks(ev),(k,np)=>{const all=nSheets+np;return `002BOOK · ${esc(ev.g)} ${esc(ev.m)} 첨삭 평가서 · 생성형 AI(Claude)가 작성한 첨삭 · ${nSheets+k+1} / ${all}`},false);
     const _it=(typeof items==='function'?items():[]).find(x=>x.g===ev.g&&x.m===ev.m);
     const _kw=ev.kw||(_it?String(_it.topic||'').split(':')[0]:'');
     const fname=pdfName([ev.g,_kw.trim(),(S.me&&S.me.nick)||S.id||''].concat(ev.round===2?['2차']:[]));
-    await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});
+    pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 첨삭 결과',creator:'002BOOK · AI 생성',keywords:'AI-generated'});await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});
     toast('PDF를 저장했어요.');
   }catch(e){if(!e||e.code!=='declined')toast('PDF를 저장하지 못했어요. 다시 눌러 주세요.')}
   finally{host.remove()}
@@ -4656,7 +4688,7 @@ document.addEventListener('click',async e=>{
     case 'profile':S.bpk=null;S.sheet={type:'profile'};renderLayers();loadConfig().then(()=>{if(S.sheet&&S.sheet.type==='profile')renderLayers()}).catch(()=>{});break;
     case 'subopen':S.subAsk='';S.sheet={type:'subscribe'};renderLayers();loadConfig().then(()=>{if(S.sheet&&S.sheet.type==='subscribe')renderLayers()}).catch(()=>{});break;
     case 'subapply':{const ok=document.getElementById('sub-ok');if(!ok||!ok.checked){toast('장점과 해지 방법을 확인하고 체크해 주세요.');break}
-      const rec={id:S.id,nick:S.me.nick||S.id,status:'requested',at:Date.now()};
+      if(window.__002.isPlayApp){toast('유료회원 신청은 002book.com 웹사이트에서 할 수 있어요.');break}location.href='/pay/checkout.html';break;const rec={id:S.id,nick:S.me.nick||S.id,status:'requested',at:Date.now()};
       try{await S.db.doc('subs/'+S.id).set(rec);S.sub=rec;renderLayers();toast('신청이 접수됐어요.')}catch(err){toast('신청하지 못했어요. 잠시 뒤 다시 해 주세요.')}break}
     case 'subundo':{try{if(S.sub&&S.sub.status==='cancel_requested'){const rec=Object.assign({},S.sub,{status:'active'});delete rec.cancelAt;await S.db.doc('subs/'+S.id).set(clone(rec));S.sub=rec}else{await S.db.doc('subs/'+S.id).delete();S.sub=null}renderLayers();toast('취소했어요.')}catch(err){toast('처리하지 못했어요.')}break}
     case 'subcancel':{if(S.subAsk!=='cancel'){S.subAsk='cancel';renderLayers();break}
@@ -4790,7 +4822,7 @@ document.addEventListener('click',async e=>{
       try{await S.db.doc('members/'+S.id).update({email:v});S.me.email=v;toast('이메일을 저장했어요.')}catch(err){toast('저장하지 못했어요.')}break}
     case 'admreset':{if(!isAdmin())break;const id=d.id;const r=(S.adm.resets||[]).find(x=>x.id===id);const m=(S.adm.members||[]).find(x=>x.id===id);if(!r||!m){toast('회원을 찾지 못했어요.');break}
       const cs='abcdefghjkmnpqrstuvwxyz23456789';const rnd=new Uint32Array(8);crypto.getRandomValues(rnd);const pw=[...rnd].map(n=>cs[n%cs.length]).join('');
-      try{const salt=m.salt||hid(id+Date.now()+Math.random());await S.db.doc('members/'+id).update({salt,pw:await sha(salt+pw),mustChange:true});m.salt=salt;
+      try{await window.__002.server.call('admin.setPassword',{id,pw,temp:true});
         S.adm.tmp=S.adm.tmp||{};S.adm.tmp[id]={pw,email:m.email||r.email,nick:m.nick||id,at:r.at};
         S.adm.resets=S.adm.resets.filter(x=>x.id!==id);S.db.doc('resets/'+id).delete().catch(()=>{});toast('임시 비밀번호를 만들었어요. 이메일로 보내 주세요.')}
       catch(err){toast('임시 비밀번호를 만들지 못했어요.')}
@@ -4814,7 +4846,7 @@ document.addEventListener('click',async e=>{
       render();break}
     case 'admpw':{if(!isAdmin())break;const v=String(($('#adm-pw')||{}).value||'');if(v.length<8){toast('새 비밀번호는 8자 이상이어야 해요.');break}
       const m=(S.adm.members||[]).find(x=>x.id===d.id);if(!m)break;
-      try{const salt=m.salt||hid(d.id+Date.now()+Math.random());await S.db.doc('members/'+d.id).update({salt,pw:await sha(salt+v)});m.salt=salt;toast('비밀번호를 바꿨어요. 회원에게 알려 주세요.');render()}
+      try{await window.__002.server.call('admin.setPassword',{id:d.id,pw:v});toast('비밀번호를 바꿨어요. 회원에게 알려 주세요.');render()}
       catch(err){toast('비밀번호를 바꾸지 못했어요.')}break}
     case 'admdel':{if(!isAdmin()||d.id===ADMIN)break;
       if(S._del!==d.id){S._del=d.id;toast('한 번 더 누르면 이 회원이 삭제돼요.');setTimeout(()=>{if(S._del===d.id)S._del=null},3500);break}
@@ -4929,7 +4961,7 @@ if(S.db){
       if(cfg.exists){const d=cfg.data();if(Array.isArray(d.items)&&d.items.length){S.course=clone(d.items);S.source='관리자가 올린 엑셀 ('+new Date(d.updatedAt||Date.now()).toLocaleDateString('ko-KR')+')'}}}catch(e){}})(),
     loadConfig().catch(()=>{})
   ]);
-  const saved=lsGet('ppang.login');
+  const saved=(window.__002.auth.session()||{}).uid||null;
   if(saved){try{await enter(saved);return}catch(e){if(e&&e.code==='blocked')lsSet('ppang.login',null)}}
 }
 render();
@@ -5024,4 +5056,7 @@ render();
 })();
 </script>
 
+<div id="legal" style="text-align:center;font-size:12px;color:#6F6155;padding:18px 0 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a> · <a href="/refund.html" style="color:inherit">환불정책</a><br>002BOOK의 첨삭·추천·피드백은 생성형 AI(Anthropic Claude)가 만들어요. 사실과 다를 수 있어요.<br>__BUSINESS_INFO__</div>
+<style>#legal{max-width:1100px;margin:0 auto}@media (max-width:720px){#legal{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}}</style>
+<script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 </body></html>

@@ -5,7 +5,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import * as acorn from 'acorn';
-import { FUNCTIONS, FUNCTION_EDITS, CONSTS, STRINGS } from './patches.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const DIST = path.join(ROOT, 'dist');
@@ -24,48 +23,8 @@ function mainScript(h) {
   throw new Error('메인 스크립트를 찾지 못했어요');
 }
 
-/* ---------- 2) 함수 단위 패치 (acorn) ---------- */
-function findNodes(code) {
-  const ast = acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'script', allowAwaitOutsideFunction: true, allowReturnOutsideFunction: true });
-  const fns = {}, consts = {};
-  (function walk(n, depth) {
-    if (!n || typeof n !== 'object') return;
-    if (n.type === 'FunctionDeclaration' && n.id) (fns[n.id.name] ||= []).push(n);
-    if (n.type === 'VariableDeclaration' && n.declarations.length === 1 && n.declarations[0].id.type === 'Identifier') (consts[n.declarations[0].id.name] ||= []).push(n);
-    for (const k in n) { if (k === 'loc') continue; const v = n[k]; if (Array.isArray(v)) v.forEach((x) => walk(x, depth + 1)); else if (v && typeof v.type === 'string') walk(v, depth + 1); }
-  })(ast, 0);
-  return { fns, consts };
-}
-const wsRe = (s) => new RegExp(s.trim().split(/\s+/).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s*'));
-
-let { start, end, code } = mainScript(html);
-const edits = []; // [from, to, text]
-{
-  const { fns, consts } = findNodes(code);
-  const one = (map, name) => { const a = map[name]; if (!a || a.length !== 1) { errors.push(`함수 ${name}: ${a ? a.length + '개' : '없음'}`); return null; } return a[0]; };
-  for (const [name, text] of Object.entries(FUNCTIONS)) { const n = one(fns, name); if (n) edits.push([n.start, n.end, text]); }
-  for (const [name, text] of Object.entries(CONSTS)) { const n = one(consts, name); if (n) edits.push([n.start, n.end, text]); }
-  for (const [name, pairs] of Object.entries(FUNCTION_EDITS)) {
-    const n = one(fns, name); if (!n) continue;
-    let src = code.slice(n.start, n.end);
-    for (const [from, to] of pairs) {
-      const re = wsRe(from); const m = src.match(re);
-      if (!m) { errors.push(`함수 ${name} 안의 고칠 부분을 찾지 못함: ${from.slice(0, 40)}…`); continue; }
-      src = src.replace(re, () => to);
-    }
-    edits.push([n.start, n.end, src]);
-  }
-}
-edits.sort((a, b) => b[0] - a[0]);
-for (const [a, b, t] of edits) code = code.slice(0, a) + t + code.slice(b);
-html = html.slice(0, start) + code + html.slice(end);
-
-/* ---------- 3) 문자열 패치 ---------- */
-for (const [label, from, to] of STRINGS) {
-  const n = html.split(from).length - 1;
-  if (n !== 1) { errors.push(`문자열 패치 "${label}": ${n}번 나옴 (1번이어야 함)`); continue; }
-  html = html.replace(from, () => to);
-}
+/* ---------- 2) 원본 문법 확인 ---------- */
+// (2026-11-21) 예전에는 Claude 게시본을 002book.com용으로 바꾸는 패치 30개를 여기서 적용했다. 지금은 app/source.html이 유일한 원본이다.
 const FREE = process.env.FREE_LAUNCH ? process.env.FREE_LAUNCH === '1' : cfg.freeLaunch !== false; // 무료 출시 모드(기본 켜짐)
 const biz = cfg.business || {};
 // 전자상거래법 제10조·제13조: 상호, 대표자, 주소, 전화, 이메일, 사업자등록번호, 통신판매업 신고번호, 호스팅 제공자, 이용약관 연결
@@ -77,7 +36,7 @@ const opLine = FREE && !biz.name ? ['서비스 운영자 개인 운영 (무료 �
 const missing = ['name', 'owner', 'address', 'phone', 'email', 'regNo', 'mailOrderNo'].filter((k) => !biz[k]);
 if (missing.length && !FREE) console.warn('⚠ site.config.json 사업자 정보 비어 있음 (전자상거래법 표시 의무): ' + missing.join(', '));
 
-/* ---------- 4) 남은 위험 패턴 검사 ---------- */
+/* ---------- 3) 남은 위험 패턴 검사 ---------- */
 const main2 = mainScript(html).code;
 for (const bad of ['sha(S.me.salt', "sha(d.salt+pw)", 'up.pw=', 'salt,pw:await sha']) if (main2.includes(bad)) errors.push(`비밀번호를 브라우저에서 다루는 코드가 남아 있음: ${bad}`);
 try { acorn.parse(main2, { ecmaVersion: 'latest', allowAwaitOutsideFunction: true, allowReturnOutsideFunction: true }); }
@@ -149,4 +108,4 @@ fs.writeFileSync(path.join(DIST, '.well-known/assetlinks.json'), JSON.stringify(
   target: { namespace: 'android_app', package_name: cfg.android?.packageId || 'com.book002.app', sha256_cert_fingerprints: fps },
 }] : [], null, 2));
 
-console.log(`빌드 완료 → dist/ (build ${buildId}, 패치 ${edits.length + STRINGS.length}개, ${FREE ? '무료 출시 모드' : '유료 모드'}${SUPA ? '' : ', ⚠ SUPABASE_URL 비어 있음'})`);
+console.log(`빌드 완료 → dist/ (build ${buildId}, ${FREE ? '무료 출시 모드' : '유료 모드'}${SUPA ? '' : ', ⚠ SUPABASE_URL 비어 있음'})`);

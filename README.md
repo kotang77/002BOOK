@@ -3,25 +3,24 @@
 중학생을 위한 책·영화 인생교육과 논술 첨삭 서비스.
 
 ```
-app/source.html          원본 앱 (Claude 게시본에서 내보낸 그대로)
-scripts/patches.mjs      원본 → 002book.com 패치 목록 (로그인·비밀번호·가입·결제)
-scripts/build.mjs        빌드: 패치 적용 + PWA + 아이콘 + 약관 → dist/
+app/source.html          앱 원본 (유일한 원본. 여기서 직접 고친다)
+scripts/build.mjs        빌드: 문법·위험 패턴 검사 + 그림 분리 + PWA + 아이콘 + 약관 → dist/
 web/                     어댑터(runtime/claude-shim.js), 서비스워커, 약관·결제·가져오기 페이지
 supabase/                DB 스키마, 서버 API(Edge Function 'api')
 android/twa-manifest.json  구글 플레이 앱(TWA) 설정
-tests/e2e.py             끝-끝 테스트 (가짜 DB로 실행)
+tests/e2e.py             끝-끝 테스트: 가입·보호자 동의·비밀번호 찾기·탈퇴·권한
+tests/oral/              구술 흐름·마이크 끊김·화면/그림/논술 PDF 연기 시험 (run.sh로 전부 실행)
 ```
 
 ## 앱을 고칠 때
-Claude 게시본에서 앱을 고친 뒤 '002book.com 이전용 내보내기'로 새 파일을 받아
-`app/source.html`을 바꾸면 된다. `node scripts/build.mjs`가 패치가 맞지 않는 곳을 알려 준다.
+`app/source.html`을 직접 고친 뒤 시험을 모두 통과하면 main에 올린다(올리면 바로 배포된다).
 
 ## 로컬 테스트
 ```
-FAKE_DB=1 FAKE_MAIL=1 FAKE_AI='{"msg":"hi"}' deno run -A supabase/functions/api/index.ts   # :8000
-SUPABASE_URL=http://localhost:8000 node scripts/build.mjs && (cd dist && python3 -m http.server 8080)
-python3 tests/e2e.py <내보내기 파일(비밀번호 testpass1234로 바꾼 테스트용)>
+DENO=deno PDFLIB=<html2canvas·jspdf가 든 node_modules> tests/oral/run.sh      # 전부
+tests/oral/run.sh ../e2e.py     # 하나만
 ```
+가짜 서버(:8000, 생각 시간 25초)와 웹(:8080)을 띄우고 시험한다.
 
 ## 비밀값 (GitHub → Settings → Secrets and variables → Actions)
 | 이름 | 종류 | 내용 |
