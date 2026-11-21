@@ -31,6 +31,7 @@ EV = {'offTopic': False, 'praise': '주장이 분명해요.', 'progress': '', 't
       'marks': [{'find': '왜냐하면', 'kind': 'good', 'fix': '', 'note': '이유 제시 좋아요'}, {'find': '그리고', 'kind': 'replace', 'fix': '또', 'note': '접속어 다양하게'}],
       'teacher': '잘했어요.', 'models': [{'title': '모범 답안 1', 'text': '모범 답안 내용입니다.'}, {'title': '모범 답안 2', 'text': '두 번째 모범 답안입니다.'}],
       'total': 85, 'question': '주인공의 선택을 평가해 보세요.', 'at': int(time.time() * 1000), 'title': '순례주택', 'g': '중1', 'm': '3월', 'kw': '가족'}
+from PIL import Image; Image.new('RGB', (900, 600), (200, 120, 60)).save(OUT + 'photo.png')
 r = api('db.set', tok, path='evals/smoke01_b0', data=EV); ok('첨삭 기록 준비', 'result' in r, r)
 LIB = lambda rt: rt.fulfill(path=(LIBDIR + '/html2canvas/dist/html2canvas.min.js' if 'html2canvas' in rt.request.url else LIBDIR + '/jspdf/dist/jspdf.umd.min.js' if 'jspdf' in rt.request.url else '/dev/null'), content_type='application/javascript')
 BROKEN = "[...document.images].filter(i=>i.complete&&i.src&&!i.src.startsWith('data:image/svg')&&i.naturalWidth===0).map(i=>i.src.slice(0,80))"
@@ -49,8 +50,19 @@ with sync_playwright() as p:
         pg.evaluate("document.querySelector('[data-act=avatar]').click()"); time.sleep(1.2)
         n = pg.evaluate("[...document.querySelectorAll('.avo img')].filter(i=>i.naturalWidth>0).length")
         ok(f'{mode}: 캐릭터 그림 19개 열림', n >= 19, n); pg.screenshot(path=OUT + f'{mode}_2_avatar.png')
+        if mode == 'mobile':
+            pg.set_input_files('input[data-avatar]', OUT + 'photo.png'); time.sleep(2)
+            d = api('db.get', tok, path='members/smoke01')['result']['data']
+            ok('내 사진 올리기 (정사각 JPEG 40KB 이하)', d.get('avatar') == 'custom' and d.get('avatarImg', '').startswith('data:image/jpeg') and len(d['avatarImg']) <= 40000, (d.get('avatar'), len(d.get('avatarImg', ''))))
         pg.evaluate("document.querySelector('[data-act=close1]').click()"); time.sleep(.5)
-        if mode == "mobile":
+        if mode == 'mobile':
+            pg.evaluate("document.querySelector('[data-act=profile]').click()"); pg.wait_for_selector('input[data-budup]', state='attached', timeout=10000)
+            pg.set_input_files('input[data-budup]', OUT + 'photo.png')
+            for _ in range(30):
+                if '그림을 넣었어요' in pg.inner_text('#toast'): break
+                time.sleep(.2)
+            ok('가상 친구 그림 올리기', '그림을 넣었어요' in pg.inner_text('#toast'), pg.inner_text('#toast'))
+            pg.evaluate("document.querySelector('[data-act=close1]').click()"); time.sleep(.5)
             def click(sel, wait=.8):
                 pg.wait_for_selector(sel, state='attached', timeout=15000); pg.evaluate("s=>document.querySelector(s).click()", sel); time.sleep(wait)
             click('[data-act=month][data-i="0"]'); click('[data-act=stab][data-v=essay]', 1.5); click('[data-act=vieweval]', .2); pg.wait_for_selector('[data-act=pdf]', timeout=15000); time.sleep(.8)
