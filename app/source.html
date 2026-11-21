@@ -766,7 +766,7 @@ form{display:flex;flex-direction:column;gap:12px}
 .rvrow.warn{background:#FFF6DC;margin:0 -8px;padding:10px 8px;border-radius:6px}
 .rvon{padding-top:4px}.rvon input{width:20px;height:20px}
 .rvth{flex:0 0 auto;width:54px;aspect-ratio:3/4;border-radius:2px 4px 4px 2px;overflow:hidden;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.rvth img{width:100%;height:100%;object-fit:cover}
+.rvth img{width:100%;height:100%;object-fit:contain}
 .rvf{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
 .rvf label{font-size:12.5px;color:var(--muted);display:block}
 .rvf input[data-rv],.rvf select{display:block;width:100%;margin-top:2px}
@@ -1597,21 +1597,63 @@ function coverBlock(it){
     <label class="btn ghost small up">${has?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label></div></div>`;
 }
 /* 사진 속 표지의 네 모서리를 찾아 반듯한 직사각형으로 펴는 보정 */
-function quadOk(q,iw,ih){
+/* AI가 짚은 네 꼭짓점을 사진 속 실제 테두리(밝기가 가장 뚜렷하게 바뀌는 선)에 맞춘다.
+   변마다 양 끝을 바깥·안쪽으로 조금씩 옮겨 보며 테두리 세기가 가장 큰 선을 고르고(비슷하면 더 바깥 선),
+   이웃한 두 선이 만나는 점을 새 꼭짓점으로 쓴다. 뚜렷한 테두리가 없으면 그 변은 그대로 둔다. */
+function edgeSnap(cv,pts){
+  try{
+    const S0=Math.min(1,800/Math.max(cv.width,cv.height)),w=Math.max(16,Math.round(cv.width*S0)),h=Math.max(16,Math.round(cv.height*S0));
+    const c=document.createElement('canvas');c.width=w;c.height=h;const cx=c.getContext('2d',{willReadFrequently:true});cx.drawImage(cv,0,0,w,h);
+    // 밝기가 비슷한 두 색(어두운 표지와 그림자 등)도 가르도록 빨강·초록·파랑 채널마다 테두리 세기를 구한다
+    const d=cx.getImageData(0,0,w,h).data,GX=[0,1,2].map(()=>new Float32Array(w*h)),GY=[0,1,2].map(()=>new Float32Array(w*h));
+    for(let ch=0;ch<3;ch++){const gx=GX[ch],gy=GY[ch],V=j=>d[j*4+ch];
+      for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=y*w+x;
+        gx[i]=V(i-w+1)+2*V(i+1)+V(i+w+1)-V(i-w-1)-2*V(i-1)-V(i+w-1);
+        gy[i]=V(i+w-1)+2*V(i+w)+V(i+w+1)-V(i-w-1)-2*V(i-w)-V(i-w+1)}}
+    const P=pts.map(p=>[p[0]*S0,p[1]*S0]),C=P.reduce((a,p)=>[a[0]+p[0]/4,a[1]+p[1]/4],[0,0]);
+    const R=Math.max(5,Math.round(.035*Math.min(w,h))),MIN=18;
+    const samp=(ax,ay,bx,by,nx,ny)=>{let s=0,k=0;for(let j=0;j<=40;j++){const t=.12+.76*j/40,x=Math.round(ax+(bx-ax)*t),y=Math.round(ay+(by-ay)*t);
+      if(x<1||y<1||x>w-2||y>h-2)continue;const i=y*w+x;s+=Math.max(Math.abs(GX[0][i]*nx+GY[0][i]*ny),Math.abs(GX[1][i]*nx+GY[1][i]*ny),Math.abs(GX[2][i]*nx+GY[2][i]*ny));k++}return k>20?s/k:0};
+    const L=[];
+    for(let i=0;i<4;i++){
+      const a=P[i],b=P[(i+1)%4],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1;let nx=-dy/len,ny=dx/len;
+      if(((a[0]+b[0])/2-C[0])*nx+((a[1]+b[1])/2-C[1])*ny<0){nx=-nx;ny=-ny}
+      const cand=[];let best=0;
+      for(let u=-R;u<=R;u++)for(let v=-R;v<=R;v++){const sc=samp(a[0]+nx*u,a[1]+ny*u,b[0]+nx*v,b[1]+ny*v,nx,ny);cand.push([sc,u,v]);if(sc>best)best=sc}
+      let u=0,v=0;
+      if(best>=MIN){let top=null;for(const q of cand)if(q[0]>=.9*best&&(!top||q[1]+q[2]>top[1]+top[2]))top=q;u=top[1];v=top[2]}
+      L.push([[a[0]+nx*u,a[1]+ny*u],[b[0]+nx*v,b[1]+ny*v]]);
+    }
+    const X=(l1,l2)=>{const [p,q]=l1,[r,s]=l2;const d1=[q[0]-p[0],q[1]-p[1]],d2=[s[0]-r[0],s[1]-r[1]],den=d1[0]*d2[1]-d1[1]*d2[0];
+      if(Math.abs(den)<1e-6)return null;const t=((r[0]-p[0])*d2[1]-(r[1]-p[1])*d2[0])/den;return [p[0]+d1[0]*t,p[1]+d1[1]*t]};
+    const Q=[0,1,2,3].map(i=>X(L[(i+3)%4],L[i]));
+    if(Q.some(p=>!p||p[0]<-2||p[1]<-2||p[0]>w+2||p[1]>h+2))return pts;
+    const area=A=>{let s=0;for(let i=0;i<4;i++){const a=A[i],b=A[(i+1)%4];s+=a[0]*b[1]-b[0]*a[1]}return Math.abs(s)/2};
+    const r0=area(Q)/Math.max(1,area(P));if(r0<.6||r0>1.6)return pts;
+    return Q.map(p=>[Math.max(0,Math.min(cv.width,p[0]/S0)),Math.max(0,Math.min(cv.height,p[1]/S0))]);
+  }catch(e){return pts}
+}
+/* 네 꼭짓점(테두리에 맞춘 뒤)으로 표지만 반듯하게 펴서 잘라낸다. long은 긴 변 픽셀 */
+function quadCut(cv,pts,long){
+  const P=edgeSnap(cv,pts),dd=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const qw=(dd(P[0],P[1])+dd(P[3],P[2]))/2,qh=(dd(P[0],P[3])+dd(P[1],P[2]))/2,rr=Math.max(.4,Math.min(2.5,qw/Math.max(1,qh)));
+  return rr>=1?warpQuad(cv,P,long,Math.round(long/rr),.985):warpQuad(cv,P,Math.round(long*rr),long,.985);
+}
+function quadOk(q,iw,ih,minA){
   if(!Array.isArray(q)||q.length!==4)return null;
   const P=q.map(p=>Array.isArray(p)&&p.length>=2?[Number(p[0])/1000*iw,Number(p[1])/1000*ih]:null);
   if(P.some(p=>!p||!isFinite(p[0])||!isFinite(p[1])))return null;
   const cl=P.map(p=>[Math.max(0,Math.min(iw,p[0])),Math.max(0,Math.min(ih,p[1]))]);
   let sg=0;for(let i=0;i<4;i++){const a=cl[i],b=cl[(i+1)%4],c=cl[(i+2)%4];const z=(b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]);if(Math.abs(z)<1)return null;const g=z>0?1:-1;if(!sg)sg=g;else if(g!==sg)return null}
   let ar=0;for(let i=0;i<4;i++){const a=cl[i],b=cl[(i+1)%4];ar+=a[0]*b[1]-b[0]*a[1]}ar=Math.abs(ar)/2;
-  if(ar<.08*iw*ih)return null;
+  if(ar<(minA||.08)*iw*ih)return null;
   const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
   const w=(d(cl[0],cl[1])+d(cl[3],cl[2]))/2,hh=(d(cl[0],cl[3])+d(cl[1],cl[2]))/2;const r=w/hh;
   if(r<.4||r>1.15)return null;
   return {pts:cl,area:ar/(iw*ih)}
 }
-function warpQuad(src,pts,W,Ht){
-  const c=pts.reduce((a,p)=>[a[0]+p[0]/4,a[1]+p[1]/4],[0,0]);const k=.955;
+function warpQuad(src,pts,W,Ht,k){
+  const c=pts.reduce((a,p)=>[a[0]+p[0]/4,a[1]+p[1]/4],[0,0]);k=k||.955;
   const q=pts.map(p=>[c[0]+(p[0]-c[0])*k,c[1]+(p[1]-c[1])*k]);
   const sw=src.width,sh=src.height;const sd=src.getContext('2d').getImageData(0,0,sw,sh).data;
   const out=document.createElement('canvas');out.width=W;out.height=Ht;const ox=out.getContext('2d');const od=ox.createImageData(W,Ht);const o=od.data;
@@ -1634,7 +1676,7 @@ async function coverFlat(file){
     if(!r||r.found===false)return null;
     const qo=quadOk([r.tl,r.tr,r.br,r.bl],cv.width,cv.height);if(!qo)return null;
     if(qo.area>.9)return null;
-    {const P=qo.pts,dd=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);const qw=(dd(P[0],P[1])+dd(P[3],P[2]))/2,qh=(dd(P[0],P[3])+dd(P[1],P[2]))/2;const rr=Math.max(.4,Math.min(2.5,qw/Math.max(1,qh)));return rr>=1?warpQuad(cv,qo.pts,480,Math.round(480/rr)):warpQuad(cv,qo.pts,Math.round(480*rr),480)}
+    return quadCut(cv,qo.pts,480);
   }catch(e){return null}
 }
 async function coverSave(h,file,opt){
@@ -2197,15 +2239,12 @@ async function bkLoad(file){
     return {cv,blob};
   }finally{URL.revokeObjectURL(url)}
 }
-function bkCrop(cv,box){
-  if(!Array.isArray(box)||box.length!==4)return '';
-  let [x,y,w,h]=box.map(Number);if(![x,y,w,h].every(Number.isFinite)||w<.06||h<.06)return '';
-  x=Math.max(0,Math.min(1,x));y=Math.max(0,Math.min(1,y));w=Math.min(w,1-x);h=Math.min(h,1-y);
-  const sx=x*cv.width,sy=y*cv.height,sw=w*cv.width,sh=h*cv.height;
-  const W=360,H=480,sc=Math.max(W/sw,H/sh),dw=W/sc,dh=H/sc;
-  const c=document.createElement('canvas');c.width=W;c.height=H;const cx=c.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,W,H);
-  cx.drawImage(cv,sx+(sw-dw)/2,sy+(sh-dh)/2,dw,dh,0,0,W,H);
-  let q=.84,d=c.toDataURL('image/jpeg',q);while(d.length>110000&&q>.4){q-=.12;d=c.toDataURL('image/jpeg',q)}
+/* 여러 권을 찍은 사진에서 책 한 권의 앞표지만 배경 없이 잘라낸다. q는 0~1000 좌표 네 꼭짓점. 앞표지가 안 보이면 '' */
+function bkCrop(cv,q){
+  if(!Array.isArray(q)||q.length!==4)return '';
+  const qo=quadOk(q,cv.width,cv.height,.006);if(!qo)return '';
+  const c=quadCut(cv,qo.pts,480);
+  let k=.84,d=c.toDataURL('image/jpeg',k);while(d.length>110000&&k>.4){k-=.12;d=c.toDataURL('image/jpeg',k)}
   return d;
 }
 const bkNorm=t=>String(t||'').replace(/\s*\(.*?\)\s*/g,'').replace(/[\s·.,!?:;'"“”‘’「」『』~\-]/g,'').toLowerCase();
@@ -2217,7 +2256,7 @@ async function bookPhotos(files){
   if(!lim||!lim.images){toast('이 화면에서는 사진 읽기를 쓸 수 없어요. 직접 입력해 주세요.');return}
   const rv=S.bkRev=S.bkRev||{items:[],busy:'',msg:''};
   const known=new Set(hexBooks().map(b=>bkNorm(b.title)));
-  const ask=`사진에는 책이 한 권 이상 있다(책 더미, 책장, 책 한 권 등). 사진 속 책을 모두 찾아 읽는다.\n규칙:\n- 표지나 책등에 보이는 글자를 바탕으로 제목을 쓴다. 한국에서 출간된 책이면 한국어 제목으로 쓴다.\n- 글자가 흐리거나 일부만 보여 제목이 확실하지 않으면 sure를 false로 하고 가장 가능성 높은 제목을 쓴다. 전혀 읽을 수 없는 책은 목록에 넣지 않는다. 보이지 않는 책을 지어내지 않는다.\n- 저자는 사진에 보이거나 그 책의 저자라고 확실히 아는 경우에만 쓴다. 모르면 빈 문자열이다.\n- cat은 교보문고 국내도서 분류 중 하나: ${KY.join(', ')}.\n- main은 중학생의 성장에 가장 도움이 되는 영역 번호(0 절대 실행력, 1 정서 조절력, 2 메타인지·철학적 사고, 3 목표 의식, 4 인성·관계성, 5 학업 역량), sub는 두 번째로 가까운 영역 번호 또는 null, why는 이유 한 문장(40자 이내).\n- box는 그 책의 앞표지가 보일 때 표지 영역을 사진 전체 크기 대비 0~1 비율로 [x,y,너비,높이](왼쪽 위 기준)로 쓴다. 앞표지가 안 보이면 null이다.\n- 책이 없으면 books를 빈 배열로 한다.\nJSON 객체 하나만 출력한다: {"books":[{"title":"","author":"","sure":true,"cat":"소설","main":5,"sub":null,"why":"","box":[0.1,0.1,0.3,0.4]}]}`;
+  const ask=`사진에는 책이 한 권 이상 있다(책 더미, 책장, 책 한 권 등). 사진 속 책을 모두 찾아 읽는다.\n규칙:\n- 표지나 책등에 보이는 글자를 바탕으로 제목을 쓴다. 한국에서 출간된 책이면 한국어 제목으로 쓴다.\n- 글자가 흐리거나 일부만 보여 제목이 확실하지 않으면 sure를 false로 하고 가장 가능성 높은 제목을 쓴다. 전혀 읽을 수 없는 책은 목록에 넣지 않는다. 보이지 않는 책을 지어내지 않는다.\n- 저자는 사진에 보이거나 그 책의 저자라고 확실히 아는 경우에만 쓴다. 모르면 빈 문자열이다.\n- cat은 교보문고 국내도서 분류 중 하나: ${KY.join(', ')}.\n- main은 중학생의 성장에 가장 도움이 되는 영역 번호(0 절대 실행력, 1 정서 조절력, 2 메타인지·철학적 사고, 3 목표 의식, 4 인성·관계성, 5 학업 역량), sub는 두 번째로 가까운 영역 번호 또는 null, why는 이유 한 문장(40자 이내).\n- q는 그 책의 앞표지가 보일 때 앞표지의 바깥 경계선(인쇄된 면의 가장자리) 네 꼭짓점이다. 책등·옆면·그림자·손·배경·다른 책은 넣지 않는다. 좌표는 사진의 왼쪽 위를 (0,0), 오른쪽 아래를 (1000,1000)으로 하는 정수 [x,y]이고, 표지 글자를 바로 읽는 방향 기준으로 왼쪽 위, 오른쪽 위, 오른쪽 아래, 왼쪽 아래 순서로 쓴다. 표지가 기울거나 누워 있어도 이 기준을 따른다. 앞표지가 안 보이면(책등만 보이면) null이다.\n- 책이 없으면 books를 빈 배열로 한다.\nJSON 객체 하나만 출력한다: {"books":[{"title":"","author":"","sure":true,"cat":"소설","main":5,"sub":null,"why":"","q":[[100,100],[400,110],[390,520],[95,510]]}]}`;
   let added=0,seen=0;
   for(let n=0;n<files.length;n++){
     rv.busy=`${n+1}/${files.length}번째 사진을 읽는 중이에요…`;renderLayers();
@@ -2231,7 +2270,7 @@ async function bookPhotos(files){
         const cat=KY.includes(x.cat)?x.cat:'기타';
         rv.items.push({id:hid(title+Date.now()+Math.random()),on:!dup,title,author:String(x.author||'').trim().slice(0,40),unsure:x.sure===false,ok:false,
           cat,main:Number.isInteger(x.main)&&x.main>=0&&x.main<6?x.main:5,sub:Number.isInteger(x.sub)&&x.sub>=0&&x.sub<6?x.sub:null,why:String(x.why||'').slice(0,80),
-          thumb:bkCrop(cv,x.box),cov:true,dup});added++;
+          thumb:bkCrop(cv,x.q),cov:true,dup});added++;
       });
     }catch(e){rv.msg='사진 '+(n+1)+'번은 읽지 못했어요. 다른 사진으로 해 보세요.'}
   }
@@ -2252,7 +2291,7 @@ function bkReviewHTML(){
         <label>제목<input data-rv="title" data-id="${it.id}" value="${esc(it.title)}" maxlength="80"></label>
         <label>저자<input data-rv="author" data-id="${it.id}" value="${esc(it.author)}" maxlength="40" placeholder="모르면 비워 두세요"></label>
         <label>서점 분류<select data-rvs="cat" data-id="${it.id}">${KY.map(k=>`<option${k===it.cat?' selected':''}>${k}</option>`).join('')}</select></label>
-        ${it.thumb?`<label class="rvck"><input type="checkbox" data-rvc="cov" data-id="${it.id}"${it.cov?' checked':''}> 사진에서 잘라낸 이 이미지를 표지로 써요</label>`:''}
+        ${it.thumb?`<label class="rvck"><input type="checkbox" data-rvc="cov" data-id="${it.id}"${it.cov?' checked':''}> 사진에서 배경을 빼고 잘라낸 이 표지를 써요</label>`:'<p class="hint">앞표지가 보이지 않아 표지 그림은 비워 둬요.</p>'}
         ${it.dup?'<p class="hint">이미 서가에 있는 책이에요.</p>':''}
         ${it.on&&(why||it.ok)?`<label class="rvck${flag?' w':''}"><input type="checkbox" data-rvc="ok" data-id="${it.id}"${it.ok?' checked':''}> ${esc(why||'확인했어요')}${why?' · 확인했어요':''}</label>`:''}
       </div></div>`};
