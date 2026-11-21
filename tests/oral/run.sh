@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# 구술 테스트 회귀 시험: 빌드 → 가짜 서버(:8000, 생각 시간 25초) + 웹(:8080) → 휴대폰·PC·마이크 끊김 흐름
+# 필요: deno, python3 + playwright, google-chrome, PDFLIB(html2canvas·jspdf가 든 node_modules 경로)
+set -u
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+DENO="${DENO:-deno}"
+WEB=/tmp/002web
+cd "$ROOT" && node scripts/build.mjs | tail -1 || exit 1
+pkill -f "unstable-sloppy-imports index.ts" 2>/dev/null; pkill -f "m http.server 8080" 2>/dev/null; sleep 1
+( cd "$ROOT/supabase/functions/api" && ORAL_THINK_SEC=25 FAKE_DB=1 FAKE_MAIL=1 FAKE_PUSH=1 FAKE_AI="$(cat "$ROOT/tests/oral/fakeai.json")" \
+  setsid nohup "$DENO" run -A --unstable-sloppy-imports index.ts > /tmp/api.log 2>&1 < /dev/null & ) > /dev/null 2>&1
+rm -rf "$WEB" && cp -r "$ROOT/dist" "$WEB"
+sed -i 's#"api":"[^"]*"#"api":"http://localhost:8000"#' "$WEB/runtime/config.js"
+( cd "$WEB" && setsid nohup python3 -m http.server 8080 > /tmp/web.log 2>&1 < /dev/null & ) > /dev/null 2>&1
+for i in $(seq 30); do curl -s -o /dev/null -X POST localhost:8000 -d '{}' && break; sleep 1; done
+fail=0
+for t in "flow.py mobile" "flow.py desktop" "miclost.py"; do
+  echo "=== $t"; python3 "$ROOT/tests/oral/"$t 2>&1 | grep -E '^(PASS|FAIL)|^[0-9]+/[0-9]+|^errors' | grep -vE '^PASS' ; r=${PIPESTATUS[0]}
+  [ "$r" = 0 ] || fail=1
+done
+[ $fail = 0 ] && echo "ALL PASS" || echo "SOME FAILED"
+exit $fail
