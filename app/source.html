@@ -908,17 +908,21 @@ form{display:flex;flex-direction:column;gap:12px}
 .flow{position:sticky;top:-1px;z-index:3;background:var(--bg);padding:10px 0 8px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
 .flow-s{list-style:none;display:grid;grid-template-columns:repeat(var(--n),1fr);margin:0;padding:0}
 .flow-s li{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
-.flow-s li::before{content:"";position:absolute;top:15px;right:50%;width:100%;height:3px;background:var(--soft);z-index:0}
+.flow-s li::before{content:"";position:absolute;top:19px;right:50%;width:100%;height:3px;background:var(--soft);z-index:0}
 .flow-s li:first-child::before{display:none}
 .flow-s li.dn::before,.flow-s li.on::before{background:var(--mint-d)}
-.flow-s .fd{position:relative;z-index:1;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:700;font-size:14px;background:var(--paper);border:2px solid var(--line);color:var(--muted);box-sizing:border-box}
-.flow-s li.dn .fd{background:var(--mint-d);border-color:var(--mint-d);color:#fff}
-.flow-s li.on .fd{background:var(--primary);border-color:var(--primary);color:var(--on-primary);box-shadow:0 0 0 4px rgba(62,47,38,.14)}
+.flow-s .fd{position:relative;z-index:1;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;line-height:1;background:var(--paper);border:2px solid var(--line);box-sizing:border-box;transition:transform .2s}
+.flow-s li:not(.dn):not(.on) .fd{filter:grayscale(.85);opacity:.5}
+.flow-s li.dn .fd{background:var(--sky-soft);border-color:var(--mint-d)}
+.flow-s li.on .fd{background:#FFF4D6;border-color:var(--gold);transform:scale(1.15);box-shadow:0 0 0 4px rgba(194,154,75,.22);animation:fdhop 2.4s ease-in-out infinite}
+.flow-s .fb{position:absolute;right:-7px;bottom:-5px;width:16px;height:16px;border-radius:50%;background:var(--mint-d);color:#fff;font-size:10.5px;font-style:normal;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+@keyframes fdhop{0%,100%{transform:scale(1.15) translateY(0)}50%{transform:scale(1.15) translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){.flow-s li.on .fd{animation:none}}
 .flow-s .fl{font-size:11.5px;line-height:1.3;color:var(--muted);word-break:keep-all}
 .flow-s li.on .fl{color:var(--ink);font-weight:700}.flow-s li.dn .fl{color:var(--mint-d)}
 .flow-now{margin:0;display:flex;flex-direction:column;gap:2px;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--primary);border-radius:0 10px 10px 0;padding:8px 12px}
 .flow-now b{font-size:14.5px;color:var(--ink)}.flow-now span{font-size:13.5px;color:var(--muted);line-height:1.5}
-@media (min-width:720px){.flow-s .fl{font-size:12.5px}.flow-s .fd{width:34px;height:34px}.flow-s li::before{top:16px}}
+@media (min-width:720px){.flow-s .fl{font-size:12.5px}.flow-s .fd{width:44px;height:44px;font-size:23px}.flow-s li::before{top:21px}}
 /* ---------- 구술 탭 (2026-11-21 재디자인) ---------- */
 .orwrap{display:flex;flex-direction:column;gap:12px}
 .btn.orbig{min-height:52px;padding:12px 22px;font-size:16px;border-radius:999px;gap:8px;justify-content:center}
@@ -3329,7 +3333,7 @@ async function loadMonthData(i){
    steps: [[아이콘, 이름], …], cur: 지금 단계 번호(다 끝났으면 steps.length), now: 지금 할 일 문장 */
 function flowHTML(label,steps,cur,now){
   const n=steps.length,doneAll=cur>=n;
-  return `<div class="flow" role="group" aria-label="${esc(label)}"><ol class="flow-s" style="--n:${n}">${steps.map(([ic,t],k)=>`<li class="${cur>k?'dn':cur===k?'on':''}"${cur===k?' aria-current="step"':''}><span class="fd" aria-hidden="true">${cur>k?'✓':k+1}</span><span class="fl">${t}</span></li>`).join('')}</ol>
+  return `<div class="flow" role="group" aria-label="${esc(label)}"><ol class="flow-s" style="--n:${n}">${steps.map(([ic,t],k)=>`<li class="${cur>k?'dn':cur===k?'on':''}"${cur===k?' aria-current="step"':''}><span class="fd" aria-hidden="true">${ic}${cur>k?'<i class="fb">✓</i>':''}</span><span class="fl">${t}</span></li>`).join('')}</ol>
     <p class="flow-now">${doneAll?'<b>🎉 모든 단계 끝</b>':`<b>${steps[cur][0]} ${cur+1}단계 · ${steps[cur][1]}</b>`}<span>${now}</span></p></div>`}
 const ES_FLOW=[['📝','질문 고르기'],['🙋','선생님께 묻기'],['🗺️','글 계획 짜기'],['✏️','원고지 쓰기'],['📮','첨삭 받기']];
 function esPast(i,P){
