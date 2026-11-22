@@ -2068,19 +2068,21 @@ function qState(i){return S.progress.qs[nk(i)]}
 async function genQs(i){
   const it=items()[i];const key=nk(i);
   S.qBusy[key]=true;renderLayers();
-  let pool=null,tags=null;
+  let pool=null,tags=null,gr=null,meta=null;
   if(S.sample){
     try{
-      const prompt=`너는 대한민국 대치동에서 외국어고·자사고·과학고 입시 논술과 구술면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n조건:\n1. 정확히 3개를 출제하고, 세 작품의 주제를 섞는다. 각 질문은 서로 다른 작품 조합을 다룬다: 1번 책+영화 ①, 2번 책+영화 ②, 3번 책+영화 ①+영화 ② 모두를 관통하는 질문.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 외고·자사고·과학고 인문논술 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량(예: 800자 내외)을 붙인다. 3개는 유형이 서로 달라야 한다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책","영화 ①"]}, ...] (from은 그 질문이 다루는 작품: "책", "영화 ①", "영화 ②")`;
+      try{meta=await PX.qmeta(it)}catch(e){meta=null}
+      const prompt=`너는 대한민국 대치동에서 외국어고·자사고·과학고 입시 논술과 구술면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n${PX.qAdd(meta)}조건:\n1. 정확히 3개를 출제하고, 세 작품의 주제를 섞는다. 각 질문은 서로 다른 작품 조합을 다룬다: 1번 책+영화 ①, 2번 책+영화 ②, 3번 책+영화 ①+영화 ② 모두를 관통하는 질문.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 외고·자사고·과학고 인문논술 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량(예: 800자 내외)을 붙인다. 3개는 유형이 서로 달라야 한다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책","영화 ①"]}, ...] (from은 그 질문이 다루는 작품: "책", "영화 ①", "영화 ②")`;
       const arr=await S.sample.json(prompt,{cache:false});
       if(Array.isArray(arr)){
         const ok=arr.map(x=>typeof x==='string'?{q:x,from:[]}:x).filter(x=>x&&String(x.q||'').length>12).slice(0,3);
         if(ok.length>=3){pool=ok.map(x=>String(x.q));tags=ok.map(x=>Array.isArray(x.from)?x.from.map(String).slice(0,3):[])}
       }
+      if(pool&&meta){try{gr=await PX.reground(meta,pool,tags)}catch(e){gr=null}}
     }catch(e){if(e&&e.code==='rate_limited')toast('질문을 너무 자주 만들었어요. 잠시 뒤 다시 열어 주세요.')}
   }
   const q={shown:[],tags:[],ai:false,v:3};const old=qState(i);
-  if(pool){q.shown=pool;q.tags=tags;q.ai=true}
+  if(pool){q.shown=pool;q.tags=tags;q.ai=true;q.hist=pool.slice();if(meta){q.theme=meta.theme;if(gr)q.gr=gr}}
   else{if(old&&old.v===3&&old.shown.length>=3){q.shown=old.shown;q.tags=old.tags;q.ai=old.ai}
     else{const t=TPL(it);q.shown=t.map(x=>x.q);q.tags=t.map(x=>x.from)}}
   if(!old||old.shown.join('|')!==q.shown.join('|')){if(S.progress.picks)delete S.progress.picks[key];if(S.essayDraft.i===i)S.essayDraft.q=-1;{const pp=(S.progress.prep||{})[key];if(pp){pp.qDone=false;pp.roadDone=false}}}
@@ -2092,18 +2094,25 @@ async function genQ1(i,n){
   const it=items()[i];const key=nk(i);const q=qState(i);if(!q||!q.shown[n]||S.qBusy[key]||S.evals[key])return;
   if(!S.sample){toast('Claude 연결이 없어 새 질문을 만들 수 없어요.');return}
   S.qBusy1=key+'_'+n;renderLayers();
-  let nq=null;
+  let nq=null,hist=[];
   try{
+    let meta=null;try{meta=await PX.qmeta(it)}catch(e){meta=null}
+    const theme=String(q.theme||(meta&&meta.theme)||it.topic||''),target=PX.target(it);hist=[...new Set([...(q.hist||[]),...q.shown])];
     const combo=(q.tags&&q.tags[n]&&q.tags[n].length?q.tags[n]:ES_COMBO[n]||ES_COMBO[2]);
-    const prompt=`너는 대한민국 대치동에서 외국어고·자사고·과학고 입시 논술과 구술면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n조건:\n1. 이미 낸 질문(${q.shown.map((x,k)=>(k+1)+'. '+x).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${n+1}번 자리에 들어갈 질문이므로 다루는 작품은 ${combo.join('+')}이다.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 외고·자사고·과학고 인문논술 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량(예: 800자 내외)을 붙인다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":${JSON.stringify(combo)}}]`;
-    const arr=await S.sample.json(prompt,{cache:false});
-    const L=Array.isArray(arr)?arr:arr&&arr.q?[arr]:[];const x=L.find(y=>y&&y.q&&!q.shown.includes(String(y.q).trim()));const t=x&&String(x.q||'').trim();
-    if(t&&t.length>12&&!q.shown.includes(t))nq={q:t,from:Array.isArray(x.from)?x.from.map(String).slice(0,3):combo};
+    const prompt=`너는 대한민국 대치동에서 외국어고·자사고·과학고 입시 논술과 구술면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n[공통 주제] ${theme}\n[목표 난이도] ${['쉬움','보통','어려움'][target-1]} (${it.g} 수준)\n질문은 공통 주제의 낱말이 드러나게 쓰고 목표 난이도에 맞춘다.\n조건:\n1. 이미 낸 질문(${q.shown.map((x,k)=>(k+1)+'. '+x).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${n+1}번 자리에 들어갈 질문이므로 다루는 작품은 ${combo.join('+')}이다.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 외고·자사고·과학고 인문논술 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량(예: 800자 내외)을 붙인다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":${JSON.stringify(combo)}}]`;
+    /* 후보 문항이 교체 조건(이력 문항과의 유사도·공통 주제 유사도·난이도)에 맞는지 보고, 안 맞으면 사유를 넣어 한 번 더 만든다. 두 번째 후보는 이미 낸 질문과 겹치지만 않으면 쓴다 */
+    for(let a=0,why='';a<2&&!nq;a++){
+      const arr=await S.sample.json(prompt+(why?`\n(직전 후보는 조건에 맞지 않았다: ${why}. 이 점을 고쳐 새로 출제한다.)`:''),{cache:false});
+      const L=Array.isArray(arr)?arr:arr&&arr.q?[arr]:[];const x=L.find(y=>y&&y.q&&!q.shown.includes(String(y.q).trim()));const t=x&&String(x.q||'').trim();
+      if(!(t&&t.length>12&&!q.shown.includes(t)))break;
+      let ck={ok:true,dup:0,why:''};try{ck=PX.replaceOK(t,hist,theme,target)}catch(e){}
+      if(ck.ok||(a===1&&ck.dup<PX.DUP))nq={q:t,from:Array.isArray(x.from)?x.from.map(String).slice(0,3):combo};else why=ck.why||'조건에 맞지 않는다';
+    }
   }catch(e){if(e&&e.code==='rate_limited'){toast('질문을 너무 자주 바꿨어요. 잠시 뒤 다시 눌러 주세요.')}}
   S.qBusy1=null;
   if(!nq){toast('새 질문을 만들지 못했어요. 잠시 뒤 다시 눌러 주세요.');renderLayers();return}
   const was=(S.progress.picks||{})[key]===n;
-  q.shown[n]=nq.q;q.tags=q.tags||[];q.tags[n]=nq.from;q.ai=true;S.progress.qs[key]=q;
+  q.shown[n]=nq.q;q.tags=q.tags||[];q.tags[n]=nq.from;q.ai=true;q.hist=[...new Set([...hist,nq.q])].slice(-30);S.progress.qs[key]=q;
   if(was){delete S.progress.picks[key];if(S.essayDraft.i===i)S.essayDraft.q=-1;const pp=(S.progress.prep||{})[key];if(pp){pp.qDone=false;pp.roadDone=false}S.esQChg=null}
   saveProgress();renderLayers();toast('질문 '+(n+1)+'번을 새 질문으로 바꿨어요.');
 }
@@ -3397,6 +3406,113 @@ function essayHTML(i){
   }
   return `<div class="sec es" data-st="${stv}">${head}${nos}${st>=1&&!busy?qline:''}${card}${friends}</div>`;
 }
+/*PX-BEGIN 누적 오류 프로파일 첨삭과 공통 주제 문항 생성의 계산부. 어느 단계든 실패하면 예전 방식 그대로 동작한다 */
+const PX={N:5,K:3,M:2,DECAY:0.7,RES:0.3,ALIGN:0.28,GATE:0.01,DUP:0.85,TH1:0.02,TH2:0.02,TH3:0.4,TH5:0.02,TOL:1,RETRY:1,DIM:8192,
+  RULE:{'맞춤법':1,'띄어쓰기':1},STY:['호응','긴 문장','접속어','근거','어휘','기타']};
+/* 글자 n-그램 해시 임베딩(2·3-그램, 8192차원, 길이 1로 정규화)과 코사인 유사도 */
+PX.norm=s=>String(s==null?'':s).toLowerCase().replace(/[^0-9a-z가-힣]+/g,'');
+PX.emb=s=>{const t=PX.norm(s),v=new Float32Array(PX.DIM);for(let n=2;n<=3;n++)for(let i=0;i+n<=t.length;i++){let h=2166136261;for(let j=0;j<n;j++){h^=t.charCodeAt(i+j);h=Math.imul(h,16777619)}v[(h>>>0)%PX.DIM]+=1}
+  let z=0;for(let i=0;i<PX.DIM;i++)z+=v[i]*v[i];z=Math.sqrt(z);if(z)for(let i=0;i<PX.DIM;i++)v[i]/=z;return v};
+PX.cos=(a,b)=>{let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s};
+PX.sim=(a,b)=>PX.cos(PX.emb(a),PX.emb(b));
+PX.sents=t=>(String(t==null?'':t).match(/[^.!?。…\n]+[.!?。…]*/g)||[]).map(x=>x.trim()).filter(x=>x.length>1);
+/* 편집거리 유사도(0~1)와, 편집거리·임베딩을 합친 문장 정렬. 대응 문장이 없으면 j=-1(삭제) */
+PX.lev=(a,b)=>{a=String(a).slice(0,160);b=String(b).slice(0,160);const m=a.length,n=b.length;if(!m||!n)return m||n?0:1;
+  let p=[];for(let j=0;j<=n;j++)p[j]=j;for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return 1-p[n]/Math.max(m,n)};
+PX.align=(s,list)=>{let bj=-1,bs=0;const e=PX.emb(s);(list||[]).forEach((x,j)=>{const v=0.5*PX.lev(s,x)+0.5*PX.cos(e,PX.emb(x));if(v>bs){bs=v;bj=j}});return bs>=PX.ALIGN?{j:bj,sim:bs}:{j:-1,sim:bs}};
+
+/* ── 누적 오류 프로파일 ── 오류 레코드 {id,t(유형),ex(오류 예),fx(고친 표현),rd(첨삭 회차),k(달),len(답안 글자 수),st(open|res|part|un)} */
+PX.inWin=(e,cur)=>cur-1-e.rd>=0&&cur-1-e.rd<PX.N;
+/* 유형별 가중점수 = Σ 최근성 감쇠^(지난 회차 수) × (100 ÷ 답안 길이) × (해소된 오류면 해소 감쇠계수) */
+PX.weights=(errs,cur)=>{const w={},rounds={};(errs||[]).forEach(e=>{if(!PX.inWin(e,cur))return;
+  w[e.t]=(w[e.t]||0)+Math.pow(PX.DECAY,cur-1-e.rd)*(100/Math.max(100,e.len||0))*(e.st==='res'?PX.RES:1);(rounds[e.t]=rounds[e.t]||{})[e.rd]=1});return {w,rounds}};
+/* 지속 오류 선택: 누적 첨삭이 M회 이상이면 M회 이상 나온 유형 가운데 상위 K개, 아니면 조건 없이 상위 K개 */
+PX.persistent=(errs,cur)=>{errs=errs||[];const {w,rounds}=PX.weights(errs,cur);let ts=Object.keys(w).sort((a,b)=>w[b]-w[a]);
+  if(cur-1>=PX.M)ts=ts.filter(t=>Object.keys(rounds[t]).length>=PX.M);
+  return ts.slice(0,PX.K).map(t=>{const c=errs.filter(e=>e.t===t&&PX.inWin(e,cur)).sort((a,b)=>(a.st==='res')-(b.st==='res')||b.rd-a.rd)[0];return {id:c.id,t,ex:c.ex,fx:c.fx,w:Math.round(w[t]*100)/100}})};
+PX.q=s=>String(s==null?'':s).replace(/["\n]/g,' ').slice(0,80);
+PX.p1Ask=list=>list&&list.length?`\n\n[지속 오류 확인]\n이 학생이 최근 글에서 되풀이한 오류다. 이번 글에 같은 유형의 오류가 다시 나타났는지 하나씩 판정해, 출력 JSON에 recur 필드를 더해 [{"id":"오류 식별자","recur":true 또는 false}] 형식으로 아래 식별자를 빠짐없이 답한다.\n${list.map(e=>`- id:${e.id} | 유형: ${e.t} | 과거 오류 예: "${PX.q(e.ex)}"${e.fx?' → "'+PX.q(e.fx)+'"':''}`).join('\n')}`:'';
+PX.TYPEASK=`\n\n[문장 오류 유형]\nsentences에서 grade가 "고침"인 항목에는 type을 붙인다. type은 "호응", "긴 문장", "접속어", "근거", "어휘", "기타" 중 하나다.`;
+/* 검증: 평가 지시에 넣은 식별자가 출력에서 빠졌는지 */
+PX.missing=(arr,ids,f)=>{const got={};(Array.isArray(arr)?arr:[]).forEach(x=>{if(x&&typeof x[f]==='boolean')got[String(x.id)]=1});return (ids||[]).filter(id=>!got[id])};
+/* 검증 실패 사유를 넣어 빠진 식별자만 다시 묻는다 */
+PX.requery=async(kind,miss,items,text)=>{const f=kind==='recur'?'recur':'ok';
+  const prompt=`직전 첨삭 출력이 검증에 실패했다. 실패 사유: ${kind==='recur'?'recur':'fixed'} 항목에 오류 식별자 ${miss.join(', ')}의 판정이 빠졌다.\n아래 학생 글을 읽고 빠진 식별자만 판정해 JSON 배열로만 답한다. 형식: [{"id":"오류 식별자","${f}":true 또는 false}]\n판정 기준: ${kind==='recur'?'이번 글에 같은 유형의 오류가 다시 나타났으면 true':'2차 글에서 그 오류가 고쳐졌으면 true'}.\n${items.filter(e=>miss.includes(e.id)).map(e=>`- id:${e.id} | 유형: ${e.t} | 오류 예: "${PX.q(e.ex)}"${e.fx?' → "'+PX.q(e.fx)+'"':''}`).join('\n')}\n\n[학생 글]\n${String(text||'').slice(0,3000)}`;
+  const r=await S.sample.json(prompt,{cache:false,modelTier:'quick'});return Array.isArray(r)?r:[]};
+PX.spType=x=>String(x.orig).replace(/\s/g,'')===String(x.fix||'').replace(/\s/g,'')?'띄어쓰기':'맞춤법';
+/* 이번 글에서 체크된 오류 모으기. 판독이 불확실한 글자에서 나온 오류는 뺀다. 재발로 판정된 지속 오류는 이번 회차 건수에 넣는다 */
+PX.collect=(ev,c)=>{const len=String(ev.transcript||'').replace(/\s/g,'').length,bad=(Array.isArray(ev.unreadable)?ev.unreadable:[]).map(String).filter(x=>x.replace(/\s/g,'').length>1);
+  const unsure=s=>/\[\?\]/.test(s)||bad.some(b=>s.includes(b)||b.includes(s));const out=[];
+  (Array.isArray(ev.spelling)?ev.spelling:[]).forEach(x=>{if(!x||!x.orig||unsure(String(x.orig)))return;out.push({t:PX.spType(x),ex:String(x.orig).slice(0,60),fx:String(x.fix||'').slice(0,60)})});
+  (Array.isArray(ev.sentences)?ev.sentences:[]).forEach(x=>{if(!x||x.grade!=='고침'||!x.orig||unsure(String(x.orig)))return;out.push({t:PX.STY.includes(x.type)?x.type:'기타',ex:String(x.orig).slice(0,80),fx:String(x.fix||'').slice(0,80)})});
+  (c.inj||[]).forEach(p=>{const r=(c.recur||[]).find(x=>x&&String(x.id)===p.id);if(r&&r.recur===true&&!out.some(o=>o.t===p.t))out.push({t:p.t,ex:p.ex,fx:p.fx||'',re:p.id})});
+  return out.map(o=>Object.assign(o,{len}))};
+PX.store=(list,key,rd)=>{const P=S.progress;P.errSeq=P.errSeq||0;const recs=list.map(o=>Object.assign({id:'e'+(++P.errSeq),t:o.t,ex:o.ex,fx:o.fx,rd,k:key,len:o.len,st:'open'},o.re?{re:o.re}:{}));
+  P.errs=(P.errs||[]).filter(e=>!(e.k===key&&e.rd===rd)&&rd-e.rd<=PX.N).concat(recs).slice(-60);return recs};
+/* 재작성 답안: 1차에서 체크된 오류마다 대응 문장을 찾아 해소 여부를 묻는 지시를 만든다 */
+PX.r2List=key=>{const all=(S.progress.errs||[]).filter(e=>e.k===key&&!e.re);if(!all.length)return [];const rd=Math.max.apply(null,all.map(e=>e.rd));return all.filter(e=>e.rd===rd).slice(0,12)};
+PX.r2Ask=(list,t1,t2)=>{const s1=PX.sents(t1),s2=PX.sents(t2),al={};
+  const rows=list.map(e=>{const src=s1.find(s=>s.includes(e.ex))||e.ex;const a=PX.align(src,s2);al[e.id]=a.j>=0?s2[a.j]:null;
+    return `- id:${e.id} | 유형: ${e.t} | 1차 오류: "${PX.q(e.ex)}"${e.fx?' | 고칠 방향: "'+PX.q(e.fx)+'"':''} | 2차 대응 문장: ${a.j>=0?'"'+PX.q(s2[a.j]).slice(0,160)+'"':'없음(지워짐)'}`});
+  return {list,al,add:`\n\n[1차 오류 해소 판정]\n아래는 1차 글에서 짚은 오류와 2차 글에서 그에 대응하는 문장이다. 각 오류가 2차 글에서 고쳐졌는지 판정해, 출력 JSON에 fixed 필드를 더해 [{"id":"오류 식별자","ok":true 또는 false}] 형식으로 아래 식별자를 빠짐없이 답한다. 대응 문장이 없으면 그 부분을 지워서 오류가 사라졌는지로 판정한다.\n${rows.join('\n')}`}};
+/* 해소 판정: 규칙 기반 검사를 쓰는 유형은 규칙(제1 판정)과 언어모델(제2 판정)이 모두 해소면 해소, 하나만이면 부분해소, 둘 다 아니면 미해소. 그 밖의 유형은 언어모델 판정만 */
+PX.rule=(e,s)=>s==null?true:!String(s).includes(e.ex);
+PX.judge=(list,al,fixed)=>list.map(e=>{const f=(Array.isArray(fixed)?fixed:[]).find(x=>x&&String(x.id)===e.id);const llm=!!(f&&f.ok===true);let c;
+  if(PX.RULE[e.t]){const r=PX.rule(e,al[e.id]);c=r&&llm?'res':r||llm?'part':'un'}else c=llm?'res':'un';return {id:e.id,t:e.t,ex:e.ex,c}});
+PX.stat=j=>{const n=j.length,res=j.filter(x=>x.c==='res').length,part=j.filter(x=>x.c==='part').length;return {n,res,part,un:n-res-part,rate:n?Math.round((res+0.5*part)/n*100):0}};
+/* 첨삭 응답을 받은 뒤: 검증·재질의, 오류 레코드 저장(1차) 또는 해소 상태 갱신(2차). 결과는 ev.px에 담는다 */
+PX.after=async(ev,c)=>{
+  if(!c.r2){const ids=c.inj.map(e=>e.id);let rc=Array.isArray(ev.recur)?ev.recur:[];let miss=PX.missing(rc,ids,'recur');
+    for(let n=0;miss.length&&n<PX.RETRY;n++){try{rc=rc.concat(await PX.requery('recur',miss,c.inj,c.text))}catch(e){break}miss=PX.missing(rc,ids,'recur')}
+    const rd=(S.progress.evalN||(S.progress.evalLog||[]).length)+1;const recs=PX.store(PX.collect(ev,{inj:c.inj,recur:rc}),c.key,rd);
+    ev.px={v:1,rd,n:recs.length,recur:c.inj.map(e=>{const r=rc.find(x=>x&&String(x.id)===e.id&&typeof x.recur==='boolean');return {id:e.id,t:e.t,ex:e.ex,recur:r?r.recur:null}})}}
+  else if(c.r2x&&c.r2x.list.length){const L=c.r2x.list,ids=L.map(e=>e.id);let fx=Array.isArray(ev.fixed)?ev.fixed:[];let miss=PX.missing(fx,ids,'ok');
+    for(let n=0;miss.length&&n<PX.RETRY;n++){try{fx=fx.concat(await PX.requery('fixed',miss,L,c.text))}catch(e){break}miss=PX.missing(fx,ids,'ok')}
+    const j=PX.judge(L,c.r2x.al,fx),m={};j.forEach(x=>{m[x.id]=x.c});(S.progress.errs||[]).forEach(e=>{if(m[e.id])e.st=m[e.id]});
+    ev.px=Object.assign({v:1,fix:j},PX.stat(j));saveProgress()}
+  delete ev.recur;delete ev.fixed};
+/* 임베딩 주제 게이트: 글자가 질문·작품과 거의 겹치지 않는 글(장난·낙서)은 언어모델을 부르기 전에 돌려보낸다 */
+PX.junk=(text,ref)=>{const t=PX.norm(text);return t.length>=8&&PX.sim(text,ref)<PX.GATE};
+PX.html=ev=>{const p=ev&&ev.px;if(!p)return '';const E=typeof esc==='function'?esc:String;
+  if(p.fix&&p.n)return `<p class="ev-prog"><b>1차에서 짚은 오류 ${p.n}개</b> · 고침 ${p.res} · 절반 고침 ${p.part} · 남음 ${p.un} <small>(고친 정도 ${p.rate}%)</small>${p.un+p.part?'<br><small>아직 남은 것: '+p.fix.filter(x=>x.c!=='res').slice(0,4).map(x=>E(x.t)+' "'+E(String(x.ex).slice(0,18))+'"').join(', ')+'</small>':''}</p>`;
+  const r=(p.recur||[]).filter(x=>typeof x.recur==='boolean');
+  return r.length?`<p class="ev-prog"><b>되풀이하던 실수 점검</b> · ${r.map(x=>E(x.t)+(x.recur?' 다시 나옴':' 이번엔 없음')).join(' · ')}</p>`:''};
+
+/* ── 공통 주제 기반 문항 생성 ── 작품 {id(책|영화 ①|영화 ②),m(book|film),title,desc(작품 서술문),ents(엔티티 목록)} */
+PX.tt=s=>String(s||'').split(/[\/(]/)[0].trim();
+PX.desc=(kind,title,sum)=>(kind+' 「'+title+'」 '+String(sum||'')).replace(/\s+/g,' ').trim().slice(0,220);
+/* 공통 주제 점수 = 후보 주제어와 각 작품 임베딩 사이 유사도의 최솟값. 대주제와의 유사도 조건까지 지킨 후보 중 점수가 가장 큰 것 */
+PX.theme=(cands,works,major)=>{let best=null;const we=works.map(w=>PX.emb(w.desc)),me=PX.emb(major);(cands||[]).forEach(c=>{c=String(c||'').trim();if(c.length<2)return;const e=PX.emb(c);
+  const s=Math.min.apply(null,we.map(x=>PX.cos(e,x)));if(s>=PX.TH1&&PX.cos(e,me)>=PX.TH2&&(!best||s>best.s))best={t:c,s}});return best};
+PX.qmeta=async(it)=>{const sig=[it.book,it.m1,it.m2,it.topic].join('|');S.qmeta=S.qmeta||{};if(sig in S.qmeta)return S.qmeta[sig];
+  const lk='002.px.qm';let all={};try{all=JSON.parse(localStorage.getItem(lk)||'{}')||{}}catch(e){}
+  if(all[sig]&&all[sig].works)return S.qmeta[sig]=all[sig];
+  const prompt=`아래 세 작품을 중학생 논술 수업에 쓰려고 한다. 작품마다 서술문에 넣을 요약과 고유 요소를 만들고, 세 작품을 잇는 후보 주제어를 만든다.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n1. works: 작품마다 id("책", "영화 ①", "영화 ②"), summary(줄거리와 핵심 갈등을 담은 두 문장. 이달의 주제와 이어지는 낱말을 살려 쓴다), entities(작품에 실제로 나오는 주요 인물·장소·사건·소재 이름 3~5개, 각 2~8자).\n2. themes: 세 작품의 요약에 공통으로 걸리는 후보 주제어 6개. 각각 2~4어절이고 요약과 이달의 주제에 쓴 낱말을 살린다.\n잘 모르는 작품은 지어내지 말고 summary를 빈 문자열, entities를 빈 배열로 둔다.\nJSON 객체 하나만 출력한다. 형식: {"works":[{"id":"책","summary":"","entities":[]}],"themes":[]}`;
+  const r=await S.sample.json(prompt,{cache:false,modelTier:'quick'});if(!r||!Array.isArray(r.works)||r.works.length<3)return S.qmeta[sig]=null;
+  const W=[['책','book',it.book],['영화 ①','film',it.m1],['영화 ②','film',it.m2]].map(([id,m,t])=>{const x=r.works.find(y=>y&&String(y.id).replace(/\s/g,'')===id.replace(/\s/g,''))||{};const title=PX.tt(t);
+    return {id,m,title,sum:String(x.summary||'').slice(0,140),desc:PX.desc(m==='book'?'책':'영화',title,x.summary),ents:(Array.isArray(x.entities)?x.entities:[]).map(String).map(s=>s.trim()).filter(s=>s.length>0&&s.length<=12).slice(0,5)}});
+  const th=PX.theme(r.themes,W,it.topic);const meta={theme:th?th.t:String(it.topic||'').slice(0,40),score:th?Math.round(th.s*1000)/1000:0,fb:!th,works:W};
+  S.qmeta[sig]=meta;try{const ks=Object.keys(all);if(ks.length>40)delete all[ks[0]];all[sig]=meta;localStorage.setItem(lk,JSON.stringify(all))}catch(e){}return meta};
+PX.qAdd=meta=>meta?`[공통 주제] ${meta.theme}\n[작품 정보: 참고용이다. 확실하지 않은 내용은 질문에 쓰지 않는다]\n${meta.works.map(w=>`- ${w.id} 「${w.title}」: ${w.sum||'(요약 없음)'}${w.ents.length?' / 요소: '+w.ents.join(', '):''}`).join('\n')}\n질문은 공통 주제를 중심으로 내고, 질문이 다루는 작품마다 제목이나 위 요소를 하나 이상 분명히 드러낸다.\n`:'';
+/* 작품별 근거 점수: 제목이 나오면 0.6, 엔티티가 나오면 하나에 0.2(둘까지). 그래도 낮으면 질문과 작품 서술문의 임베딩 유사도 */
+PX.ground=(q,w)=>{q=String(q||'');let s=0;if(w.title&&q.includes(w.title))s+=0.6;s+=0.2*Math.min(2,(w.ents||[]).filter(e=>e&&e.length>1&&q.includes(e)).length);if(s<PX.TH3)s=Math.max(s,PX.sim(q,w.desc||''));return Math.min(1,s)};
+/* 채택 조건: 근거 점수가 기준 이상인 작품이 둘 이상이고 그 안에 서로 다른 매체가 있을 것 */
+PX.check=(q,from,works)=>{const ws=works.filter(w=>!from||!from.length||from.includes(w.id)),sc=ws.map(w=>({w,s:PX.ground(q,w)})),ok=sc.filter(x=>x.s>=PX.TH3),md={};ok.forEach(x=>{md[x.w.m]=1});
+  return {ok:ok.length>=2&&Object.keys(md).length>=2,weak:sc.filter(x=>x.s<PX.TH3).map(x=>x.w)}};
+/* 근거가 약한 질문만, 약한 작품의 엔티티를 지시에 더해 한 번 다시 만든다 */
+PX.reground=async(meta,pool,tags)=>{let st=pool.map((q,n)=>PX.check(q,tags[n],meta.works));const bad=[];st.forEach((s,n)=>{if(!s.ok)bad.push(n)});
+  if(bad.length){const prompt=`아래 논술 질문은 다루는 작품의 근거가 약하다. 물음의 뼈대와 분량 표시는 지키되, 다루는 작품의 제목과 아래 요소가 질문에 분명히 드러나게 다시 쓴다. 확실하지 않은 요소는 쓰지 않는다.\n${bad.map(n=>`${n+1}번 (다루는 작품: ${(tags[n]&&tags[n].length?tags[n]:meta.works.map(w=>w.id)).join('+')}): ${pool[n]}\n  더 넣을 요소: ${(st[n].weak.length?st[n].weak:meta.works).map(w=>`${w.id} 「${w.title}」${w.ents.length?' ('+w.ents.join(', ')+')':''}`).join(' / ')}`).join('\n')}\nJSON 배열만 출력한다. 형식: [{"n":1,"q":"다시 쓴 질문"}]`;
+    const arr=await S.sample.json(prompt,{cache:false});
+    if(Array.isArray(arr))arr.forEach(x=>{const n=Number(x&&x.n)-1,t=String((x&&x.q)||'').trim();if(bad.includes(n)&&t.length>12&&!pool.includes(t))pool[n]=t});
+    st=pool.map((q,n)=>PX.check(q,tags[n],meta.works))}
+  return st.map(s=>s.ok)};
+/* 난이도 분류기(규칙 기반, 1~3)와 목표 난이도 */
+PX.diff=q=>{q=String(q||'');const k=(q.match(/비교|대조|반론|비판|평가|한계|대안|근거|관점|적용|타당|논하|논증|입장/g)||[]).length,len=q.replace(/\s/g,'').length,s=k+(len>150?1:0)+(len>220?1:0);return s<=1?1:s<=3?2:3};
+PX.target=it=>{const l=Number(it&&it.level);if(l>=1&&l<=3)return Math.round(l);const g=String((it&&it.g)||'');return /3/.test(g)?3:/2/.test(g)?2:1};
+/* 문항 교체 조건: 이력 문항과의 최대 유사도, 공통 주제와의 유사도, 난이도 차이 */
+PX.replaceOK=(c,hist,theme,target)=>{const e=PX.emb(c);let dup=0;(hist||[]).forEach(h=>{dup=Math.max(dup,PX.cos(e,PX.emb(h)))});const th=PX.cos(e,PX.emb(theme)),d=Math.abs(PX.diff(c)-target);
+  return {ok:dup<PX.DUP&&th>=PX.TH5&&d<=PX.TOL,dup,th,d,why:dup>=PX.DUP?'이미 낸 질문과 너무 비슷하다':th<PX.TH5?'공통 주제 "'+PX.q(theme)+'"가 질문에 드러나지 않는다':d>PX.TOL?'난이도가 목표 수준과 맞지 않는다':''}};
+/*PX-END*/
 async function evaluate(i,round){
   const r2=round===2;
   if(S.essayBusy||!S.sample)return;
@@ -3412,12 +3528,18 @@ async function evaluate(i,round){
     let images;
     if(d.files.length){const lim=await S.sample.limits().catch(()=>null);if(!lim||!lim.images)throw {code:'images_unavailable'};images=d.files.slice(0,lim.images.maxCount)}
     const prev=(S.progress.evalLog||[]).slice(-5);
+    if(!r2&&!d.files.length){let jk=false;try{jk=PX.junk(d.text,[question,it.topic,it.book,it.m1,it.m2].join(' '))}catch(e){}
+      if(jk){S.essayBusy='';S.essayOff={i,reason:'글이 논술 질문이나 이달의 책·영화와 이어지지 않아 보여요. 질문을 다시 읽고 써 주세요.'};renderLayers();toast('질문과 주제가 맞지 않아요. 다시 써 주세요.');return}}
+    let px={inj:[],r2:null},pxAdd='';
+    try{if(!r2)px.inj=PX.persistent(S.progress.errs,(S.progress.evalN||(S.progress.evalLog||[]).length)+1);else{const L=PX.r2List(key);if(L.length)px.r2=PX.r2Ask(L,String(e1.transcript||''),d.text)}
+      pxAdd=r2?(px.r2?px.r2.add:''):PX.p1Ask(px.inj)+PX.TYPEASK}catch(e){px={inj:[],r2:null};pxAdd=''}
     const r2x=r2&&e1?`\n\n[2차 평가 안내]\n이 글은 학생이 1차 첨삭과 모범 답안을 읽고 고쳐 쓴 2차 글이다. 1차 총점은 ${e1.total}점이다. 1차에서 지적한 고칠 점: ${(e1.improvements||[]).join(' / ')}. 1차 글:\n${String(e1.transcript||'').slice(0,2500)}\n2차 글에서 고친 점과 아직 부족한 점을 1차와 비교해 평가하고, 좋아진 부분은 구체적으로 크게 칭찬한다. 점수는 같은 기준(항목별 70~100)으로 매기되 실제로 나아진 만큼 반영한다. progress에 1차 대비 변화를 2~3문장으로 쓴다. models는 빈 배열 []로 두고 모범 답안은 쓰지 않는다(9번은 무시).`:'';
     const prompt=`너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 논술을 지도해 온 최고의 논술 강사다. 중학생 제자의 논술 과제를 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」\n- 영화: 「${it.m1}」, 「${it.m2}」\n- 이달의 주제: ${it.topic}\n- 논술 질문: ${question}${r2x}\n\n[학생 글]\n${d.text.trim()?'직접 쓴 글:\n'+d.text.trim():'직접 쓴 글: 없음'}\n${images?'첨부한 사진은 학생이 손으로 쓴 노트다. 사진 속 글을 판독해 학생의 글 전체를 transcript로 옮겨 적는다(직접 쓴 글이 있으면 함께 이어 붙인다). 오탈자나 맞춤법 오류는 고치지 말고 원문 그대로 옮긴다. 판독이 불확실한 글자는 [?]로 표시하고 unreadable에 적는다.':'transcript에는 직접 쓴 글을 그대로 넣는다.'}\n\n[최근 첨삭 기록(최대 5회)]\n${prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 총점 ${x.total}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 첨삭)'}${prepText(i,r2)}\n\n[주제 일치 확인: 가장 먼저 한다]\n학생 글이 논술 질문이나 이달의 책·영화 주제와 전혀 상관없거나 질문과 동떨어진 동문서답이면(예: 질문과 무관한 일기, 낙서, 장난, 다른 주제의 글) 첨삭하지 말고 {"offTopic":true,"reason":"왜 주제와 맞지 않는지 학생에게 다정하게 1~2문장","transcript":""}만 출력한다. 질문에 부분적으로라도 답하거나 책·영화와 연결되는 글이면 offTopic이 아니다. 조금 부족해도 주제 안에 있으면 정상적으로 첨삭한다.\n\n[첨삭 기준]\n1. spelling: 오탈자, 맞춤법, 띄어쓰기. 최대 12개. 원문 그대로 orig, 올바른 표현 fix, 이유 why(짧게).\n2. sentences: 문장별 평가. 글의 앞부분부터 고르게 골라 최대 8개(잘 쓴 문장 2개 포함). 각각 orig(transcript에 있는 그대로의 한 문장), grade("잘함"|"보통"|"고침" 중 하나), why(왜 그렇게 평가했는지 한두 문장: 주어와 서술어 호응, 길이, 접속어, 근거의 분명함 등), fix(다시 쓴 문장. "잘함"이면 빈 문자열).\n3. paragraphs: 문단 구성(서론-본론-결론, 문단 나누기, 논리 흐름)을 3~5문장으로 평가. 그리고 paraReview: transcript의 문단마다 하나씩(최대 5개) {no(문단 번호), role(이 문단의 역할 한 구절), good(잘한 점 한 문장), problem(고칠 점 한 문장), rewrite(이 문단을 학생의 논지를 그대로 살려 더 논리적으로 다시 쓴 글. 원래 분량의 100~130%, 중학생이 쓸 수 있는 문체)}.\n4. scores: 논지, 근거, 구성, 표현, 맞춤법, 적극성 각 70~100의 정수(100점 만점). 등급 기준: 최상 95~100, 상 85~94, 중 75~84, 하 70~74. 학생에게 긍정적인 동기를 주기 위해 어떤 항목도 70점 아래로 주지 않는다(총점은 항상 70점 이상). 부족한 항목도 하(70~74)로 주되 comment와 improvements에서 고칠 점은 분명히 알려 준다.\n4-0. 적극성 점수는 글이 아니라 [과제 준비 과정]을 보고 매긴다. 쓰기 전에 문제·책·영화에 대해 스스로 질문했는지와 그 질문의 수준, 메모판 로드맵(주장·근거·맺음말)을 충실하게 짰는지, 실제 글이 로드맵을 따라갔는지, 작성 시간이 권장 시간에 비해 성실했는지를 종합한다. 좋은 질문과 충실한 로드맵은 분명히 가점한다. 질문이 없었다는 이유만으로 크게 깎지는 않는다(로드맵과 글이 충실하면 85점 이상 가능). 로드맵이 한두 낱말로 성의 없거나 글과 동떨어져 있으면 감점한다. 준비 과정 자료가 거의 없으면 80점으로 한다.\n4-1. scoreWhy: 여섯 항목(논지·근거·구성·표현·맞춤법·적극성) 각각 왜 그 점수를 받았는지 {plus:[가점 요인 1~2개], minus:[감점 요인 1~2개]}로 쓴다. 각 요인은 학생 글에 실제로 나온 표현이나 구조를 짚어 한 문장(45자 안팎)으로 쓰고, 점수와 어긋나지 않게 한다(높은 점수면 가점이 중심이고, 100점에서 깎인 이유를 minus에 쓴다). 감점 요인에는 고치는 방향을 짧게 덧붙인다. 둘 다 비워 두지 않는다.\n5. comment: 총평 3~4문장.\n5-1. praise: 이 학생의 글에서 실제로 잘한 부분(글 속 표현이나 생각을 구체적으로 짚어서)을 칭찬하고 앞으로도 계속 쓰도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다. 빈 문자열 금지.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(구체적인 방법 포함).\n7. tags: 이번 글의 대표 약점 유형 키워드 최대 4개(예: "근거 부족", "띄어쓰기", "문단 나누기", "긴 문장").\n8. cumulative: 최근 기록과 이번 글을 합쳐 반복되는 실수와 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 첨삭이라고 밝히고 이번 글의 우선 과제를 쓴다.\n9. models: 같은 질문에 대한 모범 답안 2편. 서로 다른 입장이나 구성으로 쓴다. 각각 {title, text}이고 text는 600~800자. 중학생이 이해할 수 있되 최상위권 학생의 글처럼 논리가 분명해야 한다.\n10. marks: 학생 글을 원고지에 옮긴 뒤 그 위에 직접 쓰는 첨삭 표시. 최대 16개. 각각 find(transcript에 있는 그대로의 짧은 구절 2~10자. 글 전체에서 한 번만 나오는 구절이 좋다. 문장 전체를 쓰지 않는다), kind, fix, note. kind는 "delete"(빼도 되는 군더더기), "replace"(오탈자·맞춤법·어색한 표현을 fix로 고침), "insert"(find 앞에 fix를 넣음), "space"(띄어쓰기. fix에 올바른 띄어쓰기), "circle"(눈여겨볼 단어나 문장부호), "wave"(어색하거나 논리가 약한 부분. fix 없음), "good"(잘 쓴 표현), "note"(문단·문장 단위 지도) 중 하나. note는 여백에 쓰는 선생님의 짧은 한 줄 지도(20자 안팎, 이유나 방법). 글의 앞부분부터 끝까지 고르게 나눠 표시한다.\n11. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n12. transcript는 문단이 바뀔 때 줄바꿈(\n)을 넣는다.\n\nJSON 객체 하나만 출력한다. 정상 첨삭 형식:\n{"offTopic":false,"praise":"","progress":"","transcript":"","unreadable":[],"scores":{"논지":0,"근거":0,"구성":0,"표현":0,"맞춤법":0,"적극성":0},"scoreWhy":{"논지":{"plus":[""],"minus":[""]},"근거":{"plus":[""],"minus":[""]},"구성":{"plus":[""],"minus":[""]},"표현":{"plus":[""],"minus":[""]},"맞춤법":{"plus":[""],"minus":[""]},"적극성":{"plus":[""],"minus":[""]}},"comment":"","spelling":[{"orig":"","fix":"","why":""}],"sentences":[{"orig":"","grade":"고침","why":"","fix":""}],"paragraphs":"","paraReview":[{"no":1,"role":"","good":"","problem":"","rewrite":""}],"strengths":[],"improvements":[],"tags":[],"cumulative":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"teacher":"","models":[{"title":"","text":""},{"title":"","text":""}]}`;
-    const ev=await S.sample.json(prompt,{images,cache:false,onText:({text})=>{const el=$('#es-msg');if(el)el.textContent='첨삭 중이에요… ('+text.length+'자 작성됨)'}});
+    const ev=await S.sample.json(prompt+pxAdd,{images,cache:false,onText:({text})=>{const el=$('#es-msg');if(el)el.textContent='첨삭 중이에요… ('+text.length+'자 작성됨)'}});
     if(ev&&ev.offTopic===true){S.essayBusy='';S.essayOff={i,reason:String(ev.reason||'').slice(0,300)};renderLayers();toast('질문과 주제가 맞지 않아요. 다시 써 주세요.');return}
     if(!ev||typeof ev!=='object'||!ev.scores||typeof ev.transcript!=='string')throw {code:'invalid_json'};
     S.essayOff=null;
+    try{await PX.after(ev,{r2,key,inj:px.inj,r2x:px.r2,text:String(ev.transcript||d.text||'')})}catch(e){}
     ev.scores=Object.fromEntries(Object.entries(ev.scores).map(([k,v])=>[k,Math.max(70,Math.min(100,scv(v)))]));
     const nums=Object.values(ev.scores).map(Number).filter(x=>!isNaN(x));
     const total=nums.length?Math.round(nums.reduce((a,b)=>a+b,0)/nums.length):0;
@@ -3583,7 +3705,7 @@ function evalHTML(){
   <div class="ev-sum"><div class="ev-s1">
       <p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
       ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
-    <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${esc(ev.progress)}</p>`:''}${ev.teacher?`<blockquote class="ev-t">${esc(ev.teacher)}</blockquote>`:''}</div></div>
+    <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${esc(ev.progress)}</p>`:''}${PX.html(ev)}${ev.teacher?`<blockquote class="ev-t">${esc(ev.teacher)}</blockquote>`:''}</div></div>
   <div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
     ${!r2&&rwLeft(ev)?`<small class="hint">${esc(rwHint(ev))}</small>`:''}${S.downloads?'':'<small class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</small>'}</div>
   ${D('원고지 첨삭',`<p class="evq">${qShowHTML(ev)}</p>${ev.writeSec||ev.asked!=null?`<p class="hint">${ev.asked!=null?'쓰기 전 질문 '+ev.asked+'개 · 계획 작성 · ':''}쓴 시간 ${ev.writeSec?fmtSw(ev.writeSec):'기록 없음'}</p>`:''}<p class="hint">파란색은 고친 곳, 초록색은 선생님 메모예요. 손가락으로 크게 볼 수 있어요.</p>${mnSheets(ev).map(h=>`<div class="mnw">${h}</div>`).join('')}`,'',innerWidth>=720)}
@@ -5349,6 +5471,8 @@ try{
     if(u&&typeof u.can==='function'){try{S.canWrite=await u.can('data.write')}catch(e){}}
   }
 }catch(e){}
+/* 회귀 시험용 손잡이: 시험 스크립트가 미리 window.__002TEST를 둔 때만 넘긴다 */
+if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,items,nk,prepOf,rwLeft});
 S.dbState=S.db?'ok':'none';
 if(S.db){
   // 계획표와 설정(요금·공지·차단 목록)은 서로 기다릴 필요가 없어 함께 불러온다. 로그인(enter)은 둘 다 받은 뒤에
