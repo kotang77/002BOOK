@@ -69,6 +69,14 @@ fs.writeFileSync(path.join(DIST, 'runtime/config.js'),
 const brandIcon = path.join(ROOT, 'web/brand/app-icon.png'); // 아이콘이 바뀌어도 서비스 워커 캐시가 새로 만들어지게 빌드 번호에 넣는다
 const buildId = crypto.createHash('sha256').update(html + fs.readFileSync(path.join(ROOT, 'web/runtime/claude-shim.js'))).update(fs.existsSync(brandIcon) ? fs.readFileSync(brandIcon) : '').digest('hex').slice(0, 10);
 const sw = path.join(DIST, 'sw.js'); fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace('__BUILD_ID__', buildId));
+// 아이콘·매니페스트 주소에 빌드 번호를 붙여, 휴대폰 크롬이 예전 아이콘을 캐시에서 다시 쓰지 않게 한다
+{ const mf = path.join(DIST, 'manifest.webmanifest');
+  if (fs.existsSync(mf)) fs.writeFileSync(mf, fs.readFileSync(mf, 'utf8').replace(/"src": "(\/icons\/[^"?]+\.png)"/g, `"src": "$1?v=${buildId}"`));
+  for (const f of fs.readdirSync(DIST).filter((x) => x.endsWith('.html'))) {
+    const p = path.join(DIST, f); const t = fs.readFileSync(p, 'utf8');
+    const u = t.replace(/(href|src)="(\/icons\/[^"?]+\.png)"/g, `$1="$2?v=${buildId}"`).replace(/href="(\/manifest\.webmanifest)"/g, `href="$1?v=${buildId}"`);
+    if (u !== t) fs.writeFileSync(p, u);
+  } }
 const REPL = {
   __BUSINESS_INFO__: opLine, __BIZ_NAME__: biz.name || (FREE ? '002BOOK 운영자' : '002BOOK'), __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
   __PRIVACY_OFFICER__: biz.privacyOfficer || biz.owner || '(개인정보 보호책임자)', __PRIVACY_EMAIL__: biz.privacyEmail || biz.email || 'help@002book.com',

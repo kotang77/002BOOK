@@ -4,7 +4,8 @@ const CORE = ['/', '/index.html', '/manifest.webmanifest', '/runtime/config.js',
 const CACHE = '002book-' + VERSION;
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
+  // 브라우저 HTTP 캐시를 건너뛰고 서버에서 새로 받아 둔다(예전 아이콘이 새 캐시에 섞이지 않게)
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k.startsWith('002book-') && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
