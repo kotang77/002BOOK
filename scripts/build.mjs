@@ -66,7 +66,8 @@ fs.writeFileSync(path.join(DIST, 'index.html'), html);
 fs.writeFileSync(path.join(DIST, '404.html'), html);
 fs.writeFileSync(path.join(DIST, 'runtime/config.js'),
   `window.__002CFG=${JSON.stringify({ api: SUPA ? SUPA.replace(/\/$/, '') + '/functions/v1/api' : '', anon: ANON, toss: cfg.tossClientKey || '', free: FREE })};\n`);
-const buildId = crypto.createHash('sha256').update(html + fs.readFileSync(path.join(ROOT, 'web/runtime/claude-shim.js'))).digest('hex').slice(0, 10);
+const brandIcon = path.join(ROOT, 'web/brand/app-icon.png'); // 아이콘이 바뀌어도 서비스 워커 캐시가 새로 만들어지게 빌드 번호에 넣는다
+const buildId = crypto.createHash('sha256').update(html + fs.readFileSync(path.join(ROOT, 'web/runtime/claude-shim.js'))).update(fs.existsSync(brandIcon) ? fs.readFileSync(brandIcon) : '').digest('hex').slice(0, 10);
 const sw = path.join(DIST, 'sw.js'); fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace('__BUILD_ID__', buildId));
 const REPL = {
   __BUSINESS_INFO__: opLine, __BIZ_NAME__: biz.name || (FREE ? '002BOOK 운영자' : '002BOOK'), __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
@@ -90,10 +91,15 @@ try {
   const icon = Buffer.from(m[1], 'base64'); const full = Buffer.from(m2[1], 'base64');
   const bg = { r: 243, g: 236, b: 223, alpha: 1 };
   const dir = path.join(DIST, 'icons'); fs.mkdirSync(dir, { recursive: true });
-  for (const s of [192, 512]) await sharp(icon).resize(s, s, { fit: 'contain', background: bg }).flatten({ background: bg }).png().toFile(path.join(dir, `icon-${s}.png`));
-  await sharp(icon).resize(180, 180, { fit: 'contain', background: bg }).flatten({ background: bg }).png().toFile(path.join(dir, 'apple-touch-icon.png'));
-  const inner = await sharp(icon).resize(400, 400, { fit: 'contain', background: bg }).flatten({ background: bg }).png().toBuffer();
-  await sharp({ create: { width: 512, height: 512, channels: 4, background: bg } }).composite([{ input: inner, gravity: 'center' }]).png().toFile(path.join(dir, 'maskable-512.png'));
+  // 홈 화면·앱 설치 아이콘: web/brand/app-icon.png(투명 배경 원형 로고)를 흰 바탕에 올린다. 없으면 앱 안의 로고를 쓴다
+  const brand = path.join(ROOT, 'web/brand/app-icon.png');
+  const src = fs.existsSync(brand) ? fs.readFileSync(brand) : icon;
+  const white = { r: 255, g: 255, b: 255, alpha: 1 };
+  const onBg = async (size, ratio) => { const inner = Math.round(size * ratio); const lg = await sharp(src).resize(inner, inner, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } }).png().toBuffer();
+    return sharp({ create: { width: size, height: size, channels: 4, background: white } }).composite([{ input: lg, gravity: 'center' }]).flatten({ background: white }).png(); };
+  for (const s of [192, 512]) await (await onBg(s, 0.92)).toFile(path.join(dir, `icon-${s}.png`));
+  await (await onBg(180, 0.88)).toFile(path.join(dir, 'apple-touch-icon.png'));
+  await (await onBg(512, 0.76)).toFile(path.join(dir, 'maskable-512.png')); // 마스크 안전 영역(지름 80%) 안에 들어가게
   const logo = await sharp(full).resize(null, 560, { fit: 'contain', background: bg }).png().toBuffer();
   await sharp({ create: { width: 1200, height: 630, channels: 4, background: bg } }).composite([{ input: logo, gravity: 'center' }]).png().toFile(path.join(dir, 'og.png'));
   await sharp({ create: { width: 1024, height: 500, channels: 4, background: bg } }).composite([{ input: await sharp(full).resize(null, 460).png().toBuffer(), gravity: 'center' }]).png().toFile(path.join(dir, 'play-feature.png'));
