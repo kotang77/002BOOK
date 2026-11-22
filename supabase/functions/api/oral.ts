@@ -25,7 +25,13 @@ export const ORAL = {
   EMAX: 0.3,       // 수정 비율 기준값
   ITEMS: ['이해', '논리', '근거', '표현', '전달력', '태도'],
 };
-const THINK = () => Math.max(1, Number(env('ORAL_THINK_SEC', '180')));
+const THINK = () => Math.max(1, Number(env('ORAL_THINK_SEC', '180')));          // 숙고 시간 상한: 이 시간이 지나면 저절로 2차 답변이 열린다
+const THINK_MIN = () => Math.min(THINK(), Math.max(1, Number(env('ORAL_THINK_MIN_SEC', '60')))); // 숙고 시간 하한: 이 시간 전에는 어떤 경우에도 2차 답변을 받지 않는다
+/* 잠금 해제 시각: 하한이 지난 뒤 학생이 '생각 완료'를 누른 시각, 누르지 않으면 상한. 서버 시계로만 판단한다 */
+const unlockAt = (sh: Record<string, unknown>, s: { think: number; thinkMin?: number }) => {
+  const at = Number(sh.at), min = at + (s.thinkMin ?? THINK_MIN()) * 1000, max = at + s.think * 1000;
+  return sh.doneAt ? Math.min(max, Math.max(min, Number(sh.doneAt))) : max;
+};
 
 /* ---------- 문자열 지표 ---------- */
 const KEEP = /[0-9A-Za-z가-힣]/;
@@ -116,7 +122,7 @@ const checkKey = (k: unknown) => { const s = String(k ?? ''); if (!KEY.test(s)) 
 const checkN = (n: unknown) => { const v = Number(n); if (!Number.isInteger(v) || v < 0 || v >= ORAL.N) fail('bad_request', '잘못된 문항이에요.'); return v; };
 const str = (v: unknown, max: number) => String(v ?? '').slice(0, max);
 const arr = (v: unknown) => (Array.isArray(v) ? v : []);
-type St = { uid: string; key: string; st: number[]; sh: (Record<string, unknown> | null)[]; ans2: (Record<string, unknown> | null)[]; tries: number[]; think: number; at: number };
+type St = { uid: string; key: string; st: number[]; sh: (Record<string, unknown> | null)[]; ans2: (Record<string, unknown> | null)[]; tries: number[]; think: number; thinkMin?: number; at: number };
 
 async function loadState(io: OralIO, uid: string, key: string) {
   const p = `oralst/${uid}_${key}`;
@@ -130,7 +136,7 @@ async function loadState(io: OralIO, uid: string, key: string) {
   const sh = arr(a.sh).slice(0, ORAL.N) as (Record<string, unknown> | null)[];
   const ans2 = arr(a.ans2).slice(0, ORAL.N) as (Record<string, unknown> | null)[];
   const st = Array.from({ length: ORAL.N }, (_, n) => (r2 ? 5 : ans2[n] ? 4 : sh[n] ? 3 : 2));
-  const s: St = { uid, key, st, sh: Array.from({ length: ORAL.N }, (_, n) => sh[n] ?? null), ans2: Array.from({ length: ORAL.N }, (_, n) => ans2[n] ?? null), tries: [0, 0, 0], think: THINK(), at: Date.now() };
+  const s: St = { uid, key, st, sh: Array.from({ length: ORAL.N }, (_, n) => sh[n] ?? null), ans2: Array.from({ length: ORAL.N }, (_, n) => ans2[n] ?? null), tries: [0, 0, 0], think: THINK(), thinkMin: THINK_MIN(), at: Date.now() };
   await io.write(p, s as unknown as Record<string, unknown>, uid, null);
   return { row: await io.read(p), st: s };
 }
@@ -146,7 +152,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
 
   if (op === 'oral.state') {
     const { st } = await loadState(io, uid, key);
-    return { state: st, now: Date.now(), think: THINK(), cfg: { TS: ORAL.TS, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L } };
+    return { state: st, now: Date.now(), think: st?.think ?? THINK(), thinkMin: st?.thinkMin ?? THINK_MIN(), cfg: { TS: ORAL.TS, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L } };
   }
 
   if (op === 'oral.save1') {
@@ -170,7 +176,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     });
     const out = { ...rec, scores, total, answers: outA, uid, round: 1, at: Date.now() };
     await io.write(p1, out, uid, null);
-    const s: St = { uid, key, st: [2, 2, 2], sh: [null, null, null], ans2: [null, null, null], tries: [0, 0, 0], think: THINK(), at: Date.now() };
+    const s: St = { uid, key, st: [2, 2, 2], sh: [null, null, null], ans2: [null, null, null], tries: [0, 0, 0], think: THINK(), thinkMin: THINK_MIN(), at: Date.now() };
     await io.write(`oralst/${uid}_${key}`, s as unknown as Record<string, unknown>, uid, await io.read(`oralst/${uid}_${key}`));
     return { rec: out };
   }
@@ -197,7 +203,18 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     s.sh[n] = { at, acc: accP, sec, text, raw, mime: str(b.mime, 60), audio: !!b.audio, q: M.slice(0, 1200) };
     s.st[n] = 3;
     await saveState(io, uid, key, s, row);
-    return { ok: true, acc: accP, at, think: s.think, now: at };
+    return { ok: true, acc: accP, at, think: s.think, thinkMin: s.thinkMin ?? THINK_MIN(), now: at };
+  }
+
+  if (op === 'oral.thinkDone') {
+    // 생각 완료: 숙고 하한이 지났을 때만 받아들이고, 그 시각(서버 시계)을 잠금 해제 시각으로 기록한다
+    const n = checkN(b.n);
+    const sh = s.sh[n];
+    if (!sh || s.st[n] !== 3) fail('bad_state', '생각 시간이 아니에요.', 409);
+    const now = Date.now(); const min = Number(sh!.at) + (s.thinkMin ?? THINK_MIN()) * 1000;
+    if (now < min) fail('think_lock', `최소 생각 시간이 ${Math.ceil((min - now) / 1000)}초 남았어요.`, 409, { left: Math.ceil((min - now) / 1000) });
+    if (!sh!.doneAt) { sh!.doneAt = Math.min(now, Number(sh!.at) + s.think * 1000); sh!.thinkSec = Math.round((Number(sh!.doneAt) - Number(sh!.at)) / 1000); await saveState(io, uid, key, s, row); }
+    return { ok: true, doneAt: sh!.doneAt, thinkSec: sh!.thinkSec, now };
   }
 
   if (op === 'oral.ans2') {
@@ -206,8 +223,8 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     if (await io.read(p2)) fail('bad_state', '2차 평가를 이미 마쳤어요.', 409);
     const sh = s.sh[n];
     if (!sh) fail('bad_state', '모범 답안 따라 읽기를 먼저 해 주세요.', 409);
-    const now = Date.now(); const until = Number(sh!.at) + s.think * 1000;
-    if (now < until) fail('think_lock', `생각 시간이 ${Math.ceil((until - now) / 1000)}초 남았어요.`, 409, { left: Math.ceil((until - now) / 1000) });
+    const now = Date.now(); const until = unlockAt(sh!, s);
+    if (now < until) fail('think_lock', `생각 시간이 ${Math.ceil((until - now) / 1000)}초 남았어요. 생각을 마쳤으면 '생각 완료'를 눌러 주세요.`, 409, { left: Math.ceil((until - now) / 1000) });
     if (b.edit) {
       const cur = s.ans2[n]; if (!cur) fail('bad_state', '먼저 다시 대답해 주세요.', 409);
       s.ans2[n] = { ...cur!, text: str(b.text, 4000) };
@@ -230,7 +247,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
   const ready = () => {
     if (s.ans2.some((x) => !x || !String(x.text ?? '').trim())) fail('bad_state', '세 질문에 모두 다시 대답해 주세요.', 409);
     const now = Date.now();
-    if (s.sh.some((x) => !x || now < Number(x.at) + s.think * 1000)) fail('think_lock', '생각 시간이 끝나지 않은 질문이 있어요.', 409);
+    if (s.sh.some((x) => !x || now < unlockAt(x, s))) fail('think_lock', '생각 시간이 끝나지 않은 질문이 있어요.', 409);
   };
 
   if (op === 'oral.prep2') { ready(); return { items: items(), cfg: ORAL }; }
@@ -263,7 +280,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
         no: n + 1, q: str(A1[n]?.q, 400), text: str(a2.text, 4000), sec: Number(a2.sec) || 0, chars: m.chars2, cpm: m.c2, fill: m.fills2, audio: !!a2.audio,
         summary: str(x.summary, 400), improved: str(x.improved, 600), still: str(x.still, 600), marks: arr(x.marks).slice(0, 8), sentences: arr(x.sentences).slice(0, 3),
         growth: G, calc: { gai, Gd: Math.round(Gd * 10) / 10, Gh: useH ? Math.round(Gh * 10) / 10 : null, P, Sm: m.Sm, Smu: m.Smu, So: m.So, Lmax: m.Lmax, E1: m.E1, E2: m.E2 },
-        copied: m.copied, marked: m.marked, shAcc: sh.acc ?? null, shSec: Number(sh.sec) || 0, shAudio: !!sh.audio,
+        copied: m.copied, marked: m.marked, shAcc: sh.acc ?? null, shSec: Number(sh.sec) || 0, shAudio: !!sh.audio, thSec: sh.at ? Math.round((unlockAt(sh, s) - Number(sh.at)) / 1000) : null,
       };
     });
     const growth = Math.round(answers.reduce((x, a) => x + a.growth, 0) / answers.length);
@@ -273,7 +290,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     Object.assign(rec, {
       scores, total: T2, growth, answers, firstTotal: T1, firstScores: e1.scores, at: Date.now(), firstAt: e1.at,
       title: e1.title, g: e1.g, m: e1.m, kw: e1.kw ?? '', uid, round: 2,
-      calc: { version: 1, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L, PEN: ORAL.PEN, A: ORAL.A, B: ORAL.B, G: ORAL.G, think: s.think },
+      calc: { version: 1, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L, PEN: ORAL.PEN, A: ORAL.A, B: ORAL.B, G: ORAL.G, think: s.think, thinkMin: s.thinkMin ?? THINK_MIN(), thinkSec: s.sh.map((x) => x ? Math.round((unlockAt(x, s) - Number(x.at)) / 1000) : null) },
     });
     await io.write(p2, rec, uid, null);
     s.st = s.st.map(() => 5);

@@ -411,7 +411,7 @@ async function handle(req: Request, b: Record<string, unknown>) {
     }
     case 'push.unsub': { const uid = need(ctx); await removeSub(uid, b.endpoint ? String(b.endpoint) : undefined); return { ok: true }; }
     case 'push.test': { const uid = need(ctx); return { sent: await pushTo(uid, { title: '002BOOK 알림 확인', body: '이제 이 기기에서 002BOOK 알림을 받을 수 있어요.', url: '/' }) }; }
-    case 'oral.state': case 'oral.save1': case 'oral.shadow': case 'oral.ans2': case 'oral.prep2': case 'oral.finalize':
+    case 'oral.state': case 'oral.save1': case 'oral.shadow': case 'oral.thinkDone': case 'oral.ans2': case 'oral.prep2': case 'oral.finalize':
       return oralOp(String(b.op), need(ctx), b, { read: readRow, write: writeRow });
     case 'oral.report': return oralReport(ctx, b);
 

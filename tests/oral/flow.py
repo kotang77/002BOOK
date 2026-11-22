@@ -47,6 +47,13 @@ def rec(pg,sel):
 def openOral(pg):
     pg.evaluate("document.querySelector('[data-act=month][data-i=\"0\"]').click()"); time.sleep(.8)
     pg.evaluate("document.querySelector('[data-act=stab][data-v=oral]').click()"); pg.wait_for_selector('.orcard, .orq',timeout=20000); time.sleep(.5)
+def wait(f,n=40):
+    for _ in range(n):
+        try:
+            if f(): return True
+        except Exception: pass
+        time.sleep(.25)
+    return False
 with sync_playwright() as p:
     b=p.chromium.launch(executable_path='/usr/bin/google-chrome',args=['--no-sandbox','--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream'])
     ctx=b.new_context(**({'viewport':{'width':1280,'height':860},'device_scale_factor':1} if MODE=='desktop' else {'viewport':{'width':390,'height':844},'device_scale_factor':2}),locale='ko-KR',accept_downloads=True,permissions=['microphone'],service_workers='block')
@@ -85,7 +92,8 @@ with sync_playwright() as p:
     ok('1차 녹음 잠김',pg.locator('[data-m="1"]').count()==0)
     pg.screenshot(path=OUT+'1_r2start.png')
     for n in range(3): rec(pg,f'[data-act=orrec][data-n="{n}"][data-m="s"]')
-    ok('3분 생각 타이머',pg.locator('[data-cd]').count()==3, pg.inner_text('.orcd'))
+    ok('생각 타이머',pg.locator('.orcd[data-cd]').count()==3, pg.inner_text('.orcd'))
+    ok('생각 완료 버튼(최소 시간 전 잠김)',pg.locator('.orthd').count()==3 and pg.locator('.orthd[disabled]').count()>=1, pg.locator('.orthd').count())
     ok('다시 대답 아직 잠김',pg.locator('[data-m="2"]').count()==0)
     pg.locator('.orq').first.screenshot(path=OUT+'2_think.png')
     pg.fill('textarea[data-ormemo="0"]','결론: 옳았다 / 근거: 용기, 가족'); time.sleep(1.2)
@@ -98,6 +106,18 @@ with sync_playwright() as p:
     r=api('db.set',tok,path='orals/oralkid_b0_r2',data={'uid':'oralkid','growth':100}); ok('2차 평가 직접 쓰기 거부','error' in r,r)
     r=api('oral.shadow',tok,key='b0',n=0,text='전혀 상관없는 엉뚱한 말만 길게 늘어놓았어요 오늘 날씨가 좋네요',sec=5); ok('따라 읽기 정확도 미달 거부',r.get('result',{}).get('ok') is False and r['result'].get('need')==50,r)
     st2=api('oral.state',tok,key='b0')['result']['state']; ok('미달 시 기존 통과 기록 유지',st2['sh'][0]['at']==st['state']['sh'][0]['at'])
+    # 생각 완료: 최소 시간 전에는 서버가 거부하고, 지난 뒤 누르면 그 질문만 바로 다시 대답할 수 있다
+    sh2=st['state']['sh'][2]; ok('최소 시간 정보',st.get('thinkMin') and st['thinkMin']<st['think'],st.get('thinkMin'))
+    s3=api('oral.state',tok,key='b0')['result']
+    if s3['now']<sh2['at']+st['thinkMin']*1000:
+        r=api('oral.thinkDone',tok,key='b0',n=2); ok('최소 시간 전 생각 완료 거부',r.get('error',{}).get('code')=='think_lock',r)
+    time.sleep(max(0,(sh2['at']+st['thinkMin']*1000-s3['now'])/1000)+1.5)
+    ok('최소 시간이 지나면 생각 완료 버튼 열림',pg.locator('[data-act=orthd][data-n="2"]').count()==1)
+    pg.evaluate("document.querySelector('[data-act=orthd][data-n=\"2\"]').click()")
+    ok('생각 완료를 누른 질문만 다시 대답 열림',wait(lambda: pg.locator('[data-act=orrec][data-m="2"][data-n="2"]').count()==1) and pg.locator('[data-act=orrec][data-m="2"]').count()==1, pg.locator('[data-act=orrec][data-m="2"]').count())
+    s4=api('oral.state',tok,key='b0')['result']['state']; ok('생각 완료 시각 서버 기록',s4['sh'][2].get('doneAt') and s4['sh'][2].get('thinkSec')>=st['thinkMin'],s4['sh'][2].get('thinkSec'))
+    if s3['now']<st['state']['sh'][1]['at']+st['think']*1000-2000:
+        r=api('oral.ans2',tok,key='b0',n=1,text='몰래 먼저 대답',sec=5); ok('누르지 않은 질문은 여전히 잠김',r.get('error',{}).get('code')=='think_lock',r)
     left=max(0,(max(x['at'] for x in st['state']['sh'])+st['think']*1000-st['now'])/1000)+1; time.sleep(left)
     ok('생각 시간이 끝나면 새로고침 없이 다시 대답하기 열림',pg.locator('[data-act=orrec][data-m="2"]').count()==3, pg.locator('[data-act=orrec][data-m="2"]').count())
     ok('생각 끝 안내',pg.locator('.orthink.done').count()==3)
