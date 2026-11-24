@@ -10,7 +10,7 @@
 | 무료 / 유료 | **무료** (인앱 결제 없음) |
 | 개인정보처리방침 URL | https://002book.com/privacy.html |
 | 계정 삭제 URL | https://002book.com/delete-account.html |
-| 문의 이메일 | 002book@gmail.com |
+| 문의 이메일 | 002book.korea@gmail.com |
 | 웹사이트 | https://002book.com |
 
 ## 1. 스토어 설명
