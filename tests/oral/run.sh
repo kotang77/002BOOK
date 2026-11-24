@@ -8,7 +8,7 @@ DENO="${DENO:-deno}"
 WEB=/tmp/002web
 cd "$ROOT" && node scripts/build.mjs | tail -1 || exit 1
 pkill -f "unstable-sloppy-imports index.ts" 2>/dev/null; pkill -f "m http.server 8080" 2>/dev/null; sleep 1
-( cd "$ROOT/supabase/functions/api" && ORAL_THINK_SEC=25 ORAL_THINK_MIN_SEC=10 FAKE_DB=1 FAKE_MAIL=1 FAKE_PUSH=1 FAKE_AI="$(cat "$ROOT/tests/oral/fakeai.json")" FAKE_AI_MAP="$(cat "$ROOT/tests/oral/fakeai_map.json")" FAKE_NL="$(cat "$ROOT/tests/oral/fakenl.json")" \
+( cd "$ROOT/supabase/functions/api" && ORAL_THINK_SEC=25 ORAL_THINK_MIN_SEC=10 FAKE_DB=1 FAKE_MAIL=1 FAKE_PUSH=1 FAKE_AI="$(cat "$ROOT/tests/oral/fakeai.json")" FAKE_AI_MAP="$(cat "$ROOT/tests/oral/fakeai_map.json")" FAKE_NL="$(cat "$ROOT/tests/oral/fakenl.json")" FAKE_ART="$(cat "$ROOT/tests/oral/fakeart.json")" \
   setsid nohup "$DENO" run -A --unstable-sloppy-imports index.ts > /tmp/api.log 2>&1 < /dev/null & ) > /dev/null 2>&1
 rm -rf "$WEB" && cp -r "$ROOT/dist" "$WEB"
 sed -i 's#"api":"[^"]*"#"api":"http://localhost:8000"#' "$WEB/runtime/config.js"

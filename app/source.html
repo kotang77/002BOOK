@@ -1229,7 +1229,7 @@ body::before{background:#fff}
 /* 홈: 이번 달 큰 카드 */
 .hm{display:grid;grid-template-columns:minmax(0,1fr);border:1px solid #ECEEF1;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(31,35,40,.06);margin:4px 0 16px;background:#fff}
 .hm-art{display:block;height:132px;border-radius:0}
-.hm-art.img{background:var(--soft) center/cover no-repeat}
+.hm-art.img{background:var(--soft) center/contain no-repeat}
 .hm-b{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px}
 .hm-k{font-size:12px;color:var(--muted);font-weight:500}
 .hm-k b{color:var(--rose-ink)}
@@ -1904,12 +1904,35 @@ function shellHTML(){
     <nav class="nav" aria-label="메뉴">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${IC[k]}<span>${n}</span>${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</nav>`;
 }
 const BOOKG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>';
-const coverOf=title=>S.covers[hid(title)]||'';
+/* ---------- 표지·포스터 자동 (서버 media.art: 국립중앙도서관·카카오 책 표지, TMDB·KMDb 영화 포스터) ----------
+   제목으로 찾으므로 코스의 책·영화가 바뀌면 그 자리에서 새로 찾는다. 회원이 직접 올린 표지(covers)가 있으면 그것이 먼저다.
+   결과는 기기에 7일(못 찾음은 1일) 기억하고, 서버도 같은 기간 캐시한다 */
+const ART=(()=>{try{return JSON.parse(localStorage.getItem('yw.art')||'{}')||{}}catch(e){return {}}})();
+const ARTP={};let artQ=[],artRun=0,artT=null,artSaveT=null;
+function artOf(title,kind,yr){
+  if(!title)return '';const h=hid(title);if(S.covers&&S.covers[h])return S.covers[h];
+  const k=(kind==='movie'?'m':'b')+h;const v=ART[k];
+  if(!(v&&Date.now()-v.t<(v.u?7:1)*864e5))artWant(k,{kind:kind==='movie'?'movie':'book',title:bTitle(title),author:kind==='movie'?'':bAuthor(title),year:yr?String(yr):''});
+  return (v&&v.u)||'';
+}
+function artWant(k,q){if(S.artOff||!S.id||ARTP[k])return;ARTP[k]=1;artQ.push({k,q});setTimeout(artPump,0)}
+function artPump(){const SV=window.__002&&window.__002.server;if(!SV)return;
+  while(artRun<3&&artQ.length&&!S.artOff){const {k,q}=artQ.shift();artRun++;
+    SV.call('media.art',q).then(r=>{const u=(r&&r.url)||'';const old=ART[k];ART[k]={u,t:Date.now()};if(!old||old.u!==u)artDirty();else artSave()})
+      .catch(e=>{if(e&&(e.code==='art_not_configured'||e.code==='rate_limited'))S.artOff=e.code})
+      .finally(()=>{delete ARTP[k];artRun--;artPump()})}}
+function artSave(){clearTimeout(artSaveT);artSaveT=setTimeout(()=>{try{localStorage.setItem('yw.art',JSON.stringify(ART))}catch(e){}},800)}
+function artDirty(){artSave();clearTimeout(artT);artT=setTimeout(()=>{const a=document.activeElement;if(S.wr||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))return;if(S.sheet)renderLayers();else render()},500)}
+const coverOf=title=>artOf(title,'book');
+/* 자동으로 찾은 그림 주소가 열리지 않으면(지워졌거나 막힘) 그 그림은 하루 동안 쓰지 않고 도형 그림으로 바꾼다 */
+document.addEventListener('error',e=>{const im=e.target;if(!im||im.tagName!=='IMG')return;const src=im.getAttribute('src')||'';
+  const k=Object.keys(ART).find(x=>ART[x]&&ART[x].u&&ART[x].u===src);if(!k)return;ART[k]={u:'',t:Date.now(),bad:1};im.style.visibility='hidden';artDirty()},true);
+const yearOf=(it,t)=>{const x=it&&(it.m1===t?it.m1Info:it.m2===t?it.m2Info:null);return x&&x.year||''};
 const coverInner=it=>{const img=coverOf(it.book);return img?`<img src="${img}" alt="${esc(it.book)} 표지">`:`<span class="phd">${BOOKG}<span>${esc(it.genre)}</span></span>`};
 function coverBlock(it){
-  const h=hid(it.book);const has=!!S.covers[h];const p=GP[(items().indexOf(it)+GP.length)%GP.length];
+  const h=hid(it.book);const has=!!S.covers[h];const auto=!has&&!!coverOf(it.book);const p=GP[(items().indexOf(it)+GP.length)%GP.length];
   return `<div class="cvrow"><span class="cvimg big" style="--a:${p[0]};--b:${p[1]}">${coverInner(it)}</span>
-    <div class="cvside"><p class="hint">${has?'올려 둔 표지예요. 더 잘 나온 사진이 있으면 바꿀 수 있어요.':'아직 표지가 없어요. 책 표지를 찍거나 서점 화면을 캡처해서 올리면 모두에게 보여요.'}</p>
+    <div class="cvside"><p class="hint">${has?'올려 둔 표지예요. 더 잘 나온 사진이 있으면 바꿀 수 있어요.':auto?'자동으로 찾은 표지예요. 다른 판본 표지를 올리면 그것으로 바뀌어요.':'아직 표지가 없어요. 책 표지를 찍거나 서점 화면을 캡처해서 올리면 모두에게 보여요.'}</p>
     <label class="btn ghost small up">${has?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label></div></div>`;
 }
 /* 사진 속 표지의 네 모서리를 찾아 반듯한 직사각형으로 펴는 보정 */
@@ -2019,9 +2042,9 @@ async function coverUpload(h,file){
 }
 const FILMG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></svg>';
 function posterBlock(title,i){
-  const h=hid(title);const has=!!S.covers[h];const p=GP[(i+3)%GP.length];
-  return `<div class="cvrow"><span class="cvimg big" style="--a:${p[0]};--b:${p[1]}">${has?`<img src="${S.covers[h]}" alt="${esc(title)} 포스터">`:`<span class="phd">${FILMG}<span>${esc(title)}</span></span>`}</span>
-    <div class="cvside"><p class="hint">${has?'올려 둔 포스터예요. 더 잘 나온 이미지가 있으면 바꿀 수 있어요.':'아직 포스터가 없어요. 포스터 이미지를 저장하거나 화면을 캡처해서 올리면 모두에게 보여요.'}</p>
+  const h=hid(title);const up=!!S.covers[h];const img=artOf(title,'movie',yearOf(items()[i],title));const has=!!img;const p=GP[(i+3)%GP.length];
+  return `<div class="cvrow"><span class="cvimg big" style="--a:${p[0]};--b:${p[1]}">${has?`<img src="${img}" alt="${esc(title)} 포스터">`:`<span class="phd">${FILMG}<span>${esc(title)}</span></span>`}</span>
+    <div class="cvside"><p class="hint">${has&&!up?'자동으로 찾은 포스터예요. 다른 이미지를 올리면 그것으로 바뀌어요.':has?'올려 둔 포스터예요. 더 잘 나온 이미지가 있으면 바꿀 수 있어요.':'아직 포스터가 없어요. 포스터 이미지를 저장하거나 화면을 캡처해서 올리면 모두에게 보여요.'}</p>
     <label class="btn ghost small up">${has?'포스터 바꾸기':'포스터 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label></div></div>`;
 }
 function bulkMap(){
@@ -2325,12 +2348,12 @@ function qHTML(i){
 function monthHTML(i){
   const it=items()[i];const n=S.progress.notes[nk(i)]||{};const tab=S.sheetTab||'work';const p=GP[i%GP.length];
   const item=(k,t,name,cls)=>{const key=ik(i,k);const on=!!S.progress.done[key];const st=(S.progress.started||{})[key];
-    const th=cls==='tk'&&coverOf(name)?`<img class="pth" src="${coverOf(name)}" alt="">`:'';
+    const art=artOf(name,k==='book'?'book':'movie',k==='book'?'':yearOf(it,name));const th=cls==='tk'&&art?`<img class="pth" src="${art}" alt="">`:'';
     const r=on?readStat(i,k):null;const md=x=>new Date(x).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'});
     const info=on?(r?`${r.days}일 만에 완료${r.ppd?` · 하루 ${r.ppd}쪽`:''}`:'완료'):st?`${md(st)} 시작 · ${Math.max(1,Math.ceil((Date.now()-st)/864e5))}일째`:'';
     const pg=on&&k==='book'&&r&&!r.pg?(S.pgBusy===key?'<span class="pgin hint">책 쪽수를 찾고 있어요…</span>':`<span class="pgin"><input id="pg-${i}" type="number" inputmode="numeric" min="1" max="4999" placeholder="책 페이지" aria-label="책 총 쪽수"><button class="chip" data-act="pgsave" data-i="${i}">하루 읽은 페이지</button></span>`):'';
     if(cls==='bk2')return `<div class="item bk2"><small class="tkh">${t}${info?' · '+info:''}</small>
-      <div class="tkm">${coverOf(name)?`<img class="pth" src="${coverOf(name)}" alt="">`:''}<button class="nm" data-act="info" data-i="${i}" data-k="${k}"><strong>${esc(name)}</strong></button></div>
+      <div class="tkm">${art?`<img class="pth" src="${art}" alt="">`:''}<button class="nm" data-act="info" data-i="${i}" data-k="${k}"><strong>${esc(name)}</strong></button></div>
       <div class="tkb bkb"><button class="rb tki" data-act="info" data-i="${i}" data-k="${k}">정보와 후기</button>${on&&!svOK(i,k)?`<button class="rb sv" data-act="svopen" data-i="${i}" data-k="${k}">설문</button>`:''}<button class="rb${st||on?' on':''}" data-act="start" data-i="${i}" data-k="${k}" aria-pressed="${!!(st||on)}" aria-label="${t} 시작" ${on?'disabled':''}>시작</button><button class="rb${on?' on':''}" data-act="done" data-i="${i}" data-k="${k}" aria-pressed="${on}" aria-label="${t} 완료">완료</button>${pg}</div></div>`;
     if(cls==='tk')return `<div class="item tk"><small class="tkh">${t}${on&&info?' · '+info:''}</small>
       <div class="tkm">${th}<button class="nm" data-act="info" data-i="${i}" data-k="${k}"><strong>${esc(name)}</strong></button></div>
@@ -2357,7 +2380,7 @@ function monthHTML(i){
   const guide=!nx?'<div class="mguide all"><span><b>이번 달 과정을 모두 마쳤어요.</b> 다음 달로 넘어가요.</span></div>'
     :tab===nx.k?`<div class="mguide"><span><b>지금 할 일 · ${esc(nx.t)}</b> ${esc(STEP_G[nx.k])}</span></div>`
     :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>이에요.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
-  const cov=!coverOf(it.book)?`<div class="mcov"><label class="btn ghost small up">표지 올리기<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>책 표지를 찍어 올리면 모두에게 보여요.</span></div>`:'';
+  const cov=!S.covers[hid(it.book)]?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
   const body=tab==='work'?cov+work:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
   return `<div class="panel"><div class="ph"><h2>${esc(String(it.g).replace(/^중(\d)$/,'중학교 $1학년'))} ${esc(it.m)}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
@@ -2687,7 +2710,7 @@ async function saveShRv(h,stars,text){
     S.reviews=null;render();return true}catch(e){toast('저장하지 못했어요. 잠시 뒤 다시 해 주세요.');return false}
 }
 function shelfBook(b,cls){
-  const h=hid(b.title),img=S.covers[h],c=KYC[bCat(b)]||KYC['기타'];
+  const h=hid(b.title),img=artOf(b.title,'book'),c=KYC[bCat(b)]||KYC['기타'];
   return `<button type="button" class="sb ${cls||''}" data-act="shbook" data-h="${h}" aria-label="${esc(bTitle(b.title))}${S.shelfSel===h?' (선택됨)':''}" aria-pressed="${S.shelfSel===h}" style="--a:${c[0]};--b:${c[1]}">${img?`<img src="${img}" alt="" loading="lazy">`:`<span class="sbp"><i></i><em>${esc(bTitle(b.title))}</em></span>`}</button>`;
 }
 function shelfHTML(inSheet){
@@ -2708,8 +2731,8 @@ function shelfHTML(inSheet){
   const table=`<div class="stab"><div class="stb">${recent.map(b=>shelfBook(b,'tb')).join('')}</div><svg viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="150" cy="18" rx="138" ry="14" fill="#F4F1EA"/><path d="M12 18v5c0 8 60 14 138 14s138-6 138-14v-5c0 8-60 14-138 14S12 26 12 18z" fill="#C9B99B"/><path d="M142 36h16l4 28h-24z" fill="#8A5A3A"/><ellipse cx="150" cy="64" rx="46" ry="5" fill="#6E4626"/></svg></div>`;
   let det='';
   if(sel){
-    const h=hid(sel.title),has=!!S.covers[h],c=KYC[sel.c2]||KYC['기타'];
-    det=`<div class="sdt"><span class="cvimg big" style="--a:${c[0]};--b:${c[1]}">${has?`<img src="${S.covers[h]}" alt="${esc(bTitle(sel.title))} 표지">`:`<span class="phd">${BOOKG}<span>${esc(sel.c2)}</span></span>`}</span>
+    const h=hid(sel.title),selImg=artOf(sel.title,'book'),has=!!selImg,c=KYC[sel.c2]||KYC['기타'];
+    det=`<div class="sdt"><span class="cvimg big" style="--a:${c[0]};--b:${c[1]}">${has?`<img src="${selImg}" alt="${esc(bTitle(sel.title))} 표지">`:`<span class="phd">${BOOKG}<span>${esc(sel.c2)}</span></span>`}</span>
       <div class="cvside"><b>${esc(bTitle(sel.title))}</b>${(sel.author||bAuthor(sel.title))?`<span class="hint"> ${esc(sel.author||bAuthor(sel.title))}</span>`:''}
       ${sel.why?`<p class="hint">${esc(sel.why)}</p>`:''}
       <label class="sdl">서점 분류<select data-bcat="${h}">${KY.map(k=>`<option${k===sel.c2?' selected':''}>${k}</option>`).join('')}</select></label>
@@ -5464,7 +5487,7 @@ render();
 })();
 </script>
 
-<div id="legal" style="text-align:center;font-size:12px;color:#6F6155;padding:18px 0 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a> · <a href="/refund.html" style="color:inherit">환불정책</a><br>002BOOK의 첨삭·추천·피드백은 생성형 AI(Anthropic Claude)가 만들어요. 사실과 다를 수 있어요.<br>__BUSINESS_INFO__</div>
+<div id="legal" style="text-align:center;font-size:12px;color:#6F6155;padding:18px 0 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a> · <a href="/refund.html" style="color:inherit">환불정책</a><br>002BOOK의 첨삭·추천·피드백은 생성형 AI(Anthropic Claude)가 만들어요. 사실과 다를 수 있어요.<br>책 표지: 국립중앙도서관·카카오(다음 책) · 영화 포스터: TMDB·한국영상자료원(KMDb). This product uses the TMDB API but is not endorsed or certified by TMDB.<br>__BUSINESS_INFO__</div>
 <style>#legal{max-width:1100px;margin:0 auto}@media (max-width:720px){#legal{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}}</style>
 <script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 </body></html>

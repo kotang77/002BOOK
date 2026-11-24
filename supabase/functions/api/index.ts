@@ -9,6 +9,7 @@ import { payConfirm, payPlans, payReady } from './pay.ts';
 import { addSub, pushTo, removeSub, vapid } from './push.ts';
 import { oralOp } from './oral.ts';
 import { bookOp } from './books.ts';
+import { artOp } from './media.ts';
 
 const SESSION_DAYS = 60;
 const PBKDF2_ITER = 120000;
@@ -418,6 +419,8 @@ async function handle(req: Request, b: Record<string, unknown>) {
     case 'oral.report': return oralReport(ctx, b);
 
     /* ---- 도서 서지 (국립중앙도서관) ---- */
+    case 'media.art':
+      return artOp(need(ctx), b, { read: readRow, write: writeRow });
     case 'book.isbn': case 'book.find':
       return bookOp(String(b.op), need(ctx), b, { read: readRow, write: writeRow });
 

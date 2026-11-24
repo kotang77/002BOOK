@@ -48,12 +48,15 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
           NL_CERT_KEY: ${{ secrets.NL_CERT_KEY }}
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+          TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
+          KMDB_KEY: ${{ secrets.KMDB_KEY }}
           MAIL_FROM: ${{ vars.MAIL_FROM || '002BOOK <no-reply@002book.com>' }}
           FREE_LAUNCH: ${{ vars.FREE_LAUNCH || '1' }}
           PLANS_JSON: ${{ vars.PLANS_JSON }}
         run: |
           args=("SITE_URL=https://002book.com" "ALLOWED_ORIGINS=https://002book.com,https://www.002book.com" "MAIL_FROM=$MAIL_FROM" "FREE_LAUNCH=$FREE_LAUNCH")
-          for k in ANTHROPIC_API_KEY RESEND_API_KEY TOSS_SECRET_KEY NL_CERT_KEY PLANS_JSON; do
+          for k in ANTHROPIC_API_KEY RESEND_API_KEY TOSS_SECRET_KEY NL_CERT_KEY KAKAO_REST_KEY TMDB_TOKEN KMDB_KEY PLANS_JSON; do
             [ -n "${!k}" ] && args+=("$k=${!k}")
           done
           supabase secrets set "${args[@]}" --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" --yes

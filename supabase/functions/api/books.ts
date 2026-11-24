@@ -71,7 +71,7 @@ export function toBook(d: Record<string, unknown>) {
 }
 export type Book = ReturnType<typeof toBook>;
 
-async function nl(params: Record<string, string>): Promise<Record<string, unknown>[]> {
+export async function nl(params: Record<string, string>): Promise<Record<string, unknown>[]> {
   const fake = env('FAKE_NL');
   if (fake) { // 시험용: {"isbn:978…": 응답 한 건, "title:책 제목": [여러 건]}
     const m = JSON.parse(fake) as Record<string, unknown>;
