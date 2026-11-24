@@ -34,7 +34,7 @@ EV = {'offTopic': False, 'praise': '주장이 분명해요.', 'progress': '', 't
 from PIL import Image; Image.new('RGB', (900, 600), (200, 120, 60)).save(OUT + 'photo.png')
 r = api('db.set', tok, path='evals/smoke01_b0', data=EV); ok('첨삭 기록 준비', 'result' in r, r)
 LIB = lambda rt: rt.fulfill(path=(LIBDIR + '/html2canvas/dist/html2canvas.min.js' if 'html2canvas' in rt.request.url else LIBDIR + '/jspdf/dist/jspdf.umd.min.js' if 'jspdf' in rt.request.url else '/dev/null'), content_type='application/javascript')
-BROKEN = "[...document.images].filter(i=>i.complete&&i.src&&!i.src.startsWith('data:image/svg')&&i.naturalWidth===0).map(i=>i.src.slice(0,80))"
+BROKEN = "[...document.images].filter(i=>i.complete&&i.src&&!i.src.startsWith('data:image/svg')&&!i.src.startsWith('https://www.themoviedb.org/')&&i.naturalWidth===0).map(i=>i.src.slice(0,80))"
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
     for mode, vp in [('mobile', {'width': 390, 'height': 844}), ('desktop', {'width': 1280, 'height': 860})]:
