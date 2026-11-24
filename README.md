@@ -34,5 +34,6 @@ tests/oral/run.sh ../e2e.py     # 하나만
 | KAKAO_REST_KEY | Secret | 카카오 디벨로퍼스 REST API 키. 국립중앙도서관에 표지가 없을 때 다음 책 검색 표지를 쓴다 (선택) |
 | TMDB_TOKEN | Secret | TMDB API 읽기 토큰(v4). 영화 포스터. 출처 표시 필수, 상업적 이용은 TMDB와 별도 계약 필요 |
 | KMDB_KEY | Secret | 한국영상자료원 KMDb Open API 키. TMDB에 없는 영화 포스터 (선택) |
+| GOOGLE_CLIENT_ID | Variable | 구글 로그인 OAuth 클라이언트 ID (웹 애플리케이션 유형, 승인된 JavaScript 원본 https://002book.com, https://www.002book.com). 비우면 구글 버튼이 숨겨진다 |
 | ANDROID_KEYSTORE_PASSWORD, ANDROID_KEYSTORE_B64 | Secrets | 플레이 앱 서명 |
 | ANDROID_SHA256 | Variable | 앱 서명 지문(쉼표로 여러 개) → assetlinks.json |

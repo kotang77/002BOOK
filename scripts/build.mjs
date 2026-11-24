@@ -65,7 +65,7 @@ const m2 = html.match(/LOGO_FULL='data:image\/png;base64,([A-Za-z0-9+/=]+)'/);
 fs.writeFileSync(path.join(DIST, 'index.html'), html);
 fs.writeFileSync(path.join(DIST, '404.html'), html);
 fs.writeFileSync(path.join(DIST, 'runtime/config.js'),
-  `window.__002CFG=${JSON.stringify({ api: SUPA ? SUPA.replace(/\/$/, '') + '/functions/v1/api' : '', anon: ANON, toss: cfg.tossClientKey || '', free: FREE })};\n`);
+  `window.__002CFG=${JSON.stringify({ api: SUPA ? SUPA.replace(/\/$/, '') + '/functions/v1/api' : '', anon: ANON, toss: cfg.tossClientKey || '', free: FREE, google: process.env.GOOGLE_CLIENT_ID || cfg.googleClientId || '' })};\n`);
 const brandIcon = path.join(ROOT, 'web/brand/app-icon.png'); // 아이콘이 바뀌어도 서비스 워커 캐시가 새로 만들어지게 빌드 번호에 넣는다
 const buildId = crypto.createHash('sha256').update(html + fs.readFileSync(path.join(ROOT, 'web/runtime/claude-shim.js'))).update(fs.existsSync(brandIcon) ? fs.readFileSync(brandIcon) : '').digest('hex').slice(0, 10);
 const sw = path.join(DIST, 'sw.js'); fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace('__BUILD_ID__', buildId));

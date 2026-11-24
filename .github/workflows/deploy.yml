@@ -51,12 +51,13 @@ jobs:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
           TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
           KMDB_KEY: ${{ secrets.KMDB_KEY }}
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
           MAIL_FROM: ${{ vars.MAIL_FROM || '002BOOK <no-reply@002book.com>' }}
           FREE_LAUNCH: ${{ vars.FREE_LAUNCH || '1' }}
           PLANS_JSON: ${{ vars.PLANS_JSON }}
         run: |
           args=("SITE_URL=https://002book.com" "ALLOWED_ORIGINS=https://002book.com,https://www.002book.com" "MAIL_FROM=$MAIL_FROM" "FREE_LAUNCH=$FREE_LAUNCH")
-          for k in ANTHROPIC_API_KEY RESEND_API_KEY TOSS_SECRET_KEY NL_CERT_KEY KAKAO_REST_KEY TMDB_TOKEN KMDB_KEY PLANS_JSON; do
+          for k in ANTHROPIC_API_KEY RESEND_API_KEY TOSS_SECRET_KEY NL_CERT_KEY KAKAO_REST_KEY TMDB_TOKEN KMDB_KEY GOOGLE_CLIENT_ID PLANS_JSON; do
             [ -n "${!k}" ] && args+=("$k=${!k}")
           done
           supabase secrets set "${args[@]}" --project-ref "${{ vars.SUPABASE_PROJECT_REF }}" --yes
@@ -76,6 +77,7 @@ jobs:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
           ANDROID_SHA256: ${{ vars.ANDROID_SHA256 }}
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
         run: node scripts/build.mjs
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }

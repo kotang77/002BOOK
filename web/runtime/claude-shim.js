@@ -204,12 +204,13 @@
     session: getSession,
     signup: async function (p) { var r = await call('auth.signup', p); setSession(r.session); return r; },
     login: async function (id, pw) { var r = await call('auth.login', { id: id, pw: pw }); setSession(r.session); return r; },
+    google: async function (p) { var r = await call('auth.google', p); if (r.session) setSession(r.session); return r; },
     logout: async function () { try { await call('auth.logout', {}); } catch (e) {} setSession(null); },
     resume: async function () { var s = getSession(); if (!s) return null; try { var r = await call('auth.me', {}); return r; } catch (e) { return null; } },
     resetPassword: function (id, email) { return call('auth.reset', { id: id, email: email }); },
     findId: function (email) { return call('auth.findId', { email: email }); },
     changePassword: function (oldPw, newPw) { return call('auth.changePassword', { oldPw: oldPw, newPw: newPw }); },
-    withdraw: async function (pw) { var r = await call('auth.withdraw', { pw: pw }); setSession(null); return r; },
+    withdraw: async function (pw, credential) { var r = await call('auth.withdraw', credential ? { credential: credential } : { pw: pw }); setSession(null); return r; },
     guardianRequest: function (p) { return call('auth.guardianRequest', p); }
   });
 

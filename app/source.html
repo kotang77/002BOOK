@@ -1295,6 +1295,8 @@ body::before{background:#fff}
 .sbe{color:var(--muted)}
 .bbd{height:4px;margin:0 -10px;background:var(--line);box-shadow:none;border-radius:0 0 12px 12px}
 .sb{box-shadow:0 2px 6px rgba(31,35,40,.18)}
+.gsi{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 14px}.gsi [data-gsi]{min-height:44px;display:flex;justify-content:center;width:100%}
+.gor{display:flex;align-items:center;gap:10px;width:100%;margin:0;color:var(--muted,#6b6b6b);font-size:13px}.gor:before,.gor:after{content:"";flex:1;border-top:1px solid var(--line,#e5e5e5)}
 </style>
 
 <div id="app"></div>
@@ -1831,6 +1833,36 @@ function seasonFx(){
   el.dataset.k=key;el.className='sfx m'+m+' s-'+MT[m][0]+(S.id?' lite':'');el.innerHTML=seasonFxHTML(m,!!S.id);
 }
 
+function suFormHTML(g){
+  return `<form data-form="${g?'gsignup':'signup'}">${g?`<p class="okmsg">구글 계정 <b>${esc(S.gs.email)}</b>(으)로 가입해요. 아래 정보만 채우면 끝나요.</p>`:''}<label for="su-id">아이디 <small class="hint">영문 소문자·숫자 3~20자</small><input id="su-id" name="id" autocomplete="username" autocapitalize="none" required value="${g?esc(S.gs.idHint||''):''}"></label>
+    ${g?'':`<label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>`}
+    <label for="su-nick">닉네임 <small class="hint">다른 회원에게 보이는 이름이에요. 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12" value="${g?esc(S.gs.name||''):''}"></label>
+    <label for="su-region">거주지역<select id="su-region" name="region">${REGIONS.map(r=>`<option${r==='경기'?' selected':''}>${r}</option>`).join('')}</select></label>
+    <label for="su-bio">한 줄 소개 <small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small><input id="su-bio" name="bio" maxlength="40" placeholder="예: 책 읽는 걸 좋아하는 호기심 많은 사람"></label>
+    <label for="su-buddy">나의 가상 친구 이름 <small class="hint">인사하고 응원해 주는 친구예요. 비우면 '${BUDDY0}'예요. 나중에 바꿀 수 있어요</small><input id="su-buddy" name="buddy" maxlength="10" placeholder="${BUDDY0}"></label>${budPickHTML(null)}
+    <label for="su-gender">성별<select id="su-gender" name="gender" required>${genderOpts('')}</select></label>
+    ${gradeFields('중1','su')}
+    ${g?'':`<label for="su-email">이메일 <small class="hint">비밀번호를 잊었을 때 임시 비밀번호를 받을 주소예요</small><input id="su-email" name="email" type="email" autocomplete="email" required></label>`}
+    <label for="su-birth">태어난 연월 <small class="hint">만 14세 미만은 보호자 동의가 필요해요</small><input id="su-birth" name="birth" type="month" min="1940-01" max="${new Date().toISOString().slice(0,7)}" required></label>
+      <fieldset style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0;display:flex;flex-direction:column;gap:8px"><legend class="hint" style="padding:0 4px">만 14세 미만이면 보호자 정보도 적어 주세요</legend>
+        <label for="su-gname">보호자 이름<input id="su-gname" name="gname" maxlength="30" autocomplete="off"></label>
+        <label for="su-gemail">보호자 이메일 <small class="hint">이 주소로 동의 요청 메일이 가요</small><input id="su-gemail" name="gemail" type="email" autocomplete="off"></label></fieldset>
+      <details style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--field)"><summary style="cursor:pointer;font-weight:500">개인정보 처리·AI 이용 안내 (꼭 읽어 주세요)</summary>
+        <ul class="hint" style="margin:6px 0 0;padding-left:18px">
+          <li><b>목적</b>: 회원 관리, 학년별 책·영화 코스와 논술 AI 첨삭 제공, 친구·가족 기능</li>
+          <li><b>항목</b>: 아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역, 학년, 성별, 태어난 연월, 학습 기록 (만 14세 미만은 보호자 이름·이메일)</li>
+          ${g?'<li><b>구글로 가입</b>: 구글이 알려 주는 계정 식별값·이메일·이름을 받아요. 구글 비밀번호는 받지 않아요.</li>':''}
+          <li><b>보유 기간</b>: 탈퇴하면 바로 삭제${(window.__002CFG&&window.__002CFG.free)?'':' (법령상 결제 기록은 5년)'}</li>
+          <li><b>생성형 AI</b>: 첨삭·추천·구술 평가는 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
+          <li><b>국외 이전</b>: 서비스 운영을 위해 Supabase·Anthropic·Resend·GitHub(미국)에 처리를 맡겨요.</li>
+          <li><b>공개 범위</b>: 다른 회원에게는 닉네임만 보여요. 나머지는 내가 공개를 켠 것만 보여요.</li>
+          <li>선택 항목(소개·사진·마케팅)은 동의하지 않아도 이용에 제한이 없어요. 자세한 내용은 <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">개인정보처리방침</a>을 봐 주세요.</li>
+        </ul></details>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agt" required style="width:auto"> [필수] <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">이용약관</a>(생성형 AI 이용 고지 포함)에 동의해요</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agp" required style="width:auto"> [필수] 위 개인정보 처리·국외 이전 안내를 확인했어요</label>
+      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agm" style="width:auto"> [선택] 새 소식 이메일 받기 <small class="hint">만 14세 이상만</small></label>
+      <p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">가입하고 시작하기</button>${g?'<button type="button" class="lnk" data-act="authtab" data-v="signup">구글 없이 가입하기</button>':''}</form>`;
+}
 function authHTML(){
   const t=S.authTab;
   let body;
@@ -1845,36 +1877,11 @@ function authHTML(){
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
     <p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">임시 비밀번호 요청하기</button>
     <button type="button" class="lnk" data-act="authtab" data-v="login">로그인으로 돌아가기</button></form>`;
-  else body=`<form data-form="signup"><label for="su-id">아이디 <small class="hint">영문 소문자·숫자 3~20자</small><input id="su-id" name="id" autocomplete="username" autocapitalize="none" required></label>
-    <label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>
-    <label for="su-nick">닉네임 <small class="hint">다른 회원에게 보이는 이름이에요. 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12"></label>
-    <label for="su-region">거주지역<select id="su-region" name="region">${REGIONS.map(r=>`<option${r==='경기'?' selected':''}>${r}</option>`).join('')}</select></label>
-    <label for="su-bio">한 줄 소개 <small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small><input id="su-bio" name="bio" maxlength="40" placeholder="예: 책 읽는 걸 좋아하는 호기심 많은 사람"></label>
-    <label for="su-buddy">나의 가상 친구 이름 <small class="hint">인사하고 응원해 주는 친구예요. 비우면 '${BUDDY0}'예요. 나중에 바꿀 수 있어요</small><input id="su-buddy" name="buddy" maxlength="10" placeholder="${BUDDY0}"></label>${budPickHTML(null)}
-    <label for="su-gender">성별<select id="su-gender" name="gender" required>${genderOpts('')}</select></label>
-    ${gradeFields('중1','su')}
-    <label for="su-email">이메일 <small class="hint">비밀번호를 잊었을 때 임시 비밀번호를 받을 주소예요</small><input id="su-email" name="email" type="email" autocomplete="email" required></label>
-    <label for="su-birth">태어난 연월 <small class="hint">만 14세 미만은 보호자 동의가 필요해요</small><input id="su-birth" name="birth" type="month" min="1940-01" max="${new Date().toISOString().slice(0,7)}" required></label>
-      <fieldset style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0;display:flex;flex-direction:column;gap:8px"><legend class="hint" style="padding:0 4px">만 14세 미만이면 보호자 정보도 적어 주세요</legend>
-        <label for="su-gname">보호자 이름<input id="su-gname" name="gname" maxlength="30" autocomplete="off"></label>
-        <label for="su-gemail">보호자 이메일 <small class="hint">이 주소로 동의 요청 메일이 가요</small><input id="su-gemail" name="gemail" type="email" autocomplete="off"></label></fieldset>
-      <details style="border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--field)"><summary style="cursor:pointer;font-weight:500">개인정보 처리·AI 이용 안내 (꼭 읽어 주세요)</summary>
-        <ul class="hint" style="margin:6px 0 0;padding-left:18px">
-          <li><b>목적</b>: 회원 관리, 학년별 책·영화 코스와 논술 AI 첨삭 제공, 친구·가족 기능</li>
-          <li><b>항목</b>: 아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역, 학년, 성별, 태어난 연월, 학습 기록 (만 14세 미만은 보호자 이름·이메일)</li>
-          <li><b>보유 기간</b>: 탈퇴하면 바로 삭제${(window.__002CFG&&window.__002CFG.free)?'':' (법령상 결제 기록은 5년)'}</li>
-          <li><b>생성형 AI</b>: 첨삭·추천·구술 평가는 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
-          <li><b>국외 이전</b>: 서비스 운영을 위해 Supabase·Anthropic·Resend·GitHub(미국)에 처리를 맡겨요.</li>
-          <li><b>공개 범위</b>: 다른 회원에게는 닉네임만 보여요. 나머지는 내가 공개를 켠 것만 보여요.</li>
-          <li>선택 항목(소개·사진·마케팅)은 동의하지 않아도 이용에 제한이 없어요. 자세한 내용은 <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">개인정보처리방침</a>을 봐 주세요.</li>
-        </ul></details>
-      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agt" required style="width:auto"> [필수] <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">이용약관</a>(생성형 AI 이용 고지 포함)에 동의해요</label>
-      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agp" required style="width:auto"> [필수] 위 개인정보 처리·국외 이전 안내를 확인했어요</label>
-      <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="agm" style="width:auto"> [선택] 새 소식 이메일 받기 <small class="hint">만 14세 이상만</small></label>
-      <p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">가입하고 시작하기</button></form>`;
+  else if(t==='gsignup'&&S.gs)body=suFormHTML(true);
+  else body=suFormHTML(false);
   return `<div class="wrap auth"><section class="hero"><img class="biglogo" src="${LOGO_FULL}" width="512" height="512" alt="영원이북 로고. 책을 읽는 소녀">
     <h1 class="sr">002BOOK</h1><p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p>${seasonScene(monthNow())}</section>
-    <section class="authcard"><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'}">회원가입</button></div>${body}</section></div>`;
+    <section class="authcard"><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}">회원가입</button></div>${(t==='login'||t==='signup')&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section></div>`;
 }
 
 /* ---------- 화면: 앱 ---------- */
@@ -3085,15 +3092,17 @@ async function deleteMember(id){
 
 
 /* ---------- 로그아웃·탈퇴 ---------- */
-function doLogout(){window.__002.auth.logout();
+function doLogout(){window.__002.auth.logout();S.gs=null;try{if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect()}catch(e){}
   Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,gd:{},progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
   render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
 async function doWithdraw(fd){
   const er=m=>{const e=$('#wderr');if(e)e.textContent=m};
   if(isAdmin())return er('관리자 계정은 탈퇴할 수 없어요.');
-  if(!fd.get('ok'))return er('안내를 읽고 체크해 주세요.');
-  try{await window.__002.auth.withdraw(String(fd.get('pw')||''))}
-  catch(e){return er(e&&e.code==='bad_password'?'비밀번호가 맞지 않아요.':'탈퇴 처리를 마치지 못했어요. 잠시 뒤 다시 해 주세요.')}
+  const cred=S.wdCred;S.wdCred=null;
+  if(!fd.get('ok'))return er('안내를 읽고 체크한 뒤 '+(S.me&&S.me.gOnly?'구글 버튼을':'탈퇴 버튼을')+' 눌러 주세요.');
+  if(S.me&&S.me.gOnly&&!cred)return er('구글 버튼으로 본인 확인을 해 주세요.');
+  try{await window.__002.auth.withdraw(String(fd.get('pw')||''),cred||undefined)}
+  catch(e){return er(e&&e.code==='bad_password'?'비밀번호가 맞지 않아요.':e&&e.code==='bad_google'?(e.message||'연결된 구글 계정으로 확인해 주세요.'):'탈퇴 처리를 마치지 못했어요. 잠시 뒤 다시 해 주세요.')}
   doLogout();toast('탈퇴했어요. 모든 기록이 지워졌어요.')
 }
 
@@ -3297,6 +3306,7 @@ function render(){
   renderLayers();updateBadges();seasonFx();if(S.id){loadBq();loadBud()}
 }
 function renderLayers(){
+  queueMicrotask(gsiMount);
   const l1=$('#layer1'),l2=$('#layer2');
   const sh=S.sheet;
   if(!S.id||!sh){l1.hidden=true;l1.innerHTML=''}
@@ -3332,6 +3342,43 @@ async function loadCovers(){
     const f=document.activeElement;if(!(f&&/^(TEXTAREA|INPUT|SELECT)$/.test(f.tagName)))renderLayers();
   }catch(e){}
 }
+/* ---------- 구글로 가입·로그인 (Google Identity Services) ---------- */
+const gCid=()=>(window.__002CFG&&window.__002CFG.google)||'';
+const gOn=()=>!!gCid();
+let gsiLoad=null,gsiInit=false;
+function gsiScript(){
+  if(window.google&&google.accounts&&google.accounts.id)return Promise.resolve(true);
+  if(!gsiLoad)gsiLoad=new Promise(res=>{const x=document.createElement('script');x.src='https://accounts.google.com/gsi/client';x.async=true;x.onload=()=>res(true);x.onerror=()=>{gsiLoad=null;res(false)};document.head.appendChild(x)});
+  return gsiLoad;
+}
+async function gsiMount(){
+  const els=[...document.querySelectorAll('[data-gsi]')].filter(e=>!e.dataset.done);
+  if(!els.length||!gOn())return;
+  els.forEach(e=>e.dataset.done='1');
+  const ok=await gsiScript();
+  if(!ok){els.forEach(e=>{if(e.isConnected)e.innerHTML='<p class="hint">구글 버튼을 불러오지 못했어요. 인터넷 연결을 확인하거나 아이디로 진행해 주세요.</p>'});return}
+  if(!gsiInit){google.accounts.id.initialize({client_id:gCid(),callback:r=>gCred(r&&r.credential),ux_mode:'popup',auto_select:false,cancel_on_tap_outside:true,use_fedcm_for_button:true});gsiInit=true}
+  els.forEach(e=>{if(!e.isConnected)return;const w=Math.max(200,Math.min(400,(e.parentElement&&e.parentElement.clientWidth)||320));
+    google.accounts.id.renderButton(e,{type:'standard',theme:'outline',size:'large',shape:'pill',text:e.dataset.txt||'continue_with',logo_alignment:'left',locale:'ko',width:w})});
+}
+// 구글이 돌려준 ID 토큰을 화면 상황(로그인·계정 연결·탈퇴 확인)에 맞게 쓴다. 시험에서는 window.__002gcb로 부른다
+async function gCred(cred){
+  if(!cred)return;
+  const el=document.querySelector('[data-gsi]');const mode=el?el.dataset.gsi:'auth';
+  if(mode==='link'){
+    try{const r=await window.__002.server.call('auth.googleLink',{credential:cred});S.me.google=true;toast('구글 계정('+r.email+')을 연결했어요. 다음부터 구글로 로그인할 수 있어요.');renderLayers()}
+    catch(e){toast((e&&e.message)||'구글 계정을 연결하지 못했어요.')}
+    return;
+  }
+  if(mode==='withdraw'){S.wdCred=cred;const f=$('form[data-form=withdraw]');if(f)f.requestSubmit();return}
+  S.authErr='';S.authMsg='';
+  try{
+    const r=await window.__002.auth.google({credential:cred});
+    if(r.needSignup){S.gs={cred,email:r.email,name:r.name||'',idHint:r.idHint||''};S.authTab='gsignup';render();window.scrollTo(0,0);return}
+    S.gs=null;await enter(r.member.id,r.member);
+  }catch(e){S.authErr=(e&&e.code&&e.code!=='server_error'&&e.message)?e.message:'구글로 로그인하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
+}
+window.__002gcb=gCred;
 async function doLogin(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
   if(!id||!pw){S.authErr='아이디와 비밀번호를 넣어 주세요.';return render()}
@@ -3385,36 +3432,42 @@ function profileHTML(){
       <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_grade" style="width:auto" ${(m.pub||{}).grade?'checked':''}> 학년 공개</label>
       <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_region" style="width:auto" ${(m.pub||{}).region?'checked':''}> 거주지역(시·도) 공개</label>
       <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_photo" style="width:auto" ${(m.pub||{}).photo?'checked':''}> 내가 올린 프로필 사진 공개 <small class="hint">끄면 다른 회원에게는 기본 캐릭터로 보여요</small></label></div>
-    <div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3><p class="hint">바꾸지 않으려면 비워 두세요.</p>
+    ${m.gOnly?`<div class="sec" style="margin-top:6px"><h3>로그인 방법</h3><p class="hint">구글 계정으로 가입했어요. 로그인 화면에서 <b>구글로 로그인</b>을 눌러 주세요. 아이디·비밀번호로도 들어오고 싶으면 로그인 화면의 '비밀번호를 잊었어요'에서 임시 비밀번호를 받을 수 있어요.</p></div>`:`<div class="sec" style="margin-top:6px"><h3>비밀번호 바꾸기</h3><p class="hint">바꾸지 않으려면 비워 두세요.</p>
       <label for="pf-cur">현재 비밀번호<input id="pf-cur" name="cur" type="password" autocomplete="current-password"></label>
-      <label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small><input id="pf-pw" name="pw" type="password" autocomplete="new-password"></label></div>
+      <label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small><input id="pf-pw" name="pw" type="password" autocomplete="new-password"></label></div>`}
     <p class="err" id="pferr"></p><div><button class="btn" type="submit">저장</button></div></form>
+  ${gOn()&&!m.google?`<div class="sec" style="margin-top:18px"><h3>구글 계정 연결</h3><p class="hint">연결하면 다음부터 비밀번호 없이 구글로 로그인할 수 있어요.</p><div class="gsi"><div data-gsi="link" data-txt="continue_with"></div></div></div>`:m.google&&!m.gOnly?'<p class="hint" style="margin-top:12px">구글 계정이 연결돼 있어요. 로그인 화면에서 구글로 들어올 수 있어요.</p>':''}
   ${isAdmin()?'':`<form data-form="withdraw" class="sec" style="margin-top:18px"><h3>회원 탈퇴</h3><p class="hint">탈퇴하면 내 정보, 진도, 첨삭, 논술, 후기, 구술 녹음, 친구·가족 관계와 메시지가 모두 지워지고 되돌릴 수 없어요.</p>
-    <label for="wd-pw">비밀번호<input id="wd-pw" name="pw" type="password" autocomplete="current-password"></label>
+    ${m.gOnly?`<p class="hint">아래 체크 후 구글 버튼으로 본인 확인을 하면 바로 탈퇴돼요.</p>`:`<label for="wd-pw">비밀번호<input id="wd-pw" name="pw" type="password" autocomplete="current-password"></label>`}
     <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="ok" style="width:auto"> 모두 지워지는 것을 확인했어요</label>
-    <p class="err" id="wderr"></p><div><button class="btn danger" type="submit">회원 탈퇴</button></div></form>`}</div>`;
+    <p class="err" id="wderr"></p><div>${m.gOnly&&gOn()?'<div class="gsi"><div data-gsi="withdraw" data-txt="continue_with"></div></div>':'<button class="btn danger" type="submit">회원 탈퇴</button>'}</div></form>`}</div>`;
 }
 async function doSignup(fd){
   // 오류가 나도 입력한 내용이 지워지지 않도록 화면을 다시 그리지 않고 오류 문구만 바꾼다
   const er=m=>{S.authErr=m;const e=$('#autherr');if(e){e.textContent=m;e.scrollIntoView({block:'center',behavior:'smooth'})}else render()};
   const g=k=>String(fd.get(k)||'').trim();
+  const G=S.authTab==='gsignup'&&!!S.gs;
   const id=g('id').toLowerCase();const pw=String(fd.get('pw')||'');const nick=g('nick')||id;
   if(!/^[a-z0-9_-]{3,20}$/.test(id))return er('아이디는 영문 소문자와 숫자로 3~20자여야 해요.');
-  if(pw.length<8)return er('비밀번호는 8자 이상이어야 해요.');
-  if(!EMAILRE.test(g('email')))return er('이메일 주소를 정확히 적어 주세요.');
+  if(!G&&pw.length<8)return er('비밀번호는 8자 이상이어야 해요.');
+  if(!G&&!EMAILRE.test(g('email')))return er('이메일 주소를 정확히 적어 주세요.');
   if(!GENDERS.includes(g('gender')))return er('성별을 골라 주세요.');
   const bm=/^(\d{4})-(\d{2})$/.exec(g('birth'));if(!bm)return er('태어난 연도와 월을 골라 주세요.');
   const now=new Date();let age=now.getFullYear()-(+bm[1]);if(now.getMonth()+1<+bm[2])age--;
   if(age<14&&(!g('gname')||!EMAILRE.test(g('gemail'))))return er('만 14세 미만은 보호자 이름과 보호자 이메일을 적어 주세요.');
+  if(G&&age<14&&g('gemail').toLowerCase()===S.gs.email.toLowerCase())return er('보호자 이메일은 내 구글 이메일과 달라야 해요.');
   if(!fd.get('agt')||!fd.get('agp'))return er('이용약관 동의와 개인정보 처리 안내 확인에 체크해 주세요.');
   const p={id,pw,nick,region:g('region'),grade:SCODES.includes(g('grade'))?g('grade'):'중1',gender:g('gender'),bio:g('bio').slice(0,40),buddy:g('buddy').slice(0,10)||BUDDY0,...budFields(),
     email:g('email').slice(0,120),birth:g('birth'),guardianName:g('gname'),guardianEmail:g('gemail'),agreeTerms:!!fd.get('agt'),agreePrivacy:!!fd.get('agp'),agreeMarketing:!!fd.get('agm')};
-  const btn=$('form[data-form=signup] button[type=submit]');if(btn)btn.disabled=true;
+  const btn=$('form[data-form='+(G?'gsignup':'signup')+'] button[type=submit]');if(btn)btn.disabled=true;
   try{
-    const r=await window.__002.auth.signup(p);S.bpk=null;
+    const r=G?await window.__002.auth.google({...p,pw:undefined,email:undefined,credential:S.gs.cred,signup:true}):await window.__002.auth.signup(p);S.bpk=null;
+    if(G)S.gs=null;
     if(r.pending==='guardian'){S.authErr='';S.authTab='login';S.authMsg='보호자 이메일로 동의 요청을 보냈어요. 보호자가 승인하면 바로 로그인할 수 있어요.';return render()}
     S.authErr='';await enter(id,r.member);toast('가입했어요. 환영해요, '+nick+'!');
-  }catch(e){if(btn)btn.disabled=false;er((e&&e.code&&e.code!=='server_error'&&e.message)?e.message:'가입하지 못했어요. 잠시 뒤 다시 해 주세요.')}
+  }catch(e){if(btn)btn.disabled=false;
+    if(G&&e&&(e.code==='google_expired'||e.code==='bad_google')){S.gs=null;S.authTab='signup';S.authErr='구글 확인 시간이 지났어요. 구글 버튼을 한 번 더 눌러 주세요.';return render()}
+    er((e&&e.code&&e.code!=='server_error'&&e.message)?e.message:'가입하지 못했어요. 잠시 뒤 다시 해 주세요.')}
 }
 
 /* ---------- 논술 제출·첨삭 ---------- */
@@ -5099,7 +5152,7 @@ document.addEventListener('submit',e=>{
   else if(k==='profile')saveProfile(fd);
   else if(k==='vision')vbSubmit(fd);
   else if(k==='mybook')addMyBook(fd);
-  else if(k==='signup')doSignup(fd);
+  else if(k==='signup'||k==='gsignup')doSignup(fd);
   else if(k==='withdraw')doWithdraw(fd);
   else if(k==='frmsg')frSendText(fd);
   else if(k==='frrec')frSendRec(fd);

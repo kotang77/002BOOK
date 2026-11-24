@@ -1,0 +1,8 @@
+{"gtok_new":{"sub":"1000001","email":"gnew@gmail.com","email_verified":"true","name":"구글이"},
+ "gtok_minor":{"sub":"1000002","email":"gkid@gmail.com","email_verified":"true","name":"꼬마"},
+ "gtok_link":{"sub":"1000003","email":"glink@gmail.com","email_verified":"true","name":"연결"},
+ "gtok_unverified":{"sub":"1000004","email":"gun@gmail.com","email_verified":"false"},
+ "gtok_expired":{"sub":"1000005","email":"gexp@gmail.com","email_verified":"true","exp":"1000"},
+ "gtok_badiss":{"sub":"1000008","email":"giss@gmail.com","email_verified":"true","iss":"evil.example.com"},
+ "gtok_taken":{"sub":"1000006","email":"gtaken@ex.com","email_verified":"true","name":"기존"},
+ "gtok_ui":{"sub":"1000007","email":"gbrowser@gmail.com","email_verified":"true","name":"브라우저"}}

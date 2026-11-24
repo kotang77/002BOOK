@@ -197,6 +197,80 @@ async function login(req: Request, b: Record<string, unknown>) {
   return { member, session: await newSession(id, req.headers.get('user-agent')) };
 }
 
+/* ================================================================
+ * 구글로 가입·로그인 (Google Identity Services ID 토큰)
+ * - 앱이 받은 ID 토큰(JWT)을 구글 tokeninfo로 확인한다: 받는 쪽(aud)이 우리 클라이언트 ID인지, 발급자, 만료, 이메일 확인 여부
+ * - 구글 계정 ↔ 회원 연결은 sys/google_<sub>, sys/guser_<uid> 에 둔다 (회원은 읽지 못함)
+ * - 구글로 처음 온 사람은 추가 정보(아이디·닉네임·학년·태어난 연월·동의)를 받아 가입한다. 만 14세 미만 보호자 동의는 일반 가입과 같다
+ * ================================================================ */
+type GClaims = { sub: string; email: string; name: string };
+async function googleClaims(cred: unknown): Promise<GClaims> {
+  const t = String(cred ?? '');
+  if (!t || t.length > 4096) fail('bad_google', '구글 로그인 정보를 받지 못했어요. 다시 눌러 주세요.');
+  const ids = env('GOOGLE_CLIENT_ID').split(',').map((x) => x.trim()).filter(Boolean);
+  let c: Record<string, unknown> | null = null;
+  const fake = env('FAKE_GOOGLE');
+  if (fake) c = (JSON.parse(fake) as Record<string, Record<string, unknown>>)[t] ?? null;
+  else {
+    if (!ids.length) fail('google_not_configured', '구글 로그인이 아직 설정되지 않았어요.', 503);
+    try {
+      const r = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(t), { signal: AbortSignal.timeout(7000) });
+      c = r.ok ? await r.json() : null;
+    } catch { fail('google_unavailable', '구글 확인이 잠시 안 돼요. 조금 뒤 다시 해 주세요.', 502); }
+  }
+  if (!c) fail('bad_google', '구글 로그인을 확인하지 못했어요. 다시 눌러 주세요.', 401);
+  const aud = String(c!.aud ?? ''), iss = String(c!.iss ?? 'accounts.google.com'), exp = Number(c!.exp ?? 0);
+  if (!fake && !ids.includes(aud)) fail('bad_google', '다른 서비스용 구글 로그인이에요.', 401);
+  if (!/^(https:\/\/)?accounts\.google\.com$/.test(iss)) fail('bad_google', '구글 로그인을 확인하지 못했어요.', 401);
+  if (exp && exp * 1000 < Date.now()) fail('google_expired', '구글 로그인 시간이 지났어요. 구글 버튼을 다시 눌러 주세요.', 401);
+  if (String(c!.email_verified) !== 'true') fail('bad_google', '이메일 확인이 끝난 구글 계정만 쓸 수 있어요.', 401);
+  const sub = String(c!.sub ?? ''), email = String(c!.email ?? '').trim().slice(0, 120);
+  if (!/^\d{5,40}$|^[A-Za-z0-9_-]{2,40}$/.test(sub) || !EMAIL_RE.test(email)) fail('bad_google', '구글 계정 정보를 읽지 못했어요.', 401);
+  return { sub, email, name: String(c!.name ?? '').trim().slice(0, 12) };
+}
+async function googleLinkWrite(uid: string, g: GClaims, own: boolean) {
+  await writeRow('sys/google_' + g.sub, { uid, email: g.email, at: Date.now() }, null, await readRow('sys/google_' + g.sub));
+  await writeRow('sys/guser_' + uid, { sub: g.sub, email: g.email, at: Date.now() }, null, await readRow('sys/guser_' + uid));
+  const m = await readRow('members/' + uid);
+  if (m) await writeRow('members/' + uid, { ...m.data, google: true, ...(own ? { gOnly: true } : {}) }, uid, m);
+}
+async function googleAuth(req: Request, b: Record<string, unknown>) {
+  const g = await googleClaims(b.credential);
+  const link = await readRow('sys/google_' + g.sub);
+  if (link) {
+    const uid = String(link.data.uid ?? ''); const acc = await account(uid);
+    if (acc) {
+      if (acc.guardian_consent?.status === 'pending') fail('guardian_pending', '보호자 동의를 기다리고 있어요. 보호자 이메일의 승인 버튼을 눌러 주세요.');
+      const p = await plans();
+      if (acc.blocked || (uid !== ADMIN_ID && p.blocked[uid])) fail('blocked', '이용이 정지된 계정이에요. 관리자에게 문의해 주세요.');
+      const m = await readRow('members/' + uid);
+      const member = { ...(m?.data ?? { id: uid, nick: uid }), mustChange: false };
+      await isPaid(uid);
+      return { member, session: await newSession(uid, req.headers.get('user-agent')) };
+    }
+    await sb.from('docs').delete().eq('path', 'sys/google_' + g.sub);   // 지워진 회원과의 연결은 정리
+  }
+  if (!b.signup) {
+    const hint = g.email.split('@')[0].toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 20);
+    return { needSignup: true, email: g.email, name: g.name, idHint: hint.length >= 3 ? hint : '' };
+  }
+  // 구글 가입: 비밀번호 대신 아무도 모르는 임의 값을 저장한다(아이디·비밀번호 로그인은 '비밀번호 찾기'로 따로 정할 때만)
+  let r: Record<string, unknown>;
+  try { r = await signup(req, { ...b, email: g.email, pw: randToken() }); }
+  catch (e) {
+    if (e instanceof HttpErr && e.code === 'email_taken') fail('email_taken', '이 구글 이메일로 이미 가입한 아이디가 있어요. 그 아이디로 로그인한 뒤 내 정보에서 구글 계정을 연결해 주세요.');
+    throw e;
+  }
+  const uid = String(b.id ?? '').trim().toLowerCase();
+  await googleLinkWrite(uid, g, true);
+  if (r.member) (r.member as Record<string, unknown>).google = true, (r.member as Record<string, unknown>).gOnly = true;
+  return r;
+}
+async function googleUnlinkAll(uid: string) {
+  const u = await readRow('sys/guser_' + uid);
+  if (u) await sb.from('docs').delete().in('path', ['sys/google_' + String(u.data.sub ?? ''), 'sys/guser_' + uid]);
+}
+
 async function resetPw(b: Record<string, unknown>) {
   const id = String(b.id ?? '').trim().toLowerCase(), email = String(b.email ?? '').trim().toLowerCase();
   const acc = await account(id);
@@ -233,6 +307,7 @@ async function deleteAll(id: string) {
   }
   await sb.storage.from('uploads').list(id).then(async ({ data }) => { if (data?.length) await sb.storage.from('uploads').remove(data.map((f) => `${id}/${f.name}`)); });
   await sb.from('ai_usage').delete().eq('uid', id);
+  await googleUnlinkAll(id);
   await sb.from('accounts').delete().eq('id', id); // sessions는 cascade로 함께 삭제
   void del;
 }
@@ -302,6 +377,14 @@ async function handle(req: Request, b: Record<string, unknown>) {
     /* ---- 계정 ---- */
     case 'auth.signup': return signup(req, b);
     case 'auth.login': return login(req, b);
+    case 'auth.google': return googleAuth(req, b);
+    case 'auth.googleLink': {
+      const uid = need(ctx); const g = await googleClaims(b.credential);
+      const cur = await readRow('sys/google_' + g.sub);
+      if (cur && cur.data.uid !== uid && await account(String(cur.data.uid))) fail('google_taken', '이 구글 계정은 다른 아이디에 연결돼 있어요.');
+      await googleUnlinkAll(uid); await googleLinkWrite(uid, g, false);
+      return { ok: true, email: g.email };
+    }
     case 'auth.logout': { const t = req.headers.get('x-session'); if (t) await sb.from('sessions').delete().eq('token_hash', await sha256hex(t)); return { ok: true }; }
     case 'auth.me': { const uid = need(ctx); const acc = await account(uid); return { uid, admin: ctx.admin, paid: await isPaid(uid), mustChange: !!acc?.must_change }; }
     case 'auth.verify': { const uid = need(ctx); const acc = await account(uid); if (!acc || !(await checkPw(acc, String(b.pw ?? '')))) fail('bad_password', '비밀번호가 맞지 않아요.'); return { ok: true }; }
@@ -325,7 +408,10 @@ async function handle(req: Request, b: Record<string, unknown>) {
     case 'auth.withdraw': {
       const uid = need(ctx); if (uid === ADMIN_ID) fail('forbidden', '관리자 계정은 탈퇴할 수 없어요.');
       const acc = await account(uid);
-      if (!acc || !(await checkPw(acc, String(b.pw ?? '')))) fail('bad_password', '비밀번호가 맞지 않아요.');
+      if (b.credential) {   // 구글로 가입한 회원은 구글로 다시 확인하고 탈퇴
+        const g = await googleClaims(b.credential); const link = await readRow('sys/google_' + g.sub);
+        if (!acc || !link || link.data.uid !== uid) fail('bad_google', '이 아이디에 연결된 구글 계정으로 확인해 주세요.');
+      } else if (!acc || !(await checkPw(acc, String(b.pw ?? '')))) fail('bad_password', '비밀번호가 맞지 않아요.');
       await deleteAll(uid); return { ok: true };
     }
     case 'auth.guardianResend': {
