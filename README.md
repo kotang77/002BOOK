@@ -30,5 +30,6 @@ tests/oral/run.sh ../e2e.py     # 하나만
 | ANTHROPIC_API_KEY | Secret | AI 첨삭 |
 | RESEND_API_KEY | Secret | 메일 발송 |
 | TOSS_SECRET_KEY | Secret | 결제 승인 (클라이언트 키는 site.config.json) |
+| NL_CERT_KEY | Secret | 국립중앙도서관 ISBN 서지정보 API 인증키 (nl.go.kr › Open API › 인증키 신청). 없으면 책 분야를 AI 추정으로만 정한다 |
 | ANDROID_KEYSTORE_PASSWORD, ANDROID_KEYSTORE_B64 | Secrets | 플레이 앱 서명 |
 | ANDROID_SHA256 | Variable | 앱 서명 지문(쉼표로 여러 개) → assetlinks.json |

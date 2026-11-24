@@ -8,7 +8,7 @@ DENO="${DENO:-deno}"
 WEB=/tmp/002web
 cd "$ROOT" && node scripts/build.mjs | tail -1 || exit 1
 pkill -f "unstable-sloppy-imports index.ts" 2>/dev/null; pkill -f "m http.server 8080" 2>/dev/null; sleep 1
-( cd "$ROOT/supabase/functions/api" && ORAL_THINK_SEC=25 ORAL_THINK_MIN_SEC=10 FAKE_DB=1 FAKE_MAIL=1 FAKE_PUSH=1 FAKE_AI="$(cat "$ROOT/tests/oral/fakeai.json")" FAKE_AI_MAP="$(cat "$ROOT/tests/oral/fakeai_map.json")" \
+( cd "$ROOT/supabase/functions/api" && ORAL_THINK_SEC=25 ORAL_THINK_MIN_SEC=10 FAKE_DB=1 FAKE_MAIL=1 FAKE_PUSH=1 FAKE_AI="$(cat "$ROOT/tests/oral/fakeai.json")" FAKE_AI_MAP="$(cat "$ROOT/tests/oral/fakeai_map.json")" FAKE_NL="$(cat "$ROOT/tests/oral/fakenl.json")" \
   setsid nohup "$DENO" run -A --unstable-sloppy-imports index.ts > /tmp/api.log 2>&1 < /dev/null & ) > /dev/null 2>&1
 rm -rf "$WEB" && cp -r "$ROOT/dist" "$WEB"
 sed -i 's#"api":"[^"]*"#"api":"http://localhost:8000"#' "$WEB/runtime/config.js"
@@ -16,6 +16,7 @@ sed -i 's#"api":"[^"]*"#"api":"http://localhost:8000"#' "$WEB/runtime/config.js"
 for i in $(seq 30); do curl -s -o /dev/null -X POST localhost:8000 -d '{}' && break; sleep 1; done
 fail=0
 if [ $# = 0 ]; then echo "=== px/unit.js"; node "$ROOT/tests/px/unit.js" | grep -vE '^PASS'; [ "${PIPESTATUS[0]}" = 0 ] || fail=1; fi
+if [ $# = 0 ]; then echo "=== books_unit.ts"; ( cd "$ROOT/supabase/functions/api" && FAKE_DB=1 "$DENO" run -A --unstable-sloppy-imports "$ROOT/tests/books_unit.ts" ) | grep -vE '^PASS'; [ "${PIPESTATUS[0]}" = 0 ] || fail=1; fi
 TESTS=("${@}"); [ ${#TESTS[@]} = 0 ] && TESTS=("../e2e.py" "smoke.py" "shelf.py" "qref.py" "essay.py" "flow.py mobile" "flow.py desktop" "miclost.py")
 for t in "${TESTS[@]}"; do
   echo "=== $t"; python3 "$ROOT/tests/oral/"$t 2>&1 | grep -E '^(PASS|FAIL)|^[0-9]+/[0-9]+|^errors' | grep -vE '^PASS' ; r=${PIPESTATUS[0]}
