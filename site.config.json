@@ -22,5 +22,6 @@
     "packageId": "com.book002.app",
     "sha256Fingerprints": []
   },
-  "policyVersion": "2026-12-01"
+  "policyVersion": "2026-12-01",
+  "googleClientId": "488409954624-fuj0m176ats569vvv8b9mav11mmmhas3.apps.googleusercontent.com"
 }

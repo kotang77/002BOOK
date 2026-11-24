@@ -1,3 +1,4 @@
+import re
 # 구글로 가입·로그인 시험 (가짜 서버: run.sh가 FAKE_GOOGLE로 가짜 ID 토큰 표를 넘긴다)
 # 서버: 토큰 검증(이메일 확인·만료·발급자), 처음 오면 추가 정보 가입, 다시 오면 로그인, 보호자 동의, 이메일 중복 시 자동 연결 금지, 계정 연결, 구글로 탈퇴
 # 앱: 구글 버튼(가짜 GIS 스크립트) → 추가 정보 양식 → 가입 → 내 정보(비밀번호 칸 없음) → 구글로 탈퇴, 비밀번호 회원의 구글 연결
@@ -76,9 +77,9 @@ FAKE_GSI = """window.google={accounts:{id:{initialize(o){window.__gcfg=o},disabl
  renderButton(el,o){const b=document.createElement('button');b.type='button';b.className='fakegsi';b.textContent='G '+o.text;b.style.cssText='height:40px;border:1px solid #dadce0;border-radius:20px;background:#fff;width:'+o.width+'px';
  b.onclick=()=>window.__gcfg.callback({credential:window.__gTok});el.appendChild(b)}}}};"""
 def setup(ctx, google=True):
-    if google:
-        ctx.route('**/runtime/config.js', lambda rt: rt.fulfill(status=200, content_type='application/javascript',
-            body=urllib.request.urlopen(WEB + '/runtime/config.js').read().decode().replace('"google":""', '"google":"test.apps.googleusercontent.com"')))
+    gid = 'test.apps.googleusercontent.com' if google else ''
+    ctx.route('**/runtime/config.js', lambda rt: rt.fulfill(status=200, content_type='application/javascript',
+        body=re.sub(r'"google":"[^"]*"', '"google":"' + gid + '"', urllib.request.urlopen(WEB + '/runtime/config.js').read().decode())))
     ctx.route('https://accounts.google.com/gsi/client', lambda rt: rt.fulfill(status=200, content_type='application/javascript', body=FAKE_GSI))
 def uid(pg): return pg.evaluate("(()=>{try{const s=JSON.parse(localStorage.getItem('002.session'));return document.querySelector('#li-id')?null:(s&&s.uid)}catch(e){return null}})()")
 def act(pg, a): pg.evaluate("a=>{const b=document.createElement('button');b.dataset.act=a;b.hidden=true;document.querySelector('#app').appendChild(b);b.click();b.remove()}", a)

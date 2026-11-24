@@ -51,7 +51,7 @@ jobs:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
           TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
           KMDB_KEY: ${{ secrets.KMDB_KEY }}
-          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID || '488409954624-fuj0m176ats569vvv8b9mav11mmmhas3.apps.googleusercontent.com' }}  # 공개 값(구글 클라우드 프로젝트 002BOOK, 002book.korea@gmail.com)
           MAIL_FROM: ${{ vars.MAIL_FROM || '002BOOK <no-reply@002book.com>' }}
           FREE_LAUNCH: ${{ vars.FREE_LAUNCH || '1' }}
           PLANS_JSON: ${{ vars.PLANS_JSON }}
@@ -77,7 +77,7 @@ jobs:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
           ANDROID_SHA256: ${{ vars.ANDROID_SHA256 }}
-          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID || '488409954624-fuj0m176ats569vvv8b9mav11mmmhas3.apps.googleusercontent.com' }}  # 공개 값(구글 클라우드 프로젝트 002BOOK, 002book.korea@gmail.com)
         run: node scripts/build.mjs
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
