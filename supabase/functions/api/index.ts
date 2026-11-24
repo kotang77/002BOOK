@@ -138,7 +138,7 @@ async function guardianMail(id: string, nick: string, gName: string, gEmail: str
   await sendMail(gEmail, '[002BOOK] 자녀 회원가입 동의 요청', mailShell('보호자 동의 요청',
     `<p>${escHtml(gName)} 님, 안녕하세요.</p><p>자녀(닉네임 <b>${escHtml(nick)}</b>, 아이디 <b>${escHtml(id)}</b>)가 002BOOK 가입을 신청했어요.
      만 14세 미만 아동의 개인정보 수집에는 「개인정보 보호법」 제22조의2에 따라 법정대리인의 동의가 필요해요.</p>
-     <p>수집 항목: 아이디, 닉네임, 이메일, 거주지역(시·도), 학년, 성별, 출생 연월, 독서·논술·일기 기록<br>이용 목적: 독서·영화 학습 서비스와 AI 첨삭 제공<br>보관 기간: 회원 탈퇴 시까지 (탈퇴 즉시 삭제)</p>
+     <p>수집 항목: 아이디, 닉네임, 이메일, 거주지역(시·도), 학년, 성별, 출생 연월, 독서·논술·구술 기록<br>이용 목적: 독서·영화 학습 서비스와 AI 첨삭 제공<br>보관 기간: 회원 탈퇴 시까지 (탈퇴 즉시 삭제)</p>
      <p><a href="${SITE}/privacy.html" style="color:#8A5024">개인정보처리방침 전문 보기</a></p>
      <p style="margin:22px 0"><a href="${link}" style="background:#3E2F26;color:#FBF6EC;padding:10px 18px;border-radius:8px;text-decoration:none">동의 내용 확인하기</a></p>
      <p style="font-size:13px;color:#6F6155">링크를 열면 동의 내용을 확인하고 [동의] 또는 [동의하지 않음]을 고를 수 있어요. 링크는 7일 동안 쓸 수 있어요.</p>
@@ -206,8 +206,7 @@ async function resetPw(b: Record<string, unknown>) {
     await sb.from('sessions').delete().eq('uid', id);
     await sendMail(acc.email, '[002BOOK] 임시 비밀번호 안내', mailShell('임시 비밀번호',
       `<p>${escHtml(id)} 님의 임시 비밀번호는 아래와 같아요.</p><p style="font-size:22px;letter-spacing:.08em;font-weight:700">${tmp}</p>
-       <p>로그인한 뒤 위쪽의 아이디를 눌러 새 비밀번호로 바꿔 주세요.</p>
-       <p style="font-size:13px;color:#6F6155">일기를 잠가 두었다면, 새 비밀번호로 바꾼 뒤 일기 화면에서 '복구 코드로 열기'를 써 주세요.</p>`));
+       <p>로그인한 뒤 위쪽의 아이디를 눌러 새 비밀번호로 바꿔 주세요.</p>`));
   }
   return { ok: true };
 }

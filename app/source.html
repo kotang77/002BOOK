@@ -1722,7 +1722,7 @@ function authHTML(){
     <label for="su-nick">닉네임 <small class="hint">다른 회원에게 보이는 이름이에요. 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12"></label>
     <label for="su-region">거주지역<select id="su-region" name="region">${REGIONS.map(r=>`<option${r==='경기'?' selected':''}>${r}</option>`).join('')}</select></label>
     <label for="su-bio">한 줄 소개 <small class="hint">처음에는 비공개예요. 내 정보 → 공개 설정에서 켤 수 있어요. 비워도 돼요</small><input id="su-bio" name="bio" maxlength="40" placeholder="예: 책 읽는 걸 좋아하는 호기심 많은 사람"></label>
-    <label for="su-buddy">나의 가상 친구 이름 <small class="hint">일기와 책쓰기를 함께해 주는 친구예요. 비우면 '${BUDDY0}'예요. 나중에 바꿀 수 있어요</small><input id="su-buddy" name="buddy" maxlength="10" placeholder="${BUDDY0}"></label>${budPickHTML(null)}
+    <label for="su-buddy">나의 가상 친구 이름 <small class="hint">인사하고 응원해 주는 친구예요. 비우면 '${BUDDY0}'예요. 나중에 바꿀 수 있어요</small><input id="su-buddy" name="buddy" maxlength="10" placeholder="${BUDDY0}"></label>${budPickHTML(null)}
     <label for="su-gender">성별<select id="su-gender" name="gender" required>${genderOpts('')}</select></label>
     ${gradeFields('중1','su')}
     <label for="su-email">이메일 <small class="hint">비밀번호를 잊었을 때 임시 비밀번호를 받을 주소예요</small><input id="su-email" name="email" type="email" autocomplete="email" required></label>
@@ -1735,7 +1735,7 @@ function authHTML(){
           <li><b>목적</b>: 회원 관리, 학년별 책·영화 코스와 논술 AI 첨삭 제공, 친구·가족 기능</li>
           <li><b>항목</b>: 아이디, 비밀번호(암호화), 닉네임, 이메일, 거주지역, 학년, 성별, 태어난 연월, 학습 기록 (만 14세 미만은 보호자 이름·이메일)</li>
           <li><b>보유 기간</b>: 탈퇴하면 바로 삭제${(window.__002CFG&&window.__002CFG.free)?'':' (법령상 결제 기록은 5년)'}</li>
-          <li><b>생성형 AI</b>: 첨삭·추천·일기 답장은 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
+          <li><b>생성형 AI</b>: 첨삭·추천·구술 평가는 생성형 AI(Anthropic Claude)가 만들어요. 버튼을 누를 때만 내용이 AI로 가고 AI 학습에는 쓰이지 않아요.</li>
           <li><b>국외 이전</b>: 서비스 운영을 위해 Supabase·Anthropic·Resend·GitHub(미국)에 처리를 맡겨요.</li>
           <li><b>공개 범위</b>: 다른 회원에게는 닉네임만 보여요. 나머지는 내가 공개를 켠 것만 보여요.</li>
           <li>선택 항목(소개·사진·마케팅)은 동의하지 않아도 이용에 제한이 없어요. 자세한 내용은 <a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--rose-ink)">개인정보처리방침</a>을 봐 주세요.</li>
@@ -1765,14 +1765,14 @@ const IC={course:ICO('<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V
 function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progress.done[ik(i,'book')])b++;if(S.progress.done[ik(i,'m1')])f++;if(S.progress.done[ik(i,'m2')])f++});return{b,f}}
 function shellHTML(){
   const v=S.view;
-  const tabs=[['course','독서'],['me','내 서재'],['friends','친구'],['write','책만들기'],['diary','일기']];if(isAdmin())tabs.push(['admin','관리']);
+  const tabs=[['course','독서'],['me','내 서재'],['friends','친구']];if(isAdmin())tabs.push(['admin','관리']);
   return `<div class="wrap"><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기"><img src="${avatarSrc()||LOGO_ICON}" width="36" height="36" alt=""></button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
     <div class="seg" role="group" aria-label="코스 선택"><button data-act="basemode" aria-pressed="${S.mode==='base'}">기본</button><button data-act="custommode" aria-pressed="${S.mode==='custom'}">${isPaid()?'':IC.lock}맞춤</button></div></header>
     <div class="dtabs">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${n}${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</div>
-    <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='diary'?diaryHTML():v==='write'?mkHTML():v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
+    <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
     <nav class="nav" aria-label="메뉴">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${IC[k]}<span>${n}</span>${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</nav>`;
 }
 const BOOKG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>';
@@ -2775,7 +2775,7 @@ function memberRowHTML(m){
         ${m.email?`<a class="btn ghost small" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('[002BOOK] ')}">이메일 보내기</a>`:'<button class="btn ghost small" disabled>이메일 없음</button>'}
         ${adm?'':`<button class="btn ghost small" data-act="admblock" data-id="${esc(m.id)}">${blk?'정지 풀기':'이용 정지'}</button>`}</div>
       <div class="inl"><input id="adm-pw" type="text" aria-label="새 비밀번호" placeholder="새 비밀번호 (8자 이상)" autocomplete="off"><button class="btn ghost small" data-act="admpw" data-id="${esc(m.id)}">비밀번호 바꾸기</button></div>
-      ${adm?'':`<div><button class="btn danger small" data-act="admdel" data-id="${esc(m.id)}">회원 삭제</button> <span class="hint">진도·첨삭·후기·일기까지 모두 지워져요.</span></div>`}</div>`}
+      ${adm?'':`<div><button class="btn danger small" data-act="admdel" data-id="${esc(m.id)}">회원 삭제</button> <span class="hint">진도·첨삭·구술·후기까지 모두 지워져요.</span></div>`}</div>`}
   return `<div class="mb" data-k="${esc((m.id+' '+(m.nick||'')).toLowerCase())}"><button class="mbh" data-act="admopen" data-id="${esc(m.id)}" aria-expanded="${open}"><b>${esc(m.nick||m.id)}</b><span class="hint">${esc(m.id)} · ${esc(m.grade||'')} · ${esc(m.region||'')}</span>${adm?'<span class="bdg adm">관리자</span>':`<span class="bdg ${paid?'paid':''}">${paid?'유료':'무료'}</span>`}${blk?'<span class="bdg blk">정지</span>':''}</button>${d}</div>`;
 }
 function adminViewHTML(){
@@ -2876,68 +2876,9 @@ async function deleteMember(id){
 
 
 
-/* ---------- 일기 암호화 (내 기기에서만 풀림) ---------- */
-const CRY=()=>!!(window.crypto&&crypto.subtle&&crypto.getRandomValues);
-const b64=u=>{let s='';u=new Uint8Array(u);for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)};
-const unb64=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
-const rnd=n=>crypto.getRandomValues(new Uint8Array(n));
-async function kek(secret,salt){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),'PBKDF2',false,['deriveKey']);
-  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
-async function wrapKey(raw,secret){const salt=rnd(16),iv=rnd(12);const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},await kek(secret,salt),raw);return {salt:b64(salt),iv:b64(iv),ct:b64(ct)}}
-async function unwrapKey(o,secret){return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},await kek(secret,unb64(o.salt)),unb64(o.ct)))}
-async function dySetKey(raw){S.dyRaw=raw;S.dyKey=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['encrypt','decrypt'])}
-async function dyEnc(obj){const iv=rnd(12);const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},S.dyKey,new TextEncoder().encode(JSON.stringify(obj)));return {iv:b64(iv),ct:b64(ct)}}
-async function dyDec(d){return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(d.iv)},S.dyKey,unb64(d.ct))))}
-const normCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-function genCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const r=rnd(20);let c='';for(let i=0;i<20;i++){c+=A[r[i]%32];if(i%5===4&&i<19)c+='-'}return c}
-const pwOK=async pw=>{try{await window.__002.server.call('auth.verify',{pw});return true}catch(e){return false}};
-async function dyPut(x){
-  const e=await dyEnc({text:x.text,feedback:x.feedback||'',mood:x.mood||'',care:!!x.care,fbAt:x.fbAt||0});
-  await S.db.doc('diaries/'+S.id+'_'+x.date).set({uid:S.id,date:x.date,at:x.at,upd:x.upd||x.at,v:1,iv:e.iv,ct:e.ct})}
-async function dyStoreDraft(){
-  if(!S.dyKey)return;const d=S.dyDraftMem;
-  if(!d||!String(d.text||'').trim())delete S.progress.dyDraftEnc;
-  else{const e=await dyEnc({t:d.text});S.progress.dyDraftEnc={date:d.date,iv:e.iv,ct:e.ct}}
-  delete S.progress.dyDraft;saveProgress()}
-async function dyLoadDraft(date){
-  if(S.dyDraftMem&&S.dyDraftMem.date===date)return;
-  const e=S.progress.dyDraftEnc;S.dyDraftMem=null;
-  if(e&&e.date===date&&S.dyKey){try{const o=await dyDec(e);S.dyDraftMem={date,text:String(o.t||'')}}catch(err){}}}
-async function dySetup(pw){
-  const D=S.dy;
-  try{
-    if(!(await pwOK(pw)))throw {code:'pw'};
-    const raw=rnd(32);const code=genCode();
-    const kd={uid:S.id,v:1,at:Date.now(),wp:await wrapKey(raw,pw),wr:await wrapKey(raw,normCode(code))};
-    await S.db.doc('dykeys/'+S.id).set(kd);D.kd=kd;await dySetKey(raw);D.code=code;D.err=''}
-  catch(e){D.err=(e&&e.code==='pw')?'비밀번호가 맞지 않아요.':'잠금을 설정하지 못했어요. 잠시 뒤 다시 해 주세요.'}
-  render()}
-async function dyUnlock(pw){
-  const D=S.dy;
-  try{await dySetKey(await unwrapKey(D.kd.wp,pw));D.err='';await loadDiary();return}
-  catch(e){D.err='비밀번호가 맞지 않아요. 비밀번호를 바꾼 적이 있다면 아래 "복구 코드로 열기"를 눌러 주세요.'}
-  render()}
-async function dyRecover(code,pw){
-  const D=S.dy;
-  try{
-    if(!(await pwOK(pw)))throw {code:'pw'};
-    const raw=await unwrapKey(D.kd.wr,normCode(code));
-    const kd=Object.assign({},D.kd,{wp:await wrapKey(raw,pw),at:Date.now()});
-    await S.db.doc('dykeys/'+S.id).set(kd);D.kd=kd;await dySetKey(raw);D.err='';D.rec=false;await loadDiary();return}
-  catch(e){D.err=(e&&e.code==='pw')?'지금 쓰는 계정 비밀번호가 맞지 않아요.':'복구 코드가 맞지 않아요.'}
-  render()}
-async function dyRewrap(cur,pw){
-  try{
-    const g=await S.db.doc('dykeys/'+S.id).get();if(!g.exists||!CRY())return;
-    const kd=clone(g.data());let raw=S.dyRaw;
-    if(!raw)raw=await unwrapKey(kd.wp,cur);
-    kd.wp=await wrapKey(raw,pw);kd.at=Date.now();await S.db.doc('dykeys/'+S.id).set(kd);
-    if(S.dy)S.dy.kd=kd;
-  }catch(e){if(S.dy)S.dy.kdStale=true}}
-function dyLock(){S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;if(S.dy){S.dy.list=null;S.dy.sum=null;S.dy.err='';S.dy.code=null}}
+/* ---------- 로그아웃·탈퇴 ---------- */
 function doLogout(){window.__002.auth.logout();
-  S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;
-  Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,mk:null,gd:{},dy:null,progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
+  Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,gd:{},progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
   render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
 async function doWithdraw(fd){
   const er=m=>{const e=$('#wderr');if(e)e.textContent=m};
@@ -2946,131 +2887,6 @@ async function doWithdraw(fd){
   try{await window.__002.auth.withdraw(String(fd.get('pw')||''))}
   catch(e){return er(e&&e.code==='bad_password'?'비밀번호가 맞지 않아요.':'탈퇴 처리를 마치지 못했어요. 잠시 뒤 다시 해 주세요.')}
   doLogout();toast('탈퇴했어요. 모든 기록이 지워졌어요.')
-}
-
-/* ---------- 일기 ---------- */
-const MOODS=['기쁨','평온','설렘','뿌듯','피곤','속상','불안','외로움','화남'];
-const ymd=t=>{const x=new Date(t);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
-const WD=['일','월','화','수','목','금','토'];
-const dayLbl=d=>{const x=new Date(d+'T00:00:00');return d+' ('+WD[x.getDay()]+')'};
-const dyNew=()=>({tip:true,list:null,tab:'list',date:ymd(Date.now()),busy:'',sum:null,from:'',to:'',delc:''});
-async function loadDiary(){
-  if(!S.id)return;if(!S.dy)S.dy=dyNew();const D=S.dy;
-  if(!CRY()){render();return}
-  if(D.kd===undefined){try{const g=await S.db.doc('dykeys/'+S.id).get();D.kd=g.exists?clone(g.data()):null}catch(e){D.kd=null;D.kdErr=true}}
-  if(!S.dyKey||D.code){if(S.view==='diary'&&!S.wr)render();return}
-  let docs=[];
-  try{const q=await S.db.collection('diaries').where('uid','==',S.id).get();docs=q.docs.map(x=>x.data()).filter(x=>x&&x.uid===S.id&&x.date)}catch(e){docs=null}
-  if(docs===null){D.list=D.list||[];if(S.view==='diary'&&!S.wr)render();return}
-  const out=[];D.bad=0;
-  for(const d of docs){
-    try{
-      if(d.ct){const o=await dyDec(d);out.push({date:d.date,at:d.at,upd:d.upd||d.at,text:String(o.text||''),feedback:String(o.feedback||''),mood:String(o.mood||''),care:!!o.care,fbAt:o.fbAt||0})}
-      else if(typeof d.text==='string'){const x={date:d.date,at:d.at,upd:d.upd||d.at,text:d.text,feedback:d.feedback||'',mood:d.mood||'',care:!!d.care,fbAt:d.fbAt||0};out.push(x);try{await dyPut(x)}catch(e){}}
-    }catch(e){D.bad++}
-  }
-  D.list=out.sort((a,b)=>b.date.localeCompare(a.date));
-  if(S.progress.dyDraft){delete S.progress.dyDraft;saveProgress()}
-  if(S.view==='diary'&&!S.wr)render();
-}
-function dyFeedbackHTML(x){
-  if(S.dy.busy==='fb:'+x.date)return `<div class="praise"><b>${esc(buddyGa())} 읽고 있어요…</b><p>잠깐만 기다려 줘!</p></div>`;
-  if(!x.feedback)return S.sample?`<div style="margin-top:6px"><button class="chip" data-act="dyfb" data-d="${esc(x.date)}">${esc(buddyOf())}의 한마디 받기</button></div>`:'';
-  return `<div class="praise"><b>${bdFace()}${esc(buddyOf())}의 한마디</b><p style="white-space:pre-wrap">${esc(x.feedback)}</p></div>${x.care?'<div class="crisis">힘든 마음이 크게 느껴져서 걱정돼요. 부모님이나 선생님처럼 믿을 수 있는 어른에게 꼭 이야기해 보세요. 혼자 있기 힘들면 청소년상담전화 1388(24시간)에 전화하거나 문자를 보낼 수 있어요.</div>':''}`;
-}
-function diaryHTML(){
-  const D=S.dy||(S.dy=dyNew());
-  const head=`<div class="lead"><div><h2>일기</h2><p>오늘의 마음을 원고지에 적어 보세요. 읽고 나면 ${esc(buddyGa())} 한마디 해 줘요.</p></div>${S.dyKey&&!D.code?'<button class="btn ghost small" data-act="dylock">잠그기</button>':''}</div>`;
-  if(!CRY())return head+'<p class="warn">이 화면에서는 암호화를 쓸 수 없어서 일기를 열 수 없어요. 크롬이나 사파리 같은 최신 브라우저에서 열어 주세요.</p>';
-  if(D.kd===undefined)return head+'<div class="sk"></div>';
-  const tip=D.tip?`<div class="dtip"><b>안심하고 써도 돼요</b><ul><li>일기는 내 비밀번호로 잠겨서 저장돼요(암호화). 나만 쓰고, 보고, 지울 수 있어요.</li><li>관리자도 내용을 볼 수 없어요. 쓴 날짜만 보여요.</li><li>친구 피드백과 요약을 만들 때만 글이 Claude에게 전달돼요.</li><li>복구 코드를 잃고 비밀번호도 잊으면 아무도 열 수 없어요. 코드는 꼭 적어 두세요.</li><li>회원 탈퇴를 하면 일기도 모두 지워져요.</li></ul><button class="chip" data-act="dytipx">알겠어요</button></div>`:'';
-  const err=D.err?`<p class="err" role="alert">${esc(D.err)}</p>`:'';
-  if(D.code)return head+`<div class="note2"><h3>복구 코드를 적어 두세요</h3><p style="font-family:monospace;font-size:20px;letter-spacing:1px;margin:10px 0;word-break:break-all">${esc(D.code)}</p>
-    <p class="hint">이 코드는 지금 한 번만 보여요. 비밀번호를 잊거나 관리자가 비밀번호를 바꿔 준 뒤에도 일기를 열 수 있는 유일한 방법이에요. 종이에 적어 안전한 곳에 두세요. 아빠나 관리자도 이 코드를 몰라요. 코드도 비밀번호도 잃으면 일기는 아무도 열 수 없어요.</p>
-    <div class="fchips"><button class="btn small" data-act="dycopy">코드 복사</button><button class="btn" data-act="dycodeok">적어 뒀어요</button></div></div>`;
-  if(D.kd===null)return head+tip+`<form data-form="dysetup" class="note2"><h3>일기 잠금 설정</h3><p class="hint">일기는 내 비밀번호로 잠겨서 저장돼요. 나만 열 수 있고, 관리자도 읽을 수 없어요. 처음 한 번만 설정하면 돼요.</p>
-    <label for="dy-pw">내 비밀번호<input id="dy-pw" name="pw" type="password" autocomplete="current-password" required></label>${err}<div><button class="btn">잠금 설정하고 시작하기</button></div></form>`;
-  if(!S.dyKey)return head+tip+(D.rec?`<form data-form="dyrecover" class="note2"><h3>복구 코드로 열기</h3><p class="hint">처음 설정할 때 받은 복구 코드와, 지금 쓰는 계정 비밀번호를 넣어 주세요. 열리면 지금 비밀번호로 다시 잠가요.</p>
-    <label for="dy-rc">복구 코드<input id="dy-rc" name="code" autocomplete="off" autocapitalize="characters" required></label><label for="dy-pw">지금 계정 비밀번호<input id="dy-pw" name="pw" type="password" autocomplete="current-password" required></label>${err}
-    <div class="fchips"><button class="btn">열기</button><button type="button" class="chip" data-act="dyrecmode" data-v="0">비밀번호로 열기</button></div></form>`
-    :`<form data-form="dyunlock" class="note2"><h3>일기 열기</h3><p class="hint">일기는 내 비밀번호로 잠겨 있어요. 비밀번호를 넣으면 이번에 접속하는 동안 열려요.</p>
-    <label for="dy-pw">내 비밀번호<input id="dy-pw" name="pw" type="password" autocomplete="current-password" required></label>${err}
-    <div class="fchips"><button class="btn">열기</button><button type="button" class="chip" data-act="dyrecmode" data-v="1">복구 코드로 열기</button></div></form>`);
-  if(!D.list)return head+'<div class="sk"></div>';
-  const tabs=`<div class="stabs" style="margin-bottom:12px">${[['list','일기장 '+D.list.length],['sum','요약 보기']].map(([k,t])=>`<button data-act="dytab" data-v="${k}" aria-pressed="${D.tab===k}">${t}</button>`).join('')}</div>`;
-  let body='';
-  if(D.tab==='list'){
-    const ex=D.list.find(x=>x.date===D.date);const dr=S.dyDraftMem||(S.progress.dyDraftEnc?{date:S.progress.dyDraftEnc.date,text:'x'}:null);const hasDr=dr&&dr.date===D.date&&dr.text&&dr.text.trim()&&(!ex||dr.text!==ex.text);
-    body=`<div class="note2"><h3>일기 쓰기</h3>
-      <div class="dyr"><label for="dy-date">날짜<input type="date" id="dy-date" value="${esc(D.date)}" max="${ymd(Date.now())}"></label><button class="btn" data-act="dywrite">${IC.pen}${ex?'이 날 일기 고쳐 쓰기':hasDr?'쓰던 일기 이어 쓰기':'원고지에 쓰기'}</button></div>
-      <p class="hint">일기는 내 비밀번호로 잠겨 저장돼서 나만 볼 수 있어요. 날짜마다 한 편씩 모이고, 저장하면 친구 ${esc(buddyGa())} 읽고 응원해 줘요.</p></div>
-      <div class="sec" style="margin-top:14px"><h3>내 일기장</h3>${D.bad?`<p class="warn">열 수 없는 일기가 ${D.bad}편 있어요. 예전 비밀번호로 잠긴 일기라면 "잠그기" 뒤 복구 코드로 열어 보세요.</p>`:''}${D.list.length?D.list.map(x=>`<details class="dye"><summary><b>${esc(dayLbl(x.date))}</b>${x.mood?`<span class="tagk">${esc(x.mood)}</span>`:''}<span class="ex">${esc(String(x.text||'').replace(/\n/g,' ').slice(0,60))}</span></summary>
-        <p class="dt">${esc(x.text)}</p>${dyFeedbackHTML(x)}
-        <div class="fchips" style="margin-top:8px"><button class="chip" data-act="dyedit" data-d="${esc(x.date)}">고쳐 쓰기</button>${x.feedback&&S.sample?`<button class="chip" data-act="dyfb" data-d="${esc(x.date)}">피드백 다시 받기</button>`:''}<button class="chip" data-act="dydel" data-d="${esc(x.date)}">${D.delc===x.date?'한 번 더 누르면 지워져요':'삭제'}</button></div></details>`).join(''):'<p class="hint">아직 쓴 일기가 없어요. 오늘 하루를 한 줄이라도 적어 보세요.</p>'}</div>`;
-  }else{
-    const S2=D.sum;
-    const t=ymd(Date.now());
-    body=`<div class="note2"><h3>기간 골라 요약하기</h3>
-      <div class="fchips"><button class="chip" data-act="dysum" data-r="week">이번 주</button><button class="chip" data-act="dysum" data-r="month">이번 달</button><button class="chip" data-act="dysum" data-r="m3">최근 3개월</button><button class="chip" data-act="dysum" data-r="all">전체</button></div>
-      <div class="dyr" style="margin-top:8px"><label for="dy-from">부터<input type="date" id="dy-from" value="${esc(D.from)}" max="${t}"></label><label for="dy-to">까지<input type="date" id="dy-to" value="${esc(D.to)}" max="${t}"></label><button class="btn" data-act="dysum" data-r="custom">요약하기</button></div>
-      ${S.sample?'':'<p class="warn">Claude 연결이 없어 요약할 수 없어요.</p>'}</div>
-      ${D.busy==='sum'?'<div class="praise"><b>일기를 모아 읽고 있어요…</b><p>조금만 기다려 줘!</p></div>':''}
-      ${S2?`<div class="sec" style="margin-top:14px"><h3>${esc(S2.from)} ~ ${esc(S2.to)} · 일기 ${S2.n}편</h3>
-        ${S2.moods.length?`<div class="fchips">${S2.moods.map(([m,c])=>`<span class="tagk">${esc(m)} ${c}</span>`).join('')}</div>`:''}
-        <p style="white-space:pre-wrap;margin-top:8px">${esc(S2.summary)}</p>
-        ${S2.highlights&&S2.highlights.length?`<h3 style="margin-top:10px;font-size:14.5px">기억에 남는 순간</h3><ul>${S2.highlights.map(h=>`<li>${esc(h)}</li>`).join('')}</ul>`:''}
-        <div class="praise"><b>${bdFace()}${esc(buddyOf())}의 응원</b><p style="white-space:pre-wrap">${esc(S2.cheer)}</p></div></div>`:''}`;
-  }
-  return head+tip+tabs+body;
-}
-async function dyFeedback(date){
-  const D=S.dy;const x=(D.list||[]).find(e=>e.date===date);if(!x||!S.sample)return;
-  D.busy='fb:'+date;if(S.view==='diary')render();
-  try{
-    const prompt=`너는 ${S.me.nick}의 가장 친한 친구다. 이름은 '${buddyOf()}'다. ${S.me.nick}은(는) ${S.me.grade||'중학생'} 학생이다. 친구가 쓴 일기를 읽고 친한 친구처럼 편한 반말로 피드백을 해 준다.\n\n[규칙]\n- 평가, 훈계, 맞춤법 지적은 하지 않는다.\n- 일기 속 구체적인 장면과 감정을 짚어서 공감한다. 일기에 없는 사실을 지어내지 않는다.\n- 긍정적으로 응원하고 위로가 되는 말을 넣는다. 힘든 일이 있었다면 먼저 위로한다.\n- 4~6문장. 마지막은 내일을 응원하는 한마디로 끝낸다. 이모티콘은 쓰지 않는다.\n- 글에 극심한 괴로움, 자해나 자살 생각, 학대, 심한 괴롭힘 같은 위험 신호가 있으면 친구 말투로 따뜻하게 공감하고, 믿을 수 있는 어른(부모님, 선생님)에게 꼭 이야기해 보자고 권하며 care를 true로 한다. 그렇지 않으면 false다.\n\n[일기 ${date}]\n${x.text}\n\nJSON 객체 하나만 출력한다. 형식: {"feedback":"","mood":"${MOODS.join('|')} 중 하나","care":false}`;
-    const r=await S.sample.json(prompt,{cache:false});
-    if(!r||typeof r.feedback!=='string'||!r.feedback.trim())throw {code:'invalid_json'};
-    x.feedback=r.feedback.trim().slice(0,1200);x.mood=MOODS.includes(r.mood)?r.mood:'';x.care=r.care===true;x.fbAt=Date.now();
-    await dyPut(x);
-    D.busy='';if(S.view==='diary')render();toast(buddyGa()+' 한마디 남겼어요.');
-  }catch(e){D.busy='';if(S.view==='diary')render();toast((e&&e.code)==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':'피드백을 받지 못했어요. 일기는 저장됐어요. 나중에 다시 눌러 주세요.')}
-}
-async function dySave(){
-  if(!S.wr||S.wr.mode!=='diary')return;
-  const ta=$('#wr-ta');const text=String(ta?ta.value:'').trim();const date=S.wr.date;
-  if(!text){toast('일기를 써 주세요.');return}
-  const D=S.dy;const old=(D.list||[]).find(e=>e.date===date);const now=Date.now();
-  const same=old&&old.text===text;
-  const x=same?old:{uid:S.id,date,text:text.slice(0,6000),at:old?old.at:now,upd:now,feedback:'',mood:'',care:false};
-  clearTimeout(wrT);S.dyDraftMem=null;delete S.progress.dyDraftEnc;delete S.progress.dyDraft;saveProgress();
-  S.wr=null;const L=$('#layer3');L.hidden=true;L.innerHTML='';
-  try{await dyPut(x)}catch(e){toast('저장하지 못했어요. 잠시 뒤 다시 해 주세요.');S.dyDraftMem={date,text};dyStoreDraft();renderLayers();return}
-  if(!old)D.list.push(x);else if(!same)D.list[D.list.indexOf(old)]=x;
-  D.list.sort((a,b)=>b.date.localeCompare(a.date));D.tab='list';
-  toast('일기를 저장했어요.');renderLayers();render();
-  if(!same||!x.feedback)dyFeedback(date);
-}
-async function dySummary(r){
-  const D=S.dy;if(!S.sample||D.busy)return;const t=new Date();let from,to=ymd(t);
-  if(r==='week'){const x=new Date(t);x.setDate(x.getDate()-((x.getDay()+6)%7));from=ymd(x)}
-  else if(r==='month')from=to.slice(0,8)+'01';
-  else if(r==='m3'){const x=new Date(t);x.setMonth(x.getMonth()-3);from=ymd(x)}
-  else if(r==='all')from='0000-01-01';
-  else{from=D.from;to=D.to||to;if(!from){toast('시작 날짜를 골라 주세요.');return}}
-  if(from>to){toast('시작 날짜가 끝 날짜보다 늦어요.');return}
-  const es=D.list.filter(e=>e.date>=from&&e.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!es.length){toast('이 기간에 쓴 일기가 없어요.');return}
-  const moods=Object.entries(es.reduce((o,e)=>{if(e.mood)o[e.mood]=(o[e.mood]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1]);
-  const per=Math.max(250,Math.floor(14000/es.length));
-  const body=es.map(e=>`[${e.date}${e.mood?' · '+e.mood:''}]\n${String(e.text).slice(0,per)}`).join('\n\n');
-  D.busy='sum';D.from=r==='custom'?from:D.from;if(S.view==='diary')render();
-  try{
-    const prompt=`너는 ${S.me.nick}의 가장 친한 친구다. 이름은 '${buddyOf()}'다. 아래는 ${S.me.nick}이(가) ${from==='0000-01-01'?es[0].date:from}부터 ${to}까지 쓴 일기 ${es.length}편이다. 기간 전체를 요약해 준다.\n\n[규칙]\n- summary: 이 기간의 흐름, 자주 나온 일과 감정, 달라진 점을 4~6문장으로 요약한다. 부드러운 해요체. 일기에 없는 사실을 지어내지 않는다.\n- highlights: 기억에 남는 순간 2~3개. 각각 한 문장.\n- cheer: 긍정적으로 응원하고 위로가 되는 말을 친한 친구의 편한 반말로 3~4문장. 힘든 날이 있었다면 그 마음을 먼저 다독인다. 이모티콘은 쓰지 않는다.\n- 평가나 훈계는 하지 않는다.\n\n${body}\n\nJSON 객체 하나만 출력한다. 형식: {"summary":"","highlights":["",""],"cheer":""}`;
-    const o=await S.sample.json(prompt,{cache:false});
-    if(!o||typeof o.summary!=='string'||typeof o.cheer!=='string')throw {code:'invalid_json'};
-    D.sum={from:from==='0000-01-01'?es[0].date:from,to,n:es.length,moods,summary:o.summary.trim(),highlights:(o.highlights||[]).map(String).slice(0,3),cheer:o.cheer.trim()};
-    D.busy='';if(S.view==='diary')render();
-  }catch(e){D.busy='';if(S.view==='diary')render();toast('요약하지 못했어요. 잠시 뒤 다시 눌러 주세요.')}
 }
 
 /* ---------- 친구 ---------- */
@@ -3277,7 +3093,7 @@ function renderLayers(){
   const sh=S.sheet;
   if(!S.id||!sh){l1.hidden=true;l1.innerHTML=''}
   else{l1.hidden=false;const keep=l1.querySelector('.panel');const top=keep?keep.scrollTop:0;
-    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='kid'?kidHTML():sh.type==='mkprev'?mkPrevHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
+    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
     const p=l1.querySelector('.panel');if(p&&keep)p.scrollTop=top}
   if(S.id&&S.survey){l2.hidden=false;l2.innerHTML=surveyHTML();return}
   if(!S.id||(!S.info&&!S.evalView&&!S.oralView&&!S.oralHist)){l2.hidden=true;l2.innerHTML=''}
@@ -3295,7 +3111,7 @@ async function enter(id,member){
   S.mode=(S.me.mode==='custom'&&S.custom&&isPaid())?'custom':'base';
   S.grade=GR.includes(S.me.grade)?S.me.grade:'중1';S.view='course';S.sheet=null;S.info=null;
   S.adm={tab:'members',members:null,prog:{},open:null,to:'all',resets:[],tmp:{}};
-  S.fr=frNew();S.fam=famNew();S.mk=mkNew();S.gd={};S.askDraft='';S.askBusy=false;S.roadOpen=-1;S.dy=dyNew();S.dyKey=null;S.dyRaw=null;S.dyDraftMem=null;frLast='';
+  S.fr=frNew();S.fam=famNew();S.gd={};S.askDraft='';S.askBusy=false;S.roadOpen=-1;frLast='';
   render();loadCovers();loadFriends(false);loadVideos();
   S.db.doc('members/'+id).update({seen:Date.now()}).catch(()=>{});
   if(S.me.mustChange){S.sheet={type:'profile'};renderLayers();toast('임시 비밀번호로 들어왔어요. 새 비밀번호로 바꿔 주세요.')}
@@ -3340,7 +3156,6 @@ async function saveProfile(fd){
         up.mustChange=false;
     }else if(S.me.mustChange)return er('임시 비밀번호로 들어왔어요. 새 비밀번호를 정해 주세요.');
     await S.db.doc('members/'+S.id).update(up);
-    if(pw&&CRY())await dyRewrap(cur,pw);
     Object.assign(S.me,up);if(GR.includes(S.me.grade))S.grade=S.me.grade;S.sheet=null;toast('내 정보를 저장했어요.');render();
   }catch(e){er('저장하지 못했어요. 잠시 뒤 다시 해 주세요.')}
 }
@@ -3353,7 +3168,7 @@ function profileHTML(){
     <label for="pf-nick">닉네임<input id="pf-nick" name="nick" maxlength="12" value="${esc(m.nick||'')}"></label>
     <label for="pf-email">이메일<input id="pf-email" name="email" type="email" autocomplete="email" value="${esc(m.email||'')}" required></label>
     <label for="pf-bio">한 줄 소개 <small class="hint">아래 공개 설정을 켜야 다른 회원에게 보여요</small><input id="pf-bio" name="bio" maxlength="40" value="${esc(m.bio||'')}"></label>
-    <label for="pf-buddy">나의 가상 친구 이름 <small class="hint">일기와 책쓰기를 함께해 주는 친구예요</small><input id="pf-buddy" name="buddy" maxlength="10" value="${esc(buddyOf(m))}"></label>${budPickHTML(m)}
+    <label for="pf-buddy">나의 가상 친구 이름 <small class="hint">인사하고 응원해 주는 친구예요</small><input id="pf-buddy" name="buddy" maxlength="10" value="${esc(buddyOf(m))}"></label>${budPickHTML(m)}
     <label for="pf-region">거주지역<select id="pf-region" name="region">${REGIONS.map(r=>`<option${r===m.region?' selected':''}>${r}</option>`).join('')}</select></label>
     <label for="pf-gender">성별<select id="pf-gender" name="gender">${genderOpts(m.gender||'')}</select></label>
     ${gradeFields(m.grade,'pf')}
@@ -3366,7 +3181,7 @@ function profileHTML(){
       <label for="pf-cur">현재 비밀번호<input id="pf-cur" name="cur" type="password" autocomplete="current-password"></label>
       <label for="pf-pw">새 비밀번호 <small class="hint">8자 이상</small><input id="pf-pw" name="pw" type="password" autocomplete="new-password"></label></div>
     <p class="err" id="pferr"></p><div><button class="btn" type="submit">저장</button></div></form>
-  ${isAdmin()?'':`<form data-form="withdraw" class="sec" style="margin-top:18px"><h3>회원 탈퇴</h3><p class="hint">탈퇴하면 내 정보, 진도, 첨삭, 논술, 후기, 친구·가족 관계와 메시지, 일기, 내가 쓴 책이 모두 지워지고 되돌릴 수 없어요.</p>
+  ${isAdmin()?'':`<form data-form="withdraw" class="sec" style="margin-top:18px"><h3>회원 탈퇴</h3><p class="hint">탈퇴하면 내 정보, 진도, 첨삭, 논술, 후기, 구술 녹음, 친구·가족 관계와 메시지가 모두 지워지고 되돌릴 수 없어요.</p>
     <label for="wd-pw">비밀번호<input id="wd-pw" name="pw" type="password" autocomplete="current-password"></label>
     <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="ok" style="width:auto"> 모두 지워지는 것을 확인했어요</label>
     <p class="err" id="wderr"></p><div><button class="btn danger" type="submit">회원 탈퇴</button></div></form>`}</div>`;
@@ -4703,7 +4518,7 @@ function wrLayout(t,cols){cols=cols||20;
   }
   pos[t.length]=[r,c];
   return {rows,pos}}
-function wrTarget(i){if(S.wr&&(S.wr.mode==='diary'||S.wr.mode==='mk'))return 0;if(S.wr&&S.wr.mode==='r2'){const e=S.evals[nk(i)];return targetOf(e&&e.question)}const q=qState(i);return targetOf(q&&q.shown&&q.shown[S.essayDraft.q])}
+function wrTarget(i){if(S.wr&&S.wr.mode==='r2'){const e=S.evals[nk(i)];return targetOf(e&&e.question)}const q=qState(i);return targetOf(q&&q.shown&&q.shown[S.essayDraft.q])}
 function wrChip(n,t){
   const [c,l]=lenStat(n,t);
   return `<b class="qc ${c}">${n.toLocaleString('ko-KR')}/${t.toLocaleString('ko-KR')}자 내외</b> <small class="qcl ${c}">${l}</small>`}
@@ -4718,28 +4533,25 @@ function wrFit(){
   L.style.setProperty('--cols',cn);L.style.setProperty('--wc',wc+'px');L.style.setProperty('--gp',Math.max(4,Math.round(wc*.28))+'px');L.style.setProperty('--gw',gw+'px');
 }
 function wrOpen(i,mode,date){
-  const mk=mode==='mk';const dy=mode==='diary';const fr=dy||mk;const q=fr?null:qState(i);const r2=mode==='r2';const e1=fr?null:S.evals[nk(i)];
-  let part=null;
-  if(mk){const w=mkCur();part=w&&w.parts.find(p=>p.id===date);if(!part)return}
-  else if(dy){}
-  else if(r2){if(!e1)return;if(rwLeft(e1)>0){toast('다시 쓰기는 첫 제출 72시간 뒤부터 할 수 있어요.');return}}
+  const q=qState(i);const r2=mode==='r2';const e1=S.evals[nk(i)];
+  if(r2){if(!e1)return;if(rwLeft(e1)>0){toast('다시 쓰기는 첫 제출 72시간 뒤부터 할 수 있어요.');return}}
   else{
     if(S.essayDraft.i!==i)S.essayDraft=draftOf(i);
     if(q&&q.shown&&q.shown.length&&S.essayDraft.q<0){toast('먼저 위에서 논술 질문을 골라 주세요.');return}
     {const P=prepOf(i);if(!P.qDone){toast('먼저 궁금한 점 묻기 단계를 마쳐 주세요.');return}if(!P.roadDone){toast('메모판에서 논술 로드맵을 먼저 완성해 주세요.');return}}
   }
-  S.wr={i,mode:mk?'mk':dy?'diary':r2?'r2':'',date};const L=$('#layer3');
-  const qt=fr?'':r2?String(e1.question||''):(q&&q.shown?q.shown[S.essayDraft.q]:'');
-  const sw=fr?'':`<span class="swc" title="작성 시간">${IC.clock}<b id="wr-sw">${fmtSw((S.progress.wtime||{})[wtKey()]||0)}</b>${qt?`<small>권장 ${qTime(qt).total}분</small>`:''}</span>`;
-  const rd=fr?null:prepOf(i);const hasRoad=!!rd&&ROAD.some(x=>String(rd.road[x[0]]||'').trim());
-  L.innerHTML=`<div class="wrh"><h2>${mk?'책쓰기'+(part.t?' · '+esc(part.t):''):dy?'일기 · '+esc(date):r2?'다시 쓰기 (2차)':'원고지에 쓰기'}${sw}</h2><span style="display:flex;gap:8px"><button class="btn ghost small" data-act="wrclose">${dy?'임시저장':'저장하고 닫기'}</button>${r2?'<button class="btn small" data-act="rwsubmit">제출하기</button>':''}${dy?'<button class="btn small" data-act="dysave">저장하기</button>':''}</span></div>
+  S.wr={i,mode:r2?'r2':'',date};const L=$('#layer3');
+  const qt=r2?String(e1.question||''):(q&&q.shown?q.shown[S.essayDraft.q]:'');
+  const sw=`<span class="swc" title="작성 시간">${IC.clock}<b id="wr-sw">${fmtSw((S.progress.wtime||{})[wtKey()]||0)}</b>${qt?`<small>권장 ${qTime(qt).total}분</small>`:''}</span>`;
+  const rd=prepOf(i);const hasRoad=!!rd&&ROAD.some(x=>String(rd.road[x[0]]||'').trim());
+  L.innerHTML=`<div class="wrh"><h2>${r2?'다시 쓰기 (2차)':'원고지에 쓰기'}${sw}</h2><span style="display:flex;gap:8px"><button class="btn ghost small" data-act="wrclose">저장하고 닫기</button>${r2?'<button class="btn small" data-act="rwsubmit">제출하기</button>':''}</span></div>
     ${qt?`<div class="wrq"><b>${r2?'질문':'질문 '+(S.essayDraft.q+1)}</b> ${esc(qt)}</div>`:''}
     ${hasRoad?`<div class="wrq wrrd" id="wr-road" hidden>${ROAD.filter(x=>String(rd.road[x[0]]||'').trim()).map(x=>`<p><b>${x[1]}</b> ${esc(rd.road[x[0]])}</p>`).join('')}</div>`:''}
     <div class="wrs"><span id="wr-cnt"></span><span style="display:flex;gap:6px">${hasRoad?'<button class="chip" data-act="wrroad">로드맵</button>':''}<button class="chip" data-act="wrset">원고지·글씨체</button><button class="chip" data-act="wrclear">모두 지우기</button></span></div>
     <div class="wrset" id="wr-set" hidden>${wrSetHTML()}</div>
-    <div class="wrbody" id="wr-body"><div class="wrg" id="wr-grid"><div id="wr-rows"></div><textarea id="wr-ta" class="wrta" aria-label="${mk?'책 쓰기':dy?'일기 쓰기':'논술 글 쓰기'}" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea></div></div>`;
+    <div class="wrbody" id="wr-body"><div class="wrg" id="wr-grid"><div id="wr-rows"></div><textarea id="wr-ta" class="wrta" aria-label="논술 글 쓰기" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></textarea></div></div>`;
   L.hidden=false;wrApply();
-  const ta=$('#wr-ta');if(mk){ta.maxLength=4000;ta.value=part.text||''}else if(dy){const ex=((S.dy&&S.dy.list)||[]).find(x=>x.date===date);const dr=S.dyDraftMem;ta.value=dr&&dr.date===date&&dr.text?dr.text:(ex?ex.text:'')}else if(r2){const dd=(S.progress.drafts2||{})[nk(i)];ta.value=dd!=null?dd:String(e1.transcript||'')}else ta.value=S.essayDraft.text||'';
+  const ta=$('#wr-ta');if(r2){const dd=(S.progress.drafts2||{})[nk(i)];ta.value=dd!=null?dd:String(e1.transcript||'')}else ta.value=S.essayDraft.text||'';
   wrDraw();swStart();setTimeout(()=>{ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);wrDraw()},60);
 }
 function wrDraw(){
@@ -4758,7 +4570,7 @@ function wrDraw(){
   $('#wr-rows').innerHTML=h;
   ta.style.height=$('#wr-rows').offsetHeight+'px';
   const n=t.replace(/\n/g,'').length;
-  $('#wr-cnt').innerHTML=S.wr.mode==='diary'||S.wr.mode==='mk'?`<b class="qc ok">${n.toLocaleString('ko-KR')}자${S.wr.mode==='mk'?' / 4,000자':''}</b>`:wrChip(n,wrTarget(S.wr.i));
+  $('#wr-cnt').innerHTML=wrChip(n,wrTarget(S.wr.i));
   // 커서가 보이게 스크롤
   const cur=$('#wr-rows .cur');const body=$('#wr-body');
   if(cur&&body){const cr=cur.getBoundingClientRect(),br=body.getBoundingClientRect();
@@ -4767,8 +4579,6 @@ function wrDraw(){
 function wrSave(){
   if(!S.wr)return;const ta=$('#wr-ta');if(!ta)return;
   const i=S.wr.i;
-  if(S.wr.mode==='mk'){const w=mkCur();const p=w&&w.parts.find(x=>x.id===S.wr.date);if(p){p.text=ta.value.slice(0,4000);mkSaveSoon()}return}
-  if(S.wr.mode==='diary'){S.dyDraftMem={date:S.wr.date,text:ta.value};dyStoreDraft();return}
   if(S.wr.mode==='r2'){S.progress.drafts2=S.progress.drafts2||{};S.progress.drafts2[nk(i)]=ta.value;saveProgress();return}
   S.essayDraft.text=ta.value;
   S.progress.drafts=S.progress.drafts||{};
@@ -4777,7 +4587,7 @@ function wrSave(){
 }
 function wrClose(){
   if(!S.wr)return;wrSave();clearTimeout(wrT);clearInterval(wrSw);
-  S.wr=null;const L=$('#layer3');L.hidden=true;L.innerHTML='';renderLayers();if(S.view==='diary'||S.view==='write')render();toast('저장했어요.');
+  S.wr=null;const L=$('#layer3');L.hidden=true;L.innerHTML='';renderLayers();toast('저장했어요.');
 }
 window.addEventListener('resize',wrFit);
 if(window.visualViewport){window.visualViewport.addEventListener('resize',wrFit);window.visualViewport.addEventListener('scroll',wrFit)}
@@ -4882,7 +4692,7 @@ function famHTML(){
   const F=S.fr;const sub=id=>{const m=frMem(id);return [m.grade,m.region].filter(Boolean).join(' · ')};
   const row=(id,s,btns,k)=>`<div class="frr"${k?` data-k="${esc(k)}"`:''}>${frAv(id)}<div class="fi"><b>${esc(famName(id))}</b><small>${esc(s)}</small></div><div class="fa">${btns}</div></div>`;
   const recv=famRecv(),par=famParents();let h='';
-  if(recv.length)h+=`<div class="sec"><h3>받은 가족 요청 ${recv.length}건</h3><p class="hint">수락하면 부모님이 내 진도와 논술, 첨삭 점수를 볼 수 있어요. 일기는 누구도 볼 수 없어요.</p>${recv.map(d=>row(d.parent,'부모님으로 가족 맺기를 요청했어요',`<button class="btn small" data-act="famok" data-id="${esc(d.parent)}">수락</button><button class="btn ghost small" data-act="famno" data-id="${esc(d.parent)}">거절</button>`)).join('')}</div>`;
+  if(recv.length)h+=`<div class="sec"><h3>받은 가족 요청 ${recv.length}건</h3><p class="hint">수락하면 부모님이 내 진도와 논술, 첨삭 점수를 볼 수 있어요.</p>${recv.map(d=>row(d.parent,'부모님으로 가족 맺기를 요청했어요',`<button class="btn small" data-act="famok" data-id="${esc(d.parent)}">수락</button><button class="btn ghost small" data-act="famno" data-id="${esc(d.parent)}">거절</button>`)).join('')}</div>`;
   if(par.length)h+=`<div class="sec" style="margin-top:14px"><h3>내 부모님</h3>${par.map(id=>row(id,'가족',`<button class="btn ghost small" data-act="famno" data-id="${esc(id)}">가족 끊기</button>`)).join('')}</div>`;
   if(isParent()){
     const kids=famKids(),sent=famSent();
@@ -5026,7 +4836,7 @@ const rwBtn=(i,ev,label,cls)=>{const lk=rwLeft(ev)>0;return `<button class="btn 
 const fmtSw=s=>{s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0')};
 const wtKey=()=>S.wr?(S.wr.mode==='r2'?'r2:':'')+nk(S.wr.i):'';
 let wrSw=null;
-function swStart(){clearInterval(wrSw);if(!S.wr||S.wr.mode==='diary'||S.wr.mode==='mk')return;S.progress.wtime=S.progress.wtime||{};
+function swStart(){clearInterval(wrSw);if(!S.wr)return;S.progress.wtime=S.progress.wtime||{};
   wrSw=setInterval(()=>{if(!S.wr){clearInterval(wrSw);return}if(document.hidden)return;const k=wtKey();S.progress.wtime[k]=(S.progress.wtime[k]||0)+1;const el=$('#wr-sw');if(el)el.textContent=fmtSw(S.progress.wtime[k])},1000)}
 async function askTeacher(i,text){
   const P=prepOf(i);if(S.askBusy||!S.sample)return;
@@ -5069,218 +4879,6 @@ function prepText(i,r2){
   return `\n\n[과제 준비 과정(쓰기 과정 자료. 점수에는 넣지 않는다)]\n- 쓰기 전에 학생이 선생님에게 한 질문 ${P.asks.length}개:\n${asks}\n- 학생이 쓰기 전에 메모판에 짠 논술 로드맵(${P.roadDone?'완료':'미완료'}):\n${road}\n- 원고지 ${r2?'다시 쓰기 ':''}작성 시간: ${sec?Math.max(1,Math.round(sec/60))+'분':'측정 안 됨(노트 사진 제출이거나 기록 없음)'} (권장 ${rec}분)`;
 }
 
-/* ---------- 책만들기 ---------- */
-const MK_KINDS={'소설':{u:'장',d:'인물과 사건을 상상해 지어내는 이야기',ph:'장 제목 (예: 전학생)',nm:'소설'},'에세이':{u:'편',d:'내가 겪은 일과 생각을 솔직하게 쓰는 글',ph:'글 제목',nm:'에세이'},'시':{u:'편',d:'마음과 장면을 짧은 말과 리듬에 담는 글',ph:'시 제목',nm:'시집'}};
-const MK_GUIDE={
-'소설':{steps:[['씨앗 찾기','"만약에 ~라면?"이라는 질문 하나로 시작해요. 예: 만약에 우리 반에 거짓말을 못 하는 아이가 전학 온다면?'],['주인공 만들기','이름과 나이보다 주인공이 간절히 원하는 것과 약점을 먼저 정해요. 원하는 것이 있어야 이야기가 움직여요.'],['걸림돌 세우기','주인공이 원하는 것을 막는 사람이나 상황을 만들어요. 갈등이 없으면 사건도 없어요.'],['다섯 장면으로 뼈대 잡기','시작(평소의 하루), 사건(일이 터짐), 위기(점점 꼬임), 절정(가장 큰 선택), 결말(달라진 주인공) 순서로 한 줄씩 적어요.'],['말하지 말고 보여 주기','"슬펐다"라고 쓰지 말고 행동과 대사로 보여 줘요. 예: 민지는 대답 대신 운동화 끈만 다시 묶었다.'],['묵혔다가 고쳐 쓰기','하루 뒤에 소리 내어 읽어요. 없어도 되는 문장을 지우고, 첫 문장이 궁금증을 일으키는지 확인해요.']],tip:'한 장은 원고지 5~10장이면 충분해요. 처음에는 3장짜리 짧은 소설부터 끝까지 완성해 보세요.'},
-'에세이':{steps:[['글감 고르기','큰 사건보다 마음이 움직였던 작은 순간을 골라요. 예: 시험을 망친 날 엄마가 말없이 끓여 준 라면.'],['한 문장으로 말하기','이 글로 하고 싶은 말을 한 문장으로 먼저 적어요. 예: 위로는 말보다 곁에 있어 주는 것이다.'],['장면으로 시작하기','언제, 어디서, 누가, 무슨 말을 했는지 그날을 눈에 보이게 써요.'],['생각 덧붙이기','그때 느낀 것과 지금 돌아보니 달라진 생각을 나눠 써요. 경험이 일곱, 생각이 셋이면 좋아요.'],['솔직하게 쓰기','멋있어 보이려는 문장보다 부끄러웠던 마음을 그대로 쓴 문장이 읽는 사람의 마음을 움직여요.'],['여운 있게 끝내고 고쳐 쓰기','교훈으로 끝내려 하지 말고 장면이나 한마디로 끝내요. "나는"과 "그리고"가 너무 많지 않은지 살펴요.']],tip:'글 한 편은 원고지 4~6장이면 돼요. 서너 편을 모으면 에세이 한 권이 돼요.'},
-'시':{steps:[['한 장면 붙잡기','사랑, 우정 같은 넓은 주제 대신 눈앞의 한 장면을 골라요. 예: 비 온 뒤 운동장의 물웅덩이.'],['오감으로 적기','보이는 것, 들리는 것, 냄새, 손에 닿는 느낌을 낱말로 잔뜩 적어 놓고 그중에서 골라요.'],['감정은 숨기기','"외롭다"라고 쓰지 말고 외로움이 보이는 사물로 말해요. 예: 급식실 끝자리, 식판 하나.'],['빗대어 말하기','"~처럼", "~은 ~이다"로 낯설게 말해요. 누구나 쓰는 비유는 피하고 나만 본 것을 써요.'],['행과 연 나누기','숨 쉬는 곳에서 줄을 바꾸고, 장면이나 생각이 바뀌면 연을 나눠요. 소리 내어 읽으며 리듬을 확인해요.'],['덜어 내기','설명하는 말과 꾸미는 말을 지워요. 빼도 뜻이 통하면 빼는 것이 시예요. 제목은 마지막에 붙여요.']],tip:'시 한 편은 5~15행이면 충분해요. 다섯 편쯤 모으면 나만의 시집이 돼요.'}};
-const MK_FX=['더 밝게','색을 선명하게','따뜻한 느낌으로','흑백 연필 그림처럼','오래된 사진처럼','액자 테두리 넣기'];
-const mkNew=()=>({loaded:false,list:[],cur:null,imgs:{},orig:{},busy:'',ai:null});
-const mkK=w=>MK_KINDS[w&&w.kind]||MK_KINDS['소설'];
-const mkCur=()=>S.mk&&S.mk.cur?S.mk.list.find(w=>w.id===S.mk.cur):null;
-const mkDocId=w=>S.id+'_'+w.id;
-const mkImgId=(w,slot)=>S.id+'_'+w.id+'_'+slot;
-const mkLen=w=>((w&&w.parts)||[]).reduce((a,p)=>a+String(p.text||'').replace(/\s/g,'').length,0);
-const mkImg=(w,slot)=>((S.mk.imgs[mkDocId(w)])||{})[slot]||'';
-const mkTyping=()=>{const f=document.activeElement;return !!(f&&/^(TEXTAREA|INPUT|SELECT)$/.test(f.tagName))};
-async function loadWorks(){
-  if(!S.id||!S.mk)return;const me=S.id;
-  try{const q=await S.db.collection('works').where('uid','==',me).get();if(S.id!==me||!S.mk)return;
-    S.mk.list=q.docs.map(x=>x.data()).filter(x=>x&&x.uid===me&&x.id&&Array.isArray(x.parts)).sort((a,b)=>(b.up||0)-(a.up||0))}catch(e){}
-  if(!S.mk)return;S.mk.loaded=true;if(S.view==='write'&&!S.wr)render();
-}
-let mkT=null;
-function mkSaveSoon(){clearTimeout(mkT);mkT=setTimeout(mkFlush,800)}
-async function mkFlush(){
-  clearTimeout(mkT);mkT=null;const w=mkCur();if(!w||!S.db||!S.id)return;w.up=Date.now();
-  try{await S.db.doc('works/'+mkDocId(w)).set(clone(w))}catch(e){toast('책을 저장하지 못했어요. 잠시 뒤 다시 해 주세요.')}
-}
-async function mkLoadImgs(w){
-  const wid=mkDocId(w);if(S.mk.imgs[wid])return;S.mk.imgs[wid]={};
-  try{const q=await S.db.collection('workimgs').where('work','==',wid).get();const o={};
-    q.docs.forEach(x=>{const v=x.data();if(v&&v.uid===S.id&&v.slot&&v.img&&!v.orig)o[v.slot]=v.img});
-    if(!S.mk)return;S.mk.imgs[wid]=Object.assign(o,S.mk.imgs[wid])}catch(e){}
-  if(S.sheet&&S.sheet.type==='mkprev')renderLayers();else if(S.view==='write'&&!S.wr&&!mkTyping())render();
-}
-function mkLoadImage(src){return new Promise((ok,no)=>{const x=new Image();x.onload=()=>ok(x);x.onerror=no;x.src=src})}
-function mkToData(cv){
-  let c=cv;const M=960;
-  if(Math.max(c.width,c.height)>M){const s=M/Math.max(c.width,c.height);const o=document.createElement('canvas');o.width=Math.round(c.width*s);o.height=Math.round(c.height*s);o.getContext('2d').drawImage(c,0,0,o.width,o.height);c=o}
-  let q=.86,data=c.toDataURL('image/jpeg',q);
-  for(let n=0;data.length>150000&&n<12;n++){
-    if(q>.5)q-=.1;else{const o=document.createElement('canvas');o.width=Math.max(1,Math.round(c.width*.82));o.height=Math.max(1,Math.round(c.height*.82));o.getContext('2d').drawImage(c,0,0,o.width,o.height);c=o}
-    data=c.toDataURL('image/jpeg',q)}
-  return data;
-}
-function mkDataBlob(d){const k=d.indexOf(',');const mime=(/data:(.*?);/.exec(d.slice(0,k))||[])[1]||'image/jpeg';const bin=atob(d.slice(k+1));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:mime})}
-function mkSetIll(w,slot,on){if(slot==='cover')w.cover=on;else{const p=w.parts.find(x=>x.id===slot);if(p)p.ill=on}}
-async function mkIllUpload(slot,file){
-  const w=mkCur();if(!w||w.status==='done')return;toast('그림을 올리는 중이에요…');const url=URL.createObjectURL(file);
-  try{
-    const im=await mkLoadImage(url);const sc=Math.min(1,880/Math.max(im.naturalWidth,im.naturalHeight));
-    const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.naturalWidth*sc));cv.height=Math.max(1,Math.round(im.naturalHeight*sc));
-    const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(im,0,0,cv.width,cv.height);
-    const data=mkToData(cv);const wid=mkDocId(w);
-    await S.db.doc('workimgs/'+mkImgId(w,slot)).set({uid:S.id,work:wid,slot,img:data,at:Date.now()});
-    S.db.doc('workimgs/'+mkImgId(w,slot)+'_o').delete().catch(()=>{});delete S.mk.orig[mkImgId(w,slot)+'_o'];
-    (S.mk.imgs[wid]=S.mk.imgs[wid]||{})[slot]=data;mkSetIll(w,slot,true);S.mk.ai=null;await mkFlush();toast(slot==='cover'?'표지 그림을 넣었어요.':'삽화를 넣었어요.');render();
-  }catch(e){toast('그림을 올리지 못했어요. 다른 그림으로 해 주세요.')}
-  finally{URL.revokeObjectURL(url)}
-}
-async function mkIllDel(slot){
-  const w=mkCur();if(!w)return;const wid=mkDocId(w);
-  try{await S.db.doc('workimgs/'+mkImgId(w,slot)).delete()}catch(e){}
-  S.db.doc('workimgs/'+mkImgId(w,slot)+'_o').delete().catch(()=>{});delete S.mk.orig[mkImgId(w,slot)+'_o'];
-  if(S.mk.imgs[wid])delete S.mk.imgs[wid][slot];mkSetIll(w,slot,false);if(S.mk.ai&&S.mk.ai.slot===slot)S.mk.ai=null;mkSaveSoon();render();
-}
-const clampN=(v,a,b)=>{v=Number(v);return isNaN(v)?0:Math.max(a,Math.min(b,v))};
-async function mkApplyFx(src,fx){
-  const im=await mkLoadImage(src);const W=im.naturalWidth,H=im.naturalHeight;
-  const c=(fx.crop&&typeof fx.crop==='object')?fx.crop:{};const l=clampN(c.l,0,30)/100,t=clampN(c.t,0,30)/100,r=clampN(c.r,0,30)/100,b=clampN(c.b,0,30)/100;
-  const sx=W*l,sy=H*t,sw=Math.max(1,W*(1-l-r)),sh=Math.max(1,H*(1-t-b));
-  const rot=[90,180,270].includes(+fx.rotate)?+fx.rotate:0;const q=rot===90||rot===270;
-  const cv=document.createElement('canvas');cv.width=Math.round(q?sh:sw);cv.height=Math.round(q?sw:sh);
-  const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.save();cx.translate(cv.width/2,cv.height/2);cx.rotate(rot*Math.PI/180);cx.drawImage(im,sx,sy,sw,sh,-sw/2,-sh/2,sw,sh);cx.restore();
-  const id=cx.getImageData(0,0,cv.width,cv.height);const p=id.data;
-  const br=clampN(fx.brightness,-40,40)*2.55,ct=clampN(fx.contrast,-40,40)*2.55,cf=(259*(ct+255))/(255*(259-ct));
-  const sat=fx.gray===true?0:1+clampN(fx.saturation,-100,60)/100,wm=clampN(fx.warmth,-40,40)*.9,sp=clampN(fx.sepia,0,100)/100;
-  for(let i=0;i<p.length;i+=4){
-    let R=cf*(p[i]+br-128)+128,G=cf*(p[i+1]+br-128)+128,B=cf*(p[i+2]+br-128)+128;
-    const L=.299*R+.587*G+.114*B;R=L+(R-L)*sat;G=L+(G-L)*sat;B=L+(B-L)*sat;
-    if(sp){const r2=.393*R+.769*G+.189*B,g2=.349*R+.686*G+.168*B,b2=.272*R+.534*G+.131*B;R+=(r2-R)*sp;G+=(g2-G)*sp;B+=(b2-B)*sp}
-    p[i]=R+wm;p[i+1]=G;p[i+2]=B-wm}
-  cx.putImageData(id,0,0);
-  const vg=clampN(fx.vignette,0,60)/100;
-  if(vg){const g=cx.createRadialGradient(cv.width/2,cv.height/2,Math.min(cv.width,cv.height)*.35,cv.width/2,cv.height/2,Math.max(cv.width,cv.height)*.72);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+vg+')');cx.fillStyle=g;cx.fillRect(0,0,cv.width,cv.height)}
-  const FR={white:['#FFFFFF',.05],wood:['#8A5A33',.055],black:['#1E1A17',.04],polaroid:['#FFFFFF',.05]};const f=FR[fx.frame];
-  if(!f)return cv;
-  const m=Math.max(4,Math.round(Math.max(cv.width,cv.height)*f[1]));const bot=fx.frame==='polaroid'?Math.round(m*3.2):m;
-  const o=document.createElement('canvas');o.width=cv.width+m*2;o.height=cv.height+m+bot;const ox=o.getContext('2d');ox.fillStyle=f[0];ox.fillRect(0,0,o.width,o.height);ox.drawImage(cv,m,m);
-  if(fx.frame==='wood'){ox.strokeStyle='#5E3B1E';ox.lineWidth=Math.max(2,m*.18);ox.strokeRect(m*.45,m*.45,o.width-m*.9,o.height-m*.9)}
-  else if(fx.frame!=='black'){ox.strokeStyle='#D9D2C5';ox.lineWidth=1;ox.strokeRect(.5,.5,o.width-1,o.height-1)}
-  return o;
-}
-async function mkAiEdit(slot,req){
-  const w=mkCur();if(!w||!S.sample||S.mk.busy)return;const cur=mkImg(w,slot);if(!cur)return;
-  req=String(req||'').trim().slice(0,200);if(!req){toast('어떻게 고칠지 적거나 골라 주세요.');return}
-  S.mk.busy='ai:'+slot;render();
-  try{
-    const lim=await S.sample.limits().catch(()=>null);if(!lim||!lim.images)throw {code:'images_unavailable'};
-    const wid=mkDocId(w);const oid=mkImgId(w,slot)+'_o';
-    if(!S.mk.orig[oid]){const sn=await S.db.doc('workimgs/'+oid).get().catch(()=>null);
-      if(sn&&sn.exists&&sn.data()&&sn.data().img)S.mk.orig[oid]=sn.data().img;
-      else{await S.db.doc('workimgs/'+oid).set({uid:S.id,work:wid,slot,orig:true,img:cur,at:Date.now()});S.mk.orig[oid]=cur}}
-    const prompt=`너는 ${S.me.nick}의 친한 친구 '${buddyOf()}'이고 그림 보는 눈이 좋다. 친구가 직접 그린 그림을 자기가 쓰는 책(${w.kind} 「${w.title||'제목 미정'}」)의 ${slot==='cover'?'표지':'삽화'}로 올리고 이렇게 고쳐 달라고 했다: "${req}"\n\n첨부한 그림을 보고, 아래 조정값만으로 할 수 있는 범위에서 친구의 요청에 가장 잘 맞게 값을 정한다. 그림을 새로 그리거나 사물을 더하고 빼는 것은 할 수 없다. 요청이 조정값으로는 불가능하면 can을 false로 하고, say에서 솔직하게 말한 뒤 대신 해 볼 수 있는 조정을 적용한다. 요청하지 않은 값은 0이나 기본값으로 둔다. 과하지 않게 조정한다.\n\n[조정값]\n- brightness: -40~40 (밝기, 0은 그대로)\n- contrast: -40~40 (대비)\n- saturation: -100~60 (색의 선명함)\n- warmth: -40~40 (양수는 따뜻하게, 음수는 차갑게)\n- gray: true면 흑백\n- sepia: 0~100 (오래된 사진 느낌)\n- vignette: 0~60 (가장자리를 어둡게)\n- rotate: 0, 90, 180, 270 중 하나 (시계 방향)\n- crop: 가장자리를 잘라 낼 비율(%) {"l":0,"t":0,"r":0,"b":0} 각 0~30\n- frame: "none", "white", "wood", "black", "polaroid" 중 하나\n\nsay: 친구에게 반말로 2~3문장. 무엇을 어떻게 고쳤는지, 그림에서 좋은 점 하나, 다음에 그릴 때 해 볼 만한 것 하나. 이모티콘은 쓰지 않는다.\n\nJSON 객체 하나만 출력한다. 형식: {"can":true,"brightness":0,"contrast":0,"saturation":0,"warmth":0,"gray":false,"sepia":0,"vignette":0,"rotate":0,"crop":{"l":0,"t":0,"r":0,"b":0},"frame":"none","say":""}`;
-    const fx=await S.sample.json(prompt,{images:[mkDataBlob(cur)],cache:false});
-    if(!fx||typeof fx!=='object'||Array.isArray(fx))throw {code:'invalid_json'};
-    const data=mkToData(await mkApplyFx(cur,fx));
-    await S.db.doc('workimgs/'+mkImgId(w,slot)).set({uid:S.id,work:wid,slot,img:data,at:Date.now()});
-    S.mk.imgs[wid][slot]=data;S.mk.ai={slot,say:String(fx.say||'').trim().slice(0,400)||'고쳐 봤어. 마음에 드는지 봐 줘.'};
-  }catch(e){const c=e&&e.code;toast(c==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':c==='images_unavailable'||c==='image_rejected'?'이 화면에서는 그림 고치기를 쓸 수 없어요.':'그림을 고치지 못했어요. 한 번 더 눌러 주세요.')}
-  S.mk.busy='';render();
-}
-async function mkAiUndo(){
-  const w=mkCur();const A=S.mk.ai;if(!w||!A||S.mk.busy)return;const slot=A.slot;const wid=mkDocId(w);const oid=mkImgId(w,slot)+'_o';
-  let o=S.mk.orig[oid];
-  if(!o){const sn=await S.db.doc('workimgs/'+oid).get().catch(()=>null);o=sn&&sn.exists&&sn.data()?sn.data().img:null}
-  if(!o){toast('아직 고친 적이 없는 그림이에요.');return}
-  try{await S.db.doc('workimgs/'+mkImgId(w,slot)).set({uid:S.id,work:wid,slot,img:o,at:Date.now()});S.mk.imgs[wid][slot]=o;S.mk.ai={slot,say:''};toast('원래 그림으로 돌렸어요.')}catch(e){toast('되돌리지 못했어요.')}
-  render();
-}
-async function mkFeedback(){
-  const w=mkCur();if(!w||!S.sample||S.mk.busy)return;
-  S.mk.busy='fb';if(S.view==='write')render();
-  try{
-    const K=mkK(w);const who=GR.includes(S.me.grade)||/^[초고]/.test(S.me.grade||'')?S.me.grade+' 학생':'글쓰기를 좋아하는 사람';
-    const body=w.parts.map((p,n)=>`<${n+1}${K.u}${p.t?' · '+p.t:''}>\n${String(p.text||'').trim()||'(비어 있음)'}`).join('\n\n');
-    const prompt=`너는 ${S.me.nick}의 가장 친한 친구다. 이름은 '${buddyOf()}'다. 책을 아주 많이 읽었고 글 보는 눈이 정확하다. ${S.me.nick}은(는) ${who}이다. 친구가 직접 쓴 ${w.kind} 책을 끝까지 읽고, 친한 친구처럼 편한 반말로 이야기해 준다.\n\n[규칙]\n- 먼저 좋았던 점을 칭찬한다. 글 속의 표현이나 장면을 직접 짚어서 구체적으로 쓴다(praise 3~4문장, best 2~3개).\n- 그다음 친구가 더 잘 쓰는 사람으로 자라도록 냉정하게 지도한다(coach 정확히 3개). 듣기 좋은 말로 흐리지 말고 무엇이 부족한지 분명하게 말한다. 다만 사람을 깎아내리지 않고 글에 대해서만 말한다. 각각 point(부족한 점 한 문장), why(글의 어느 부분 때문에 그렇게 봤는지), how(어떻게 고치면 되는지. 고쳐 쓴 예를 한 줄 보여 주면 좋다).\n- ${w.kind==='소설'?'소설의 기준으로 본다: 인물이 살아 있는지, 갈등과 사건이 분명한지, 장면을 보여 주는지, 대화가 자연스러운지, 결말이 납득되는지.':w.kind==='에세이'?'에세이의 기준으로 본다: 경험이 구체적인지, 생각이 깊어지는지, 솔직한지, 구성과 마무리가 좋은지.':'시의 기준으로 본다: 장면과 이미지가 선명한지, 리듬과 행·연 나누기가 어울리는지, 표현이 새로운지, 설명하는 말과 군더더기가 없는지.'}\n- 맞춤법과 띄어쓰기는 여러 번 틀린 것만 spell에 최대 5개.\n- next: 다음 글에서 도전해 볼 한 가지. line: 마지막 응원 한마디.\n- 글에 없는 내용을 지어내지 않는다. 이모티콘은 쓰지 않는다.\n- 글에 극심한 괴로움, 자해나 자살 생각, 학대, 심한 괴롭힘 같은 실제 위험 신호가 보이면(지어낸 이야기 속 사건은 해당하지 않는다) 따뜻하게 공감하고 믿을 수 있는 어른에게 이야기해 보자고 권하며 care를 true로 한다. 그렇지 않으면 false다.\n\n[책]\n- 갈래: ${w.kind}\n- 제목: ${w.title}\n\n${body}\n\nJSON 객체 하나만 출력한다. 형식: {"praise":"","best":[""],"coach":[{"point":"","why":"","how":""}],"spell":[{"orig":"","fix":""}],"next":"","line":"","care":false}`;
-    const r=await S.sample.json(prompt,{cache:false});
-    if(!r||typeof r.praise!=='string'||!r.praise.trim())throw {code:'invalid_json'};
-    const arr=a=>Array.isArray(a)?a:[];
-    w.fb={praise:r.praise.trim().slice(0,1200),best:arr(r.best).map(x=>String(x).slice(0,200)).filter(Boolean).slice(0,3),
-      coach:arr(r.coach).filter(x=>x&&x.point).map(x=>({point:String(x.point).slice(0,200),why:String(x.why||'').slice(0,300),how:String(x.how||'').slice(0,400)})).slice(0,3),
-      spell:arr(r.spell).filter(x=>x&&x.orig&&x.fix).map(x=>({orig:String(x.orig).slice(0,60),fix:String(x.fix).slice(0,60)})).slice(0,5),
-      next:String(r.next||'').slice(0,300),line:String(r.line||'').slice(0,200),care:r.care===true,by:buddyOf(),at:Date.now()};
-    S.mk.busy='';await mkFlush();toast(buddyGa()+' 책을 다 읽었어요.');
-  }catch(e){S.mk.busy='';toast((e&&e.code)==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':'감상을 받지 못했어요. 책은 저장됐어요. "감상 다시 받기"를 눌러 주세요.')}
-  if(S.view==='write'&&!S.wr)render();
-}
-async function mkDone(){
-  const w=mkCur();if(!w||S.mk.busy)return;
-  if(!String(w.title||'').trim()){toast('책 제목을 먼저 지어 주세요.');return}
-  const min=w.kind==='시'?30:200;if(mkLen(w)<min){toast('아직 글이 짧아요. '+min+'자 이상 쓴 뒤에 완료해 주세요.');return}
-  w.status='done';w.doneAt=Date.now();w.fb=null;await mkFlush();
-  S.sheet={type:'mkprev'};render();mkLoadImgs(w);
-  mkFeedback();
-}
-function mkFbHTML(w){
-  const f=w.fb;const nm=esc(f.by||buddyOf());
-  return `<div class="sec fbk"><h3>${bdFace()}${nm}의 감상</h3>
-    <div class="praise" style="margin-top:0"><b>좋았던 점</b><p style="white-space:pre-wrap">${esc(f.praise)}</p>${(f.best||[]).length?`<ul>${f.best.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>
-    ${(f.coach||[]).length?`<div class="coach"><b>더 잘 쓰려면 · 냉정한 지도</b>${f.coach.map(c=>`<div class="rv"><b>${esc(c.point)}</b>${c.why?`<span class="hint">${esc(c.why)}</span>`:''}${c.how?`<span class="rw">이렇게 고쳐 봐 · ${esc(c.how)}</span>`:''}</div>`).join('')}</div>`:''}
-    ${(f.spell||[]).length?`<p class="hint">자주 틀린 맞춤법: ${f.spell.map(x=>`<s>${esc(x.orig)}</s> → <b>${esc(x.fix)}</b>`).join(' · ')}</p>`:''}
-    ${f.next?`<p><b>다음 도전</b> ${esc(f.next)}</p>`:''}${f.line?`<p class="hint">${esc(f.line)}</p>`:''}
-    ${f.care?'<div class="crisis">힘든 마음이 크게 느껴져서 걱정돼요. 부모님이나 선생님처럼 믿을 수 있는 어른에게 꼭 이야기해 보세요. 혼자 있기 힘들면 청소년상담전화 1388(24시간)에 전화하거나 문자를 보낼 수 있어요.</div>':''}</div>`;
-}
-function mkGuideHTML(kind){const g=MK_GUIDE[kind];return `<details class="mkg"><summary>${kind} 쓰는 방법 가이드</summary><ol>${g.steps.map(([t,x])=>`<li><b>${t}</b><span>${esc(x)}</span></li>`).join('')}</ol><p class="note">${esc(g.tip)}</p></details>`}
-function mkIllHTML(w,slot){
-  const cov=slot==='cover';const has=cov?w.cover:(w.parts.find(p=>p.id===slot)||{}).ill;const img=mkImg(w,slot);
-  const busy=S.mk.busy==='ai:'+slot;const A=S.mk.ai&&S.mk.ai.slot===slot?S.mk.ai:null;const done=w.status==='done';
-  if(!has)return done?'':`<div><label class="chip up">${cov?'표지 그림 넣기':'내가 그린 삽화 넣기'}<input type="file" accept="image/*" data-mkill="${esc(slot)}"></label></div>`;
-  if(!img)return '<div class="sk" style="height:90px"></div>';
-  if(done)return `<div class="ill"><img src="${img}" alt="${cov?'표지 그림':'삽화'}"></div>`;
-  return `<div class="ill"><img src="${img}" alt="${cov?'표지 그림':'삽화'}">
-    <div class="brow">${S.sample?`<button class="chip" data-act="mkai" data-s="${esc(slot)}" aria-expanded="${!!A}" ${busy?'disabled':''}>${esc(buddyOf())}와 그림 고치기</button>`:''}<label class="chip up">다른 그림으로<input type="file" accept="image/*" data-mkill="${esc(slot)}"></label><button class="chip" data-act="mkilldel" data-s="${esc(slot)}">빼기</button></div>
-    ${busy?`<p class="hint" role="status">${esc(buddyGa())} 그림을 보고 고치는 중이에요…</p>`:''}
-    ${A&&!busy?`<div class="note2">${A.say?`<div class="praise" style="margin:0"><b>${esc(buddyOf())}</b><p>${esc(A.say)}</p></div>`:''}
-      <label for="mk-aireq">어떻게 고칠까요? <small class="hint">밝기, 색감, 흑백, 테두리, 방향, 가장자리 자르기를 고쳐 줘요. 그림을 새로 그리지는 못해요</small><input id="mk-aireq" maxlength="200" placeholder="예: 좀 더 따뜻하고 밝게" autocomplete="off"></label>
-      <div class="brow">${MK_FX.map((t,k)=>`<button class="chip" data-act="mkaifx" data-k="${k}">${t}</button>`).join('')}</div>
-      <div class="brow"><button class="btn small" data-act="mkaigo">고쳐 줘</button><button class="btn ghost small" data-act="mkaiundo">원래 그림으로</button><button class="btn ghost small" data-act="mkaix">닫기</button></div></div>`:''}</div>`;
-}
-function mkHTML(){
-  const M=S.mk;
-  const lead=`<div class="lead"><div><h2>책만들기</h2><p>소설, 에세이, 시. 내 글과 그림으로 나만의 책을 만들어요.</p></div></div>`;
-  if(!M||!M.loaded)return lead+'<div class="sk"></div>';
-  const w=mkCur();
-  if(!w){
-    const list=M.list.length?M.list.map(x=>`<div class="frr"><div class="fi"><b>${esc(x.title||'제목 없는 책')}${x.status==='done'?' <span class="tagk">완성</span>':''}</b><small>${esc(x.kind)} · ${(x.parts||[]).length}${mkK(x).u} · ${mkLen(x).toLocaleString('ko-KR')}자 · ${fmtD(x.up||x.at)}</small></div><div class="fa"><button class="btn small" data-act="mkopen" data-id="${esc(x.id)}">${x.status==='done'?'열기':'이어 쓰기'}</button><button class="btn ghost small" data-act="mkdel" data-id="${esc(x.id)}">지우기</button></div></div>`).join(''):'<p class="hint">아직 쓴 책이 없어요. 위에서 하나를 골라 첫 책을 시작해 보세요.</p>';
-    return `${lead}<div class="sec"><h3>새 책 쓰기</h3><p class="hint">소설, 에세이, 시 가운데 하나를 골라 시작해요.</p>
-      <div class="kinds">${Object.keys(MK_KINDS).map(k=>`<button class="kind" data-act="mknew" data-k="${k}"><b>${k}</b><span>${MK_KINDS[k].d}</span></button>`).join('')}</div>
-      ${Object.keys(MK_KINDS).map(mkGuideHTML).join('')}</div>
-      <div class="sec" style="margin-top:18px"><h3>내가 쓴 책 ${M.list.length}권</h3>${list}</div>
-      <p class="hint" style="margin-top:12px">내가 쓴 책은 다른 회원의 화면에 보이지 않아요.</p>`;
-  }
-  const K=mkK(w);const done=w.status==='done';const n=mkLen(w);
-  const fbH=M.busy==='fb'?`<div class="praise"><b>${esc(buddyGa())} 책을 끝까지 읽고 있어요…</b><p>조금만 기다려 줘!</p></div>`:done&&w.fb?mkFbHTML(w):done&&S.sample?`<div class="brow"><button class="btn ghost small" data-act="mkfb">${esc(buddyOf())}의 감상 다시 받기</button></div>`:'';
-  const parts=w.parts.map((p,k)=>{const has=!!String(p.text||'').trim();
-    return `<div class="pt"><div class="pth2"><span class="pno">${k+1}${K.u}</span><input data-mkp="${esc(p.id)}" value="${esc(p.t||'')}" maxlength="40" placeholder="${esc(K.ph)}" aria-label="${k+1}번째 ${K.u} 제목" ${done?'disabled':''}></div>
-      ${has?`<div class="wrprev">${esc(p.text.length>220?p.text.slice(0,220)+'…':p.text)}</div>`:'<p class="hint">아직 쓴 글이 없어요.</p>'}
-      ${done?'':`<div class="brow"><button class="btn ghost small" data-act="mkwrite" data-p="${esc(p.id)}">${IC.pen}${has?'원고지에 이어서 쓰기':'원고지에 쓰기'}</button>${has?`<span class="hint">${String(p.text).replace(/\s/g,'').length.toLocaleString('ko-KR')}자</span>`:''}${w.parts.length>1?`<button class="chip" data-act="mkpdel" data-p="${esc(p.id)}">이 ${K.u} 지우기</button>`:''}</div>`}
-      ${mkIllHTML(w,p.id)}</div>`}).join('');
-  return `<div class="lead"><div><h2>${done?'완성한 책':'책쓰기'} <span class="tagk">${esc(w.kind)}</span></h2><p>${n.toLocaleString('ko-KR')}자 · ${w.parts.length}${K.u}${done?' · 완성 '+fmtD(w.doneAt):' · 쓰는 대로 자동 저장돼요'}</p></div><button class="btn ghost small" data-act="mkback">${IC.back}내 책 목록</button></div>
-    ${fbH}
-    <div class="sec"><label for="mk-title">책 제목<input id="mk-title" data-mk="title" value="${esc(w.title||'')}" maxlength="40" placeholder="제목은 나중에 지어도 돼요" ${done?'disabled':''}></label>
-      ${mkIllHTML(w,'cover')}${done?'':mkGuideHTML(MK_KINDS[w.kind]?w.kind:'소설')}</div>
-    <div class="sec" style="margin-top:14px">${parts}</div>
-    <div class="brow" style="margin-top:14px">${done?'':(w.parts.length<10?`<button class="btn ghost" data-act="mkadd">${K.u==='장'?'다음 장':w.kind==='시'?'시 한 편':'글 한 편'} 더하기</button>`:'')}
-      <button class="btn ghost" data-act="mkprev">책 미리보기</button>
-      ${done?`<button class="btn ghost" data-act="mkreopen">${IC.pen}다시 고쳐 쓰기</button>`:`<button class="btn" data-act="mkdone" ${M.busy?'disabled':''}>책쓰기 완료 · ${esc(buddyOf())}에게 보여 주기</button>`}</div>
-    ${done?'':`<p class="hint" style="margin-top:8px">완료하면 ${esc(buddyGa())} 책을 읽고 좋았던 점과 더 잘 쓰는 방법을 알려 주고, 삽화가 들어간 책 미리보기가 열려요.</p>`}`;
-}
-function mkPrevHTML(){
-  const w=mkCur();
-  if(!w)return `<div class="panel"><div class="ph"><h2>책 미리보기</h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div><p class="hint">책을 찾지 못했어요.</p></div>`;
-  const K=mkK(w);let pg=0;const no=()=>`<span class="pgn">${++pg}</span>`;const poem=w.kind==='시';
-  const cim=w.cover?mkImg(w,'cover'):'';
-  const cover=`<div class="pg cv">${cim?`<img src="${cim}" alt="표지 그림">`:''}<small>${esc(K.nm)}</small><h1>${esc(w.title||'제목 없는 책')}</h1><p>${esc(S.me.nick)} 지음</p><em>002BOOK</em></div>`;
-  const toc=w.parts.length>1?`<div class="pg"><h3>차례</h3><ol class="toc">${w.parts.map((p,k)=>`<li>${esc(p.t||(k+1)+K.u)}</li>`).join('')}</ol>${no()}</div>`:'';
-  const body=w.parts.map((p,k)=>{const im=p.ill?mkImg(w,p.id):'';return `<div class="pg${poem?' poem':''}">${w.kind==='소설'&&w.parts.length>1?`<small class="chn">${k+1}장</small>`:''}${p.t?`<h3>${esc(p.t)}</h3>`:''}${im?`<img src="${im}" alt="삽화">`:''}<div class="tx">${esc(String(p.text||'').trim())}</div>${no()}</div>`}).join('');
-  return `<div class="panel bkpv"><div class="ph"><h2>책 미리보기<small>${esc(w.kind)} · ${mkLen(w).toLocaleString('ko-KR')}자${w.status==='done'?'':' · 쓰는 중'}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
-    ${S.mk.busy==='fb'?`<p class="hint" role="status">${esc(buddyGa())} 책을 읽고 있어요. 미리보기를 닫으면 감상을 볼 수 있어요.</p>`:w.status==='done'&&w.fb?`<p class="hint">${esc(w.fb.by||buddyOf())}의 감상이 도착했어요. 미리보기를 닫으면 볼 수 있어요.</p>`:''}
-    ${cover}${toc}${body}</div>`;
-}
-
 /* ---------- 이벤트 ---------- */
 let swX=null,swY=0;
 document.addEventListener('touchstart',e=>{const c=e.target.closest&&e.target.closest('.qcar');if(!c||e.target.closest('button')){swX=null;return}swX=e.touches[0].clientX;swY=e.touches[0].clientY},{passive:true});
@@ -5294,9 +4892,6 @@ document.addEventListener('submit',e=>{
   else if(k==='vision')vbSubmit(fd);
   else if(k==='mybook')addMyBook(fd);
   else if(k==='signup')doSignup(fd);
-  else if(k==='dysetup')dySetup(String(fd.get('pw')||''));
-  else if(k==='dyunlock')dyUnlock(String(fd.get('pw')||''));
-  else if(k==='dyrecover')dyRecover(String(fd.get('code')||''),String(fd.get('pw')||''));
   else if(k==='withdraw')doWithdraw(fd);
   else if(k==='frmsg')frSendText(fd);
   else if(k==='frrec')frSendRec(fd);
@@ -5306,9 +4901,6 @@ document.addEventListener('change',e=>{
   if(el.dataset&&el.dataset.gkind!==undefined){const f=el.form;if(f)f.querySelectorAll('[data-gpane]').forEach(l=>{const on=l.dataset.gpane===el.value;l.hidden=!on;const q=l.querySelector('select');if(q)q.disabled=!on});return}
   if(el.id==='ad-file'&&el.files[0])readXlsx(el.files[0]);
   else if(el.id==='ad-bulk'&&el.files.length)bulkCovers([...el.files]);
-  else if(el.id==='dy-date'){if(el.value&&S.dy)S.dy.date=el.value}
-  else if(el.id==='dy-from'){if(S.dy)S.dy.from=el.value}
-  else if(el.id==='dy-to'){if(S.dy)S.dy.to=el.value}
   else if(el.id==='es-files'){S.essayDraft.files=[...el.files];renderLayers()}
   else if(el.dataset&&el.dataset.isbnphoto!==undefined&&el.files[0]){const f=el.files[0];toast('바코드를 읽는 중이에요…');isbnFromPhoto(f).then(v=>{const i=document.getElementById('mb-isbn');if(v){S.mbIsbn=v;if(i)i.value=v;toast('ISBN '+v+'을(를) 읽었어요.')}else toast('바코드를 읽지 못했어요. 숫자를 직접 적어 주세요.')});el.value=''}
   else if(el.dataset&&el.dataset.ocr&&el.files[0])ocr(el.dataset.ocr,el.files[0]);
@@ -5318,7 +4910,6 @@ document.addEventListener('change',e=>{
   else if(el.dataset&&el.dataset.vbimg&&el.files[0]){const f=el.files[0],k=el.dataset.vbimg;el.value='';vbImgUp(k,f)}
   else if(el.dataset&&el.dataset.budup&&el.files[0]){const f=el.files[0];el.value='';budUpload(f)}
   else if(el.dataset&&el.dataset.shqimg&&el.files[0]){const f=el.files[0],h=el.dataset.shqimg;el.value='';shqPhoto(h,f)}
-  else if(el.dataset&&el.dataset.mkill&&el.files[0]){const f=el.files[0],s=el.dataset.mkill;el.value='';mkIllUpload(s,f)}
   else if(el.dataset&&el.dataset.bkphoto!==undefined&&el.files.length){const fl=[...el.files];el.value='';bookPhotos(fl)}
   else if(el.dataset&&el.dataset.rvc&&S.bkRev){const it=S.bkRev.items.find(x=>x.id===el.dataset.id);if(it){it[el.dataset.rvc]=el.checked;renderLayers()}}
   else if(el.dataset&&el.dataset.rvs&&S.bkRev){const it=S.bkRev.items.find(x=>x.id===el.dataset.id);if(it&&KY.includes(el.value)){it.cat=el.value}}
@@ -5334,8 +4925,6 @@ document.addEventListener('input',e=>{
   else if(el.id==='rv-text'&&S.info){S.info.mine=Object.assign({stars:0},S.info.mine,{text:el.value})}
   else if(el.dataset.road&&S.sheet&&S.sheet.type==='month'){prepOf(S.sheet.i).road[el.dataset.road]=el.value.slice(0,300);saveProgress()}
   else if(el.id==='ask-in'){S.askDraft=el.value}
-  else if(el.dataset.mk==='title'){const w=mkCur();if(w){w.title=el.value.slice(0,40);mkSaveSoon()}}
-  else if(el.dataset.mkp){const w=mkCur();const p=w&&w.parts.find(x=>x.id===el.dataset.mkp);if(p){p.t=el.value.slice(0,40);mkSaveSoon()}}
 });
 document.addEventListener('click',async e=>{
   const t=e.target.closest('[data-act]');if(!t)return;
@@ -5401,24 +4990,9 @@ document.addEventListener('click',async e=>{
     case 'avset':{const id=(AVIMG[d.id]||(d.id==='custom'&&S.me.avatarImg))?d.id:'';const old=S.me.avatar;S.me.avatar=id;render();
       try{await S.db.doc('members/'+S.id).update({avatar:id});toast(id?'캐릭터를 바꿨어요.':'기본 로고로 바꿨어요.')}catch(err){S.me.avatar=old;render();toast('저장하지 못했어요.')}break}
     case 'mbdel':S.progress.myBooks=(S.progress.myBooks||[]).filter(b=>b.id!==d.id);saveProgress();render();break;
-    case 'view':if(d.v==='admin'&&!isAdmin())break;if(S.view==='write'&&mkT)await mkFlush();S.view=d.v;S.sheet=null;S.info=null;render();if(d.v==='admin')loadAdmin();
+    case 'view':if(d.v==='admin'&&!isAdmin())break;S.view=d.v;S.sheet=null;S.info=null;render();if(d.v==='admin')loadAdmin();
       if(d.v==='friends'){if(!S.fr)S.fr=frNew();loadFriends(true)}
-      if(d.v==='diary'){if(S.dy)S.dy.tip=true;loadDiary()}
-      if(d.v==='write'&&S.mk){S.mk.ai=null;if(!S.mk.loaded)loadWorks();else{const w=mkCur();if(w)mkLoadImgs(w)}}
       window.scrollTo(0,0);break;
-    case 'dytab':S.dy.tab=d.v;render();break;
-    case 'dywrite':{const dt=S.dy.date||ymd(Date.now());S.dy.date=dt;await dyLoadDraft(dt);wrOpen(0,'diary',dt);break}
-    case 'dyedit':{S.dy.date=d.d;await dyLoadDraft(d.d);wrOpen(0,'diary',d.d);break}
-    case 'dytipx':S.dy.tip=false;render();break;
-    case 'dylock':dyLock();render();break;
-    case 'dycopy':{try{await navigator.clipboard.writeText(S.dy.code||'');toast('복사했어요. 안전한 곳에 적어 두세요.')}catch(err){toast('복사하지 못했어요. 직접 적어 두세요.')}break}
-    case 'dycodeok':S.dy.code=null;loadDiary();break;
-    case 'dyrecmode':S.dy.rec=d.v==='1';S.dy.err='';render();break;
-    case 'dysave':dySave();break;
-    case 'dyfb':dyFeedback(d.d);break;
-    case 'dysum':dySummary(d.r);break;
-    case 'dydel':{const D=S.dy;if(D.delc!==d.d){D.delc=d.d;render();setTimeout(()=>{if(D.delc===d.d){D.delc='';if(S.view==='diary'&&!S.wr)render()}},3000);break}
-      D.delc='';try{await S.db.doc('diaries/'+S.id+'_'+d.d).delete();D.list=D.list.filter(e=>e.date!==d.d);toast('일기를 지웠어요.')}catch(err){toast('지우지 못했어요.')}render();break}
     case 'frtab':S.fr.tab=d.v;render();break;
     case 'frreq':frRequest(d.id);break;
     case 'fra':frAccept(d.id);break;
@@ -5574,34 +5148,6 @@ document.addEventListener('click',async e=>{
     case 'roaddone':{const P=prepOf(+d.i);if(!roadOk(P.road)){toast('주장, 근거 1, 근거 2, 맺음말을 각각 8자 이상 적어 주세요.');break}P.roadDone=true;P.roadAt=Date.now();saveProgress();renderLayers();toast('로드맵을 완성했어요. 이제 원고지에 써 보세요.');break}
     case 'roadedit':{const P=prepOf(+d.i);P.roadDone=false;S.roadOpen=+d.i;saveProgress();renderLayers();break}
     case 'wrroad':{const el=$('#wr-road');if(el)el.hidden=!el.hidden;break}
-    case 'mknew':{if(!S.mk)break;if(S.mk.list.length>=20){toast('책은 스무 권까지 만들 수 있어요.');break}
-      const k=MK_KINDS[d.k]?d.k:'소설';const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-      const w={uid:S.id,id,kind:k,title:'',parts:[{id:'p1',t:'',text:'',ill:false}],cover:false,status:'draft',at:Date.now(),up:Date.now()};
-      S.mk.list.unshift(w);S.mk.cur=id;S.mk.imgs[mkDocId(w)]={};S.mk.ai=null;render();mkSaveSoon();window.scrollTo(0,0);break}
-    case 'mkopen':{await mkFlush();const w=S.mk.list.find(x=>x.id===d.id);if(!w)break;S.mk.cur=w.id;S.mk.ai=null;render();mkLoadImgs(w);window.scrollTo(0,0);break}
-    case 'mkback':await mkFlush();S.mk.cur=null;S.mk.ai=null;render();window.scrollTo(0,0);break;
-    case 'mkadd':{const w=mkCur();if(!w||w.status==='done')break;if(w.parts.length>=10){toast('열 개까지 넣을 수 있어요.');break}w.parts.push({id:'p'+Date.now().toString(36),t:'',text:'',ill:false});mkSaveSoon();render();break}
-    case 'mkpdel':{const w=mkCur();if(!w||w.status==='done'||w.parts.length<2)break;
-      if(S._mkp!==d.p){S._mkp=d.p;toast('한 번 더 누르면 쓴 글과 삽화가 지워져요.');setTimeout(()=>{if(S._mkp===d.p)S._mkp=null},3500);break}
-      S._mkp=null;const p=w.parts.find(x=>x.id===d.p);if(!p)break;if(p.ill){S.db.doc('workimgs/'+mkImgId(w,p.id)).delete().catch(()=>{});S.db.doc('workimgs/'+mkImgId(w,p.id)+'_o').delete().catch(()=>{})}
-      w.parts=w.parts.filter(x=>x!==p);mkSaveSoon();render();break}
-    case 'mkwrite':{const w=mkCur();if(!w||w.status==='done')break;wrOpen(0,'mk',d.p);break}
-    case 'mkprev':{const w=mkCur();if(!w)break;await mkFlush();S.sheet={type:'mkprev'};renderLayers();mkLoadImgs(w);break}
-    case 'mkdone':mkDone();break;
-    case 'mkfb':mkFeedback();break;
-    case 'mkreopen':{const w=mkCur();if(!w||S.mk.busy)break;w.status='draft';mkSaveSoon();render();toast('다시 고쳐 쓸 수 있어요.');break}
-    case 'mkdel':{if(S._mkd!==d.id){S._mkd=d.id;toast('한 번 더 누르면 이 책이 지워져요.');setTimeout(()=>{if(S._mkd===d.id)S._mkd=null},3500);break}
-      S._mkd=null;const w=S.mk.list.find(x=>x.id===d.id);if(!w)break;const wid=mkDocId(w);
-      try{await S.db.doc('works/'+wid).delete();S.mk.list=S.mk.list.filter(x=>x!==w);
-        try{const q=await S.db.collection('workimgs').where('work','==',wid).get();await Promise.all(q.docs.map(x=>S.db.doc('workimgs/'+x.id).delete().catch(()=>{})))}catch(err){}
-        delete S.mk.imgs[wid];toast('책을 지웠어요.')}catch(err){toast('지우지 못했어요.')}
-      render();break}
-    case 'mkilldel':mkIllDel(d.s);break;
-    case 'mkai':S.mk.ai=S.mk.ai&&S.mk.ai.slot===d.s?null:{slot:d.s,say:''};render();break;
-    case 'mkaix':S.mk.ai=null;render();break;
-    case 'mkaifx':if(S.mk.ai)mkAiEdit(S.mk.ai.slot,MK_FX[+d.k]);break;
-    case 'mkaigo':if(S.mk.ai)mkAiEdit(S.mk.ai.slot,($('#mk-aireq')||{}).value);break;
-    case 'mkaiundo':mkAiUndo();break;
     case 'recnew':recLoad(true);break;
     case 'recread':S.recRate={n:+d.n,v:{}};render();break;
     case 'recno':S.recRate=null;render();break;
@@ -5614,7 +5160,7 @@ document.addEventListener('click',async e=>{
   }
 });
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(S.wr)wrClose();else if(S.oralView&&S.oralHist){S.oralView=null;renderLayers()}else if(S.evalView||S.info||S.oralView||S.oralHist){S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;renderLayers()}else if(S.sheet){S.sheet=null;S.admin=null;S.bulk=null;render()}});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(S.wr)wrSave();clearTimeout(pT);flush();if(mkT)mkFlush()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(S.wr)wrSave();clearTimeout(pT);flush()}});
 
 /* ---------- 부팅 ---------- */
 render();

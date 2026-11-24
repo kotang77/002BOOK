@@ -139,16 +139,17 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
       return false;
     case 'orals':                                        // 1차·2차 평가 결과는 서버가 검증해 저장. 회원은 답변 문서(_a)만
       return (mineByPrefix(id, me) && id.endsWith('_a')) || (ctx.admin && kind === 'delete');
-    case 'evals': case 'diaries': case 'works': case 'orauds': case 'qimgs':
+    case 'evals': case 'orauds': case 'qimgs':
       return mineByPrefix(id, me) || (ctx.admin && kind === 'delete');
+    case 'diaries': case 'works':                      // 2026-11-24 일기·책만들기 종료: 새로 쓰지 못하고 지우기만
+      return kind === 'delete' && (mineByPrefix(id, me) || ctx.admin);
     case 'dykeys':
-      return id === me;
+      return kind === 'delete' && (id === me || ctx.admin);
     case 'essays': case 'reviews':
       if (kind === 'delete') return mineBySuffix(id, me) || ctx.admin;
       return mineBySuffix(id, me) && (nd.uid === undefined || nd.uid === me);
-    case 'workimgs':
-      if (kind === 'delete') return String(od.uid ?? existing?.owner) === me || ctx.admin;
-      return (nd.uid === undefined || nd.uid === me) && (!existing || String(od.uid ?? existing.owner) === me);
+    case 'workimgs':                                     // 책만들기 종료: 지우기만
+      return kind === 'delete' && (String(od.uid ?? existing?.owner) === me || ctx.admin);
     case 'alerts': case 'msgs':
       if (kind === 'delete') return od.to === me || od.from === me || ctx.admin;
       if (!existing) return nd.from === me;
