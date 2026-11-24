@@ -7,15 +7,16 @@
   "effectiveDate": "2026년 12월 1일",
   "business": {
     "name": "",
+    "brand": "TAi Edutech",
     "owner": "",
     "regNo": "",
     "mailOrderNo": "",
     "mailOrderAgency": "",
     "address": "",
     "phone": "",
-    "email": "anji01204@gmail.com",
+    "email": "002book@gmail.com",
     "privacyOfficer": "유안지",
-    "privacyEmail": "anji01204@gmail.com"
+    "privacyEmail": "002book@gmail.com"
   },
   "android": {
     "packageId": "com.book002.app",

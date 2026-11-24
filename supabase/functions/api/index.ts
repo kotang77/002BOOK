@@ -666,7 +666,7 @@ async function guardianConsent(req: Request, b: Record<string, unknown>) {
   await sb.from('accounts').update({ guardian_consent: rec }).eq('id', acc!.id);
   await sendMail(gc.email, '[002BOOK] 보호자 동의가 확인됐어요', mailShell('보호자 동의 확인',
     `<p>${escHtml(name)} 님(${escHtml(rel)})의 동의로 자녀(아이디 <b>${escHtml(acc!.id)}</b>)의 가입이 완료됐어요. (${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })})</p>
-     <p>본인이 동의하지 않았다면 바로 ${escHtml(env('PRIVACY_CONTACT', 'anji01204@gmail.com'))} 로 알려 주세요. 자녀 정보는 언제든지 열람·정정·삭제를 요청할 수 있어요.</p>`)).catch(() => {});
+     <p>본인이 동의하지 않았다면 바로 ${escHtml(env('PRIVACY_CONTACT', '002book@gmail.com'))} 로 알려 주세요. 자녀 정보는 언제든지 열람·정정·삭제를 요청할 수 있어요.</p>`)).catch(() => {});
   return { message: '동의가 완료됐어요. 이제 자녀가 002BOOK에 로그인할 수 있어요. 확인 메일도 보내 드렸어요.' };
 }
 

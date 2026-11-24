@@ -32,7 +32,7 @@ const bizLine = [biz.name && `상호 ${biz.name}`, biz.owner && `대표 ${biz.ow
   biz.regNo && `사업자등록번호 ${biz.regNo}` + (biz.regNo ? ` <a href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=${biz.regNo.replace(/\D/g, '')}" target="_blank" rel="noopener" style="color:inherit">[사업자정보 확인]</a>` : ''),
   biz.mailOrderNo && `통신판매업 신고 ${biz.mailOrderNo}${biz.mailOrderAgency ? ' (' + biz.mailOrderAgency + ')' : ''}`,
   `호스팅 제공 GitHub, Inc. · Supabase, Inc.`].filter(Boolean).join(' · ');
-const opLine = FREE && !biz.name ? ['서비스 운영자 개인 운영 (무료 제공 · 사업자 등록 전)', (biz.email || biz.privacyEmail) && `문의 ${biz.email || biz.privacyEmail}`, '호스팅 제공 GitHub, Inc. · Supabase, Inc.'].filter(Boolean).join(' · ') : bizLine;
+const opLine = FREE && !biz.name ? [`서비스 운영자 ${biz.brand ? biz.brand + ' ' : ''}(개인 운영 · 무료 제공 · 사업자 등록 전)`, (biz.email || biz.privacyEmail) && `문의 ${biz.email || biz.privacyEmail}`, '호스팅 제공 GitHub, Inc. · Supabase, Inc.'].filter(Boolean).join(' · ') : bizLine;
 const missing = ['name', 'owner', 'address', 'phone', 'email', 'regNo', 'mailOrderNo'].filter((k) => !biz[k]);
 if (missing.length && !FREE) console.warn('⚠ site.config.json 사업자 정보 비어 있음 (전자상거래법 표시 의무): ' + missing.join(', '));
 
@@ -78,7 +78,7 @@ const sw = path.join(DIST, 'sw.js'); fs.writeFileSync(sw, fs.readFileSync(sw, 'u
     if (u !== t) fs.writeFileSync(p, u);
   } }
 const REPL = {
-  __BUSINESS_INFO__: opLine, __BIZ_NAME__: biz.name || (FREE ? '002BOOK 운영자' : '002BOOK'), __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
+  __BUSINESS_INFO__: opLine, __BIZ_NAME__: biz.name || (FREE ? (biz.brand || '002BOOK 운영자') : '002BOOK'), __BIZ_OWNER__: biz.owner || '(대표자명)', __BIZ_PHONE__: biz.phone || '(전화번호)',
   __PRIVACY_OFFICER__: biz.privacyOfficer || biz.owner || '(개인정보 보호책임자)', __PRIVACY_EMAIL__: biz.privacyEmail || biz.email || 'help@002book.com',
   __EFFECTIVE_DATE__: cfg.effectiveDate || '2026년 12월 1일', __POLICY_VERSION__: cfg.policyVersion || '2026-12-01',
 };
