@@ -31,6 +31,26 @@ export const ORAL = {
   HOLD: ['표현', '전달'],
 };
 const LP = [0, 40, 55, 70, 85, 100];
+/* 평가 영역 설정(관리자 화면 config/rubric.oral). 영역 6개, 이름 1~20자(서로 다름), 배점 1~60 정수 합 100.
+   c·l(기준 설명·수준 설명)은 앱이 AI 지시문을 만들 때 쓰고, 서버 채점은 이름·배점·보류 여부만 쓴다 */
+export type RbItem = { k: string; w: number; h?: boolean; c?: string; l?: string };
+export const RB_DEF: RbItem[] = ORAL.ITEMS.map((k, n) => ({ k, w: ORAL.W[n], h: ORAL.HOLD.includes(k) }));
+export function rbValid(v: unknown): RbItem[] | null {
+  if (!Array.isArray(v) || v.length !== 6) return null;
+  const out: RbItem[] = []; const seen = new Set<string>(); let sum = 0;
+  for (const x of v) {
+    const o = (x ?? {}) as Record<string, unknown>;
+    const k = String(o.k ?? '').trim(), w = Number(o.w);
+    if (!k || k.length > 20 || seen.has(k) || !Number.isInteger(w) || w < 1 || w > 60) return null;
+    seen.add(k); sum += w;
+    out.push({ k, w, h: !!o.h, ...(o.c ? { c: String(o.c).slice(0, 300) } : {}), ...(o.l ? { l: String(o.l).slice(0, 900) } : {}) });
+  }
+  return sum === 100 ? out : null;
+}
+async function rbNow(io: OralIO): Promise<RbItem[]> {
+  const r = await io.read('config/rubric');
+  return rbValid((r?.data as Record<string, unknown> | undefined)?.oral) ?? RB_DEF;
+}
 /** 수준 1~5(또는 백분율·10점 척도)를 수준으로. 비어 있으면 0 */
 export function lvl(v: unknown) {
   if (v == null || v === '' || v === '보류') return 0;
@@ -40,13 +60,13 @@ export function lvl(v: unknown) {
   return x >= 93 ? 5 : x >= 78 ? 4 : x >= 63 ? 3 : x >= 48 ? 2 : 1;
 }
 /** 영역 점수(환산 %)·수준·채점 보류·가중 총점 */
-export function rubric(sc: Record<string, unknown>) {
+export function rubric(sc: Record<string, unknown>, items: RbItem[] = RB_DEF) {
   const scores: Record<string, number> = {}, levels: Record<string, number> = {}, held: string[] = [];
   let s = 0, w = 0;
-  ORAL.ITEMS.forEach((k, n) => {
+  items.forEach(({ k, w: wt, h }) => {
     const l = lvl(sc[k]);
-    if (!l) { if (ORAL.HOLD.includes(k)) { held.push(k); return; } fail('bad_ai', '평가 점수가 비어 있어요.', 422); }
-    levels[k] = l; scores[k] = LP[l]; s += ORAL.W[n] * LP[l]; w += ORAL.W[n];
+    if (!l) { if (h) { held.push(k); return; } fail('bad_ai', '평가 점수가 비어 있어요.', 422); }
+    levels[k] = l; scores[k] = LP[l]; s += wt * LP[l]; w += wt;
   });
   return { scores, levels, held, total: w ? Math.round(s / w) : 0 };
 }
@@ -146,7 +166,7 @@ export function memo(a1: string, a2: string, M: string, Q: string) {
 
 /* ---------- 문서 ---------- */
 const KEY = /^[bc]\d{1,3}$/;
-const checkKey = (k: unknown) => { const s = String(k ?? ''); if (!KEY.test(s)) fail('bad_request', '잘못된 요청이에요.'); return s; };
+export const checkKey = (k: unknown) => { const s = String(k ?? ''); if (!KEY.test(s)) fail('bad_request', '잘못된 요청이에요.'); return s; };
 const checkN = (n: unknown) => { const v = Number(n); if (!Number.isInteger(v) || v < 0 || v >= ORAL.N) fail('bad_request', '잘못된 문항이에요.'); return v; };
 const str = (v: unknown, max: number) => String(v ?? '').slice(0, max);
 const arr = (v: unknown) => (Array.isArray(v) ? v : []);
@@ -191,7 +211,8 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     const ans = arr(A.ans);
     const answers = arr(rec.answers);
     if (answers.length !== ORAL.N) fail('bad_ai', '평가 결과의 답변 수가 맞지 않아요.', 422);
-    const { scores, levels, held, total } = rubric((rec.scores ?? {}) as Record<string, unknown>);
+    const rbi = await rbNow(io);   // 이 시험에 쓴 평가 영역을 기록해 2차 평가도 같은 기준으로 매긴다
+    const { scores, levels, held, total } = rubric((rec.scores ?? {}) as Record<string, unknown>, rbi);
     const outA = answers.map((x, n) => {
       const a = (x ?? {}) as Record<string, unknown>; const src = (ans[n] ?? {}) as Record<string, unknown>;
       if (!String(a.model ?? '').trim()) fail('bad_ai', '모범 답안이 비어 있어요.', 422);
@@ -199,7 +220,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
       if (!text.trim()) fail('bad_request', '말한 내용이 비어 있는 답변이 있어요.');
       return { ...a, no: n + 1, q: str(src.q ?? a.q, 400), text, raw: str(src.raw, 4000), sec: Number(src.sec ?? a.sec) || 0, model: str(a.model, 1200) };
     });
-    const out = { ...rec, scores, levels, held, rb: 2, total, answers: outA, uid, round: 1, at: Date.now() };
+    const out = { ...rec, scores, levels, held, rb: 2, rbi, total, answers: outA, uid, round: 1, at: Date.now() };
     await io.write(p1, out, uid, null);
     const s: St = { uid, key, st: [2, 2, 2], sh: [null, null, null], ans2: [null, null, null], tries: [0, 0, 0], think: THINK(), thinkMin: THINK_MIN(), at: Date.now() };
     await io.write(`oralst/${uid}_${key}`, s as unknown as Record<string, unknown>, uid, await io.read(`oralst/${uid}_${key}`));
@@ -284,11 +305,12 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     const ev = (b.ev ?? {}) as Record<string, unknown>;
     const evA = arr(ev.answers) as Record<string, unknown>[];
     if (evA.length !== ORAL.N) fail('bad_ai', '평가 결과의 답변 수가 맞지 않아요.', 422);
-    const { scores, levels, held, total: T2 } = rubric((ev.scores ?? {}) as Record<string, unknown>);
+    const rbi = rbValid(e1.rbi) ?? await rbNow(io);
+    const { scores, levels, held, total: T2 } = rubric((ev.scores ?? {}) as Record<string, unknown>, rbi);
     const T1 = Number(e1.total) || 0;
     // 영역별 수준 변화: 1차와 이름이 같은 영역만 비교한다(개정 전 1차 기록은 비교하지 않음)
     const s1 = (e1.scores ?? {}) as Record<string, unknown>;
-    const cmp = ORAL.ITEMS.filter((k) => s1[k] != null && levels[k] != null);
+    const cmp = rbi.map((x) => x.k).filter((k) => s1[k] != null && levels[k] != null);
     const up = cmp.filter((k) => levels[k] > lvl(s1[k])).length, down = cmp.filter((k) => levels[k] < lvl(s1[k])).length;
     const Gd = clip(85 + 1.5 * (T2 - T1));
     const its = items();
@@ -314,7 +336,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     const rec: Record<string, unknown> = {};
     for (const k of keep) if (ev[k] != null) rec[k] = ev[k];
     Object.assign(rec, {
-      scores, levels, held, rb: 2, total: T2, delta: T2 - T1, up, down, growth, answers, firstTotal: T1, firstScores: e1.scores, at: Date.now(), firstAt: e1.at,
+      scores, levels, held, rb: 2, rbi, total: T2, delta: T2 - T1, up, down, growth, answers, firstTotal: T1, firstScores: e1.scores, at: Date.now(), firstAt: e1.at,
       title: e1.title, g: e1.g, m: e1.m, kw: e1.kw ?? '', uid, round: 2,
       calc: { version: 2, CLO: ORAL.CLO, CHI: ORAL.CHI, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L, PEN: ORAL.PEN, A: ORAL.A, B: ORAL.B, G: ORAL.G, think: s.think, thinkMin: s.thinkMin ?? THINK_MIN(), thinkSec: s.sh.map((x) => x ? Math.round((unlockAt(x, s) - Number(x.at)) / 1000) : null) },
     });

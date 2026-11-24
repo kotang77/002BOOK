@@ -7,7 +7,7 @@ import { canRead, canWrite, Ctx, redact, Row, sanitize } from './rules.ts';
 import { sampleAI } from './ai.ts';
 import { payConfirm, payPlans, payReady } from './pay.ts';
 import { addSub, pushTo, removeSub, vapid } from './push.ts';
-import { oralOp } from './oral.ts';
+import { checkKey, oralOp } from './oral.ts';
 import { bookOp } from './books.ts';
 import { artOp } from './media.ts';
 
@@ -26,8 +26,18 @@ async function getCtx(req: Request): Promise<Ctx> {
   if (!t) return { uid: null, admin: false };
   const { data } = await sb.from('sessions').select('uid, expires_at').eq('token_hash', await sha256hex(t)).maybeSingle();
   if (!data || new Date(data.expires_at) < new Date()) return { uid: null, admin: false };
-  return { uid: data.uid, admin: data.uid === ADMIN_ID };
+  return { uid: data.uid, admin: await isAdm(data.uid) };
 }
+/* 관리자: 최고 관리자(ADMIN_ID) + 최고 관리자가 추가한 관리자(sys/admins, 서버만 읽음). 30초 동안 기억한다 */
+let ADM: { at: number; ids: Set<string> } | null = null;
+async function adminIds(fresh = false) {
+  if (!fresh && ADM && Date.now() - ADM.at < 30000) return ADM.ids;
+  const r = await readRow('sys/admins');
+  ADM = { at: Date.now(), ids: new Set<string>([ADMIN_ID, ...(((r?.data?.ids as string[]) ?? []).map(String))]) };
+  return ADM.ids;
+}
+async function isAdm(uid: string | null) { return !!uid && (uid === ADMIN_ID || (await adminIds()).has(uid)); }
+const needOwner = (ctx: Ctx) => { need(ctx); if (ctx.uid !== ADMIN_ID) fail('forbidden', '최고 관리자만 할 수 있어요.', 403); };
 const need = (ctx: Ctx) => { if (!ctx.uid) fail('unauthenticated', '다시 로그인해 주세요.', 401); return ctx.uid!; };
 const needAdmin = (ctx: Ctx) => { need(ctx); if (!ctx.admin) fail('forbidden', '관리자만 할 수 있어요.', 403); };
 
@@ -37,7 +47,7 @@ async function newSession(uid: string, ua: string | null) {
     token_hash: await sha256hex(token), uid, user_agent: (ua ?? '').slice(0, 200),
     expires_at: new Date(Date.now() + SESSION_DAYS * 864e5).toISOString(),
   });
-  return { token, uid, admin: uid === ADMIN_ID };
+  return { token, uid, admin: await isAdm(uid), owner: uid === ADMIN_ID };
 }
 
 /* ================================================================
@@ -100,7 +110,7 @@ async function plans() {
   return { row: r, paid: d.paid ?? {}, blocked: d.blocked ?? {} };
 }
 async function isPaid(uid: string) {
-  if (uid === ADMIN_ID) return true;
+  if (await isAdm(uid)) return true;
   const p = await plans(); const e = p.paid[uid];
   if (!e) return false;
   if (e.until && e.until < Date.now()) {       // 이용 기간이 끝나면 자동으로 무료회원
@@ -286,11 +296,65 @@ async function resetPw(b: Record<string, unknown>) {
   return { ok: true };
 }
 
+/* ================================================================
+ * 시험 리셋·재시험 (관리자)
+ * - what: essay(논술 1·2차) | oral(구술 1·2차, 진행 상태, 녹음) | both
+ * - keep=true(재시험 부여): 지우기 전에 평가 결과를 archive/<아이디>_<키>_<종류>_<시각>에 보관해 회원·관리자가 볼 수 있게 한다
+ * - keep=false(리셋): 보관하지 않고 지운다
+ * - 진도 문서에서 그 달의 완료 표시·기록을 빼고 rv를 올려, 열려 있던 예전 화면이 덮어쓰지 못하게 한다
+ * 특허 구현부(오류 프로파일 계산, 구술 잠금·성장 점수 산식)는 건드리지 않고, 그 달의 기록만 지운다
+ * ================================================================ */
+async function resetTest(ctx: Ctx, b: Record<string, unknown>) {
+  needAdmin(ctx);
+  const id = String(b.id ?? '').trim().toLowerCase(); const key = checkKey(b.key);
+  const what = String(b.what ?? 'both'); const keep = !!b.keep;
+  if (!['essay', 'oral', 'both'].includes(what)) fail('bad_request', '무엇을 다시 열지 골라 주세요.');
+  if (!(await account(id))) fail('no_user', '회원을 찾지 못했어요.');
+  const at = Date.now(); const done: string[] = [];
+  const kinds = what === 'both' ? ['essay', 'oral'] : [what];
+  for (const kind of kinds) {
+    const paths = kind === 'essay' ? [`evals/${id}_${key}`, `evals/${id}_${key}_r2`] : [`orals/${id}_${key}`, `orals/${id}_${key}_r2`, `orals/${id}_${key}_a`, `oralst/${id}_${key}`];
+    const rows = (await Promise.all(paths.map(readRow))).filter(Boolean) as Row[];
+    if (!rows.length) continue;
+    if (keep) {
+      const docs: Record<string, unknown> = {}; for (const r of rows) docs[r.path] = r.data;
+      const meta = { uid: id, key, kind, at, by: ctx.uid, title: String(rows[0].data.title ?? ''), m: `${rows[0].data.g ?? ''} ${rows[0].data.m ?? ''}`.trim(), total: rows.find((r) => /_r2$/.test(r.path))?.data.total ?? rows[0].data.total ?? null };
+      try { await writeRow(`archive/${id}_${key}_${kind}_${at}`, { ...meta, docs }, id, null); }
+      catch { await writeRow(`archive/${id}_${key}_${kind}_${at}`, { ...meta, docs: {}, trimmed: true }, id, null); }
+    }
+    if (kind === 'essay') {
+      const title = String(rows.find((r) => r.path === `evals/${id}_${key}`)?.data.title ?? '');
+      if (title) await sb.from('docs').delete().eq('parent', 'essays').eq('data->>uid', id).eq('data->>book', title);
+    } else {
+      const pre = `${id}_${key}_`;
+      const { data } = await sb.from('docs').select('path, id').eq('parent', 'orauds').like('id', pre.replace(/_/g, '\\_') + '%');
+      const ap = (data ?? []).filter((r: { id: string }) => r.id.startsWith(pre)).map((r: { path: string }) => r.path); if (ap.length) await sb.from('docs').delete().in('path', ap);
+    }
+    await sb.from('docs').delete().in('path', paths);
+    done.push(kind);
+  }
+  const pr = await readRow('progress/' + id);
+  if (pr) {
+    const P = { ...pr.data } as Record<string, unknown>;
+    const omit = (o: unknown, ...ks: string[]) => { const x = { ...((o as Record<string, unknown>) ?? {}) }; for (const k of ks) delete x[k]; return x; };
+    const drop = (a: unknown, f: (x: Record<string, unknown>) => boolean) => (Array.isArray(a) ? a : []).filter((x) => !f((x ?? {}) as Record<string, unknown>));
+    if (kinds.includes('essay')) {
+      P.evDone = omit(P.evDone, key); P.evalLog = drop(P.evalLog, (x) => x.key === key);
+      P.errs = drop(P.errs, (x) => x.k === key); P.wtime = omit(P.wtime, key, 'r2:' + key);
+    }
+    if (kinds.includes('oral')) { P.orDone = omit(P.orDone, key); P.oralLog = drop(P.oralLog, (x) => x.key === key); P.oqs = omit(P.oqs, key); }
+    P.rv = Number(P.rv ?? 0) + 1;
+    P.testResets = [...(Array.isArray(P.testResets) ? P.testResets : []), { key, what, keep, at, by: ctx.uid }].slice(-50);
+    await writeRow('progress/' + id, P, id, pr);
+  }
+  return { ok: true, done, keep, rv: pr ? Number(pr.data.rv ?? 0) + 1 : 0 };
+}
+
 async function deleteAll(id: string) {
   // 회원이 만든 모든 문서와 회원이 관련된 공유 문서를 지운다
   const del = (q: ReturnType<typeof sb.from>) => q;
   await sb.from('docs').delete().in('path', ['members/' + id, 'progress/' + id, 'custom/' + id, 'dykeys/' + id, 'subs/' + id, 'resets/' + id, 'pushsubs/' + id]);
-  for (const col of ['evals', 'orals', 'oralst', 'orauds', 'qimgs', 'diaries', 'works', 'essays', 'reviews']) {
+  for (const col of ['evals', 'orals', 'oralst', 'orauds', 'qimgs', 'diaries', 'works', 'essays', 'reviews', 'archive']) {
     const { data } = await sb.from('docs').select('path, id').eq('parent', col);
     const mine = (data ?? []).filter((r: { id: string }) => (col === 'essays' || col === 'reviews') ? r.id.endsWith('_' + id) : r.id.startsWith(id + '_'));
     for (let i = 0; i < mine.length; i += 100) await sb.from('docs').delete().in('path', mine.slice(i, i + 100).map((r: { path: string }) => r.path));
@@ -308,6 +372,8 @@ async function deleteAll(id: string) {
   await sb.storage.from('uploads').list(id).then(async ({ data }) => { if (data?.length) await sb.storage.from('uploads').remove(data.map((f) => `${id}/${f.name}`)); });
   await sb.from('ai_usage').delete().eq('uid', id);
   await googleUnlinkAll(id);
+  { const a = await readRow('sys/admins'); const ids = ((a?.data?.ids as string[]) ?? []);
+    if (ids.includes(id)) { await writeRow('sys/admins', { ...a!.data, ids: ids.filter((x) => x !== id) }, null, a); ADM = null; } }
   await sb.from('accounts').delete().eq('id', id); // sessions는 cascade로 함께 삭제
   void del;
 }
@@ -386,7 +452,7 @@ async function handle(req: Request, b: Record<string, unknown>) {
       return { ok: true, email: g.email };
     }
     case 'auth.logout': { const t = req.headers.get('x-session'); if (t) await sb.from('sessions').delete().eq('token_hash', await sha256hex(t)); return { ok: true }; }
-    case 'auth.me': { const uid = need(ctx); const acc = await account(uid); return { uid, admin: ctx.admin, paid: await isPaid(uid), mustChange: !!acc?.must_change }; }
+    case 'auth.me': { const uid = need(ctx); const acc = await account(uid); return { uid, admin: ctx.admin, owner: uid === ADMIN_ID, paid: await isPaid(uid), mustChange: !!acc?.must_change }; }
     case 'auth.verify': { const uid = need(ctx); const acc = await account(uid); if (!acc || !(await checkPw(acc, String(b.pw ?? '')))) fail('bad_password', '비밀번호가 맞지 않아요.'); return { ok: true }; }
     case 'auth.reset': return resetPw(b);
     case 'auth.guardianInfo': return guardianInfo(String(b.token ?? ''));
@@ -424,15 +490,45 @@ async function handle(req: Request, b: Record<string, unknown>) {
     }
 
     /* ---- 관리자 ---- */
+    case 'admin.admins': {
+      needAdmin(ctx); const ids = [...(await adminIds(true))];
+      const out = [];
+      for (const id of ids) { const m = await readRow('members/' + id); out.push({ id, nick: String(m?.data?.nick ?? id), owner: id === ADMIN_ID, at: Number(((await readRow('sys/admins'))?.data?.added as Record<string, number> | undefined)?.[id] ?? 0) }); }
+      return { owner: ADMIN_ID, admins: out };
+    }
+    case 'admin.adminAdd': case 'admin.adminRemove': {
+      needOwner(ctx); const id = String(b.id ?? '').trim().toLowerCase();
+      if (!id || id === ADMIN_ID) fail('bad_request', '최고 관리자는 바꿀 수 없어요.');
+      const row = await readRow('sys/admins'); const d = (row?.data ?? {}) as Record<string, unknown>;
+      const ids = ((d.ids as string[]) ?? []).filter((x) => x !== id); const added = { ...((d.added as Record<string, number>) ?? {}) };
+      if (b.op === 'admin.adminAdd') {
+        const acc = await account(id); const m = await readRow('members/' + id);
+        if (!acc || !m) fail('no_user', '회원을 찾지 못했어요. 아이디를 확인해 주세요.');
+        if (acc.guardian_consent?.status === 'pending') fail('forbidden', '보호자 동의를 기다리는 계정은 관리자가 될 수 없어요.');
+        const age = ageFrom(String(m!.data.birth ?? ''));
+        if (age === null || age < 19) fail('adult_only', '관리자는 만 19세 이상 성인 회원만 될 수 있어요. 학생 개인정보를 볼 수 있기 때문이에요.');
+        if (ids.length >= 20) fail('too_many', '관리자는 20명까지 둘 수 있어요.');
+        ids.push(id); added[id] = Date.now();
+      } else delete added[id];
+      const log = [...((d.log as unknown[]) ?? []), { at: Date.now(), by: ctx.uid, id, act: b.op === 'admin.adminAdd' ? 'add' : 'remove' }].slice(-100);
+      await writeRow('sys/admins', { ids, added, log }, null, row); ADM = null;
+      return { ok: true, ids: [ADMIN_ID, ...ids] };
+    }
+    case 'admin.resetTest': return resetTest(ctx, b);
     case 'admin.setPassword': {
       needAdmin(ctx); const id = String(b.id ?? ''); const pw = String(b.pw ?? '');
+      if (id !== ctx.uid && ctx.uid !== ADMIN_ID && await isAdm(id)) fail('forbidden', '다른 관리자의 비밀번호는 최고 관리자만 바꿀 수 있어요.', 403);
       if (pw.length < 8) fail('weak_password', '비밀번호는 8자 이상이어야 해요.');
       if (!(await account(id))) fail('no_user', '회원을 찾지 못했어요.');
       await sb.from('accounts').update({ ...(await hashNew(pw)), must_change: !!b.temp, updated_at: new Date().toISOString() }).eq('id', id);
       await sb.from('sessions').delete().eq('uid', id);
       return { ok: true };
     }
-    case 'admin.deleteMember': { needAdmin(ctx); const id = String(b.id ?? ''); if (id === ADMIN_ID) fail('forbidden', '관리자는 지울 수 없어요.'); await deleteAll(id); return { ok: true }; }
+    case 'admin.deleteMember': {
+      needAdmin(ctx); const id = String(b.id ?? '');
+      if (id === ADMIN_ID || (ctx.uid !== ADMIN_ID && await isAdm(id))) fail('forbidden', '관리자는 지울 수 없어요. 최고 관리자가 먼저 관리자에서 빼 주세요.');
+      await deleteAll(id); return { ok: true };
+    }
     case 'admin.mail': {
       needAdmin(ctx);
       const to = (Array.isArray(b.to) ? b.to : [b.to]).map(String).filter((x) => EMAIL_RE.test(x)).slice(0, 50);
@@ -478,6 +574,9 @@ async function handle(req: Request, b: Record<string, unknown>) {
       if (b.op === 'db.update' && !prev) fail('not_found', '문서를 찾지 못했어요.', 404);
       const incoming = sanitize(ctx, path, b.data as Record<string, unknown>);
       const next = b.op === 'db.update' ? applyUpdate(prev!.data, incoming) : b.merge && prev ? deepMerge(prev.data, incoming) : incoming;
+      // 관리자가 시험을 다시 연 뒤(rv 증가) 예전 화면이 진도를 통째로 덮어쓰지 못하게 한다
+      if (path.startsWith('progress/') && prev && !ctx.admin && Number(prev.data.rv ?? 0) > Number((next as Record<string, unknown>).rv ?? 0))
+        fail('stale_progress', '관리자가 학습 기록을 바꿨어요. 화면을 새로 불러올게요.', 409);
       if (path.startsWith('members/') && prev) { delete next.pw; delete next.salt; for (const k of ['id', 'birth']) if (prev.data[k] !== undefined) next[k] = prev.data[k]; }
       if (!(await canWrite(ctx, b.op === 'db.update' ? 'update' : 'set', path, prev, next))) fail('permission_denied', '이 기록을 바꿀 권한이 없어요.', 403);
       return writeRow(path, next, uid, prev);

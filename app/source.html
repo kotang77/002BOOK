@@ -1297,6 +1297,53 @@ body::before{background:#fff}
 .sb{box-shadow:0 2px 6px rgba(31,35,40,.18)}
 .gsi{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 14px}.gsi [data-gsi]{min-height:44px;display:flex;justify-content:center;width:100%}
 .gor{display:flex;align-items:center;gap:10px;width:100%;margin:0;color:var(--muted,#6b6b6b);font-size:13px}.gor:before,.gor:after{content:"";flex:1;border-top:1px solid var(--line,#e5e5e5)}
+/* 관리자 대시보드 (ad-) */
+.ad{display:flex;flex-direction:column;gap:16px;padding-bottom:30px}
+.ad-top h2{font-family:var(--f-display);font-size:24px;margin:0}.ad-top p{margin:2px 0 0}
+.ad-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:760px){.ad-tiles{grid-template-columns:repeat(6,1fr)}}
+.ad-tile{background:#fff;border:1px solid #ECEEF1;border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:1px;box-shadow:0 2px 8px rgba(31,35,40,.04)}
+.ad-tile[role=button]{cursor:pointer}.ad-tile b{font-size:28px;line-height:1.1;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.ad-tile span{font-size:13px;color:var(--ink);font-weight:600}.ad-tile small{font-size:12px;color:var(--muted)}
+.ad-todos{display:flex;gap:8px;flex-wrap:wrap}.ad-todo{border:0;background:var(--rose-soft);color:var(--rose-ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}.ad-todo b{font-weight:800}
+.ad-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ad-two>.ad-dist:last-child{grid-column:1/-1}@media(min-width:760px){.ad-two{grid-template-columns:1fr 1fr 1.2fr;gap:10px}.ad-two>.ad-dist:last-child{grid-column:auto}}
+.ad-dist{background:#fff;border:1px solid #ECEEF1;border-radius:16px;padding:12px 14px}.ad-dist h4{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:600}
+.ad-row{display:grid;grid-template-columns:84px 1fr 30px;align-items:center;gap:8px;font-size:13px;margin:5px 0}.ad-row i{height:8px;width:100%;background:var(--soft);border-radius:4px;overflow:hidden;display:block}.ad-row i b{display:block;height:100%;background:var(--rose);border-radius:4px}.ad-row em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.ad-rc{display:flex;justify-content:space-between;align-items:baseline;width:100%;border:0;background:none;padding:6px 0;border-bottom:1px solid var(--line);font:inherit;cursor:pointer;text-align:left}.ad-rc:last-child{border-bottom:0}.ad-rc small{color:var(--muted);font-size:12px}
+.ad-menu{display:flex;flex-direction:column;gap:10px}
+.ad-sec{background:#fff;border:1px solid #ECEEF1;border-radius:16px;overflow:hidden}.ad-sec.open{box-shadow:0 4px 16px rgba(31,35,40,.07);border-color:#E2E5E9}
+.ad-sh,.ad-sub{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:14px 16px;font:inherit;text-align:left;cursor:pointer;color:var(--ink)}
+.ad-sh>span,.ad-sub>span{flex:1;display:flex;flex-direction:column;min-width:0}.ad-sh b{font-size:16px}.ad-sh small,.ad-sub small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad-chev{transition:transform .18s;color:var(--muted);flex:none}[aria-expanded=true]>.ad-chev{transform:rotate(90deg)}
+.ad-badge{font-style:normal;font-size:12px;background:var(--soft);border-radius:999px;padding:2px 9px;font-weight:700}.ad-badge.hot{background:var(--rose);color:#fff}
+.ad-sb{padding:2px 16px 16px;border-top:1px solid var(--line)}
+.ad-subs{display:flex;flex-direction:column;gap:8px;margin-top:10px}.ad-sbx{border:1px solid var(--line);border-radius:12px}.ad-sbx.open{background:#FCFCFD}.ad-sub{padding:11px 12px}.ad-sub b{font-size:14px}.ad-sbb{padding:0 12px 12px}
+.ad-filt{display:flex;flex-direction:column;gap:6px;margin:12px 0 8px}.ad-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}.ad-chips .chip{white-space:nowrap;flex:none}
+.ad-srow{display:flex;gap:8px}.ad-srow input{flex:1;min-width:0}.ad-srow select{width:auto;flex:none}.ad-cnt{margin:2px 0 0}
+.ad-mlist{display:flex;flex-direction:column}.ad-m{border-bottom:1px solid var(--line)}.ad-m:last-child{border-bottom:0}
+.ad-mh{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:10px 2px;font:inherit;text-align:left;cursor:pointer;color:var(--ink)}
+.ad-av{width:34px;height:34px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700;flex:none}.ad-m.open .ad-av{background:var(--ink);color:#fff}
+.ad-mt{flex:1;min-width:0;display:flex;flex-direction:column}.ad-mt small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad-tag{font-size:11px;border-radius:999px;padding:1px 7px;background:var(--soft);color:var(--muted)}.ad-tag.p{background:#DDF1EE;color:#0F6E63}.ad-tag.x{background:#FBE3E0;color:var(--brick)}.ad-tag.a{background:var(--rose-soft);color:var(--rose-ink)}
+.ad-sc{display:flex;gap:10px;flex:none}.ad-sc span{display:flex;flex-direction:column;align-items:center;min-width:30px}.ad-sc small{font-size:10px;color:var(--muted)}.ad-sc b{font-size:15px;font-variant-numeric:tabular-nums}
+.ad-md{padding:0 0 14px 44px;display:flex;flex-direction:column;gap:10px}@media(max-width:520px){.ad-md{padding-left:0}}
+.ad-seg{align-self:flex-start;display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;width:max-content;max-width:100%}.ad-seg button{white-space:nowrap}
+.ad-dl{display:grid;grid-template-columns:86px 1fr;gap:6px 10px;margin:0;font-size:14px}.ad-dl dt{color:var(--muted)}.ad-dl dd{margin:0}
+.ad-kv{display:flex;gap:8px}.ad-kv span{flex:1;background:var(--soft);border-radius:12px;padding:8px;text-align:center;font-size:12px;color:var(--muted)}.ad-kv b{display:block;font-size:20px;color:var(--ink)}
+.ad-h4{margin:6px 0 2px;font-size:13px}.ad-ul{list-style:none;margin:0;padding:0}.ad-ul li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}.ad-ul li:last-child{border-bottom:0}
+.ad-tl{list-style:none;margin:0;padding:0}.ad-tl li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.ad-tl li>div:first-child{flex:1;min-width:0;font-size:14px}.ad-tl small{display:block;color:var(--muted);font-size:12px}
+.ad-tb{display:flex;gap:6px;flex:none}.ad-dan{color:var(--brick)!important}
+.ad-acts{display:flex;gap:6px;flex-wrap:wrap}
+.ad-rb{display:flex;flex-direction:column;gap:8px}.ad-ri{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff}
+.ad-rh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ad-rh input[name^=k]{flex:1 1 190px;min-width:0}.ad-rh input[type=number]{width:64px;flex:none;text-align:right}.ad-no{font-weight:700;color:var(--rose-ink)}
+.ad-hold{flex-direction:row!important;gap:4px!important;align-items:center;font-size:12px;white-space:nowrap}.ad-hold input{width:auto}
+.ad-ri details{margin-top:6px}.ad-ri summary{cursor:pointer;font-size:13px;color:var(--muted)}.ad-ri textarea{font-size:13px}
+.ad-sum{margin:0;font-size:14px}.ad-sum b{font-size:18px}
+.ad-cl{list-style:none;margin:8px 0 0;padding:0}.ad-cl li{border-bottom:1px solid var(--line)}.ad-ci{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 2px;font:inherit;text-align:left;cursor:pointer;color:var(--ink)}
+.ad-ci>b{width:38px;flex:none}.ad-ci span{flex:1;min-width:0}.ad-ci small{display:block;color:var(--muted);font-size:12px}
+.ad-cf{display:flex;flex-direction:column;gap:8px;padding:10px 0 14px}.ad-two2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ad-adm li{align-items:center}
+@media(max-width:759px){.ad-tile{padding:10px 11px;border-radius:14px}.ad-tile b{font-size:22px}.ad-tile span{font-size:12px}.ad-tile small{font-size:11px}.ad-dist{padding:10px 12px}.ad-row{grid-template-columns:42px minmax(0,1fr) 16px;gap:6px;font-size:12px;margin:3px 0}.ad-row span{min-width:28px}.ad-rc{padding:4px 0}}
 </style>
 
 <div id="app"></div>
@@ -1333,8 +1380,10 @@ const S={db:null,sample:null,dbState:'loading',canWrite:null,authTab:'login',aut
   plans:{paid:{},blocked:{}},bill:{price:'',payLink:'',note:''},sub:null,subAsk:'',notices:[],adm:{tab:'members',members:null,prog:{},open:null,to:'all'}};
 
 const ADMIN='kotang77';
-const isAdmin=()=>S.id===ADMIN;
-const paidOf=id=>id===ADMIN||!!((S.plans.paid||{})[id]);
+const isAdmin=()=>!!S.id&&(S.id===ADMIN||!!S.admX);
+const isOwner=()=>S.id===ADMIN;
+const admOf=id=>id===ADMIN||((S.adm&&S.adm.adminIds)||[]).includes(id);
+const paidOf=id=>admOf(id)||!!((S.plans.paid||{})[id]);
 const blockedOf=id=>id!==ADMIN&&!!((S.plans.blocked||{})[id]);
 const isPaid=()=>!!(window.__002CFG&&window.__002CFG.free)||paidOf(S.id);
 const myNotices=()=>(S.notices||[]).filter(n=>n.to==='all'||n.to===S.id||(n.to==='paid'&&isPaid())||(n.to==='free'&&!isPaid())).concat((S.alerts||[]).map(a=>({title:(a.title||'알림')+' · '+(a.fromNick||a.from),text:a.text,at:a.at,to:S.id}))).sort((a,b)=>b.at-a.at);
@@ -1401,7 +1450,8 @@ async function flush(){
   if(!pDirty||!S.db||!S.id)return;
   pDirty=false;pBusy=true;
   try{await S.db.doc('progress/'+S.id).set(clone(S.progress))}
-  catch(e){toast('저장하지 못했어요. 잠시 뒤 다시 눌러 주세요.')}
+  catch(e){if(e&&e.code==='stale_progress'){try{const p=await S.db.doc('progress/'+S.id).get();S.progress=Object.assign({done:{},notes:{},qs:{},evalLog:[],drafts:{},picks:{}},p.exists?clone(p.data()):{});S.evals={};S.evals2={};S.orals={};S.orals2={};render();toast('관리자가 시험을 다시 열어 학습 기록을 새로 불러왔어요.')}catch(x){}}
+    else toast('저장하지 못했어요. 잠시 뒤 다시 눌러 주세요.')}
   finally{pBusy=false}
 }
 
@@ -2543,6 +2593,13 @@ function courseAdminHTML(){
     <label for="ad-bulk">이미지 파일들<input id="ad-bulk" type="file" accept="image/*" multiple></label>
     ${S.bulk?`<p role="status">${S.bulk.busy?'올리는 중이에요… ':''}올린 작품 ${S.bulk.ok.length}개${S.bulk.miss.length?` · 제목을 찾지 못한 파일 ${S.bulk.miss.length}개: <span class="err">${esc(S.bulk.miss.join(', '))}</span>`:''}</p>`:''}</div>`;
 }
+function admXlsxHTML(){const a=S.admin;return `<div><p class="hint">전달받은 양식(002BOOK_업로드양식.xlsx)을 고쳐서 올려 주세요. 올린 뒤 내용을 확인하고 적용해요.</p>
+    <label for="ad-file">엑셀 파일<input id="ad-file" type="file" accept=".xlsx,.xls"></label>
+    ${a?`<p role="status">${a.err?`<span class="err">${esc(a.err)}</span>`:`${a.items.length}개월을 읽었어요. 첫 달은 ${esc(a.items[0].g)} ${esc(a.items[0].m)}「${esc(a.items[0].book)}」, 마지막 달은 ${esc(a.items[a.items.length-1].g)} ${esc(a.items[a.items.length-1].m)}「${esc(a.items[a.items.length-1].book)}」예요.${a.warn?'<br><span class="err">'+esc(a.warn)+'</span>':''}`}</p>`:''}
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" data-act="adminapply" ${a&&!a.err?'':'disabled'}>이 계획표로 적용</button><button class="btn ghost" data-act="adminreset">처음 계획표로 되돌리기</button></div></div>`}
+function admBulkHTML(){return `<div><p class="hint">이미지 파일 이름을 작품 제목으로 해서 여러 장을 한 번에 올려요. 예: 원더.jpg, 에너지 버스.png, 인사이드 아웃 1.jpg (괄호 속 저자 이름은 안 써도 돼요)</p>
+    <label for="ad-bulk">이미지 파일들<input id="ad-bulk" type="file" accept="image/*" multiple></label>
+    ${S.bulk?`<p role="status">${S.bulk.busy?'올리는 중이에요… ':''}올린 작품 ${S.bulk.ok.length}개${S.bulk.miss.length?` · 제목을 찾지 못한 파일 ${S.bulk.miss.length}개: <span class="err">${esc(S.bulk.miss.join(', '))}</span>`:''}</p>`:''}</div>`}
 /* ---------- 육각형 인재 ---------- */
 /* 육각형 독서 (2026-11-24 개정): 사람의 능력이 아니라 읽은 책의 분야와 깊이를 그린다.
    축은 한국십진분류법(KDC) 주류를 중학생 독서에 맞게 여섯으로 묶은 지식 분야. 근거: 서가 육각형 표 평가기준 정립 보고서 */
@@ -2964,7 +3021,7 @@ async function loadAdmin(){
     S.adm.subs=sbs?sbs.docs.map(d=>d.data()).filter(x=>x&&x.id).sort((x,y)=>(y.at||0)-(x.at||0)):[];
     S.adm.resets=rs?rs.docs.map(d=>d.data()).filter(x=>x&&x.id).sort((x,y)=>(y.at||0)-(x.at||0)):[];
     S.adm.members=ms.docs.map(d=>Object.assign({},d.data(),{id:d.id})).sort((x,y)=>(y.at||0)-(x.at||0));
-    S.adm.prog={};ps.docs.forEach(d=>{S.adm.prog[d.id]=d.data()});S.adm.err=false;
+    S.adm.prog={};ps.docs.forEach(d=>{S.adm.prog[d.id]=d.data()});S.adm.err=false;loadAdmins();
   }catch(e){S.adm.members=S.adm.members||[];S.adm.err=true}
   if(S.view==='admin')render();
 }
@@ -2972,50 +3029,14 @@ async function savePlans(){await S.db.doc('config/plans').set(clone(S.plans))}
 async function saveNotices(){await S.db.doc('config/notices').set({items:clone(S.notices.slice(-100))})}
 function memberStat(id){const p=S.adm.prog[id]||{};const ks=Object.keys(p.done||{});const log=p.evalLog||[];
   return {b:ks.filter(k=>k.endsWith(':book')).length,f:ks.filter(k=>!k.endsWith(':book')).length,e:log.length,last:log.length?log[log.length-1]:null}}
-function memberRowHTML(m){
-  const open=S.adm.open===m.id;const paid=paidOf(m.id),blk=blockedOf(m.id),adm=m.id===ADMIN;
-  let d='';
-  if(open){const st=memberStat(m.id);const gr=(S.plans.paid||{})[m.id];
-    d=`<div class="mbd"><dl>
-      <dt>아이디</dt><dd>${esc(m.id)}</dd><dt>닉네임</dt><dd>${esc(m.nick||'')}</dd>
-      <dt>학년·지역</dt><dd>${esc(m.grade||'')} · ${esc(m.region||'')}</dd>
-      <dt>성별</dt><dd>${m.gender?esc(m.gender):'<span class="hint">미입력</span>'}</dd>
-      <dt>이메일</dt><dd>${m.email?esc(m.email):'<span class="hint">없음</span>'}</dd>
-      <dt>가입일</dt><dd>${fmtD(m.at)}</dd><dt>최근 접속</dt><dd>${fmtD(m.seen)}</dd>
-      <dt>회원 등급</dt><dd>${adm?'관리자':paid?'유료회원'+(gr&&gr.at?' ('+fmtD(gr.at)+' 부여)':''):'무료회원'}${blk?' · 이용 정지':''}</dd>
-      <dt>코스</dt><dd>${m.mode==='custom'?'맞춤형코스':'기본코스'}</dd>
-      <dt>진도</dt><dd>책 ${st.b}권 · 영화 ${st.f}편 · 첨삭 ${st.e}회${st.last?' (최근 '+esc(st.last.total)+'점)':''}</dd></dl>
-      <div class="acts">${adm?'':`<button class="btn ${paid?'ghost':''} small" data-act="admpaid" data-id="${esc(m.id)}">${paid?'무료회원으로 바꾸기':'유료회원 권한 주기'}</button>`}
-        <button class="btn ghost small" data-act="admto" data-id="${esc(m.id)}">알림 보내기</button>
-        ${m.email?`<a class="btn ghost small" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('[002BOOK] ')}">이메일 보내기</a>`:'<button class="btn ghost small" disabled>이메일 없음</button>'}
-        ${adm?'':`<button class="btn ghost small" data-act="admblock" data-id="${esc(m.id)}">${blk?'정지 풀기':'이용 정지'}</button>`}</div>
-      <div class="inl"><input id="adm-pw" type="text" aria-label="새 비밀번호" placeholder="새 비밀번호 (8자 이상)" autocomplete="off"><button class="btn ghost small" data-act="admpw" data-id="${esc(m.id)}">비밀번호 바꾸기</button></div>
-      ${adm?'':`<div><button class="btn danger small" data-act="admdel" data-id="${esc(m.id)}">회원 삭제</button> <span class="hint">진도·첨삭·구술·후기까지 모두 지워져요.</span></div>`}</div>`}
-  return `<div class="mb" data-k="${esc((m.id+' '+(m.nick||'')).toLowerCase())}"><button class="mbh" data-act="admopen" data-id="${esc(m.id)}" aria-expanded="${open}"><b>${esc(m.nick||m.id)}</b><span class="hint">${esc(m.id)} · ${esc(m.grade||'')} · ${esc(m.region||'')}</span>${adm?'<span class="bdg adm">관리자</span>':`<span class="bdg ${paid?'paid':''}">${paid?'유료':'무료'}</span>`}${blk?'<span class="bdg blk">정지</span>':''}</button>${d}</div>`;
-}
-function adminViewHTML(){
-  const A=S.adm;const tab=A.tab;const ms=A.members;
-  const tabs=`<div class="stabs" style="margin-bottom:16px">${[['members','회원'],['pay','결제'+((S.adm.subs||[]).filter(x=>x.status==='requested'||x.status==='cancel_requested').length?' ('+(S.adm.subs||[]).filter(x=>x.status==='requested'||x.status==='cancel_requested').length+')':'')],['notices','알림'],['course','코스·표지']].map(([k,t])=>`<button data-act="admtab" data-v="${k}" aria-pressed="${tab===k}">${t}</button>`).join('')}</div>`;
-  let body;
-  if(tab==='course')body=courseAdminHTML();
-  else if(tab==='pay')body=payAdminHTML();
-  else if(!ms)body='<div class="sk"></div><div class="sk" style="margin-top:8px"></div>';
-  else if(tab==='members'){
-    const paid=ms.filter(m=>m.id!==ADMIN&&paidOf(m.id)).length,blk=ms.filter(m=>blockedOf(m.id)).length;
-    const mails=ms.map(m=>m.email).filter(Boolean);
-    body=`${A.err?'<p class="warn" style="margin-bottom:10px">회원 목록을 다 불러오지 못했어요. 다시 열어 주세요.</p>':''}
-    ${(()=>{const rs=A.resets||[],dn=A.tmp||{};const ids=[...new Set([...rs.map(r=>r.id),...Object.keys(dn)])];if(!ids.length)return '';
+function admResetsHTML(){const A=S.adm;return (()=>{const rs=A.resets||[],dn=A.tmp||{};const ids=[...new Set([...rs.map(r=>r.id),...Object.keys(dn)])];if(!ids.length)return '';
       return `<div class="note2" style="margin-bottom:14px"><h3>비밀번호 찾기 요청 ${ids.length}건</h3>${ids.map(id=>{const r=rs.find(x=>x.id===id)||dn[id];const t=dn[id];
         const body=t?encodeURIComponent('안녕하세요, 002BOOK입니다.\n\n'+(t.nick||id)+'님('+id+')의 임시 비밀번호는 '+t.pw+' 입니다.\n로그인한 뒤 위쪽의 아이디를 눌러 새 비밀번호로 바꿔 주세요.'):'';
         return `<div class="ntc"><b>${esc(r.nick||id)} (${esc(id)})</b><span class="hint">${esc(r.email||'')} · ${fmtD(r.at)}</span>
           ${t?`<p>임시 비밀번호 <span class="tmp">${esc(t.pw)}</span></p><div class="acts" style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn small" href="mailto:${esc(t.email)}?subject=${encodeURIComponent('[002BOOK] 임시 비밀번호 안내')}&body=${body}">이메일로 보내기</a><button class="btn ghost small" data-act="admresetx" data-id="${esc(id)}">보냈어요</button></div>`
             :`<div class="acts" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn small" data-act="admreset" data-id="${esc(id)}">임시 비밀번호 만들기</button><button class="btn ghost small" data-act="admresetno" data-id="${esc(id)}">요청 지우기</button></div>`}</div>`}).join('')}
         <p class="hint">임시 비밀번호를 만들면 그 회원의 비밀번호가 바로 바뀌어요. "이메일로 보내기"를 누르면 이 기기의 메일 앱이 받는 사람과 내용을 채운 채로 열려요.</p></div>`})()}
-    <div class="stats"><div class="stat"><b>${ms.length}</b><span>전체 회원</span></div><div class="stat"><b>${paid}</b><span>유료회원</span></div><div class="stat"><b>${blk}</b><span>이용 정지</span></div></div>
-    <div class="inl" style="margin:14px 0 10px"><input id="adm-q" type="search" aria-label="회원 검색" placeholder="아이디나 닉네임으로 찾기">${mails.length?`<a class="btn ghost small" href="mailto:?bcc=${encodeURIComponent(mails.join(','))}&subject=${encodeURIComponent('[002BOOK] ')}">전체 이메일</a>`:''}</div>
-    <div class="mbl">${ms.map(memberRowHTML).join('')||'<p class="hint" style="padding:12px">아직 회원이 없어요.</p>'}</div>
-    <p class="hint" style="margin-top:10px">이메일 보내기는 이 기기의 메일 앱을 열어요. 이메일을 적어 둔 회원에게만 보낼 수 있어요.</p>`;
-  }else{
+function admNoticesHTML(){const A=S.adm;const ms=A.members||[];let body;
     const sent=(S.notices||[]).slice().sort((a,b)=>b.at-a.at);
     const toName=t=>t==='all'?'전체 회원':t==='paid'?'유료회원':t==='free'?'무료회원':(()=>{const m=ms.find(x=>x.id===t);return (m?m.nick+' ':'')+'('+t+')'})();
     body=`<div class="note2"><h3>알림 보내기</h3>
@@ -3025,9 +3046,179 @@ function adminViewHTML(){
       <div><button class="btn" data-act="admsend">알림 보내기</button></div>
       <p class="hint">회원이 002BOOK을 열면 위쪽 종 모양에 새 알림 표시가 떠요.</p></div>
     <div class="sec" style="margin-top:18px"><h3>보낸 알림 ${sent.length}개</h3>${sent.length?sent.map(n=>`<div class="ntc"><b>${esc(n.title||'알림')}</b><p>${esc(n.text)}</p><span class="hint">${esc(toName(n.to))} · ${fmtD(n.at)} <button class="chip" data-act="admndel" data-id="${esc(n.id)}">지우기</button></span></div>`).join(''):'<p class="hint">아직 보낸 알림이 없어요.</p>'}</div>`;
-  }
-  return `<div class="lead"><div><h2>관리자 모드</h2><p>${esc(ADMIN)} 계정으로만 열리는 화면이에요.</p></div></div>${tabs}${body}`;
-}
+  return body}
+/* ---------- 관리자 대시보드 (2026-11-24 개편: 포켓 스타일, 한눈에 보는 지표 + 펼치는 메뉴) ----------
+   위에서 아래로: 지표 타일 → 분포 → 할 일·최근 가입 → 메뉴(누르면 그 메뉴만 펼쳐짐, 안쪽도 한 번에 하나만 펼쳐짐) */
+const ADM_SECS=[['members','회원 관리','정렬·필터 · 성적 · 시험 다시 열기 · 권한'],['rubric','평가 기준','논술·구술 영역과 배점'],['course','코스 (책·영화)','월별로 바꾸기 · 엑셀 · 영상 · 표지'],['pay','결제','신청·해지 요청, 결제 링크'],['notices','알림 보내기','전체·유료·무료·회원별'],['resets','비밀번호 요청','임시 비밀번호 만들기'],['admins','관리자','관리자 추가·해제']];
+const admF=()=>{const A=S.adm;A.f=A.f||{kind:'all',gender:'all',grade:'all',plan:'all',sort:'join',q:''};return A.f};
+const CHEV='<svg class="ad-chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):null;
+/* 회원 한 명의 학습·성적 요약 (진도 문서에서) */
+function mScore(id){const p=(S.adm.prog||{})[id]||{};const el=(p.evalLog||[]).filter(x=>x&&x.total!=null),ol=(p.oralLog||[]).filter(x=>x&&(x.t2!=null||x.total!=null));
+  const ks=Object.keys(p.done||{});
+  return {es:avg(el.slice(-5).map(x=>+x.total)),esN:Math.max(el.length,Object.keys(p.evDone||{}).length),or:avg(ol.slice(-5).map(x=>+(x.t2!=null?x.t2:x.total))),orN:Math.max(ol.length,Object.keys(p.orDone||{}).length),
+    b:ks.filter(k=>k.endsWith(':book')).length,f:ks.filter(k=>!k.endsWith(':book')).length,el,ol}}
+const mKind=m=>admOf(m.id)?'admin':isParentG(m.grade)?'parent':'student';
+function admList(){const A=S.adm,F=admF();const ms=A.members||[];const q=F.q.trim().toLowerCase();
+  let L=ms.filter(m=>{const k=mKind(m);
+    if(F.kind==='student'&&k!=='student')return false;if(F.kind==='parent'&&k!=='parent')return false;if(F.kind==='admin'&&k!=='admin')return false;
+    if(F.gender!=='all'&&m.gender!==F.gender)return false;
+    if(F.grade!=='all'&&m.grade!==F.grade)return false;
+    if(F.plan==='paid'&&!(paidOf(m.id)&&!admOf(m.id)))return false;if(F.plan==='free'&&paidOf(m.id))return false;if(F.plan==='blocked'&&!blockedOf(m.id))return false;
+    if(q&&!(m.id+' '+(m.nick||'')+' '+(m.email||'')).toLowerCase().includes(q))return false;return true});
+  const sc={};L.forEach(m=>sc[m.id]=mScore(m.id));const nn=v=>v==null?-1:v;
+  const by={join:(a,b)=>(b.at||0)-(a.at||0),seen:(a,b)=>(b.seen||0)-(a.seen||0),esHi:(a,b)=>nn(sc[b.id].es)-nn(sc[a.id].es),esLo:(a,b)=>(sc[a.id].es==null?999:sc[a.id].es)-(sc[b.id].es==null?999:sc[b.id].es),
+    orHi:(a,b)=>nn(sc[b.id].or)-nn(sc[a.id].or),prog:(a,b)=>(sc[b.id].b+sc[b.id].f)-(sc[a.id].b+sc[a.id].f),name:(a,b)=>String(a.nick||a.id).localeCompare(String(b.nick||b.id),'ko')}[F.sort]||((a,b)=>0);
+  return L.slice().sort(by)}
+function admStats(){const ms=S.adm.members||[];const now=Date.now();const P=S.adm.prog||{};
+  const st=ms.filter(m=>mKind(m)==='student'),pa=ms.filter(m=>mKind(m)==='parent');
+  const paid=ms.filter(m=>!admOf(m.id)&&paidOf(m.id)).length;
+  const w=ms.filter(m=>(m.seen||0)>now-7*864e5).length,d=ms.filter(m=>(m.seen||0)>now-864e5).length;
+  let esN=0,orN=0;const es=[],or=[];Object.values(P).forEach(p=>{const el=(p&&p.evalLog||[]).filter(x=>x&&x.total!=null),ol=(p&&p.oralLog||[]).filter(x=>x&&(x.t2!=null||x.total!=null));
+    esN+=Math.max(el.length,Object.keys(p&&p.evDone||{}).length);orN+=Math.max(ol.length,Object.keys(p&&p.orDone||{}).length);el.forEach(x=>es.push(+x.total));ol.forEach(x=>or.push(+(x.t2!=null?x.t2:x.total)))});
+  const req=(S.adm.subs||[]).filter(x=>x.status==='requested'||x.status==='cancel_requested').length,pw=new Set([...(S.adm.resets||[]).map(r=>r.id)]).size;
+  const cnt=(arr,f)=>arr.filter(f).length;
+  return {all:ms.length,st:st.length,pa:pa.length,paid,free:ms.length-paid-ms.filter(m=>admOf(m.id)).length,w,d,esN,orN,es:avg(es),or:avg(or),req,pw,
+    grade:[['중1',cnt(st,m=>m.grade==='중1')],['중2',cnt(st,m=>m.grade==='중2')],['중3',cnt(st,m=>m.grade==='중3')],['부모',pa.length]],
+    gender:[['여자',cnt(ms,m=>m.gender==='여자')],['남자',cnt(ms,m=>m.gender==='남자')],['미입력',cnt(ms,m=>!m.gender)]]}}
+function admBars(title,rows){const mx=Math.max(1,...rows.map(r=>r[1]));
+  return `<div class="ad-dist"><h4>${title}</h4>${rows.map(([k,v])=>`<div class="ad-row"><span>${k}</span><i><b style="width:${Math.round(v/mx*100)}%"></b></i><em>${v}</em></div>`).join('')}</div>`}
+function admDashHTML(){const T=admStats();const tile=(v,l,sub,act)=>`<div class="ad-tile"${act?` data-act="admsec" data-v="${act}" role="button" tabindex="0"`:''}><b>${v}</b><span>${l}</span>${sub?`<small>${sub}</small>`:''}</div>`;
+  const recent=(S.adm.members||[]).slice().sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,innerWidth<760?3:5);
+  const todo=[T.req?`<button class="ad-todo" data-act="admsec" data-v="pay"><b>${T.req}</b> 결제 신청·해지 요청</button>`:'',T.pw?`<button class="ad-todo" data-act="admsec" data-v="resets"><b>${T.pw}</b> 비밀번호 찾기 요청</button>`:''].join('');
+  return `<div class="ad-tiles">${tile(T.all,'전체 회원',`학생 ${T.st} · 부모 ${T.pa}${T.all-T.st-T.pa?' · 관리 '+(T.all-T.st-T.pa):''}`,'members')}${tile(T.paid,'유료 회원',`무료 ${T.free}`)}${tile(T.w,'7일 안 접속',`오늘 ${T.d}`)}
+    ${tile(T.esN,'논술 첨삭',T.es!=null?`평균 ${T.es}점`:'아직 없음')}${tile(T.orN,'구술 평가',T.or!=null?`평균 ${T.or}점`:'아직 없음')}${tile(T.req+T.pw,'처리할 일',T.req+T.pw?'아래에서 바로 처리':'없음')}</div>
+  ${todo?`<div class="ad-todos">${todo}</div>`:''}
+  <div class="ad-two">${admBars('학년',T.grade)}${admBars('성별',T.gender)}
+    <div class="ad-dist"><h4>최근 가입</h4>${recent.map(m=>`<button class="ad-rc" data-act="admgo" data-id="${esc(m.id)}"><span>${esc(m.nick||m.id)}</span><small>${esc(m.id)} · ${fmtD(m.at)}</small></button>`).join('')||'<p class="hint">아직 없어요.</p>'}</div></div>`}
+/* ---------- 회원 관리 ---------- */
+function admChips(k,opts){const F=admF();return `<div class="ad-chips" role="group">${opts.map(([v,t])=>`<button class="chip" data-act="admf" data-k="${k}" data-v="${v}" aria-pressed="${F[k]===v}">${t}</button>`).join('')}</div>`}
+function admMembersHTML(){const A=S.adm,F=admF();const L=admList();const mails=L.map(m=>m.email).filter(Boolean);
+  return `<div class="ad-filt">${admChips('kind',[['all','전체'],['student','학생'],['parent','부모·선생님'],['admin','관리자']])}
+    ${admChips('gender',[['all','성별 전체'],['여자','여자'],['남자','남자']])}
+    ${admChips('grade',[['all','학년 전체'],['중1','중1'],['중2','중2'],['중3','중3']])}
+    ${admChips('plan',[['all','등급 전체'],['paid','유료'],['free','무료'],['blocked','정지']])}
+    <div class="ad-srow"><input id="adm-q" type="search" aria-label="회원 검색" placeholder="아이디·닉네임·이메일" value="${esc(F.q)}">
+      <select id="adm-sort" aria-label="정렬">${[['join','최근 가입순'],['seen','최근 접속순'],['esHi','논술 점수 높은순'],['esLo','논술 점수 낮은순'],['orHi','구술 점수 높은순'],['prog','진도 많은순'],['name','이름순']].map(([v,t])=>`<option value="${v}"${F.sort===v?' selected':''}>${t}</option>`).join('')}</select></div>
+    <p class="hint ad-cnt"><b>${L.length}명</b> / 전체 ${(A.members||[]).length}명${mails.length?` · <a href="mailto:?bcc=${encodeURIComponent(mails.join(','))}&subject=${encodeURIComponent('[002BOOK] ')}">이 ${mails.length}명에게 이메일</a>`:''}</p></div>
+  ${A.err?'<p class="warn">회원 목록을 다 불러오지 못했어요. 다시 열어 주세요.</p>':''}
+  <div class="ad-mlist">${L.map(memberRowHTML).join('')||'<p class="hint" style="padding:14px">조건에 맞는 회원이 없어요.</p>'}</div>`}
+function memberRowHTML(m){const A=S.adm;const open=A.open===m.id;const sc=mScore(m.id);const k=mKind(m);
+  const tag=k==='admin'?(m.id===ADMIN?'최고 관리자':'관리자'):blockedOf(m.id)?'정지':paidOf(m.id)?'유료':'무료';
+  const head=`<button class="ad-mh" data-act="admopen" data-id="${esc(m.id)}" aria-expanded="${open}"><span class="ad-av">${esc(String(m.nick||m.id).slice(0,1))}</span>
+    <span class="ad-mt"><b>${esc(m.nick||m.id)}</b><small>${esc(m.id)} · ${esc(m.grade||'')}${m.gender?' · '+esc(m.gender):''} · <span class="ad-tag ${tag==='유료'?'p':tag==='정지'?'x':k==='admin'?'a':''}">${tag}</span></small></span>
+    <span class="ad-sc">${k==='parent'?'':`<span><small>논술</small><b>${sc.es??'–'}</b></span><span><small>구술</small><b>${sc.or??'–'}</b></span>`}</span>${CHEV}</button>`;
+  if(!open)return `<div class="ad-m">${head}</div>`;
+  const t=A.mtab||'info';
+  const tabs=`<div class="seg ad-seg" role="tablist">${[['info','정보'],['study','학습·성적'],['test','시험 다시 열기'],['acct','계정·권한']].map(([v,x])=>`<button role="tab" data-act="admmtab" data-v="${v}" aria-pressed="${t===v}">${x}</button>`).join('')}</div>`;
+  let body='';
+  if(t==='info')body=`<dl class="ad-dl"><dt>아이디</dt><dd>${esc(m.id)}</dd><dt>닉네임</dt><dd>${esc(m.nick||'')}</dd><dt>구분·학년</dt><dd>${k==='parent'?'부모·선생님':'학생'} · ${esc(m.grade||'')}</dd>
+      <dt>성별</dt><dd>${m.gender?esc(m.gender):'<span class="hint">미입력</span>'}</dd><dt>지역</dt><dd>${esc(m.region||'')}</dd><dt>이메일</dt><dd>${m.email?esc(m.email):'<span class="hint">없음</span>'}${m.google?' · 구글 연결':''}</dd>
+      <dt>가입</dt><dd>${fmtD(m.at)}</dd><dt>최근 접속</dt><dd>${fmtD(m.seen)}</dd><dt>코스</dt><dd>${m.mode==='custom'?'맞춤형코스':'기본코스'}</dd></dl>`;
+  else if(t==='study'){const row=(x,o)=>`<li><span>${esc(x.m||'')} 「${esc(x.title||'')}」</span><b>${o?(x.t1??x.total)+(x.t2!=null?' → '+x.t2:''):x.total}점</b></li>`;
+    body=`<div class="ad-kv"><span><b>${sc.b}</b>책</span><span><b>${sc.f}</b>영화</span><span><b>${sc.esN}</b>논술</span><span><b>${sc.orN}</b>구술</span></div>
+      <h4 class="ad-h4">논술 (최근 평균 ${sc.es??'–'}점)</h4><ul class="ad-ul">${sc.el.slice().reverse().map(x=>row(x,0)).join('')||'<li class="hint">기록 없음</li>'}</ul>
+      <h4 class="ad-h4">구술 (최근 평균 ${sc.or??'–'}점, 1차 → 2차)</h4><ul class="ad-ul">${sc.ol.slice().reverse().map(x=>row(x,1)).join('')||'<li class="hint">기록 없음</li>'}</ul>`}
+  else if(t==='test')body=admTestHTML(m);
+  else {const paid=paidOf(m.id),blk=blockedOf(m.id),adm=admOf(m.id);const canPw=!adm||isOwner()||m.id===S.id;
+    body=`<div class="ad-acts">${adm?'':`<button class="btn ${paid?'ghost':''} small" data-act="admpaid" data-id="${esc(m.id)}">${paid?'무료회원으로 바꾸기':'유료회원 권한 주기'}</button>`}
+        <button class="btn ghost small" data-act="admto" data-id="${esc(m.id)}">알림 보내기</button>
+        ${m.email?`<a class="btn ghost small" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('[002BOOK] ')}">이메일</a>`:''}
+        ${adm?'':`<button class="btn ghost small" data-act="admblock" data-id="${esc(m.id)}">${blk?'정지 풀기':'이용 정지'}</button>`}</div>
+      ${canPw?`<div class="inl"><input id="adm-pw" type="text" aria-label="새 비밀번호" placeholder="새 비밀번호 (8자 이상)" autocomplete="off"><button class="btn ghost small" data-act="admpw" data-id="${esc(m.id)}">비밀번호 바꾸기</button></div>`:''}
+      ${adm?'<p class="hint">관리자 계정은 삭제·정지할 수 없어요. 최고 관리자가 관리자 메뉴에서 먼저 해제해야 해요.</p>':`<div><button class="btn danger small" data-act="admdel" data-id="${esc(m.id)}">회원 삭제</button> <span class="hint">진도·첨삭·구술·후기까지 모두 지워져요.</span></div>`}`}
+  return `<div class="ad-m open">${head}<div class="ad-md">${tabs}${body}</div></div>`}
+/* 시험 다시 열기: 논술·구술을 마친 달 목록. 재시험 주기 = 결과를 보관하고 다시 볼 수 있게, 리셋 = 기록 없이 지움 */
+function admTestKeys(id){const p=(S.adm.prog||{})[id]||{};const o={};
+  const lab=k=>{const x=[...(p.evalLog||[]),...(p.oralLog||[])].find(y=>y&&y.key===k);if(x)return {m:x.m||'',t:x.title||''};const i=+k.slice(1);const it=k[0]==='b'?S.course[i]:null;return it?{m:it.g+' '+it.m,t:it.book}:{m:k[0]==='c'?'맞춤형 '+(i+1)+'번째 달':k,t:''}};
+  const add=k=>{if(k&&/^[bc]\d+$/.test(k)&&!o[k])o[k]=lab(k)};
+  Object.keys(p.evDone||{}).forEach(add);Object.keys(p.orDone||{}).forEach(add);(p.evalLog||[]).forEach(x=>add(x&&x.key));(p.oralLog||[]).forEach(x=>add(x&&x.key));
+  return Object.entries(o).sort((a,b)=>a[0][0]===b[0][0]?+a[0].slice(1)-+b[0].slice(1):a[0]<b[0]?-1:1)}
+function admTestHTML(m){const A=S.adm;const p=(A.prog||{})[m.id]||{};const rt=A.rt||'both';const ks=admTestKeys(m.id);const ar=(A.arch||{})[m.id];
+  const es=k=>{const x=(p.evalLog||[]).filter(y=>y&&y.key===k).pop();return x?x.total+'점':(p.evDone||{})[k]?'완료':'–'};
+  const or=k=>{const x=(p.oralLog||[]).filter(y=>y&&y.key===k).pop();return x?(x.t1??x.total)+(x.t2!=null?'→'+x.t2:'')+'점':(p.orDone||{})[k]?'완료':'–'};
+  return `<p class="hint">다시 열 시험</p><div class="seg ad-seg">${[['both','논술+구술'],['essay','논술만'],['oral','구술만']].map(([v,t])=>`<button data-act="admrt" data-v="${v}" aria-pressed="${rt===v}">${t}</button>`).join('')}</div>
+    <ul class="ad-tl">${ks.map(([k,l])=>`<li><div><b>${esc(l.m)}</b> <span>「${esc(l.t)}」</span><small>논술 ${es(k)} · 구술 ${or(k)}</small></div>
+      <div class="ad-tb"><button class="btn ghost small" data-act="admtest" data-id="${esc(m.id)}" data-k="${k}" data-v="keep">${A.cf==='keep:'+m.id+':'+k?'한 번 더 누르면 실행':'재시험 주기'}</button><button class="btn ghost small ad-dan" data-act="admtest" data-id="${esc(m.id)}" data-k="${k}" data-v="wipe">${A.cf==='wipe:'+m.id+':'+k?'한 번 더 누르면 실행':'리셋'}</button></div></li>`).join('')||'<li class="hint">아직 마친 시험이 없어요.</li>'}</ul>
+    <p class="hint"><b>재시험 주기</b>: 지금 결과를 보관함에 옮기고 그 달 시험을 처음부터 다시 볼 수 있게 열어요. 회원에게 알림이 가요. <b>리셋</b>: 보관하지 않고 그 달 시험 기록을 지워요. 구술 녹음도 함께 지워져요.</p>
+    <div class="ad-arch"><h4 class="ad-h4">보관된 이전 시험</h4>${ar?ar.length?`<ul class="ad-ul">${ar.map(x=>`<li><span>${esc(x.m||'')} 「${esc(x.title||'')}」 ${x.kind==='oral'?'구술':'논술'}</span><b>${x.total!=null?esc(x.total)+'점':''} <small class="hint">${fmtD(x.at)}</small></b></li>`).join('')}</ul>`:'<p class="hint">없어요.</p>':`<button class="btn ghost small" data-act="admarch" data-id="${esc(m.id)}">불러오기</button>`}</div>`}
+async function admTest(id,key,keep){const A=S.adm;const what=A.rt||'both';
+  try{const r=await window.__002.server.call('admin.resetTest',{id,key,what,keep});
+    const p=await S.db.doc('progress/'+id).get().catch(()=>null);if(p&&p.exists)A.prog[id]=p.data();if(A.arch)delete A.arch[id];
+    const l=(admTestKeys(id).find(x=>x[0]===key)||[0,{m:'',t:''}])[1];const W=what==='essay'?'논술':what==='oral'?'구술':'논술·구술';
+    if(keep&&r.done&&r.done.length){S.notices=[...(S.notices||[]),{id:Date.now().toString(36),to:id,title:'재시험이 열렸어요',text:`${l.m||''} ${l.t?'「'+l.t+'」 ':''}${W} 시험을 다시 볼 수 있어요. 이전 결과는 보관돼 있어요.`,at:Date.now()}];saveNotices().catch(()=>{})}
+    toast(r.done&&r.done.length?(keep?'재시험을 열었어요. 이전 결과는 보관했어요.':'시험 기록을 지웠어요.'):'지울 시험 기록이 없었어요.')}
+  catch(e){toast((e&&e.message)||'처리하지 못했어요.')}
+  A.cf=null;render()}
+/* ---------- 평가 기준 ---------- */
+function admRubricHTML(){const A=S.adm;const sub=A.sub||'';
+  const one=(kind,title)=>{const open=sub===kind;const cur=A.rbDraft&&A.rbDraft[kind]||(kind==='essay'?RBC.essay:RBC.oral);
+    const head=`<button class="ad-sub" data-act="admsub" data-v="${kind}" aria-expanded="${open}"><span><b>${title}</b><small>${cur.map(x=>x.k+' '+x.w).join(' · ')}</small></span>${CHEV}</button>`;
+    if(!open)return `<div class="ad-sbx">${head}</div>`;
+    return `<div class="ad-sbx open">${head}<form data-form="rubric" data-kind="${kind}" class="ad-rb">
+      <p class="hint">영역은 6개예요. 이름과 배점(합계 100)을 바꾸고, 영역을 누르면 AI가 채점할 때 읽는 기준 설명과 수준(1 시작 ~ 5 탁월) 설명을 고칠 수 있어요. 수준 환산은 40·55·70·85·100%예요.</p>
+      ${cur.map((x,n)=>`<div class="ad-ri"><div class="ad-rh"><span class="ad-no">${RB_CIRC[n]}</span><input name="k${n}" value="${esc(x.k)}" maxlength="20" aria-label="영역 ${n+1} 이름"><input name="w${n}" type="number" min="1" max="60" step="1" value="${x.w}" aria-label="영역 ${n+1} 배점" data-rbw><span class="hint">점</span>${kind==='oral'?`<label class="ad-hold"><input type="checkbox" name="h${n}"${x.h?' checked':''}> 보류 가능</label>`:''}</div>
+        <details><summary>기준·수준 설명</summary><label>기준 설명<textarea name="c${n}" maxlength="300" rows="2">${esc(x.c||'')}</textarea></label><label>수준 1~5 설명 <small class="hint">"1 … / 2 … / 3 … / 4 … / 5 …" 모양</small><textarea name="l${n}" maxlength="900" rows="4">${esc(x.l||'')}</textarea></label></details></div>`).join('')}
+      <p class="ad-sum" id="rbsum-${kind}">합계 <b>${cur.reduce((a,x)=>a+x.w,0)}</b> / 100</p>${kind==='oral'?'<p class="hint">보류 가능: 음성 인식 품질이 나쁘면 그 영역은 채점하지 않고 남은 배점으로 나눠요(지금은 표현·전달).</p>':''}
+      <p class="err" id="rberr-${kind}"></p>
+      <div class="ad-acts"><button class="btn small" type="submit">저장</button><button class="btn ghost small" type="button" data-act="admrbdef" data-v="${kind}">처음 기준으로</button></div>
+      <p class="hint">저장하면 다음 첨삭·평가부터 바로 적용돼요. 이미 받은 점수는 바뀌지 않고, 1차를 마친 구술의 2차 평가는 1차 때 기준으로 매겨요.${RBC.at?' 마지막 변경: '+fmtD(RBC.at)+(RBC.by?' ('+esc(RBC.by)+')':''):''}</p></form></div>`};
+  return `<div class="ad-subs">${one('essay','논술 평가')}${one('oral','구술 평가')}</div>`}
+async function admRubricSave(form){const kind=form.dataset.kind;const fd=new FormData(form);const er=m=>{const e=$('#rberr-'+kind);if(e)e.textContent=m};
+  const base=kind==='essay'?RBC.essay:RBC.oral;
+  const items=base.map((x,n)=>({k:String(fd.get('k'+n)||'').trim(),w:Number(fd.get('w'+n)),c:String(fd.get('c'+n)||'').trim(),l:String(fd.get('l'+n)||'').trim(),...(kind==='oral'?{h:!!fd.get('h'+n)}:{})}));
+  if(items.some(x=>!x.k))return er('영역 이름을 모두 적어 주세요.');
+  if(new Set(items.map(x=>x.k)).size!==6)return er('영역 이름이 겹쳐요.');
+  if(items.some(x=>!Number.isInteger(x.w)||x.w<1||x.w>60))return er('배점은 1~60 사이의 정수로 적어 주세요.');
+  const sum=items.reduce((a,x)=>a+x.w,0);if(sum!==100)return er('배점 합계가 100이어야 해요. 지금 '+sum+'점이에요.');
+  if(items.some(x=>!x.c||!x.l))return er('기준 설명과 수준 설명을 비우지 말아 주세요.');
+  const cfg={essay:clone(RBC.essay),oral:clone(RBC.oral),[kind]:items,at:Date.now(),by:S.id};
+  try{await S.db.doc('config/rubric').set(cfg);rbApply(cfg);if(S.adm.rbDraft)delete S.adm.rbDraft[kind];toast((kind==='essay'?'논술':'구술')+' 평가 기준을 저장했어요.');render()}
+  catch(e){er('저장하지 못했어요. 잠시 뒤 다시 해 주세요.')}}
+/* ---------- 코스 (책·영화) ---------- */
+function admCourseHTML(){const A=S.adm;const sub=A.sub||'';const box=(k,title,small,html)=>{const open=sub===k;
+    return `<div class="ad-sbx${open?' open':''}"><button class="ad-sub" data-act="admsub" data-v="${k}" aria-expanded="${open}"><span><b>${title}</b><small>${small}</small></span>${CHEV}</button>${open?`<div class="ad-sbb">${html()}</div>`:''}</div>`};
+  return `<p class="hint">지금 계획표: <b>${esc(S.source)}</b> · ${S.course.length}개월 (책 ${S.course.length}권 · 영화 ${S.course.length*2}편)</p><div class="ad-subs">
+    ${box('month','월별로 바꾸기','달을 눌러 책·영화·주제를 고쳐요',admMonthsHTML)}
+    ${box('xlsx','엑셀 파일로 한꺼번에 바꾸기','양식 파일을 올려 계획표 전체를 바꿔요',admXlsxHTML)}
+    ${box('video','키워드별 유튜브 영상','첨삭을 마친 달에 보이는 영상',vidAdminHTML)}
+    ${box('bulk','표지·포스터 한꺼번에 올리기','파일 이름을 작품 제목으로',admBulkHTML)}</div>`}
+function admMonthsHTML(){const A=S.adm;const g=A.cg||'중1';const ed=A.ced;
+  return `<div class="ad-chips">${GR.map(x=>`<button class="chip" data-act="admcg" data-v="${x}" aria-pressed="${g===x}">${x}</button>`).join('')}</div>
+  <ul class="ad-cl">${S.course.map((it,i)=>[it,i]).filter(([it])=>it.g===g).map(([it,i])=>ed===i?`<li class="open"><form data-form="admcourse" data-i="${i}" class="ad-cf">
+      <p><b>${esc(it.g)} ${esc(it.m)}</b> <span class="hint">${esc(it.season||'')}</span></p>
+      <label>책 <small class="hint">「제목 (저자)」처럼 적으면 저자도 보여요</small><input name="book" value="${esc(it.book)}" maxlength="80" required></label>
+      <label>영화 1<input name="m1" value="${esc(it.m1)}" maxlength="60" required></label><label>영화 2<input name="m2" value="${esc(it.m2)}" maxlength="60" required></label>
+      <label>이달의 주제 <small class="hint">논술·구술 질문이 이 주제로 만들어져요</small><textarea name="topic" maxlength="200" rows="2">${esc(it.topic||'')}</textarea></label>
+      <div class="ad-two2"><label>장르<input name="genre" value="${esc(it.genre||'')}" maxlength="20"></label><label>난이도 (1~5)<input name="level" type="number" min="1" max="5" value="${esc(it.level||2)}"></label></div>
+      <p class="err" id="cferr"></p><div class="ad-acts"><button class="btn small" type="submit">저장</button><button class="btn ghost small" type="button" data-act="admced" data-v="-1">닫기</button></div>
+      <p class="hint">작품을 바꾸면 그 작품의 소개·표지는 새로 찾아요. 이 달을 이미 마친 회원의 기록은 그대로 남아요.</p></form></li>`
+    :`<li><button class="ad-ci" data-act="admced" data-v="${i}"><b>${esc(it.m)}</b><span>「${esc(it.book)}」<small>${esc(it.m1)} · ${esc(it.m2)}</small></span>${CHEV}</button></li>`).join('')}</ul>`}
+async function admCourseSave(form){const i=+form.dataset.i;const fd=new FormData(form);const g=k=>String(fd.get(k)||'').trim();const er=m=>{const e=$('#cferr');if(e)e.textContent=m};
+  const it=S.course[i];if(!it)return;
+  const nx=Object.assign({},clone(it),{book:g('book'),m1:g('m1'),m2:g('m2'),topic:g('topic'),genre:g('genre'),level:Math.max(1,Math.min(5,Math.round(Number(g('level'))||it.level||2)))});
+  if(!nx.book||!nx.m1||!nx.m2)return er('책과 영화 두 편을 모두 적어 주세요.');
+  if(nx.m1===nx.m2)return er('영화 두 편이 같아요.');
+  if(nx.m1!==it.m1)delete nx.m1Info;if(nx.m2!==it.m2)delete nx.m2Info;if(nx.book!==it.book)delete nx.ax;
+  const items=clone(S.course);items[i]=nx;
+  try{await S.db.doc('config/course').set({items,updatedAt:Date.now(),by:S.id,via:'edit'});S.course=items;S.source='관리자가 고친 계획표 ('+new Date().toLocaleDateString('ko-KR')+')';S.adm.ced=-1;toast(it.g+' '+it.m+' 코스를 바꿨어요.');render()}
+  catch(e){er('저장하지 못했어요. 잠시 뒤 다시 해 주세요.')}}
+/* ---------- 관리자 ---------- */
+function admAdminsHTML(){const A=S.adm;const L=A.admins;
+  if(!L)return '<div class="sk"></div>';
+  return `<p class="hint">관리자는 모든 회원의 개인정보와 학습 기록을 보고, 평가 기준·코스·시험을 바꿀 수 있어요. 꼭 필요한 성인(만 19세 이상)만 추가하고, 추가한 사람에게 비밀 유지와 개인정보 보호 의무를 알려 주세요.</p>
+  <ul class="ad-ul ad-adm">${L.map(x=>`<li><span><b>${esc(x.nick)}</b> <small class="hint">${esc(x.id)}</small></span><span>${x.owner?'<span class="ad-tag a">최고 관리자</span>':`<span class="ad-tag a">관리자</span>${x.at?' <small class="hint">'+fmtD(x.at)+'</small>':''}${isOwner()?` <button class="btn ghost small ad-dan" data-act="admrm" data-id="${esc(x.id)}">${A.cf==='rm:'+x.id?'한 번 더 누르면 해제':'해제'}</button>`:''}`}</span></li>`).join('')}</ul>
+  ${isOwner()?`<form data-form="admadd" class="inl"><input name="id" placeholder="회원 아이디" autocapitalize="none" autocomplete="off" required aria-label="관리자로 추가할 회원 아이디"><button class="btn small" type="submit">관리자로 추가</button></form><p class="err" id="aderr"></p>`:'<p class="hint">관리자 추가·해제는 최고 관리자만 할 수 있어요.</p>'}`}
+async function loadAdmins(){try{const r=await window.__002.server.call('admin.admins',{});S.adm.admins=r.admins||[];S.adm.adminIds=(r.admins||[]).map(x=>x.id)}catch(e){S.adm.admins=S.adm.admins||[]}if(S.view==='admin')render()}
+async function loadArch(id){try{const q=await S.db.collection('archive').where('uid','==',id).get();S.adm.arch=S.adm.arch||{};S.adm.arch[id]=q.docs.map(d=>d.data()).map(x=>({kind:x.kind,key:x.key,title:x.title,m:x.m,total:x.total,at:x.at})).sort((a,b)=>b.at-a.at)}catch(e){toast('불러오지 못했어요.')}render()}
+function adminViewHTML(){const A=S.adm;const ms=A.members;const sec=A.sec;
+  if(!ms)return `<div class="lead"><div><h2>관리자 대시보드</h2></div></div><div class="sk"></div><div class="sk" style="margin-top:8px"></div>`;
+  const T=admStats();const badge={members:ms.length,pay:T.req||'',resets:T.pw||'',admins:(A.admins||[]).length||'',rubric:'',course:S.course.length+'개월',notices:''};
+  const bodyOf=k=>k==='members'?admMembersHTML():k==='rubric'?admRubricHTML():k==='course'?admCourseHTML():k==='pay'?payAdminHTML():k==='notices'?admNoticesHTML():k==='resets'?(admResetsHTML()||'<p class="hint">들어온 요청이 없어요.</p>'):admAdminsHTML();
+  return `<div class="ad"><div class="ad-top"><h2>관리자 대시보드</h2><p class="hint">${isOwner()?'최고 관리자':'관리자'} ${esc(S.id)} · ${new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'})}</p></div>
+  ${admDashHTML()}
+  <div class="ad-menu">${ADM_SECS.map(([k,t,d])=>{const open=sec===k;return `<section class="ad-sec${open?' open':''}" id="ads-${k}"><button class="ad-sh" data-act="admsec" data-v="${k}" aria-expanded="${open}"><span><b>${t}</b><small>${d}</small></span>${badge[k]!==''&&badge[k]!=null?`<em class="ad-badge${(k==='pay'||k==='resets')&&badge[k]?' hot':''}">${badge[k]}</em>`:''}${CHEV}</button>${open?`<div class="ad-sb">${bodyOf(k)}</div>`:''}</section>`}).join('')}</div></div>`}
+
 function noticesHTML(){
   const mine=myNotices();const seen=S.noticeSeenPrev||0;
   const A=frAlerts();const fra=A.n?`<div class="ntc new"><b>친구·가족 알림</b><p>${[A.req?`받은 친구 요청 ${A.req}건`:'',A.fam?`받은 가족 요청 ${A.fam}건`:'',A.msg?`읽지 않은 메시지 ${A.msg}개`:''].filter(Boolean).join(' · ')}</p><button class="chip" data-act="view" data-v="friends">친구 페이지로 가기</button></div>`:'';
@@ -3092,7 +3283,7 @@ async function deleteMember(id){
 
 
 /* ---------- 로그아웃·탈퇴 ---------- */
-function doLogout(){window.__002.auth.logout();S.gs=null;try{if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect()}catch(e){}
+function doLogout(){window.__002.auth.logout();S.gs=null;S.admX=false;try{if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect()}catch(e){}
   Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,gd:{},progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
   render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
 async function doWithdraw(fd){
@@ -3323,12 +3514,12 @@ async function enter(id,member){
   const [m,p,c]=await Promise.all([member?null:S.db.doc('members/'+id).get(),S.db.doc('progress/'+id).get(),S.db.doc('custom/'+id).get()]);
   if(!member){if(!m.exists)throw new Error('none');member=m.data()}
   if(blockedOf(id))throw {code:'blocked'};
-  S.me=clone(member);S.id=id;
+  S.me=clone(member);S.id=id;{const ss=window.__002.auth.session();S.admX=!!(ss&&ss.uid===id&&ss.admin)}
   S.progress=Object.assign({done:{},notes:{},qs:{},evalLog:[],drafts:{},picks:{}},p.exists?clone(p.data()):{});S.evals={};S.evals2={};S.essays={};S.evalView=null;S.orals={};S.orals2={};S.odoc={};S.oLoad={};S.oBusy={};S.oaud={};S.oralView=null;S.oralOff=null;S.oralHist=null;S.orSend=null;S.pushSt=null;
   S.custom=c.exists?clone(c.data()):null;
   S.mode=(S.me.mode==='custom'&&S.custom&&isPaid())?'custom':'base';
   S.grade=GR.includes(S.me.grade)?S.me.grade:'중1';S.view='course';S.sheet=null;S.info=null;
-  S.adm={tab:'members',members:null,prog:{},open:null,to:'all',resets:[],tmp:{}};
+  S.adm={sec:null,sub:null,members:null,prog:{},open:null,to:'all',resets:[],tmp:{},adminIds:[]};
   S.fr=frNew();S.fam=famNew();S.gd={};S.askDraft='';S.askBusy=false;S.roadOpen=-1;frLast='';
   render();loadCovers();loadFriends(false);loadVideos();
   S.db.doc('members/'+id).update({seen:Date.now()}).catch(()=>{});
@@ -3663,9 +3854,9 @@ PX.replaceOK=(c,hist,theme,target)=>{const e=PX.emb(c);let dup=0;(hist||[]).forE
    논술·구술 모두 영역마다 수준 1~5(시작·발전·도달·숙달·탁월)를 매기고 40·55·70·85·100%로 환산해 배점을 곱해 더한다.
    모든 영역이 '도달'이면 70점(학년 기대 수준), 범위 40~100. 근거: 중학생 논술·구술 평가기준 정립 보고서(2026-11-24) */
 const RB_LV=['','시작','발전','도달','숙달','탁월'],RB_P=[0,40,55,70,85,100];
-const RB_ES=[['작품 이해와 활용',20],['주장과 근거',30],['구성',20],['표현',10],['어문 규범',10],['생각의 깊이',10]];
-const RB_OR=[['질문 이해와 작품 활용',20],['주장과 근거',30],['구성',15],['표현',10],['전달',15],['생각의 깊이',10]];
-const RB_HOLD=['표현','전달'];  // 구술: 음성 인식 품질이 나쁘면 채점 보류할 수 있는 영역
+let RB_ES=[['작품 이해와 활용',20],['주장과 근거',30],['구성',20],['표현',10],['어문 규범',10],['생각의 깊이',10]];
+let RB_OR=[['질문 이해와 작품 활용',20],['주장과 근거',30],['구성',15],['표현',10],['전달',15],['생각의 깊이',10]];
+let RB_HOLD=['표현','전달'];  // 구술: 음성 인식 품질이 나쁘면 채점 보류할 수 있는 영역
 /* AI가 준 값(수준 1~5. 실수로 준 백분율·10점 척도도 받아 준다)을 수준으로 */
 function rbLv(v){if(v==null||v===''||v==='보류')return 0;let x=Number(v);if(!isFinite(x)||x<=0)return 0;if(x<=5)return Math.max(1,Math.min(5,Math.round(x)));if(x<=10)x*=10;return x>=93?5:x>=78?4:x>=63?3:x>=48?2:1}
 /* 영역 점수(환산 %)·수준·총점. hold에 든 영역이 비어 있으면 채점 보류로 빼고 남은 배점으로 나눈다 */
@@ -3678,7 +3869,7 @@ const rbW=(dom,k)=>{const d=dom.find(x=>x[0]===k);return d?d[1]:0};
 /* 도달(3) 이상인 영역 수 */
 const rbReach=sc=>Object.values(sc||{}).filter(v=>scv(v)>=63).length;
 const RB_LVTXT='수준은 1~5의 정수다. 1 시작(핵심 요소가 대부분 보이지 않아 기초부터 지도가 필요), 2 발전(기대 수준에 가까워지는 중. 핵심 요소 일부가 빠지거나 약함), 3 도달(그 학년의 기대 수준에 도달. 성취기준이 요구하는 바를 해냄), 4 숙달(기대 수준을 안정적으로 충족하고 일부에서 넘어섬), 5 탁월(기대 수준을 뚜렷하게 넘어서 한 학년 위의 요구까지 충족). 학생을 격려하려고 수준을 올려 주지 않는다. 격려는 칭찬과 다음 단계 안내로 한다. 3이 "보통 이상 잘 쓴 글"의 기준이다.';
-const RB_ESD=`① 작품 이해와 활용(배점 20): 문항이 묻는 바를 정확히 파악하고 책·영화 내용을 바르게 이해해 끌어왔는가.
+const RB_ESD0=`① 작품 이해와 활용(배점 20): 문항이 묻는 바를 정확히 파악하고 책·영화 내용을 바르게 이해해 끌어왔는가.
   1 문항을 벗어났거나 작품 내용이 거의 없음 / 2 문항 일부에만 답함. 작품을 줄거리 수준으로 언급하거나 사실 오류 / 3 문항에 답함. 작품 내용을 바르게 이해하고 한 곳 이상 구체적으로 끌어옴 / 4 문항 요구를 빠짐없이 다룸. 두 작품 이상의 장면·인물을 정확히 들어 주장과 연결 / 5 문항의 숨은 쟁점까지 짚음. 작품들의 공통점과 차이를 스스로 해석해 논의의 재료로 씀
 ② 주장과 근거(배점 30): 주장이 분명한가. 근거가 타당하고 충분하며 구체적인가.
   1 주장이 없거나 알기 어려움. 근거 없이 생각만 나열 / 2 주장이 흐리거나 중간에 바뀜. 근거가 하나뿐이거나 느슨함 / 3 주장이 분명하고 관련된 타당한 근거를 둘 이상 듦 / 4 주장이 일관됨. 근거가 구체적(사례, 작품 속 장면, 경험)이며 왜 근거가 되는지 설명 / 5 주장이 정교함. 서로 다른 종류의 근거를 들고 근거와 주장의 연결을 빈틈없이 밝힘
@@ -3690,6 +3881,7 @@ const RB_ESD=`① 작품 이해와 활용(배점 20): 문항이 묻는 바를 �
   1 오류가 많아 읽기를 방해 / 2 같은 유형의 오류가 되풀이됨 / 3 오류가 가끔 있으나 읽기를 방해하지 않음 / 4 오류가 드물고 문장 부호·원고지 사용이 바름 / 5 오류가 거의 없음
 ⑥ 생각의 깊이(배점 10): 다른 입장을 헤아렸는가, 자기 경험·사회와 연결했는가, 자기만의 관점이 있는가.
   1 답을 되풀이할 뿐 자기 생각이 없음 / 2 "좋다, 나쁘다" 수준의 판단에 머묾 / 3 자기 경험이나 주변 사례와 연결해 생각을 넓힘 / 4 자신과 다른 입장을 언급하고 그에 대한 생각을 밝힘 / 5 예상 반론을 들어 다시 반박하거나 문제를 새로운 관점에서 봄`;
+let RB_ESD=RB_ESD0;
 /* 학년별 기대 수준(3 도달의 기준)과 권장 분량 */
 const RB_GN=g=>{const m=String(g||'').match(/[123]/);return m?+m[0]:2};
 const ES_LEN={1:[500,700],2:[700,900],3:[900,1100]};
@@ -3721,13 +3913,13 @@ async function evaluate(i,round){
     try{if(!r2)px.inj=PX.persistent(S.progress.errs,(S.progress.evalN||(S.progress.evalLog||[]).length)+1);else{const L=PX.r2List(key);if(L.length)px.r2=PX.r2Ask(L,String(e1.transcript||''),d.text)}
       pxAdd=r2?(px.r2?px.r2.add:''):PX.p1Ask(px.inj)+PX.TYPEASK}catch(e){px={inj:[],r2:null};pxAdd=''}
     const r2x=r2&&e1?`\n\n[2차 평가 안내]\n이 글은 학생이 1차 첨삭과 모범 답안을 읽고 고쳐 쓴 2차 글이다. 1차 총점은 ${e1.total}점이다. 1차에서 지적한 고칠 점: ${(e1.improvements||[]).join(' / ')}. 1차 글:\n${String(e1.transcript||'').slice(0,2500)}\n2차 글에서 고친 점과 아직 부족한 점을 1차와 비교해 평가하고, 좋아진 부분은 구체적으로 크게 칭찬한다. 수준은 1차와 같은 기준(영역별 수준 1~5)으로 매기되 실제로 나아진 만큼만 올린다. progress에 1차 대비 변화를 2~3문장으로 쓴다. models는 빈 배열 []로 두고 모범 답안은 쓰지 않는다(9번은 무시).`:'';
-    const prompt=`너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 논술을 지도해 온 최고의 논술 강사다. 중학생 제자의 논술 과제를 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」\n- 영화: 「${it.m1}」, 「${it.m2}」\n- 이달의 주제: ${it.topic}\n- 논술 질문: ${question}${r2x}\n\n[학생 글]\n${d.text.trim()?'직접 쓴 글:\n'+d.text.trim():'직접 쓴 글: 없음'}\n${images?'첨부한 사진은 학생이 손으로 쓴 노트다. 사진 속 글을 판독해 학생의 글 전체를 transcript로 옮겨 적는다(직접 쓴 글이 있으면 함께 이어 붙인다). 오탈자나 맞춤법 오류는 고치지 말고 원문 그대로 옮긴다. 판독이 불확실한 글자는 [?]로 표시하고 unreadable에 적는다.':'transcript에는 직접 쓴 글을 그대로 넣는다.'}\n\n[최근 첨삭 기록(최대 5회)]\n${prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 총점 ${x.total}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 첨삭)'}${prepText(i,r2)}\n\n[주제 일치 확인: 가장 먼저 한다]\n학생 글이 논술 질문이나 이달의 책·영화 주제와 전혀 상관없거나 질문과 동떨어진 동문서답이면(예: 질문과 무관한 일기, 낙서, 장난, 다른 주제의 글) 첨삭하지 말고 {"offTopic":true,"reason":"왜 주제와 맞지 않는지 학생에게 다정하게 1~2문장","transcript":""}만 출력한다. 질문에 부분적으로라도 답하거나 책·영화와 연결되는 글이면 offTopic이 아니다. 조금 부족해도 주제 안에 있으면 정상적으로 첨삭한다.\n\n[첨삭 기준]\n1. spelling: 오탈자, 맞춤법, 띄어쓰기. 최대 12개. 원문 그대로 orig, 올바른 표현 fix, 이유 why(짧게).\n2. sentences: 문장별 평가. 글의 앞부분부터 고르게 골라 최대 8개(잘 쓴 문장 2개 포함). 각각 orig(transcript에 있는 그대로의 한 문장), grade("잘함"|"보통"|"고침" 중 하나), why(왜 그렇게 평가했는지 한두 문장: 주어와 서술어 호응, 길이, 접속어, 근거의 분명함 등), fix(다시 쓴 문장. "잘함"이면 빈 문자열).\n3. paragraphs: 문단 구성(서론-본론-결론, 문단 나누기, 논리 흐름)을 3~5문장으로 평가. 그리고 paraReview: transcript의 문단마다 하나씩(최대 5개) {no(문단 번호), role(이 문단의 역할 한 구절), good(잘한 점 한 문장), problem(고칠 점 한 문장), rewrite(이 문단을 학생의 논지를 그대로 살려 더 논리적으로 다시 쓴 글. 원래 분량의 100~130%, 중학생이 쓸 수 있는 문체)}.\n4. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_LVTXT}\n${RB_ESD}\n학년 기대 수준: ${ES_GRADE[RB_GN(it.g)]} 분량이 학년 권장 분량보다 많이 모자라면 구성과 주장과 근거에서 그만큼 반영한다.\n4-0. process: 쓰기 과정 지표. 점수에 넣지 않는다. 글이 아니라 [과제 준비 과정]을 보고 {"plan":"충실"|"부분"|"없음", "note":"쓰기 전에 주장·근거·맺음말 계획을 세웠고 글이 계획을 따랐는지 한 문장"}으로 쓴다. 자료가 거의 없으면 plan은 "없음"이다.\n4-1. scoreWhy: 여섯 영역 각각 왜 그 수준인지 {plus:[잘한 점 1~2개], minus:[한 수준 위로 가려면 고칠 점 1~2개]}로 쓴다. 각 요인은 학생 글에 실제로 나온 표현이나 구조를 짚어 한 문장(45자 안팎)으로 쓰고 수준과 어긋나지 않게 한다. minus에는 고치는 방법을 덧붙인다. 5(탁월)이면 minus에 더 다듬을 점을 쓴다. 둘 다 비워 두지 않는다.\n5. comment: 총평 3~4문장.\n5-1. praise: 이 학생의 글에서 실제로 잘한 부분(글 속 표현이나 생각을 구체적으로 짚어서)을 칭찬하고 앞으로도 계속 쓰도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다. 빈 문자열 금지.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(구체적인 방법 포함). 배점이 큰 영역(주장과 근거, 작품 이해와 활용, 구성)의 과제를 앞에 둔다.\n7. tags: 이번 글의 대표 약점 유형 키워드 최대 4개(예: "근거 부족", "띄어쓰기", "문단 나누기", "긴 문장").\n8. cumulative: 최근 기록과 이번 글을 합쳐 반복되는 실수와 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 첨삭이라고 밝히고 이번 글의 우선 과제를 쓴다.\n9. models: 같은 질문에 대한 모범 답안 2편. 서로 다른 입장이나 구성으로 쓴다. 각각 {title, text}이고 text는 ${esLen(it.g)[0]}~${esLen(it.g)[1]}자(${it.g} 권장 분량). 중학생이 이해할 수 있되 최상위권 학생의 글처럼 논리가 분명해야 한다.\n10. marks: 학생 글을 원고지에 옮긴 뒤 그 위에 직접 쓰는 첨삭 표시. 최대 16개. 각각 find(transcript에 있는 그대로의 짧은 구절 2~10자. 글 전체에서 한 번만 나오는 구절이 좋다. 문장 전체를 쓰지 않는다), kind, fix, note. kind는 "delete"(빼도 되는 군더더기), "replace"(오탈자·맞춤법·어색한 표현을 fix로 고침), "insert"(find 앞에 fix를 넣음), "space"(띄어쓰기. fix에 올바른 띄어쓰기), "circle"(눈여겨볼 단어나 문장부호), "wave"(어색하거나 논리가 약한 부분. fix 없음), "good"(잘 쓴 표현), "note"(문단·문장 단위 지도) 중 하나. note는 여백에 쓰는 선생님의 짧은 한 줄 지도(20자 안팎, 이유나 방법). 글의 앞부분부터 끝까지 고르게 나눠 표시한다.\n11. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n12. transcript는 문단이 바뀔 때 줄바꿈(\n)을 넣는다.\n\nJSON 객체 하나만 출력한다. 정상 첨삭 형식:\n{"offTopic":false,"praise":"","progress":"","transcript":"","unreadable":[],"scores":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,0])))},"process":{"plan":"부분","note":""},"scoreWhy":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,{plus:[""],minus:[""]}])))},"comment":"","spelling":[{"orig":"","fix":"","why":""}],"sentences":[{"orig":"","grade":"고침","why":"","fix":""}],"paragraphs":"","paraReview":[{"no":1,"role":"","good":"","problem":"","rewrite":""}],"strengths":[],"improvements":[],"tags":[],"cumulative":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"teacher":"","models":[{"title":"","text":""},{"title":"","text":""}]}`;
+    const prompt=`너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 논술을 지도해 온 최고의 논술 강사다. 중학생 제자의 논술 과제를 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」\n- 영화: 「${it.m1}」, 「${it.m2}」\n- 이달의 주제: ${it.topic}\n- 논술 질문: ${question}${r2x}\n\n[학생 글]\n${d.text.trim()?'직접 쓴 글:\n'+d.text.trim():'직접 쓴 글: 없음'}\n${images?'첨부한 사진은 학생이 손으로 쓴 노트다. 사진 속 글을 판독해 학생의 글 전체를 transcript로 옮겨 적는다(직접 쓴 글이 있으면 함께 이어 붙인다). 오탈자나 맞춤법 오류는 고치지 말고 원문 그대로 옮긴다. 판독이 불확실한 글자는 [?]로 표시하고 unreadable에 적는다.':'transcript에는 직접 쓴 글을 그대로 넣는다.'}\n\n[최근 첨삭 기록(최대 5회)]\n${prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 총점 ${x.total}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 첨삭)'}${prepText(i,r2)}\n\n[주제 일치 확인: 가장 먼저 한다]\n학생 글이 논술 질문이나 이달의 책·영화 주제와 전혀 상관없거나 질문과 동떨어진 동문서답이면(예: 질문과 무관한 일기, 낙서, 장난, 다른 주제의 글) 첨삭하지 말고 {"offTopic":true,"reason":"왜 주제와 맞지 않는지 학생에게 다정하게 1~2문장","transcript":""}만 출력한다. 질문에 부분적으로라도 답하거나 책·영화와 연결되는 글이면 offTopic이 아니다. 조금 부족해도 주제 안에 있으면 정상적으로 첨삭한다.\n\n[첨삭 기준]\n1. spelling: 오탈자, 맞춤법, 띄어쓰기. 최대 12개. 원문 그대로 orig, 올바른 표현 fix, 이유 why(짧게).\n2. sentences: 문장별 평가. 글의 앞부분부터 고르게 골라 최대 8개(잘 쓴 문장 2개 포함). 각각 orig(transcript에 있는 그대로의 한 문장), grade("잘함"|"보통"|"고침" 중 하나), why(왜 그렇게 평가했는지 한두 문장: 주어와 서술어 호응, 길이, 접속어, 근거의 분명함 등), fix(다시 쓴 문장. "잘함"이면 빈 문자열).\n3. paragraphs: 문단 구성(서론-본론-결론, 문단 나누기, 논리 흐름)을 3~5문장으로 평가. 그리고 paraReview: transcript의 문단마다 하나씩(최대 5개) {no(문단 번호), role(이 문단의 역할 한 구절), good(잘한 점 한 문장), problem(고칠 점 한 문장), rewrite(이 문단을 학생의 논지를 그대로 살려 더 논리적으로 다시 쓴 글. 원래 분량의 100~130%, 중학생이 쓸 수 있는 문체)}.\n4. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_LVTXT}\n${RB_ESD}\n학년 기대 수준: ${ES_GRADE[RB_GN(it.g)]} 분량이 학년 권장 분량보다 많이 모자라면 구성과 주장과 근거에서 그만큼 반영한다.\n4-0. process: 쓰기 과정 지표. 점수에 넣지 않는다. 글이 아니라 [과제 준비 과정]을 보고 {"plan":"충실"|"부분"|"없음", "note":"쓰기 전에 주장·근거·맺음말 계획을 세웠고 글이 계획을 따랐는지 한 문장"}으로 쓴다. 자료가 거의 없으면 plan은 "없음"이다.\n4-1. scoreWhy: 여섯 영역 각각 왜 그 수준인지 {plus:[잘한 점 1~2개], minus:[한 수준 위로 가려면 고칠 점 1~2개]}로 쓴다. 각 요인은 학생 글에 실제로 나온 표현이나 구조를 짚어 한 문장(45자 안팎)으로 쓰고 수준과 어긋나지 않게 한다. minus에는 고치는 방법을 덧붙인다. 5(탁월)이면 minus에 더 다듬을 점을 쓴다. 둘 다 비워 두지 않는다.\n5. comment: 총평 3~4문장.\n5-1. praise: 이 학생의 글에서 실제로 잘한 부분(글 속 표현이나 생각을 구체적으로 짚어서)을 칭찬하고 앞으로도 계속 쓰도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다. 빈 문자열 금지.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(구체적인 방법 포함). 배점이 큰 영역(${rbTop(RB_ES)})의 과제를 앞에 둔다.\n7. tags: 이번 글의 대표 약점 유형 키워드 최대 4개(예: "근거 부족", "띄어쓰기", "문단 나누기", "긴 문장").\n8. cumulative: 최근 기록과 이번 글을 합쳐 반복되는 실수와 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 첨삭이라고 밝히고 이번 글의 우선 과제를 쓴다.\n9. models: 같은 질문에 대한 모범 답안 2편. 서로 다른 입장이나 구성으로 쓴다. 각각 {title, text}이고 text는 ${esLen(it.g)[0]}~${esLen(it.g)[1]}자(${it.g} 권장 분량). 중학생이 이해할 수 있되 최상위권 학생의 글처럼 논리가 분명해야 한다.\n10. marks: 학생 글을 원고지에 옮긴 뒤 그 위에 직접 쓰는 첨삭 표시. 최대 16개. 각각 find(transcript에 있는 그대로의 짧은 구절 2~10자. 글 전체에서 한 번만 나오는 구절이 좋다. 문장 전체를 쓰지 않는다), kind, fix, note. kind는 "delete"(빼도 되는 군더더기), "replace"(오탈자·맞춤법·어색한 표현을 fix로 고침), "insert"(find 앞에 fix를 넣음), "space"(띄어쓰기. fix에 올바른 띄어쓰기), "circle"(눈여겨볼 단어나 문장부호), "wave"(어색하거나 논리가 약한 부분. fix 없음), "good"(잘 쓴 표현), "note"(문단·문장 단위 지도) 중 하나. note는 여백에 쓰는 선생님의 짧은 한 줄 지도(20자 안팎, 이유나 방법). 글의 앞부분부터 끝까지 고르게 나눠 표시한다.\n11. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n12. transcript는 문단이 바뀔 때 줄바꿈(\n)을 넣는다.\n\nJSON 객체 하나만 출력한다. 정상 첨삭 형식:\n{"offTopic":false,"praise":"","progress":"","transcript":"","unreadable":[],"scores":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,0])))},"process":{"plan":"부분","note":""},"scoreWhy":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,{plus:[""],minus:[""]}])))},"comment":"","spelling":[{"orig":"","fix":"","why":""}],"sentences":[{"orig":"","grade":"고침","why":"","fix":""}],"paragraphs":"","paraReview":[{"no":1,"role":"","good":"","problem":"","rewrite":""}],"strengths":[],"improvements":[],"tags":[],"cumulative":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"teacher":"","models":[{"title":"","text":""},{"title":"","text":""}]}`;
     const ev=await S.sample.json(prompt+pxAdd,{images,cache:false,onText:({text})=>{const el=$('#es-msg');if(el)el.textContent='첨삭 중이에요… ('+text.length+'자 작성됨)'}});
     if(ev&&ev.offTopic===true){S.essayBusy='';S.essayOff={i,reason:String(ev.reason||'').slice(0,300)};renderLayers();toast('질문과 주제가 맞지 않아요. 다시 써 주세요.');return}
     if(!ev||typeof ev!=='object'||!ev.scores||typeof ev.transcript!=='string')throw {code:'invalid_json'};
     S.essayOff=null;
     try{await PX.after(ev,{r2,key,inj:px.inj,r2x:px.r2,text:String(ev.transcript||d.text||'')})}catch(e){}
-    const RS=rbScore(ev.scores,RB_ES);ev.scores=RS.scores;ev.levels=RS.levels;ev.rb=2;const total=RS.total;
+    const RS=rbScore(ev.scores,RB_ES);ev.scores=RS.scores;ev.levels=RS.levels;ev.rb=2;ev.rbAt=RBC.at;const total=RS.total;
     {const p=ev.process&&typeof ev.process==='object'?ev.process:{};ev.process={plan:['충실','부분','없음'].includes(p.plan)?p.plan:'없음',note:String(p.note||'').slice(0,200)}}
     const at=Date.now();
     if(r2){
@@ -4415,7 +4607,7 @@ function orPart(r,n){if(!r||typeof r!=='object')return {};if(Array.isArray(r.ans
 const OR_NOTE=`[알아 둘 점]\n말한 내용은 휴대폰 음성 인식으로 받아 적은 글이라 문장부호와 띄어쓰기가 없거나 낱말을 잘못 알아들었을 수 있다. 맞춤법·띄어쓰기·문장부호는 평가하지 않는다. 앞뒤가 맞지 않는 낱말 하나는 인식 오류로 보고 너그럽게 읽는다.\n발음, 성량, 억양, 표정과 몸짓, 자신감은 들을 수 없으므로 평가하지 않는다. 오래 말했다고 가점하지 않는다.\n대신 말하기 자체(끝맺지 못한 문장, 같은 말 되풀이, 친구에게 하듯 한 말투, 군말, 말 속도, 시간 운용)는 평가한다. 말 속도는 1분에 200~330자면 알맞고 이 범위 안에서는 감점하지 않는다. 160자 미만이거나 380자를 넘으면 듣는 이가 따라가기 어렵다. 권장 시간의 60% 이상을 쓰면 시간 운용은 충족한다.\n'군말' 횟수는 '음, 어, 으, 저기, 뭐지, 뭐랄까'만 센 값이다. '그, 아, 약간, 막, 그러니까'는 뜻 없이 쓰였을 때만 군말로 본다("그 장면", "약간의 차이"는 군말이 아니다). 군말은 생각하느라 생기는 자연스러운 현상이니 어절 100개당 3개 이하면 문제 삼지 않고 7개 이상일 때만 지도한다.\n말한 시간이 15초 미만이거나 받아 적은 글이 50자 미만인 답변은 problem에 '너무 짧아 생각을 펼치지 못했다'고 밝히고 그만큼 수준에 반영한다.`;
 /* 구술 평가 AI의 역할(1차·2차·첨삭 표시 요청이 함께 쓴다) */
 const OR_COACH='너는 대한민국 대치동에서 20년 넘게 외고·자사고·과학고 입시 구술면접을 지도해 온 최고의 면접 강사다.';
-const OR_SCORE=`1. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_LVTXT}
+const OR_SCORE0=`1. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_LVTXT}
 ① 질문 이해와 작품 활용(배점 20): 질문이 묻는 바에 답했는가. 책과 영화 내용을 바르게 이해하고 답에 끌어왔는가.
   1 질문과 다른 이야기를 하거나 작품이 거의 없음 / 2 질문 일부에만 답함. 작품을 제목·줄거리 수준으로만 말함 / 3 질문에 답함. 작품의 장면이나 인물을 한 가지 이상 바르게 듦 / 4 질문 요구를 모두 다룸. 장면·인물의 말과 행동을 구체적으로 들어 답과 연결 / 5 질문의 의도를 짚어 답함. 두 작품을 스스로 견주어 근거로 삼음
 ② 주장과 근거(배점 30): 자기 생각을 분명히 밝혔는가. 이유와 구체적 사례로 뒷받침했는가.
@@ -4431,8 +4623,34 @@ const OR_SCORE=`1. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_
 세 답변을 아울러 영역마다 수준 하나를 매긴다. 세 답변 모두 음성 인식 결과를 학생이 30% 넘게 고쳤거나 뜻이 통하지 않는 구간이 많으면 표현과 전달은 0(채점 보류)으로 둔다.
 2. scoreWhy: 여섯 영역 각각 {plus:[잘한 점 1~2개], minus:[한 수준 위로 가려면 고칠 점 1~2개]}. 학생이 실제로 한 말이나 말하기 습관을 짚어 한 문장(45자 안팎)으로 쓰고 수준과 어긋나지 않게 한다. 첫 지도는 내용(무엇을 말했는가)이고 전달(어떻게 말했는가)은 그다음이다. 둘 다 비워 두지 않는다.`;
 const OR_MARKS=`말한 내용 위에 직접 하는 첨삭 표시 최대 6개. 각각 find(말한 내용에 있는 그대로의 짧은 구절 2~12자, 그 답변 안에서 한 번만 나오는 구절), kind("delete"=빼야 할 군말·되풀이, "replace"=더 알맞은 말로 바꿈(fix에 바꿀 말), "insert"=find 앞에 넣을 말(fix), "good"=잘한 표현, "wave"=논리가 약하거나 모호한 부분), fix, note(20자 안팎 지도 한 줄)`;
-const OR_SC_JSON=JSON.stringify(Object.fromEntries(RB_OR.map(([k])=>[k,0])));
-const OR_SW_JSON=JSON.stringify(Object.fromEntries(RB_OR.map(([k])=>[k,{plus:[""],minus:[""]}])));
+/* ---------- 평가 기준 설정 (관리자 화면 → config/rubric). 영역 6개의 이름·배점·기준 설명·수준 설명(구술은 채점 보류 여부)
+   기본값은 위 개정 기준 문장에서 읽어 온다. 서버(oral.ts rbValid)와 같은 규칙으로 검사하고, 맞지 않으면 기본값을 쓴다 ---------- */
+const RB_CIRC='①②③④⑤⑥';
+function rbParse(txt){const re=/([①②③④⑤⑥]) (.+?)\(배점 (\d+)\): (.*)\n  (.*)/g;const items=[];let m,a=-1,b=0;
+  while((m=re.exec(txt))){if(a<0)a=m.index;b=m.index+m[0].length;items.push({k:m[2],w:+m[3],c:m[4],l:m[5]})}
+  return {items,pre:txt.slice(0,Math.max(0,a)),post:txt.slice(b)}}
+const RB_PE=rbParse(RB_ESD0),RB_PO=rbParse(OR_SCORE0);
+const RBC_DEF={essay:RB_PE.items,oral:RB_PO.items.map(x=>Object.assign({},x,{h:['표현','전달'].includes(x.k)}))};
+let RBC={essay:RBC_DEF.essay,oral:RBC_DEF.oral,at:0,by:''};
+let OR_SCORE=OR_SCORE0,OR_SC_JSON='',OR_SW_JSON='';
+function rbValid(v,oral){if(!Array.isArray(v)||v.length!==6)return null;const seen=new Set();let sum=0;const out=[];
+  for(const x of v){const k=String(x&&x.k||'').trim(),w=Number(x&&x.w);if(!k||k.length>20||seen.has(k)||!Number.isInteger(w)||w<1||w>60)return null;seen.add(k);sum+=w;
+    const d=(oral?RBC_DEF.oral:RBC_DEF.essay).find(y=>y.k===k)||{};
+    out.push({k,w,c:String(x.c||d.c||'').slice(0,300),l:String(x.l||d.l||'').slice(0,900),...(oral?{h:!!x.h}:{})})}
+  return sum===100?out:null}
+const rbTxt=items=>items.map((x,i)=>`${RB_CIRC[i]} ${x.k}(배점 ${x.w}): ${x.c}\n  ${x.l}`).join('\n');
+/* 구술 지시문 조각(영역 목록이 바뀌면 함께 바뀐다). 2차 평가는 1차 때 쓴 영역(rbi)으로 만든다 */
+function orTxt(items){const hold=items.filter(x=>x.h).map(x=>x.k);
+  const post=RB_PO.post.replace('표현과 전달은 0(채점 보류)으로 둔다.',hold.length?hold.join('·')+'은 0(채점 보류)으로 둔다.':'모든 영역을 그대로 매긴다.');
+  return {score:RB_PO.pre+rbTxt(items)+post,sc:JSON.stringify(Object.fromEntries(items.map(x=>[x.k,0]))),sw:JSON.stringify(Object.fromEntries(items.map(x=>[x.k,{plus:[""],minus:[""]}])))}}
+const rbSnap=rbi=>rbValid(rbi,true)||RBC.oral;
+function rbApply(cfg){const e=cfg&&rbValid(cfg.essay,false),o=cfg&&rbValid(cfg.oral,true);
+  RBC={essay:e||RBC_DEF.essay,oral:o||RBC_DEF.oral,at:cfg&&(e||o)?Number(cfg.at)||0:0,by:cfg&&cfg.by||''};
+  RB_ES=RBC.essay.map(x=>[x.k,x.w]);RB_OR=RBC.oral.map(x=>[x.k,x.w]);RB_HOLD=RBC.oral.filter(x=>x.h).map(x=>x.k);
+  RB_ESD=RB_PE.pre+rbTxt(RBC.essay)+RB_PE.post;const T=orTxt(RBC.oral);OR_SCORE=T.score;OR_SC_JSON=T.sc;OR_SW_JSON=T.sw}
+rbApply(null);
+/* 배점이 큰 영역 세 개(첨삭 과제 순서 안내에 쓴다) */
+const rbTop=dom=>dom.slice().sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(', ');
 const OR_GRADE={1:'중1의 도달(3): 권장 답변 1분 안팎. 생각과 이유 1개. 자기 경험과 연결.',2:'중2의 도달(3): 권장 답변 1분~1분 30초. 결론을 먼저 말하고 이유와 마무리. 자기 경험이나 주변 일과 연결.',3:'중3의 도달(3): 권장 답변 1분 30초~2분. 결론과 이유 2개(또는 이유와 사례), 마무리. 다른 입장을 언급.'};
 /* 부호 있는 점수 변화와 나아진 영역 수(2026-11 개정: 단일 성장 점수는 대표 숫자에서 내렸다) */
 const sgn=d=>(d>0?'+':d<0?'−':'')+Math.abs(d);
@@ -4449,10 +4667,11 @@ async function oralEval2(i){
   S.oralBusy=key;S.oralMsg='2차 구술 평가를 시작했어요. 1분 안팎 걸려요. 이 창을 닫지 말아 주세요.';renderLayers();
   try{
     const PV=(await orSrv('prep2',{key})).items||[];
+    const OT=orTxt(rbSnap(ev.rbi));
     const A=(ev.answers||[]).map((a1,n)=>{const a=D.ans2[n];const pv=PV[n]||{};const st=orStat(a);const sh=D.sh[n]||{};return {q:a1.q,t1:a1.text,p1:a1.problem||'',model:a1.model||'',acc:sh.acc,shSec:sh.sec||0,think:String(D.memo[n]||'').trim(),text:String(a.text).trim(),edited:!!a.raw&&a.raw.trim()!==String(a.text).trim(),sec:st.sec,chars:st.ch,cpm:st.cpm,fill:st.fill,stt:!!a.raw,pv,marked:String(pv.marked||String(a.text).trim())}});
     const prev=(S.progress.oralLog||[]).filter(x=>x.key!==key).slice(-5);
-    const prompt=`${OR_COACH} 중학생 제자가 1차 구술 첨삭을 받은 뒤, 모범 답안을 소리 내어 따라 읽고 최대 3분 동안 생각한 다음 같은 질문에 다시 대답했다. 2차 대답을 첨삭하고 1차와 비교해 얼마나 성장했는지 평가하라. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」 / 영화: 「${it.m1}」, 「${it.m2}」 / 주제: ${it.topic}\n- 1차 총점: ${ev.total}점, 1차 영역 수준: ${Object.entries(ev.scores||{}).map(([k,v])=>k+' '+rbName(v)).join(', ')}\n- 1차 고칠 점: ${(ev.improvements||[]).join(' / ')}\n\n${A.map((a,n)=>`<질문 ${n+1}> ${a.q}\n[1차 대답] ${a.t1}\n[1차에서 지적한 점] ${a.p1}\n[모범 답안] ${a.model}\n[따라 읽기] ${a.shSec}초${a.acc!=null?`, 모범 답안과 ${a.acc}% 같게 읽음`:''}\n[생각 메모] ${a.think||'없음'}\n[2차 대답] 말한 시간 ${a.sec}초 · ${a.chars}자 · 1분에 ${a.cpm}자 · 군말 ${a.fill}회${a.stt?(a.edited?' · 음성 인식 결과를 학생이 일부 고침':' · 음성 인식 결과'):' · 학생이 직접 받아 적음'}\n[서버가 계산한 암기 지표] 모범 답안 고유 유사도 ${a.pv.Smu??'-'} · 1차 답변 유지도 ${a.pv.So??'-'} · 모범 답안과 최장 연속 일치 ${a.pv.Lmax??'-'}자 · 서버 암기 판정: ${a.pv.copied?'암기':'아님'}\n[2차 대답 — [[ ]] 안은 모범 답안과 8자 이상 그대로 겹친 구간이니 성장의 근거로 쓰지 않는다]\n${a.marked}`).join('\n\n')}\n\n${OR_NOTE}\n\n[최근 구술 테스트 기록(최대 5회)]\n${orPrevText(prev)}\n\n[평가 기준]\n${OR_SCORE}
-학년 기대 수준: ${OR_GRADE[RB_GN(it.g)]}\n   2차 수준은 2차 대답만 보고 1차와 같은 기준으로 매긴다.\n3. growth: 대답 성장 점수(70~100 정수). 1차 대비 2차가 얼마나 나아졌는지를 본다. 결론을 먼저 말하기, 근거의 구체성, 구조, 군말·말끝, 1차 지적 사항 반영을 따진다. [[ ]] 표시 구간과 모범 답안을 거의 그대로 외워 말한 부분은 성장으로 보지 않고, 자기 생각을 살리면서 모범 답안에서 배운 구조·근거·표현을 가져온 것을 높이 평가한다. 실제로 나아진 만큼 주되 70점 아래로 주지 않는다. 95~100은 눈에 띄게 달라진 경우.\n4. growthWhy: 성장 점수의 이유 {plus:[나아진 점 2~3개], minus:[아직 남은 과제 1~2개]}. 1차와 2차에 실제로 한 말을 짚어 한 문장씩 쓴다.\n5. answers: 질문마다 하나씩 정확히 ${OR_N}개. 각각\n  - no, summary(2차 대답의 핵심 주장 한 문장)\n  - growth: 이 질문의 대답 성장 점수(70~100)\n  - improved: 1차보다 나아진 점 한두 문장(1차와 2차 표현을 나란히 짚어서)\n  - still: 아직 부족한 점과 다음 연습 방법 한두 문장\n  (2차 대답의 문장별 첨삭 표시는 따로 만드니 여기서는 쓰지 않는다.)\n6. growthComment: 1·2차를 비교한 성장 총평 3~4문장.\n7. comment: 2차 대답의 총평 2~3문장.\n8. praise: 다시 도전해 나아진 점을 구체적으로 칭찬하고 격려하는 따뜻한 멘트 3~4문장. 반드시 쓴다.\n9. strengths: 잘한 점 3개. improvements: 다음 구술 테스트까지 연습할 점 3개(구체적인 방법 포함).\n10. tags: 2차 이후에도 남은 약점 키워드 최대 4개.\n11. cumulative: 최근 기록과 이번 1·2차를 합쳐 반복되는 습관과 나아지는 흐름, 앞으로의 과제를 4~6문장으로 쓴다.\n12. nextGoal: 다음 구술 테스트의 목표 한 문장.\n13. teacher: 부모님도 읽는 선생님 한마디. 성장을 칭찬하는 한 문장과 가장 중요한 다음 과제 한두 문장, 총 3문장 이내.\n\nJSON 객체 하나만 출력한다. 형식:\n{"scores":${OR_SC_JSON},"scoreWhy":${OR_SW_JSON},"growth":0,"growthWhy":{"plus":[""],"minus":[""]},"answers":[{"no":1,"summary":"","growth":0,"improved":"","still":"",}],"growthComment":"","comment":"","praise":"","strengths":[],"improvements":[],"tags":[],"cumulative":"","nextGoal":"","teacher":""}`;
+    const prompt=`${OR_COACH} 중학생 제자가 1차 구술 첨삭을 받은 뒤, 모범 답안을 소리 내어 따라 읽고 최대 3분 동안 생각한 다음 같은 질문에 다시 대답했다. 2차 대답을 첨삭하고 1차와 비교해 얼마나 성장했는지 평가하라. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」 / 영화: 「${it.m1}」, 「${it.m2}」 / 주제: ${it.topic}\n- 1차 총점: ${ev.total}점, 1차 영역 수준: ${Object.entries(ev.scores||{}).map(([k,v])=>k+' '+rbName(v)).join(', ')}\n- 1차 고칠 점: ${(ev.improvements||[]).join(' / ')}\n\n${A.map((a,n)=>`<질문 ${n+1}> ${a.q}\n[1차 대답] ${a.t1}\n[1차에서 지적한 점] ${a.p1}\n[모범 답안] ${a.model}\n[따라 읽기] ${a.shSec}초${a.acc!=null?`, 모범 답안과 ${a.acc}% 같게 읽음`:''}\n[생각 메모] ${a.think||'없음'}\n[2차 대답] 말한 시간 ${a.sec}초 · ${a.chars}자 · 1분에 ${a.cpm}자 · 군말 ${a.fill}회${a.stt?(a.edited?' · 음성 인식 결과를 학생이 일부 고침':' · 음성 인식 결과'):' · 학생이 직접 받아 적음'}\n[서버가 계산한 암기 지표] 모범 답안 고유 유사도 ${a.pv.Smu??'-'} · 1차 답변 유지도 ${a.pv.So??'-'} · 모범 답안과 최장 연속 일치 ${a.pv.Lmax??'-'}자 · 서버 암기 판정: ${a.pv.copied?'암기':'아님'}\n[2차 대답 — [[ ]] 안은 모범 답안과 8자 이상 그대로 겹친 구간이니 성장의 근거로 쓰지 않는다]\n${a.marked}`).join('\n\n')}\n\n${OR_NOTE}\n\n[최근 구술 테스트 기록(최대 5회)]\n${orPrevText(prev)}\n\n[평가 기준]\n${OT.score}
+학년 기대 수준: ${OR_GRADE[RB_GN(it.g)]}\n   2차 수준은 2차 대답만 보고 1차와 같은 기준으로 매긴다.\n3. growth: 대답 성장 점수(70~100 정수). 1차 대비 2차가 얼마나 나아졌는지를 본다. 결론을 먼저 말하기, 근거의 구체성, 구조, 군말·말끝, 1차 지적 사항 반영을 따진다. [[ ]] 표시 구간과 모범 답안을 거의 그대로 외워 말한 부분은 성장으로 보지 않고, 자기 생각을 살리면서 모범 답안에서 배운 구조·근거·표현을 가져온 것을 높이 평가한다. 실제로 나아진 만큼 주되 70점 아래로 주지 않는다. 95~100은 눈에 띄게 달라진 경우.\n4. growthWhy: 성장 점수의 이유 {plus:[나아진 점 2~3개], minus:[아직 남은 과제 1~2개]}. 1차와 2차에 실제로 한 말을 짚어 한 문장씩 쓴다.\n5. answers: 질문마다 하나씩 정확히 ${OR_N}개. 각각\n  - no, summary(2차 대답의 핵심 주장 한 문장)\n  - growth: 이 질문의 대답 성장 점수(70~100)\n  - improved: 1차보다 나아진 점 한두 문장(1차와 2차 표현을 나란히 짚어서)\n  - still: 아직 부족한 점과 다음 연습 방법 한두 문장\n  (2차 대답의 문장별 첨삭 표시는 따로 만드니 여기서는 쓰지 않는다.)\n6. growthComment: 1·2차를 비교한 성장 총평 3~4문장.\n7. comment: 2차 대답의 총평 2~3문장.\n8. praise: 다시 도전해 나아진 점을 구체적으로 칭찬하고 격려하는 따뜻한 멘트 3~4문장. 반드시 쓴다.\n9. strengths: 잘한 점 3개. improvements: 다음 구술 테스트까지 연습할 점 3개(구체적인 방법 포함).\n10. tags: 2차 이후에도 남은 약점 키워드 최대 4개.\n11. cumulative: 최근 기록과 이번 1·2차를 합쳐 반복되는 습관과 나아지는 흐름, 앞으로의 과제를 4~6문장으로 쓴다.\n12. nextGoal: 다음 구술 테스트의 목표 한 문장.\n13. teacher: 부모님도 읽는 선생님 한마디. 성장을 칭찬하는 한 문장과 가장 중요한 다음 과제 한두 문장, 총 3문장 이내.\n\nJSON 객체 하나만 출력한다. 형식:\n{"scores":${OT.sc},"scoreWhy":${OT.sw},"growth":0,"growthWhy":{"plus":[""],"minus":[""]},"answers":[{"no":1,"summary":"","growth":0,"improved":"","still":"",}],"growthComment":"","comment":"","praise":"","strengths":[],"improvements":[],"tags":[],"cumulative":"","nextGoal":"","teacher":""}`;
     const pM=`${OR_COACH} 중학생 제자의 2차 구술 대답(같은 질문에 다시 한 대답)에 말한 내용 위에 직접 하는 첨삭 표시를 한다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n- 학년: ${it.g} / 책: 「${it.book}」 / 영화: 「${it.m1}」, 「${it.m2}」\n\n${A.map((a,n)=>`<질문 ${n+1}> ${a.q}\n[2차 대답] ${a.text}`).join('\n\n')}\n\n${OR_NOTE}\n\n[할 일] 질문마다 하나씩 정확히 ${OR_N}개. 각각\n  - no: 질문 번호\n  - marks: ${OR_MARKS}\n  - sentences: 2차 대답의 문장 지도 최대 2개. 각각 orig(말한 내용에 있는 그대로), grade("잘함"|"보통"|"고침"), why, fix\n\nJSON 객체 하나만 출력한다. 형식:\n{"answers":[{"no":1,"marks":[{"find":"","kind":"replace","fix":"","note":""}],"sentences":[{"orig":"","grade":"보통","why":"","fix":""}]}]}`;
     const r=await orParallel(prompt,[pM],'2차 평가 중이에요…');
     if(r&&r.parts){const m=r.parts[0];if(Array.isArray(r.answers))r.answers=r.answers.map((x,n)=>{const d=m&&Array.isArray(m.answers)?(m.answers.find(y=>+y.no===+(x&&x.no||n+1))||m.answers[n]||{}):{};return Object.assign({},x,{marks:d.marks||(x&&x.marks)||[],sentences:d.sentences||(x&&x.sentences)||[]})});delete r.parts}
@@ -4858,7 +5077,7 @@ document.addEventListener('pointerup',e=>{const ta=e.target;if(ta&&ta.id==='wr-t
 document.addEventListener('compositionupdate',e=>{if(e.target.id==='wr-ta')setTimeout(wrDraw,0)});
 
 /* ---------- 성적 리포트 (대시보드 › 전체보기) ---------- */
-const SC_AX=RB_ES.map(x=>x[0]);  // 2026-11 개정 영역. 예전 기록의 항목(논지·맞춤법·적극성 등)은 뒤에 따로 보인다
+const scAx=()=>RB_ES.map(x=>x[0]);  // 2026-11 개정 영역. 예전 기록의 항목(논지·맞춤법·적극성 등)은 뒤에 따로 보인다
 async function scLoad(){
   const me=S.id;S.scr={busy:true,list:[]};renderLayers();
   let list=[];
@@ -4895,7 +5114,7 @@ function scoreHTML(){
   const chart=`<div class="sec"><h3>점수 흐름 <small class="hint">최근 ${show.length}회</small></h3>${scChart(show.map(x=>Number(x.total)||0),show.map(x=>String(x.m||'').replace(/^중\d\s*/,'')))}
     ${trend!=null?`<p class="hint">${prev3.length?'최근 3회 평균이 그 전 3회보다':'지난번보다'} ${trend>0?trend+'점 올랐어요.':trend<0?(-trend)+'점 내려갔어요.':'같아요.'}${r2n?` 다시 쓰기는 ${r2n}번 했고, 평균 ${r2gain>=0?r2gain+'점 올렸어요':(-r2gain)+'점 내려갔어요'}.`:''}</p>`:''}</div>`;
   const ax={};firsts.forEach(x=>{const s=x.scores||{};Object.keys(s).forEach(k=>{const v=scv(s[k]);if(v>0)(ax[k]=ax[k]||[]).push(v)})});
-  const keys=SC_AX.filter(k=>ax[k]).concat(Object.keys(ax).filter(k=>!SC_AX.includes(k)));
+  const keys=scAx().filter(k=>ax[k]).concat(Object.keys(ax).filter(k=>!scAx().includes(k)));
   let axH='';
   if(keys.length){const av=keys.map(k=>[k,Math.round(mean(ax[k]))]);const s=[...av].sort((a,b)=>b[1]-a[1]);
     const lastSc=(firsts[firsts.length-1]||{}).scores||{};
@@ -5147,6 +5366,10 @@ document.addEventListener('touchend',e=>{if(swX===null)return;const c=e.target.c
 document.addEventListener('submit',e=>{
   const f=e.target.closest('form');if(!f)return;e.preventDefault();
   const k=f.dataset.form;const fd=new FormData(f);
+  if(k==='rubric'){if(isAdmin())admRubricSave(f);return}
+  if(k==='admcourse'){if(isAdmin())admCourseSave(f);return}
+  if(k==='admadd'){if(isOwner())(async()=>{const id=String(fd.get('id')||'').trim().toLowerCase();const er=m=>{const e=$('#aderr');if(e)e.textContent=m};
+    try{await window.__002.server.call('admin.adminAdd',{id});toast(id+' 님을 관리자로 추가했어요.');loadAdmins()}catch(err){er((err&&err.message)||'추가하지 못했어요.')}})();return}
   if(k==='login')doLogin(fd);
   else if(k==='find')doFind(fd);
   else if(k==='profile')saveProfile(fd);
@@ -5160,7 +5383,8 @@ document.addEventListener('submit',e=>{
 document.addEventListener('change',e=>{
   const el=e.target;
   if(el.dataset&&el.dataset.gkind!==undefined){const f=el.form;if(f)f.querySelectorAll('[data-gpane]').forEach(l=>{const on=l.dataset.gpane===el.value;l.hidden=!on;const q=l.querySelector('select');if(q)q.disabled=!on});return}
-  if(el.id==='ad-file'&&el.files[0])readXlsx(el.files[0]);
+  if(el.id==='adm-sort'){admF().sort=el.value;render()}
+  else if(el.id==='ad-file'&&el.files[0])readXlsx(el.files[0]);
   else if(el.id==='ad-bulk'&&el.files.length)bulkCovers([...el.files]);
   else if(el.id==='es-files'){S.essayDraft.files=[...el.files];renderLayers()}
   else if(el.dataset&&el.dataset.isbnphoto!==undefined&&el.files[0]){const f=el.files[0];toast('바코드를 읽는 중이에요…');isbnFromPhoto(f).then(v=>{const i=document.getElementById('mb-isbn');if(v){S.mbIsbn=v;if(i)i.value=v;toast('ISBN '+v+'을(를) 읽었어요.')}else toast('바코드를 읽지 못했어요. 숫자를 직접 적어 주세요.')});el.value=''}
@@ -5181,7 +5405,8 @@ document.addEventListener('input',e=>{
   if(el.dataset&&el.dataset.rv&&S.bkRev){const it=S.bkRev.items.find(x=>x.id===el.dataset.id);if(it){it[el.dataset.rv]=el.value;if(el.dataset.rv==='title'||el.dataset.rv==='author')bkBtn();}return}
   if(el.dataset.note&&S.sheet&&S.sheet.type==='month'){const k=nk(S.sheet.i);S.progress.notes[k]=Object.assign({},S.progress.notes[k],{[el.dataset.note]:el.value});saveProgress()}
   else if(el.dataset.pref){S.me.prefs=Object.assign({},S.me.prefs,{[el.dataset.pref]:el.value})}
-  else if(el.id==='adm-q'){const q=el.value.trim().toLowerCase();document.querySelectorAll('.mb').forEach(r=>{r.hidden=!!q&&!r.dataset.k.includes(q)})}
+  else if(el.id==='adm-q'){admF().q=el.value;const l=document.querySelector('.ad-mlist');const L=admList();if(l)l.innerHTML=L.map(memberRowHTML).join('')||'<p class="hint" style="padding:14px">조건에 맞는 회원이 없어요.</p>';const c=document.querySelector('.ad-cnt b');if(c)c.textContent=L.length+'명'}
+  else if(el.dataset.rbw!==undefined){const f=el.form;if(f){const t=[...f.querySelectorAll('[data-rbw]')].reduce((a,x)=>a+(Number(x.value)||0),0);const o=document.querySelector('#rbsum-'+f.dataset.kind+' b');if(o){o.textContent=t;o.style.color=t===100?'':'var(--brick)'}}}
   else if(el.id==='fr-q'){const q=el.value.trim().toLowerCase();document.querySelectorAll('.frr[data-k]').forEach(r=>{r.hidden=!!q&&!r.dataset.k.includes(q)})}
   else if(el.id==='rv-text'&&S.info){S.info.mine=Object.assign({stars:0},S.info.mine,{text:el.value})}
   else if(el.dataset.road&&S.sheet&&S.sheet.type==='month'){prepOf(S.sheet.i).road[el.dataset.road]=el.value.slice(0,300);saveProgress()}
@@ -5336,9 +5561,22 @@ document.addEventListener('click',async e=>{
       render();break}
     case 'admresetx':if(!isAdmin())break;if(S.adm.tmp)delete S.adm.tmp[d.id];render();break;
     case 'admresetno':if(!isAdmin())break;S.adm.resets=(S.adm.resets||[]).filter(x=>x.id!==d.id);S.db.doc('resets/'+d.id).delete().catch(()=>{});render();break;
-    case 'admtab':if(!isAdmin())break;S.adm.tab=d.v;render();break;
-    case 'admopen':if(!isAdmin())break;S.adm.open=S.adm.open===d.id?null:d.id;render();break;
-    case 'admto':if(!isAdmin())break;S.adm.to=d.id;S.adm.tab='notices';render();window.scrollTo(0,0);break;
+    case 'admtab':if(!isAdmin())break;S.adm.sec=d.v;render();break;
+    case 'admsec':if(!isAdmin())break;S.adm.sec=S.adm.sec===d.v?null:d.v;S.adm.sub=null;S.adm.cf=null;render();if(S.adm.sec==='admins'&&!S.adm.admins)loadAdmins();if(S.adm.sec){const x=document.getElementById('ads-'+S.adm.sec);if(x)x.scrollIntoView({block:'start',behavior:'smooth'})}break;
+    case 'admsub':if(!isAdmin())break;S.adm.sub=S.adm.sub===d.v?null:d.v;render();break;
+    case 'admgo':if(!isAdmin())break;S.adm.sec='members';S.adm.open=d.id;S.adm.mtab='info';render();{const x=document.getElementById('ads-members');if(x)x.scrollIntoView({block:'start',behavior:'smooth'})}break;
+    case 'admf':if(!isAdmin())break;admF()[d.k]=d.v;render();break;
+    case 'admmtab':if(!isAdmin())break;S.adm.mtab=d.v;S.adm.cf=null;render();break;
+    case 'admrt':if(!isAdmin())break;S.adm.rt=d.v;S.adm.cf=null;render();break;
+    case 'admtest':{if(!isAdmin())break;const c=d.v+':'+d.id+':'+d.k;if(S.adm.cf!==c){S.adm.cf=c;render();break}admTest(d.id,d.k,d.v==='keep');break}
+    case 'admarch':if(!isAdmin())break;loadArch(d.id);break;
+    case 'admrbdef':if(!isAdmin())break;S.adm.rbDraft=Object.assign({},S.adm.rbDraft,{[d.v]:clone(RBC_DEF[d.v])});render();toast('처음 기준을 채웠어요. 저장해야 적용돼요.');break;
+    case 'admcg':if(!isAdmin())break;S.adm.cg=d.v;S.adm.ced=-1;render();break;
+    case 'admced':if(!isAdmin())break;S.adm.ced=+d.v;render();break;
+    case 'admrm':{if(!isOwner())break;if(S.adm.cf!=='rm:'+d.id){S.adm.cf='rm:'+d.id;render();break}S.adm.cf=null;
+      try{await window.__002.server.call('admin.adminRemove',{id:d.id});toast('관리자에서 해제했어요.')}catch(err){toast((err&&err.message)||'해제하지 못했어요.')}loadAdmins();break}
+    case 'admopen':if(!isAdmin())break;S.adm.open=S.adm.open===d.id?null:d.id;S.adm.mtab='info';S.adm.cf=null;render();break;
+    case 'admto':if(!isAdmin())break;S.adm.to=d.id;S.adm.sec='notices';render();{const x=document.getElementById('ads-notices');if(x)x.scrollIntoView({block:'start'})}break;
     case 'admpaid':{if(!isAdmin())break;const id=d.id;const was=!!(S.plans.paid||{})[id];
       S.plans.paid=S.plans.paid||{};if(was)delete S.plans.paid[id];else S.plans.paid[id]={at:Date.now()};
       try{await savePlans();
@@ -5442,8 +5680,9 @@ if(S.db){
   // 계획표와 설정(요금·공지·차단 목록)은 서로 기다릴 필요가 없어 함께 불러온다. 로그인(enter)은 둘 다 받은 뒤에
   await Promise.all([
     (async()=>{try{const cfg=await S.db.doc('config/course').get();
-      if(cfg.exists){const d=cfg.data();if(Array.isArray(d.items)&&d.items.length){S.course=clone(d.items);S.source='관리자가 올린 엑셀 ('+new Date(d.updatedAt||Date.now()).toLocaleDateString('ko-KR')+')'}}}catch(e){}})(),
-    loadConfig().catch(()=>{})
+      if(cfg.exists){const d=cfg.data();if(Array.isArray(d.items)&&d.items.length){S.course=clone(d.items);S.source=(d.via==='edit'?'관리자가 고친 계획표 (':'관리자가 올린 엑셀 (')+new Date(d.updatedAt||Date.now()).toLocaleDateString('ko-KR')+')'}}}catch(e){}})(),
+    loadConfig().catch(()=>{}),
+    (async()=>{try{const r=await S.db.doc('config/rubric').get();if(r.exists)rbApply(r.data())}catch(e){}})()
   ]);
   const saved=(window.__002.auth.session()||{}).uid||null;
   if(saved){try{await enter(saved);return}catch(e){}}

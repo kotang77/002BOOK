@@ -86,6 +86,8 @@ export async function canRead(ctx: Ctx, path: string, row: Row | null): Promise<
       return d.a === me || d.b === me || d.from === me || d.to === me;
     case 'resets':
       return false;
+    case 'archive':                                      // 재시험 때 보관한 예전 평가: 본인만 (관리자는 위에서 허용)
+      return mineByPrefix(id, me);
     default:
       return true;
   }
@@ -137,6 +139,8 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
       return id === me || ctx.admin;
     case 'oralst':                                       // 구술 진행 상태: 서버(oral.*)만 쓴다
       return false;
+    case 'archive':                                      // 재시험 보관본: 서버(admin.resetTest)만 쓰고 관리자만 지움
+      return ctx.admin && kind === 'delete';
     case 'orals':                                        // 1차·2차 평가 결과는 서버가 검증해 저장. 회원은 답변 문서(_a)만
       return (mineByPrefix(id, me) && id.endsWith('_a')) || (ctx.admin && kind === 'delete');
     case 'evals': case 'orauds': case 'qimgs':
