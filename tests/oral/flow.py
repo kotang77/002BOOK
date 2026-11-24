@@ -62,7 +62,7 @@ with sync_playwright() as p:
     pg.on('pageerror',lambda e:errs.append(str(e)[:200])); pg.on('request',lambda r:'"ai.sample"' in (r.post_data or '') and AI.append(time.time())); pg.on('console',lambda m:m.type in ('error','warning') and print('CONSOLE',m.text[:300]))
     pg.goto(WEB+'/'); pg.evaluate("s=>localStorage.setItem('002.session',JSON.stringify(s))",s); pg.goto(WEB+'/'); pg.wait_for_selector('.who',timeout=20000); time.sleep(1.2)
     openOral(pg)
-    ok('구술 탭이 논술 오른쪽',pg.evaluate("[...document.querySelectorAll('[data-act=stab]')].map(b=>b.textContent).join(',')").startswith('작품,논술,구술'))
+    ok('단계 순서: 작품·기록·논술·구술',pg.evaluate("[...document.querySelectorAll('.msteps [data-act=stab]')].map(b=>b.dataset.v).join(',')")=='work,note,essay,oral')
     ok('질문 글은 숨김',pg.locator('.orcard .qtx').count()==0 and pg.locator('[data-act=orsay]').count()==1)
     ok('듣기 전 답변 잠김',pg.locator('[data-act=orrec][data-m="1"][disabled]').count()==1)
     pg.screenshot(path=OUT+'0_listen.png')

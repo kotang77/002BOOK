@@ -1,7 +1,7 @@
 <!doctype html><html lang="ko"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>002BOOK</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&family=Gaegu:wght@400;700&family=Hi+Melody&family=Gowun+Dodum&family=Permanent+Marker&family=Abril+Fatface&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&family=Gaegu:wght@400;700&family=Hi+Melody&family=Gowun+Dodum&family=Permanent+Marker&family=Abril+Fatface&display=swap" rel="stylesheet">
 <meta name="description" content="중학생을 위한 책·영화 인생교육과 논술 첨삭, 002BOOK">
 <meta name="theme-color" content="#3E2F26">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -1167,6 +1167,134 @@ section.dash .dgo .dl2 .bar{flex:1;min-width:24px;margin:0}
 .yn{font-size:13.5px;line-height:1.6;margin:3px 0 4px}
 .ybox .ylk{margin-left:0;align-self:flex-start;text-decoration:none}
 .ybox .ylk:hover{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+
+/* ---------- 2026-11-24 포켓 스타일: 흰 바탕, 검은 글자, 호박색 강조 하나, 카드·목록, 둥근 버튼 ---------- */
+:root{
+  --bg:#FFFFFF; --paper:#FFFFFF; --soft:#F3F4F6; --field:#FFFFFF;
+  --ink:#1F2328; --muted:#6B7078; --line:#E8EAED;
+  --primary:#1F2328; --primary-d:#000000; --on-primary:#FFFFFF;
+  --rose:#D9822B; --rose-soft:#FBEBD9; --rose-ink:#A85C14; --sky-soft:#E6F4F1; --mint-d:#2F8F7A;
+  --gold:#D9A441; --gold-ink:#8A5A12; --brick:#C8463B; --latte:#F3D98F;
+  --shadow:rgba(31,35,40,.10);
+  --f-display:'Noto Serif KR','Nanum Myeongjo',serif;
+  --pk-teal:#8FD0C9; --pk-coral:#F7B29A; --pk-mint:#A8DEC3; --pk-sun:#F3D98F;
+}
+body{background-color:#fff;background-image:none}
+body::before{background:#fff}
+.top{background:rgba(255,255,255,.96);box-shadow:0 0 0 100vmax rgba(255,255,255,.96),0 1px 0 var(--line)}
+.brand{font-size:18px;letter-spacing:0}
+.brand img{box-shadow:none}
+.seg{border-radius:999px;background:var(--soft);border-color:transparent;padding:3px}
+.seg button{border-radius:999px}
+.dtabs{gap:26px}
+.dtabs button[aria-pressed=true]{border-bottom-color:var(--ink);font-weight:700}
+.nav{background:rgba(255,255,255,.98);border-top:1px solid var(--line);padding-top:6px}
+.nav button{font-size:11px;gap:3px}
+.nav button svg{width:23px;height:23px}
+.nav button[aria-pressed=true]{color:var(--ink);font-weight:700}
+.nav button[aria-pressed=true]::before{display:none}
+.nav button[aria-pressed=true] svg{stroke-width:2.2}
+.btn{border-radius:999px;font-weight:700;padding:8px 18px}
+.btn.small{padding:4px 13px}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{background:var(--soft)}
+.chip{border-color:transparent;background:var(--soft);padding:4px 12px}
+.chip[aria-pressed=true]{background:#DDF1EE;border-color:transparent;color:#0F6E63;font-weight:700}
+.bar{height:5px;background:var(--soft);border-radius:3px}
+.bar i{background:var(--rose);border-radius:3px}
+.dcard,.note2,.vban2,.hxdef,.ybox{border-radius:14px;border-color:#ECEEF1;box-shadow:0 2px 8px rgba(31,35,40,.05)}
+.kpis{border-color:#ECEEF1;border-radius:12px}
+.kpi b{font-family:var(--f-body);color:var(--ink)}
+.layer{background:rgba(31,35,40,.38)}
+.panel{background:#fff;border-left:0;box-shadow:-8px 0 30px rgba(31,35,40,.12)}
+.sec h3,.note2 h3{border-bottom:0;padding-bottom:0}
+.lead{border-bottom:0}
+.flow{background:#fff}
+.flow-now{border-left-color:var(--rose);border-radius:0 12px 12px 0}
+.stabs button[aria-pressed=true],.tabs button[aria-pressed=true]{border-bottom-color:var(--ink)}
+
+/* 그림 타일: 표지가 없을 때 쓰는 단순한 도형 그림 (포켓의 일러스트 자리) */
+.art{position:relative;overflow:hidden;background:var(--a);display:block;border-radius:8px}
+.art i{position:absolute;display:block}
+.art.v0 i:nth-child(1){left:12%;top:16%;width:40%;aspect-ratio:1;border-radius:50%;background:var(--b)}
+.art.v0 i:nth-child(2){right:9%;bottom:12%;width:48%;height:44%;border-radius:6px;background:var(--c)}
+.art.v0 i:nth-child(3){left:22%;bottom:16%;width:13%;aspect-ratio:1;background:#fff;transform:rotate(45deg)}
+.art.v1 i:nth-child(1){left:24%;bottom:12%;width:52%;height:42%;background:var(--b)}
+.art.v1 i:nth-child(2){left:16%;top:18%;width:68%;height:32%;background:var(--c);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.art.v1 i:nth-child(3){right:10%;top:10%;width:18%;aspect-ratio:1;border-radius:50%;background:#fff}
+.art.v2 i:nth-child(1){left:16%;top:16%;width:68%;height:64%;border-radius:4px;background:#fff;box-shadow:inset 0 0 0 2px var(--b)}
+.art.v2 i:nth-child(2){left:26%;top:34%;width:48%;height:6%;border-radius:3px;background:var(--b)}
+.art.v2 i:nth-child(3){left:26%;top:50%;width:30%;height:6%;border-radius:3px;background:var(--c)}
+
+/* 홈: 이번 달 큰 카드 */
+.hm{display:grid;grid-template-columns:minmax(0,1fr);border:1px solid #ECEEF1;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(31,35,40,.06);margin:4px 0 16px;background:#fff}
+.hm-art{display:block;height:132px;border-radius:0}
+.hm-art.img{background:var(--soft) center/cover no-repeat}
+.hm-b{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.hm-k{font-size:12px;color:var(--muted);font-weight:500}
+.hm-k b{color:var(--rose-ink)}
+.hm-t{font-family:var(--f-display);font-size:20px;line-height:1.35;font-weight:700}
+.hm-w{font-size:13px;color:var(--muted)}
+.hm-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:2px}
+.hm-next{font-size:13px}
+.hm-next b{color:var(--ink)}
+.hm-done{font-family:var(--f-display);font-size:18px}
+@media (min-width:721px){.hm{grid-template-columns:260px minmax(0,1fr)}.hm-art{height:auto;min-height:190px}}
+
+/* 단계 점(목록·홈) */
+.sdots{display:inline-flex;gap:5px;align-items:center}
+.sdots i{width:22px;height:5px;border-radius:3px;background:var(--soft)}
+.sdots i.s-pt{background:var(--latte)}
+.sdots i.s-dn{background:var(--mint-d)}
+
+/* 홈: 학년 칩과 월 목록 */
+.pk-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 6px}
+.pk-head h2{font-size:17px}
+.pk-head h2 small{font-family:var(--f-body);font-weight:400;font-size:12.5px;color:var(--muted);margin-left:8px}
+.gchips{display:flex;gap:6px}
+.pk-list{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){.pk-list{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
+.pk-row{display:flex;gap:12px;align-items:stretch;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:13px 2px;color:var(--ink)}
+.pk-row:hover .pk-t{text-decoration:underline}
+.pk-row.next{background:linear-gradient(90deg,rgba(217,130,43,.07),transparent 60%)}
+.pk-i{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.pk-k{font-size:11.5px;color:var(--muted)}
+.pk-k b{color:var(--rose-ink);font-weight:700}
+.pk-t{font-size:15px;font-weight:700;line-height:1.35}
+.pk-w{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.pk-tag{font-size:11px;color:var(--muted);border:1px solid #E2E4E8;border-radius:6px;padding:0 7px;line-height:18px}
+.pk-tag.on{color:#0F6E63;border-color:#BFE3DC;background:#EEF8F6}
+.pk-tag.dn{color:#fff;background:var(--mint-d);border-color:var(--mint-d)}
+.pk-th{flex:none;width:72px;height:72px;border-radius:8px;overflow:hidden}
+.pk-th img{width:100%;height:100%;object-fit:cover;display:block}
+.pk-vid{font-size:11px;color:#C8463B;font-weight:700;text-decoration:none}
+
+/* 월 화면: 단계 */
+.msteps{list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.msteps button{width:100%;border:1px solid #ECEEF1;background:#fff;border-radius:12px;padding:8px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:12.5px;font-weight:500}
+.msteps .mn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--muted);font-size:12px;font-weight:700}
+.msteps li.s-pt .mn{background:var(--latte);color:var(--gold-ink)}
+.msteps li.s-dn .mn{background:var(--mint-d);color:#fff}
+.msteps li.s-dn button{color:var(--mint-d)}
+.msteps button[aria-pressed=true]{border-color:var(--ink);color:var(--ink);font-weight:700;box-shadow:0 0 0 1px var(--ink) inset}
+.msteps li.s-nx:not(.s-dn) button[aria-pressed=false]{border-color:var(--rose)}
+.mguide{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--soft);border-radius:12px;padding:9px 12px;font-size:13px;line-height:1.5}
+.mguide b{color:var(--ink)}
+.mguide.all{background:#EEF8F6;color:#0F6E63}
+.mmore{display:flex;gap:6px;justify-content:flex-end;margin-top:-4px}
+.mnextb{align-self:stretch;justify-content:center;margin-top:6px}
+.mcov{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted)}
+.sfx.lite{display:none}
+.gchips .chip{white-space:nowrap}
+.bcase{background:#F6F7F8;box-shadow:none;border-radius:16px;padding:12px 12px 2px}
+.bcase::before,.bcase::after,.bn::before,.bn::after,.bbd::before,.spl{display:none}
+.bn{background:#fff;border-radius:12px;padding:10px 10px 0;margin:0 0 10px;box-shadow:0 1px 4px rgba(31,35,40,.06)}
+.bnl{background:var(--soft);color:var(--ink);box-shadow:none;border-radius:999px;padding:2px 10px;text-shadow:none}
+.bnh small{color:var(--muted);text-shadow:none}
+.sbe{color:var(--muted)}
+.bbd{height:4px;margin:0 -10px;background:var(--line);box-shadow:none;border-radius:0 0 12px 12px}
+.sb{box-shadow:0 2px 6px rgba(31,35,40,.18)}
 </style>
 
 <div id="app"></div>
@@ -1928,6 +2056,28 @@ function cardInfoLines(it,k){
   const bits=[];if(inf.director)bits.push('감독 '+inf.director);if(inf.year)bits.push(inf.year);if(inf.runtime)bits.push(inf.runtime+'분');if(inf.rating)bits.push(inf.rating);
   return {t,a:bits.join(' · '),extra:''};
 }
+/* ---------- 2026-11-24 월 과정 단계: 작품 → 기록 → 논술 → 구술 (화면 안내용. 잠금·평가 로직은 각 탭의 기존 코드가 그대로 맡는다) ---------- */
+const PKA=['#8FD0C9','#F7B29A','#A8DEC3','#F3D98F','#C9D3F2','#F4C7D0'];
+const PKB=['#2E4057','#E0684B','#3D8B7D','#D9822B','#5561A8','#B04A6A'];
+function artHTML(i,cls){const a=PKA[i%6],b=PKB[(i+1)%6],c=PKA[(i+3)%6];return `<span class="art v${i%3} ${cls||''}" style="--a:${a};--b:${b};--c:${c}" aria-hidden="true"><i></i><i></i><i></i></span>`}
+const STEP_T={work:'작품',note:'기록',essay:'논술',oral:'구술'};
+const STEP_G={work:'책 1권과 영화 2편을 읽고 보며 시작·완료를 눌러요. 끝나면 작품마다 짧은 설문을 해요.',
+  note:'책에서 마음에 남은 문장 하나, 영화에서 기억에 남는 장면 하나를 적어요.',
+  essay:'질문 고르기 → 묻기 → 계획 → 원고지에 쓰기 → 첨삭 순서로 진행해요.',
+  oral:'질문을 귀로 듣고 2분 안에 말로 답해요. 모범 답안을 따라 읽고 다시 답하면 나아진 점을 알려 줘요.'};
+function stepsOf(i){
+  const k=nk(i);const n=(S.progress.notes||{})[k]||{};const d=monthDone(i);const sv=svAll(i);
+  const ol=(S.progress.oralLog||[]).filter(x=>x&&x.key===k);
+  const o2=ol.some(x=>x.t2!=null)||!!(S.orals2&&S.orals2[k]);const o1=o2||ol.length>0||!!(S.orals&&S.orals[k]);
+  const ess=evOK(i);const dr=!!((S.progress.drafts||{})[k]||Number.isInteger((S.progress.picks||{})[k]));
+  return [
+    {k:'work',done:d===3&&sv,part:d>0,sub:d===3&&!sv?'설문 남음':d+'/3'},
+    {k:'note',done:!!(n.sentence&&n.scene),part:!!(n.sentence||n.scene),sub:(n.sentence?1:0)+(n.scene?1:0)+'/2'},
+    {k:'essay',done:ess,part:dr,sub:ess?'첨삭 완료':dr?'쓰는 중':''},
+    {k:'oral',done:o2,part:o1,sub:o2?'2차 완료':o1?'1차 완료':''}].map(x=>Object.assign(x,{t:STEP_T[x.k]}))}
+const stepNext=i=>stepsOf(i).find(x=>!x.done)||null;
+const sdotsHTML=st=>`<span class="sdots" aria-hidden="true">${st.map(x=>`<i class="${x.done?'s-dn':x.part?'s-pt':''}"></i>`).join('')}</span>`;
+const homeIdx=()=>{const l=items();for(let i=0;i<l.length;i++)if(stepNext(i))return i;return -1};
 function coverHTML(i){
   const it=items()[i];const d=monthDone(i);const nm=i===nextIdx();const p=GP[i%GP.length];
   const k=(S.cvTab&&S.cvTab[i])||'book';
@@ -1986,17 +2136,42 @@ function dashHTML(pct,ct){
   </section>`;
 }
 function courseHTML(){
-  const nx=nextIdx();
   const stats=GR.map(g=>[g,gradeStats(g)]);
   const tot=stats.reduce((a,[,s])=>({d:a.d+s.done,t:a.t+s.total}),{d:0,t:0});
   const pct=tot.t?Math.round(tot.d/tot.t*100):0;const ct=counts();
+  const cur=stats.find(([g])=>g===S.grade)[1];
   return `${S.canWrite===false?'<p class="warn" style="margin-bottom:14px">지금 계정은 기록을 저장할 수 없어요. 서재 주인에게 기여자 권한으로 초대해 달라고 해 주세요.</p>':''}
-  ${visionBanner()}
+  ${homeCardHTML()}
   ${dashHTML(pct,ct)}
-  ${(()=>{const cur=stats.find(([g])=>g===S.grade)[1];return `<div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
-    <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>`})()}
-  <div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div>
+  <div class="pk-head"><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · 작품 ${cur.pct}%</small></h2>
+    <div class="gchips" role="group" aria-label="학년 고르기">${GR.map(g=>`<button class="chip" data-act="grade" data-g="${g}" aria-pressed="${g===S.grade}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
+  <ul class="pk-list">${idxOf(S.grade).map(i=>`<li>${monthRowHTML(i)}</li>`).join('')}</ul>
+  ${visionBanner()}
   <p class="hint" style="margin-top:14px">${S.mode==='custom'?'AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.':'계획표 출처: '+esc(S.source)}</p>`;
+}
+function homeCardHTML(){
+  const i=homeIdx();
+  if(i<0)return `<section class="hm" aria-label="이번 달"><span class="hm-art">${artHTML(3,'hm-art')}</span><div class="hm-b"><span class="hm-k">3년 과정</span><p class="hm-done">36개월 과정을 모두 마쳤어요. 정말 멋져요!</p></div></section>`;
+  const it=items()[i];const st=stepsOf(i);const nx=stepNext(i);const img=coverOf(it.book);const kw=kwDisp(it);
+  const dn=st.filter(x=>x.done).length;
+  return `<section class="hm" aria-label="이번 달 과정">
+    ${img?`<span class="hm-art img" style="background-image:url('${img}')" role="img" aria-label="${esc(bTitle(it.book))} 표지"></span>`:artHTML(i,'hm-art')}
+    <div class="hm-b"><span class="hm-k">이번 달 · <b>${esc(it.g)} ${esc(it.m)}</b>${kw?' · '+esc(kw):''}</span>
+      <h2 class="hm-t">「${esc(bTitle(it.book))}」</h2>
+      <span class="hm-w">영화 「${esc(bTitle(it.m1))}」 · 「${esc(bTitle(it.m2))}」</span>
+      <div class="hm-foot"><span class="hm-next">${sdotsHTML(st)} <b>${dn}/4 단계</b> · 다음: ${esc(nx.t)}</span>
+        <button class="btn" data-act="month" data-i="${i}" data-tab="${nx.k}">${dn?'이어서 하기':'시작하기'}</button></div></div></section>`;
+}
+function monthRowHTML(i){
+  const it=items()[i];const st=stepsOf(i);const nx=stepNext(i);const img=coverOf(it.book);const kw=kwDisp(it);
+  const vu=evOK(i)?vidOf(it):'';const cur=i===homeIdx();
+  const tag=!nx?'<span class="pk-tag dn">완료</span>':st.some(x=>x.done||x.part)?`<span class="pk-tag on">다음: ${esc(nx.t)}</span>`:'<span class="pk-tag">시작 전</span>';
+  return `<button type="button" class="pk-row${cur?' next':''}" data-act="month" data-i="${i}" aria-label="${esc(it.g)} ${esc(it.m)} ${esc(bTitle(it.book))}, ${st.filter(x=>x.done).length}/4 단계">
+    <span class="pk-i"><span class="pk-k"><b>${esc(it.m)}</b>${kw?' · '+esc(kw):''}</span>
+      <span class="pk-t">${esc(bTitle(it.book))}</span>
+      <span class="pk-w">영화 ${esc(bTitle(it.m1))} · ${esc(bTitle(it.m2))}</span>
+      <span class="pk-f">${tag}${sdotsHTML(st)}</span></span>
+    <span class="pk-th">${img?`<img src="${img}" alt="">`:artHTML(i,'pk-th')}</span></button>${vu?`<a class="pk-vid" href="${esc(vu)}" target="_blank" rel="noopener noreferrer" data-act="ytopen">▶ ${esc(kw)} 영상</a>`:''}`;
 }
 function recHTML(){
   const R=S.progress.recs;
@@ -2177,9 +2352,19 @@ function monthHTML(i){
       <label for="n-scene">장면<textarea id="n-scene" data-note="scene" placeholder="어떤 장면이었는지 적어요">${esc(n.scene||'')}</textarea></label>
       <label for="n-creason">그 이유<textarea id="n-creason" data-note="creason" placeholder="왜 이 장면이 기억에 남았나요?">${esc(n.creason||'')}</textarea></label></div>
     <p class="hint">쓰는 대로 자동 저장돼요.</p>`;
+  const st=stepsOf(i);const nx=stepNext(i);const pos=st.findIndex(x=>x.k===tab);
+  const later=pos>=0&&st[pos].done?st.slice(pos+1).find(x=>!x.done):null;
+  const guide=!nx?'<div class="mguide all"><span><b>이번 달 과정을 모두 마쳤어요.</b> 다음 달로 넘어가요.</span></div>'
+    :tab===nx.k?`<div class="mguide"><span><b>지금 할 일 · ${esc(nx.t)}</b> ${esc(STEP_G[nx.k])}</span></div>`
+    :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>이에요.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
+  const cov=!coverOf(it.book)?`<div class="mcov"><label class="btn ghost small up">표지 올리기<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>책 표지를 찍어 올리면 모두에게 보여요.</span></div>`:'';
+  const body=tab==='work'?cov+work:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
   return `<div class="panel"><div class="ph"><h2>${esc(String(it.g).replace(/^중(\d)$/,'중학교 $1학년'))} ${esc(it.m)}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
-  <div class="stabs">${[['work','작품'],['essay','논술'],['oral','구술'],['note','기록'],['edu','교육자료']].map(([k,t])=>`<button data-act="stab" data-v="${k}" aria-pressed="${tab===k}">${t}</button>`).join('')}</div>
-  ${tab==='work'?work:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note}</div>`;
+  <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
+  <div class="mmore"><button class="chip" data-act="stab" data-v="edu" aria-pressed="${tab==='edu'}">교육자료</button></div>
+  ${guide}
+  ${body}
+  ${later?`<button class="btn ghost mnextb" data-act="stab" data-v="${later.k}">다음 단계 · ${esc(later.t)} →</button>`:''}</div>`;
 }
 
 /* ---------- 작품 정보 ---------- */
@@ -5010,7 +5195,7 @@ document.addEventListener('click',async e=>{
       break;
     case 'custommode':S.sheet={type:isPaid()?'custom':'paywall'};renderLayers();break;
     case 'cvtab':{const i=+d.i;S.cvTab=Object.assign({},S.cvTab,{[i]:d.k});repaintCard(i);cardFill(i,d.k);break}
-    case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab='work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();{const qq=qState(i);if((!qq||(qq.v!==3&&!Number.isInteger((S.progress.picks||{})[nk(i)]))||(!qq.ai&&S.sample))&&!S.qBusy[nk(i)])genQs(i)};loadMonthData(i);break}
+    case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab=['work','note','essay','oral'].includes(d.tab)?d.tab:'work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();{const qq=qState(i);if((!qq||(qq.v!==3&&!Number.isInteger((S.progress.picks||{})[nk(i)]))||(!qq.ai&&S.sample))&&!S.qBusy[nk(i)])genQs(i)};loadMonthData(i);break}
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
     case 'wropen':if(!svAll(+d.i)){toast('책과 영화 세 작품의 설문을 먼저 끝내 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
