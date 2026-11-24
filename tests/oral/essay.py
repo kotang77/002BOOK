@@ -28,7 +28,7 @@ TTS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'flow.py'), 
 # 화면의 AI 호출을 가로채는 가짜 응답. window.__calls에 보낸 지시문을 모은다
 STUB = r"""
 window.__calls=[];window.__mode={};
-const EV=(o)=>Object.assign({offTopic:false,praise:'잘했어요',progress:'좋아졌어요',unreadable:[],scores:{'논지':85,'근거':80,'구성':82,'표현':84,'맞춤법':78,'적극성':90},scoreWhy:{},comment:'',paragraphs:'',paraReview:[],strengths:['a'],improvements:['띄어쓰기를 고쳐요'],tags:['띄어쓰기'],cumulative:'',marks:[],teacher:'좋아요',models:[]},o);
+const EV=(o)=>Object.assign({offTopic:false,praise:'잘했어요',progress:'좋아졌어요',unreadable:[],scores:{'작품 이해와 활용':4,'주장과 근거':3,'구성':3,'표현':4,'어문 규범':2,'생각의 깊이':3},process:{plan:'충실',note:'계획을 따랐어요'},scoreWhy:{},comment:'',paragraphs:'',paraReview:[],strengths:['a'],improvements:['띄어쓰기를 고쳐요'],tags:['띄어쓰기'],cumulative:'',marks:[],teacher:'좋아요',models:[]},o);
 S.sample.json=async(p,o)=>{window.__calls.push(p);const it=items()[0];
   if(p.includes('후보 주제어'))return window.__mode.nometa?{x:1}:{works:[{id:'책',summary:'주인공이 가족과 부딪치며 스스로 서는 법을 배운다. 가족의 의미를 묻는다.',entities:['가나다라','마바사']},{id:'영화 ①',summary:'아버지가 가족을 지키려고 애쓴다. 가족의 의미와 희생을 보여 준다.',entities:['아자차카']},{id:'영화 ②',summary:'주인공이 가족과 함께하는 삶에서 가족의 의미를 깨닫는다.',entities:['타파하하']}],themes:['가족의 의미','어른의 책임']};
   if(p.includes('정확히 3개를 출제'))return [{q:'「'+PX.tt(it.book)+'」과 「'+PX.tt(it.m1)+'」에서 가족의 의미를 비교하고 논하시오. (800자 내외)',from:['책','영화 ①']},{q:'두 작품의 주인공이 공동체를 대하는 태도를 비교하고 논하시오. (800자 내외)',from:['책','영화 ②']},{q:'「'+PX.tt(it.book)+'」, 「'+PX.tt(it.m1)+'」, 「'+PX.tt(it.m2)+'」을 관통하는 가족의 의미를 논하시오. (1000자 내외)',from:['책','영화 ①','영화 ②']}];
@@ -42,7 +42,9 @@ S.sample.json=async(p,o)=>{window.__calls.push(p);const it=items()[0];
   return {}};0
 """
 T1 = '나는 어른이 됬다고 생각한다. 주인공은 가족을 도와 줄수있다. 그래서 가족은 중요하다 왜냐하면 가족이 없으면 힘들기 때문에 가족은 소중하다.'
-T2 = '나는 어른이 되었다고 생각한다. 주인공은 가족을 도와 줄수있다. 가족은 중요하다. 가족이 없으면 힘들기 때문이다.'
+PAD = ' 이 책을 읽고 나는 가족과 이웃이 서로를 지키는 마음이 얼마나 큰 힘이 되는지 다시 생각하게 되었다. 영화 속 아버지도 아들을 위해 끝까지 웃음을 잃지 않았다. 두 작품은 모두 가족이 함께 견디는 힘을 보여 준다. 나도 내 가족과 이웃을 먼저 돌보는 사람이 되고 싶다. 작은 실천이 쌓이면 공동체가 단단해진다고 믿는다. 물론 가족이 늘 옳은 것은 아니어서 서로 부딪칠 때도 있다. 그럴 때일수록 먼저 이야기를 듣고 마음을 헤아리는 태도가 필요하다. 그래서 나는 앞으로 일주일에 한 번 가족과 저녁을 먹으며 서로의 하루를 나누겠다.'
+T1 += PAD
+T2 = '나는 어른이 되었다고 생각한다. 주인공은 가족을 도와 줄수있다. 가족은 중요하다. 가족이 없으면 힘들기 때문이다.' + PAD
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox'])
     ctx = b.new_context(viewport={'width': 390, 'height': 844}, locale='ko-KR', service_workers='block'); ctx.add_init_script(TTS); ctx.add_init_script('window.__002TEST=o=>{Object.assign(window,o)}'); pg = ctx.new_page()
@@ -79,6 +81,9 @@ with sync_playwright() as p:
     ok('오류 레코드 3건 저장(식별자·유형·회차)', [x['t'] for x in e] == ['맞춤법', '띄어쓰기', '긴 문장'] and all(x['id'].startswith('e') and x['rd'] == 1 and x['st'] == 'open' for x in e), e)
     ev1 = api('db.get', s['token'], path='evals/' + U + '_b0')['result']['data']
     ok('첨삭 기록에 px 저장, 임시 필드 없음', ev1.get('px', {}).get('n') == 3 and 'recur' not in ev1, ev1.get('px'))
+    ok('개정 기준: 수준 환산·가중 총점(73)·쓰기 과정 분리', ev1.get('total') == 73 and ev1.get('levels', {}).get('어문 규범') == 2 and ev1['scores'].get('어문 규범') == 55 and ev1.get('process', {}).get('plan') == '충실' and '적극성' not in ev1['scores'], (ev1.get('total'), ev1.get('scores'), ev1.get('process')))
+    mp = next((c for c in J("window.__calls") if '20년 넘게' in c), '')
+    ok('지시문: 여섯 영역 기술어·학년 기대 수준·하한 없음', '① 작품 이해와 활용(배점 20)' in mp and '중1의 도달(3)' in mp and '70점 아래로' not in mp and '적극성' not in mp, mp[:200])
     ok('첫 첨삭 지시에는 지속 오류 없음, 유형 지시는 있음', not any('[지속 오류 확인]' in c for c in J("window.__calls")) and any('[문장 오류 유형]' in c for c in J("window.__calls")))
     # ── 2차 첨삭: 문장 정렬·이중 판정·재질의·해소 상태
     J("(t)=>{const k=nk(0);const e=S.evals[k];e.at-=80*3600e3;e.firstAt=e.at;S.progress.drafts2=Object.assign({},S.progress.drafts2,{[k]:t})}", T2)
@@ -96,7 +101,7 @@ with sync_playwright() as p:
     ok('결과 화면에 해소 요약', wait(lambda: '1차에서 짚은 오류 3개' in pg.inner_text('body')), '')
     # ── 다음 달 첨삭: 지속 오류 주입·재발 판정·재질의
     J("document.querySelector('[data-act=closesheet]')&&document.querySelector('[data-act=closesheet]').click()"); time.sleep(.3)
-    J("(t)=>{S.evalView=null;const k=nk(1);S.progress.qs[k]={shown:['가족의 의미를 논하시오. (800자 내외)','b','c'],tags:[[],[],[]],ai:true,v:3};const P=prepOf(1);P.qDone=true;P.roadDone=true;S.essayDraft={i:1,q:0,text:t,files:[]}}", '주인공은 가족에게 갈수있다고 믿는다. 가족의 의미는 서로 돕는 데 있다고 생각한다.')
+    J("(t)=>{S.evalView=null;const k=nk(1);S.progress.qs[k]={shown:['가족의 의미를 논하시오. (800자 내외)','b','c'],tags:[[],[],[]],ai:true,v:3};const P=prepOf(1);P.qDone=true;P.roadDone=true;S.essayDraft={i:1,q:0,text:t,files:[]}}", '주인공은 가족에게 갈수있다고 믿는다. 가족의 의미는 서로 돕는 데 있다고 생각한다.'+PAD)
     n2 = len(J("window.__calls")); J("evaluate(1)")
     ok('다음 달 첨삭 완료', wait(lambda: J("!!S.evals[nk(1)]&&!S.essayBusy"), 80), J("S.essayBusy"))
     c3 = J("window.__calls")[n2:]
@@ -112,6 +117,25 @@ with sync_playwright() as p:
     n3 = len(J("window.__calls"))
     J("()=>{S.evalView=null;delete S.evals[nk(1)];S.essayDraft={i:1,q:0,text:'아아아아아아아아아아아아아아아아아아',files:[]}}"); J("evaluate(1)"); time.sleep(.8)
     ok('낙서는 AI 호출 없이 주제 불일치 안내', len(J("window.__calls")) == n3 and J("!!S.essayOff&&!S.essayBusy"), J("S.essayOff"))
+    # ── 최소 분량: 학년 권장 분량 하한의 50% 미만이면 AI를 부르지 않고 '조금 더' 안내
+    n4 = len(J("window.__calls"))
+    J("()=>{S.evalView=null;S.essayOff=null;delete S.evals[nk(1)];S.essayDraft={i:1,q:0,text:'가족의 의미는 서로 돕는 데 있다. 주인공은 가족을 도왔다. 그래서 가족은 소중하다고 생각한다.',files:[]}}"); J("evaluate(1)"); time.sleep(.8)
+    ok('짧은 글은 채점하지 않고 분량 안내', len(J("window.__calls")) == n4 and J("!!(S.essayOff&&S.essayOff.short)&&!S.essayBusy"), J("S.essayOff"))
+    # ── 육각형 독서(지식 분야·깊이·학년 목표)
+    J("""()=>{const P=S.progress;P.done=Object.assign({},P.done,{'b0:book':1,'b1:book':1});P.evDone={b0:1};P.orDone={};P.quotes={};P.notes={};P.catOv={};
+      P.myBooks=[{id:'o1',title:'시간의 역사',main:5,sub:null,cat:'과학',at:1},{id:'v1',title:'어느 역사 소설',main:3,sub:0,v:2,g:'중1',cat:'소설',at:2},{id:'c1',title:'만화 한국사',main:3,v:2,nc:1,g:'중1',cat:'역사/문화',at:3},{id:'u1',title:'모르는 책',main:-1,v:2,g:'중1',cat:'기타',at:4}];
+      P.quotes[hid('시간의 역사')]=[{t:'우주는 넓다'}]}""")
+    hx = J("(()=>{const h=hexScores('중1');return {p:h.p,t:h.t,n:h.n,un:h.un,even:h.even}})()")
+    ok('육각형: 분야별 점수(코스 책 고정 분야·논술 깊이 2·문장 1.5·0.7/0.3·만화 제외·미정 제외)', hx['p'] == [2.3, 1, 0, 0.7, 1.5, 0] and hx['t'] == [9, 4, 4, 4, 6, 3] and hx['n'] == 4 and hx['un'] == 1, hx)
+    J("()=>{S.progress.catOv={[hid('모르는 책')]:'역사/문화'}}")
+    ok('육각형: 서가에서 고른 서점 분류로 미정 책 분야 결정', J("hexScores('중1').p[3]") == 1.7, J("hexScores('중1').p"))
+    ok('육각형: 3년 누적 목표 90점', J("hexScores('all').t.reduce((a,b)=>a+b,0)") == 90)
+    svg = J("radarSVG([0,0,0,0,0,0],300,true)")
+    ok('육각형: 0은 중심점, 숫자 병기', 'NaN' not in svg and '0 / 9' in svg, svg[:120])
+    J("()=>{S.view='me';S.sheet=null;render()}"); time.sleep(.5)
+    body = pg.inner_text('body')
+    ok('육각형 화면 문구: 능력 점수가 아님·고른 읽기', '능력이나 인성 점수가 아니에요' in body and '고른 읽기' in body and '절대 실행력' not in body, body[:200])
+    ok('구술 군말 규칙: 뜻 있는 낱말은 세지 않음', J("orFill('그 장면은 약간 다르다 음 저는 막 시작했을 때 어 그러니까')") == 2 and J("orSpeed(250)") == '알맞아요' and J("orSpeed(300)") == '알맞아요' and J("orSpeed(150)") == '많이 느려요')
     # ── 새 단계가 실패해도 예전처럼 동작
     J("()=>{window.__mode.nometa=true;S.qmeta={};localStorage.removeItem('002.px.qm');S.essayOff=null}")
     J("genQs(1)")

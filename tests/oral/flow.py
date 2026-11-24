@@ -74,10 +74,12 @@ with sync_playwright() as p:
         if n==0:
             ok('질문을 목소리로 읽음',any('질문 1번' in x for x in pg.evaluate('window.__said')),pg.evaluate('window.__said')[:2])
             pg.evaluate("document.querySelector('[data-act=orsay]').click()"); time.sleep(1.6)
-            ok('다시 듣기 1회 후 잠김',pg.locator('[data-act=orsay][disabled]').count()==1, pg.inner_text('.orlisten'))
+            ok('중1은 다시 듣기 1회 뒤에도 한 번 더',pg.locator('[data-act=orsay][disabled]').count()==0, pg.inner_text('.orlisten'))
+            pg.evaluate("document.querySelector('[data-act=orsay]').click()"); time.sleep(1.6)
+            ok('중1 다시 듣기 2회 후 잠김',pg.locator('[data-act=orsay][disabled]').count()==1, pg.inner_text('.orlisten'))
             pg.locator('.orcard').screenshot(path=OUT+'0c_heard.png')
         rec(pg,f'[data-act=orrec][data-n="{n}"][data-m="1"]'); pg.fill(f'textarea[data-ortx="{n}"]',TX[n]); time.sleep(1.1)
-    d=api('db.get',tok,path='orals/oralkid_b0_a')['result']['data']; ok('듣기 횟수 저장',d.get('heard')==[2,1,1],d.get('heard'))
+    d=api('db.get',tok,path='orals/oralkid_b0_a')['result']['data']; ok('듣기 횟수 저장',d.get('heard')==[3,1,1],d.get('heard'))
     pg.screenshot(path=OUT+'0d_answered.png')
     pg.evaluate("document.querySelector('[data-act=oreval]').click()")
     try: pg.wait_for_selector('#layer2 .ora',timeout=30000)
@@ -131,6 +133,7 @@ with sync_playwright() as p:
     ok('최종 리포트 화면',pg.locator('#layer2 .or12').count()==3)
     r2=api('db.get',tok,path='orals/oralkid_b0_r2')['result']['data']; a0=r2['answers'][0]
     ok('성장 점수 서버 계산',all('calc' in a and 'Gd' in a['calc'] and 70<=a['growth']<=100 for a in r2['answers']) and r2['growth']==round(sum(a['growth'] for a in r2['answers'])/3),[(a['growth'],a['calc']) for a in r2['answers']][:1])
+    ok('개정 구술 기준: 가중 총점·수준·점수 변화·나아진 영역', r2.get('rb')==2 and r2['total']==75 and r2.get('delta')==r2['total']-r2['firstTotal'] and r2.get('up')==0 and r2['levels'].get('전달')==3 and '태도' not in r2['scores'] and r2['calc'].get('version')==2, (r2.get('total'),r2.get('delta'),r2.get('up'),r2.get('scores')))
     ok('서버 암기 판정·표시 전사문 저장',all('copied' in a and 'marked' in a for a in r2['answers']),[a['marked'][:40] for a in r2['answers']])
     ok('서버 상태 완료',api('oral.state',tok,key='b0')['result']['state']['st']==[5,5,5])
     r=api('oral.finalize',tok,key='b0',ev={'scores':{},'answers':[]}); ok('2차 평가 재저장 거부','error' in r,r.get('error'))

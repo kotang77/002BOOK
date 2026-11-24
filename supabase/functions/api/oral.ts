@@ -2,7 +2,8 @@
 // - 문항별 진행 상태(ST2 1차 평가 완료 → ST3 숙고 잠금 → ST4 2차 답변 가능 → ST5 성장 평가 완료)를 서버가 관리한다.
 // - 따라 읽기 완료 시각은 서버 시계로 기록하고, 숙고 시간 전의 2차 답변 저장·평가 요청은 거부한다.
 // - 모범 답안 유사도(고유 n-그램)·자기 답변 유지도·최장 연속 일치로 암기를 판정하고, 성장 점수를 산식으로 계산한다.
-// - 생성형 언어 모델 응답은 구조·범위를 검증하고 점수를 70~100으로 잘라 저장한다.
+// - 생성형 언어 모델 응답은 구조·범위를 검증한다. 영역 점수는 수준 1~5를 40·55·70·85·100%로 환산하고 배점으로 가중 평균한다(2026-11 개정).
+// - 성장 점수(α·β·γ 결합, 암기 감산)는 명세서 실시예대로 계산해 저장한다. 화면과 리포트의 대표 숫자는 점수 변화와 나아진 영역 수다.
 import { env, fail } from './lib.ts';
 
 type Row = { path: string; data: Record<string, unknown>; owner: string | null; version: number };
@@ -21,10 +22,34 @@ export const ORAL = {
   LMARK: 8,        // 암기 구간 표시 기준 글자 수
   PEN: 15,         // 암기 판정 시 감산값 P
   A: 0.6, B: 0.25, G: 0.15,  // α, β, γ
-  CSTAR: 300,      // 목표 말 빠르기 (자/분)
+  CSTAR: 300,      // 따라 읽기 예상 낭독 속도 (자/분): 음성 인식이 없을 때 따라 읽기 시간 판단에 쓴다
+  CLO: 200, CHI: 330, // 적정 말 속도 범위 (자/분). 범위 안에서는 감점하지 않는다
   EMAX: 0.3,       // 수정 비율 기준값
-  ITEMS: ['이해', '논리', '근거', '표현', '전달력', '태도'],
+  // 평가 영역과 배점 (2026-11 개정). 표현·전달은 음성 인식 품질이 나쁘면 채점 보류할 수 있다
+  ITEMS: ['질문 이해와 작품 활용', '주장과 근거', '구성', '표현', '전달', '생각의 깊이'],
+  W: [20, 30, 15, 10, 15, 10],
+  HOLD: ['표현', '전달'],
 };
+const LP = [0, 40, 55, 70, 85, 100];
+/** 수준 1~5(또는 백분율·10점 척도)를 수준으로. 비어 있으면 0 */
+export function lvl(v: unknown) {
+  if (v == null || v === '' || v === '보류') return 0;
+  let x = Number(v); if (!Number.isFinite(x) || x <= 0) return 0;
+  if (x <= 5) return Math.max(1, Math.min(5, Math.round(x)));
+  if (x <= 10) x *= 10;
+  return x >= 93 ? 5 : x >= 78 ? 4 : x >= 63 ? 3 : x >= 48 ? 2 : 1;
+}
+/** 영역 점수(환산 %)·수준·채점 보류·가중 총점 */
+export function rubric(sc: Record<string, unknown>) {
+  const scores: Record<string, number> = {}, levels: Record<string, number> = {}, held: string[] = [];
+  let s = 0, w = 0;
+  ORAL.ITEMS.forEach((k, n) => {
+    const l = lvl(sc[k]);
+    if (!l) { if (ORAL.HOLD.includes(k)) { held.push(k); return; } fail('bad_ai', '평가 점수가 비어 있어요.', 422); }
+    levels[k] = l; scores[k] = LP[l]; s += ORAL.W[n] * LP[l]; w += ORAL.W[n];
+  });
+  return { scores, levels, held, total: w ? Math.round(s / w) : 0 };
+}
 const THINK = () => Math.max(1, Number(env('ORAL_THINK_SEC', '180')));          // 숙고 시간 상한: 이 시간이 지나면 저절로 2차 답변이 열린다
 const THINK_MIN = () => Math.min(THINK(), Math.max(1, Number(env('ORAL_THINK_MIN_SEC', '60')))); // 숙고 시간 하한: 이 시간 전에는 어떤 경우에도 2차 답변을 받지 않는다
 /* 잠금 해제 시각: 하한이 지난 뒤 학생이 '생각 완료'를 누른 시각, 누르지 않으면 상한. 서버 시계로만 판단한다 */
@@ -87,7 +112,10 @@ export function markSpans(text: string, model: string, own = '', min = ORAL.LMAR
   }
   return out + text.slice(last);
 }
-const FILL = /(^|[\s,.])(음+|어+|으+|그+|아+|저기|뭐지|뭐랄까|그니까|그러니까|약간|막)(?=[\s,.?!]|$)/g;
+// 군말: 뜻 없이 쓰이는 소리만 센다. '그, 아, 약간, 막, 그러니까'는 뜻 있는 낱말로도 쓰여 세지 않는다(2026-11 개정)
+const FILL = /(^|[\s,.])(음+|어+|으+|저기|뭐지|뭐랄까)(?=[\s,.?!]|$)/g;
+/** 적정 말 속도 범위에서 벗어난 정도(자/분). 범위 안이면 0 */
+export const speedDev = (c: number) => Math.max(0, ORAL.CLO - c, c - ORAL.CHI);
 export const fillers = (t: string) => (String(t ?? '').match(FILL) ?? []).length;
 const clip = (x: number, lo = 70, hi = 100) => Math.max(lo, Math.min(hi, x));
 const r3 = (x: number) => Math.round(x * 1000) / 1000;
@@ -163,10 +191,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     const ans = arr(A.ans);
     const answers = arr(rec.answers);
     if (answers.length !== ORAL.N) fail('bad_ai', '평가 결과의 답변 수가 맞지 않아요.', 422);
-    const sc = (rec.scores ?? {}) as Record<string, unknown>;
-    const scores: Record<string, number> = {};
-    for (const k of ORAL.ITEMS) { let v = Math.round(Number(sc[k])); if (v > 0 && v <= 10) v *= 10; if (!Number.isFinite(v) || v <= 0) fail('bad_ai', '평가 점수가 비어 있어요.', 422); scores[k] = clip(v); }
-    const total = Math.round(ORAL.ITEMS.reduce((s, k) => s + scores[k], 0) / ORAL.ITEMS.length);
+    const { scores, levels, held, total } = rubric((rec.scores ?? {}) as Record<string, unknown>);
     const outA = answers.map((x, n) => {
       const a = (x ?? {}) as Record<string, unknown>; const src = (ans[n] ?? {}) as Record<string, unknown>;
       if (!String(a.model ?? '').trim()) fail('bad_ai', '모범 답안이 비어 있어요.', 422);
@@ -174,7 +199,7 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
       if (!text.trim()) fail('bad_request', '말한 내용이 비어 있는 답변이 있어요.');
       return { ...a, no: n + 1, q: str(src.q ?? a.q, 400), text, raw: str(src.raw, 4000), sec: Number(src.sec ?? a.sec) || 0, model: str(a.model, 1200) };
     });
-    const out = { ...rec, scores, total, answers: outA, uid, round: 1, at: Date.now() };
+    const out = { ...rec, scores, levels, held, rb: 2, total, answers: outA, uid, round: 1, at: Date.now() };
     await io.write(p1, out, uid, null);
     const s: St = { uid, key, st: [2, 2, 2], sh: [null, null, null], ans2: [null, null, null], tries: [0, 0, 0], think: THINK(), thinkMin: THINK_MIN(), at: Date.now() };
     await io.write(`oralst/${uid}_${key}`, s as unknown as Record<string, unknown>, uid, await io.read(`oralst/${uid}_${key}`));
@@ -259,18 +284,19 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     const ev = (b.ev ?? {}) as Record<string, unknown>;
     const evA = arr(ev.answers) as Record<string, unknown>[];
     if (evA.length !== ORAL.N) fail('bad_ai', '평가 결과의 답변 수가 맞지 않아요.', 422);
-    const sc = (ev.scores ?? {}) as Record<string, unknown>;
-    const scores: Record<string, number> = {};
-    for (const k of ORAL.ITEMS) { let v = Math.round(Number(sc[k])); if (v > 0 && v <= 10) v *= 10; if (!Number.isFinite(v) || v <= 0) fail('bad_ai', '평가 점수가 비어 있어요.', 422); scores[k] = clip(v); }
+    const { scores, levels, held, total: T2 } = rubric((ev.scores ?? {}) as Record<string, unknown>);
     const T1 = Number(e1.total) || 0;
-    const T2 = Math.round(ORAL.ITEMS.reduce((x, k) => x + scores[k], 0) / ORAL.ITEMS.length);
+    // 영역별 수준 변화: 1차와 이름이 같은 영역만 비교한다(개정 전 1차 기록은 비교하지 않음)
+    const s1 = (e1.scores ?? {}) as Record<string, unknown>;
+    const cmp = ORAL.ITEMS.filter((k) => s1[k] != null && levels[k] != null);
+    const up = cmp.filter((k) => levels[k] > lvl(s1[k])).length, down = cmp.filter((k) => levels[k] < lvl(s1[k])).length;
     const Gd = clip(85 + 1.5 * (T2 - T1));
     const its = items();
     const answers = its.map((m, n) => {
       const x = evA.find((y) => Number(y?.no) === n + 1) ?? evA[n] ?? {};
       const gai = clip(Math.round(Number(x.growth)) || 70);
       const useH = m.rawOk && (m.E1 ?? 0) <= ORAL.EMAX && (m.E2 ?? 0) <= ORAL.EMAX;
-      const Gh = clip(85 + 10 * (m.f1 - m.f2) / Math.max(m.f1, 1) + 5 * (Math.abs(m.c1 - ORAL.CSTAR) - Math.abs(m.c2 - ORAL.CSTAR)) / ORAL.CSTAR);
+      const Gh = clip(85 + 10 * (m.f1 - m.f2) / Math.max(m.f1, 1) + 5 * (speedDev(m.c1) - speedDev(m.c2)) / ((ORAL.CLO + ORAL.CHI) / 2));
       const P = m.copied ? ORAL.PEN : 0;
       const g = useH ? ORAL.A * gai + ORAL.B * Gd + ORAL.G * Gh - P
         : (ORAL.A / (ORAL.A + ORAL.B)) * gai + (ORAL.B / (ORAL.A + ORAL.B)) * Gd - P;
@@ -288,9 +314,9 @@ export async function oralOp(op: string, uid: string, b: Record<string, unknown>
     const rec: Record<string, unknown> = {};
     for (const k of keep) if (ev[k] != null) rec[k] = ev[k];
     Object.assign(rec, {
-      scores, total: T2, growth, answers, firstTotal: T1, firstScores: e1.scores, at: Date.now(), firstAt: e1.at,
+      scores, levels, held, rb: 2, total: T2, delta: T2 - T1, up, down, growth, answers, firstTotal: T1, firstScores: e1.scores, at: Date.now(), firstAt: e1.at,
       title: e1.title, g: e1.g, m: e1.m, kw: e1.kw ?? '', uid, round: 2,
-      calc: { version: 1, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L, PEN: ORAL.PEN, A: ORAL.A, B: ORAL.B, G: ORAL.G, think: s.think, thinkMin: s.thinkMin ?? THINK_MIN(), thinkSec: s.sh.map((x) => x ? Math.round((unlockAt(x, s) - Number(x.at)) / 1000) : null) },
+      calc: { version: 2, CLO: ORAL.CLO, CHI: ORAL.CHI, TM: ORAL.TM, TO: ORAL.TO, L: ORAL.L, PEN: ORAL.PEN, A: ORAL.A, B: ORAL.B, G: ORAL.G, think: s.think, thinkMin: s.thinkMin ?? THINK_MIN(), thinkSec: s.sh.map((x) => x ? Math.round((unlockAt(x, s) - Number(x.at)) / 1000) : null) },
     });
     await io.write(p2, rec, uid, null);
     s.st = s.st.map(() => 5);

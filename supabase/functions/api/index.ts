@@ -263,7 +263,8 @@ async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
   const me = await readRow('members/' + uid);
   const nick = String(me?.data?.nick ?? uid);
   const title = String(d.title ?? ''), gm = `${d.g ?? ''} ${d.m ?? ''}`.trim();
-  const t1 = Number(d.firstTotal ?? 0), t2 = Number(d.total ?? 0), gr = Number(d.growth ?? 0);
+  const t1 = Number(d.firstTotal ?? 0), t2 = Number(d.total ?? 0);
+  const nItems = Object.keys((d.scores ?? {}) as Record<string, unknown>).length, up = d.up == null ? null : Number(d.up);
   const fname = String(b.filename ?? 'oral-report.pdf').replace(/[\\/:*?"<>|]/g, '').slice(0, 80) || 'oral-report.pdf';
   const accs = await Promise.all(ids.map((id) => account(id)));
   const emails = accs.map((a) => a?.email).filter((e): e is string => !!e && EMAIL_RE.test(e));
@@ -273,7 +274,8 @@ async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
       `<p><b>${escHtml(nick)}</b> 학생이 ${escHtml(gm)} 「${escHtml(title)}」 구술 테스트를 마쳤어요.</p>
        <table style="border-collapse:collapse;margin:10px 0;font-size:15px"><tr><td style="padding:6px 12px;border:1px solid #DCCFBB">1차 총점</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${t1}</b>점</td></tr>
        <tr><td style="padding:6px 12px;border:1px solid #DCCFBB">2차 총점</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${t2}</b>점 (${t2 - t1 >= 0 ? '+' : ''}${t2 - t1})</td></tr>
-       <tr><td style="padding:6px 12px;border:1px solid #DCCFBB">대답 성장 점수</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${gr}</b>점</td></tr></table>
+       ${up == null ? '' : `<tr><td style="padding:6px 12px;border:1px solid #DCCFBB">나아진 영역</td><td style="padding:6px 12px;border:1px solid #DCCFBB"><b>${up}</b> / ${nItems}</td></tr>`}</table>
+       <p style="font-size:13px;color:#6F6155">영역마다 수준(시작·발전·도달·숙달·탁월)을 매겨 환산했어요. 모든 영역이 '도달'(학년 기대 수준)이면 70점이에요. 발음, 성량, 억양, 표정, 자신감은 평가하지 않아요.</p>
        ${d.teacher ? `<p style="background:#EEF5EC;padding:10px 12px;border-radius:8px">${escHtml(d.teacher)}</p>` : ''}
        <p>1차·2차 대답 첨삭과 성장 분석은 <b>첨부한 PDF 리포트</b>에 있어요. 002BOOK에 로그인하면 자녀 화면에서 녹음도 들어 볼 수 있어요.</p>
        <p style="font-size:12px;color:#6F6155">이 리포트는 생성형 AI(Anthropic Claude)가 작성한 평가예요. 가족으로 연결된 보호자에게만 보내요.</p>`),
@@ -282,7 +284,7 @@ async function oralReport(ctx: Ctx, b: Record<string, unknown>) {
   } catch (e) { mailErr = e instanceof HttpErr ? e.code : 'mail_failed'; console.log('oral report mail failed', String(e)); }
   const at = Date.now(); let pushed = 0;
   for (const x of to) {
-    const text = `${nick} 학생의 ${gm} 「${title}」 구술 테스트: 1차 ${t1}점 → 2차 ${t2}점, 성장 점수 ${gr}점`;
+    const text = `${nick} 학생의 ${gm} 「${title}」 구술 테스트: 1차 ${t1}점 → 2차 ${t2}점 (${t2 - t1 >= 0 ? '+' : ''}${t2 - t1})${up == null ? '' : `, 나아진 영역 ${up}개`}`;
     await writeRow(`alerts/${x.id}_${uid}_${at}_oral`, { to: x.id, from: uid, fromNick: nick, title: '구술 테스트 리포트', text, at }, uid, null);
     pushed += await pushTo(x.id, { title: '002BOOK 구술 테스트 리포트', body: text, url: '/', tag: 'oral-' + uid + '-' + key });
   }
