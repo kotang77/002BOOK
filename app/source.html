@@ -3,7 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&family=Gaegu:wght@400;700&family=Hi+Melody&family=Gowun+Dodum&family=Permanent+Marker&family=Abril+Fatface&display=swap" rel="stylesheet">
 <meta name="description" content="중학생을 위한 책·영화 인생교육과 논술 첨삭, 002BOOK">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#3E2F26">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" type="image/png" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1168,8 +1168,8 @@ section.dash .dgo .dl2 .bar{flex:1;min-width:24px;margin:0}
 .ybox .ylk{margin-left:0;align-self:flex-start;text-decoration:none}
 .ybox .ylk:hover{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
 
-/* ---------- 2026-11-24 포켓 스타일: 흰 바탕, 검은 글자, 호박색 강조 하나, 카드·목록, 둥근 버튼 ---------- */
-:root{
+/* ---------- 2026-11-24 포켓 스타일 (11-24 저녁: 메인 화면은 원래 디자인으로 되돌리고, 논술·구술 화면(.pk)과 관리자(.ad)에만 적용): 흰 바탕, 검은 글자, 호박색 강조 하나, 카드·목록, 둥근 버튼 ---------- */
+.pk,.ad{
   --bg:#FFFFFF; --paper:#FFFFFF; --soft:#F3F4F6; --field:#FFFFFF;
   --ink:#1F2328; --muted:#6B7078; --line:#E8EAED;
   --primary:#1F2328; --primary-d:#000000; --on-primary:#FFFFFF;
@@ -1179,39 +1179,20 @@ section.dash .dgo .dl2 .bar{flex:1;min-width:24px;margin:0}
   --f-display:'Noto Serif KR','Nanum Myeongjo',serif;
   --pk-teal:#8FD0C9; --pk-coral:#F7B29A; --pk-mint:#A8DEC3; --pk-sun:#F3D98F;
 }
-body{background-color:#fff;background-image:none}
-body::before{background:#fff}
-.top{background:rgba(255,255,255,.96);box-shadow:0 0 0 100vmax rgba(255,255,255,.96),0 1px 0 var(--line)}
-.brand{font-size:18px;letter-spacing:0}
-.brand img{box-shadow:none}
-.seg{border-radius:999px;background:var(--soft);border-color:transparent;padding:3px}
-.seg button{border-radius:999px}
-.dtabs{gap:26px}
-.dtabs button[aria-pressed=true]{border-bottom-color:var(--ink);font-weight:700}
-.nav{background:rgba(255,255,255,.98);border-top:1px solid var(--line);padding-top:6px}
-.nav button{font-size:11px;gap:3px}
-.nav button svg{width:23px;height:23px}
-.nav button[aria-pressed=true]{color:var(--ink);font-weight:700}
-.nav button[aria-pressed=true]::before{display:none}
-.nav button[aria-pressed=true] svg{stroke-width:2.2}
-.btn{border-radius:999px;font-weight:700;padding:8px 18px}
-.btn.small{padding:4px 13px}
-.btn.ghost{border-color:var(--line);color:var(--ink)}
-.btn.ghost:hover{background:var(--soft)}
-.chip{border-color:transparent;background:var(--soft);padding:4px 12px}
-.chip[aria-pressed=true]{background:#DDF1EE;border-color:transparent;color:#0F6E63;font-weight:700}
-.bar{height:5px;background:var(--soft);border-radius:3px}
-.bar i{background:var(--rose);border-radius:3px}
-.dcard,.note2,.vban2,.hxdef,.ybox{border-radius:14px;border-color:#ECEEF1;box-shadow:0 2px 8px rgba(31,35,40,.05)}
-.kpis{border-color:#ECEEF1;border-radius:12px}
-.kpi b{font-family:var(--f-body);color:var(--ink)}
-.layer{background:rgba(31,35,40,.38)}
-.panel{background:#fff;border-left:0;box-shadow:-8px 0 30px rgba(31,35,40,.12)}
-.sec h3,.note2 h3{border-bottom:0;padding-bottom:0}
-.lead{border-bottom:0}
-.flow{background:#fff}
-.flow-now{border-left-color:var(--rose);border-radius:0 12px 12px 0}
-.stabs button[aria-pressed=true],.tabs button[aria-pressed=true]{border-bottom-color:var(--ink)}
+:is(.pk,.ad) .btn{border-radius:999px;font-weight:700;padding:8px 18px}
+:is(.pk,.ad) .btn.small{padding:4px 13px}
+:is(.pk,.ad) .btn.ghost{border-color:var(--line);color:var(--ink)}
+:is(.pk,.ad) .btn.ghost:hover{background:var(--soft)}
+:is(.pk,.ad) .chip{border-color:transparent;background:var(--soft);padding:4px 12px}
+:is(.pk,.ad) .chip[aria-pressed=true]{background:#DDF1EE;border-color:transparent;color:#0F6E63;font-weight:700}
+:is(.pk,.ad) .bar{height:5px;background:var(--soft);border-radius:3px}
+:is(.pk,.ad) .bar i{background:var(--rose);border-radius:3px}
+:is(.pk,.ad) .dcard,:is(.pk,.ad) .note2,:is(.pk,.ad) .vban2,:is(.pk,.ad) .hxdef,:is(.pk,.ad) .ybox{border-radius:14px;border-color:#ECEEF1;box-shadow:0 2px 8px rgba(31,35,40,.05)}
+.panel.pk{background:#fff;border-left:0;box-shadow:-8px 0 30px rgba(31,35,40,.12)}
+:is(.pk,.ad) .sec h3,:is(.pk,.ad) .note2 h3{border-bottom:0;padding-bottom:0}
+:is(.pk,.ad) .flow{background:#fff}
+:is(.pk,.ad) .flow-now{border-left-color:var(--rose);border-radius:0 12px 12px 0}
+:is(.pk,.ad) .stabs button[aria-pressed=true],:is(.pk,.ad) .tabs button[aria-pressed=true]{border-bottom-color:var(--ink)}
 
 /* 그림 타일: 표지가 없을 때 쓰는 단순한 도형 그림 (포켓의 일러스트 자리) */
 .art{position:relative;overflow:hidden;background:var(--a);display:block;border-radius:8px}
@@ -1285,16 +1266,7 @@ body::before{background:#fff}
 .mmore{display:flex;gap:6px;justify-content:flex-end;margin-top:-4px}
 .mnextb{align-self:stretch;justify-content:center;margin-top:6px}
 .mcov{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted)}
-.sfx.lite{display:none}
 .gchips .chip{white-space:nowrap}
-.bcase{background:#F6F7F8;box-shadow:none;border-radius:16px;padding:12px 12px 2px}
-.bcase::before,.bcase::after,.bn::before,.bn::after,.bbd::before,.spl{display:none}
-.bn{background:#fff;border-radius:12px;padding:10px 10px 0;margin:0 0 10px;box-shadow:0 1px 4px rgba(31,35,40,.06)}
-.bnl{background:var(--soft);color:var(--ink);box-shadow:none;border-radius:999px;padding:2px 10px;text-shadow:none}
-.bnh small{color:var(--muted);text-shadow:none}
-.sbe{color:var(--muted)}
-.bbd{height:4px;margin:0 -10px;background:var(--line);box-shadow:none;border-radius:0 0 12px 12px}
-.sb{box-shadow:0 2px 6px rgba(31,35,40,.18)}
 .gsi{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 14px}.gsi [data-gsi]{min-height:44px;display:flex;justify-content:center;width:100%}
 .gor{display:flex;align-items:center;gap:10px;width:100%;margin:0;color:var(--muted,#6b6b6b);font-size:13px}.gor:before,.gor:after{content:"";flex:1;border-top:1px solid var(--line,#e5e5e5)}
 /* 관리자 대시보드 (ad-) */
@@ -2162,7 +2134,7 @@ function coverHTML(i){
   const it=items()[i];const d=monthDone(i);const nm=i===nextIdx();const p=GP[i%GP.length];
   const k=(S.cvTab&&S.cvTab[i])||'book';
   const {title,h}=cardData(it,k);
-  const img=k==='book'?coverOf(it.book):S.covers[h];
+  const img=k==='book'?coverOf(it.book):artOf(title,'movie',yearOf(it,title));
   const inner=img?`<img src="${img}" alt="${esc(bTitle(title))} ${k==='book'?'표지':'포스터'}">`:`<span class="phd">${k==='book'?BOOKG:FILMG}<span>${esc(k==='book'?it.genre:bTitle(title))}</span></span>`;
   const ln=cardInfoLines(it,k);const kw=kwDisp(it);
   const done=!!S.progress.done[ik(i,k)];
@@ -2222,11 +2194,10 @@ function courseHTML(){
   const cur=stats.find(([g])=>g===S.grade)[1];
   return `${S.canWrite===false?'<p class="warn" style="margin-bottom:14px">지금 계정은 기록을 저장할 수 없어요. 서재 주인에게 기여자 권한으로 초대해 달라고 해 주세요.</p>':''}
   ${visionBanner()}
-  ${homeCardHTML()}
   ${dashHTML(pct,ct)}
-  <div class="pk-head"><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · 작품 ${cur.pct}%</small></h2>
-    <div class="gchips" role="group" aria-label="학년 고르기">${GR.map(g=>`<button class="chip" data-act="grade" data-g="${g}" aria-pressed="${g===S.grade}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
-  <ul class="pk-list">${idxOf(S.grade).map(i=>`<li>${monthRowHTML(i)}</li>`).join('')}</ul>
+  <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
+    <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
+  <div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div>
   <p class="hint" style="margin-top:14px">${S.mode==='custom'?'AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.':'계획표 출처: '+esc(S.source)}</p>`;
 }
 function homeCardHTML(){
@@ -2439,7 +2410,7 @@ function monthHTML(i){
     :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>이에요.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
   const cov=!S.covers[hid(it.book)]?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
   const body=tab==='work'?cov+work:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
-  return `<div class="panel"><div class="ph"><h2>${esc(String(it.g).replace(/^중(\d)$/,'중학교 $1학년'))} ${esc(it.m)}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
+  return `<div class="panel pk"><div class="ph"><h2>${esc(String(it.g).replace(/^중(\d)$/,'중학교 $1학년'))} ${esc(it.m)}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
   <div class="mmore"><button class="chip" data-act="stab" data-v="edu" aria-pressed="${tab==='edu'}">교육자료</button></div>
   ${guide}
@@ -4080,7 +4051,7 @@ function evalHTML(){
   const why=Object.keys(sc).map(k=>{const w=swList(ev,k);return w?`<div class="evw"><b>${esc(k)} <span>${scv(sc[k])}</span></b>${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}).join('');
   const D=(t,body,n,open)=>`<details class="ev-d"${open?' open':''}><summary>${t}${n||''}</summary><div class="ev-db">${body}</div></details>`;
   const df=r2?Number(ev.total)-Number(ev.firstTotal):0;
-  return `<div class="panel ev"><div class="ph"><h2>${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭<br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
+  return `<div class="panel ev pk"><div class="ph"><h2>${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭<br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
   <div class="ev-sum"><div class="ev-s1">
       ${ev.rb?`<p class="ev-lv"><b>${rbReach(sc)}</b>/${Object.keys(sc).length}개 영역이 학년 기대 수준(도달)에 닿았어요${ev.process?` · 쓰기 과정: 계획 ${esc(ev.process.plan)}`:''}</p>`:''}<p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
       ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
@@ -4757,7 +4728,7 @@ function oralEvalHTML(){
       ${a.sentences&&a.sentences.length?`<details><summary>문장 지도</summary>${sent(a.sentences)}</details>`:''}
       ${a.model?`<details><summary>모범 답안</summary><p style="white-space:pre-wrap">${esc(a.model)}</p></details>`:''}
       ${a.followUp?`<p class="orfu"><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`:''}</details>`;
-    return `<div class="panel ev">${top(`1차 구술 평가<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」</small>`)}
+    return `<div class="panel ev pk">${top(`1차 구술 평가<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」</small>`)}
     <div class="orhero">${ev.rb?`<p class="ev-lv"><b>${rbReach(ev.scores)}</b>/${Object.keys(ev.scores||{}).length}개 영역이 학년 기대 수준(도달)에 닿았어요</p>`:''}<p class="tot">${esc(ev.total)}<small>점</small></p><p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
     ${uid===S.id&&!ev2?`<div class="ornext"><b>이제 2차 도전!</b><p>모범 답안을 따라 읽고, ${orThinkL()} 생각한 뒤 다시 대답해요.</p><button class="btn orbig" data-act="close2">2차 도전 시작하기</button></div>`:''}
     <div class="sec"><h3>항목 점수</h3>${orScoreRows(ev)}</div>
@@ -4775,7 +4746,7 @@ function oralEvalHTML(){
       <div class="swy"><p class="swp"><i>＋</i>${esc(a.improved||'')}</p><p class="swm"><i>－</i>${esc(a.still||'')}</p></div>
       ${a.copied?'<p class="warn">이번 대답은 모범 답안을 거의 그대로 외워 말했어요. 다음에는 모범 답안의 구조만 빌리고 내 생각과 경험으로 채워 보세요.</p>':''}
       ${orMemBox(a)}${marked(a)}${a.sentences&&a.sentences.length?`<details><summary>문장 지도</summary>${sent(a.sentences)}</details>`:''}</details>`};
-  return `<div class="panel ev">${top(`구술 테스트 최종 리포트<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」 · 1·2차 종합</small>`)}
+  return `<div class="panel ev pk">${top(`구술 테스트 최종 리포트<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」 · 1·2차 종합</small>`)}
   <div class="sec"><div class="orsum big"><div><small>1차 총점</small><b>${esc(ev.total)}</b></div><div><small>2차 총점</small><b>${esc(ev2.total)}</b><em class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'} ${Math.abs(d)}</em></div><div class="g"><small>나아진 영역</small><b>${ev2.up??orUp(ev.scores,ev2.scores)}<small>/${Object.keys(ev2.scores||{}).length}</small></b></div></div>
     ${S.orSend&&S.orSend.key===v.key&&/중이에요|못했어요|여러 번/.test(S.orSend.msg)?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:ev2.sentAt?`<p class="hint">✓ ${esc((ev2.sentTo||[]).join(', '))}님께 보냈어요 · 최종 리포트 · ${new Date(ev2.sentAt).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}</p>`:''}
     <div class="praise"><b>성장 총평</b><p>${esc(ev2.growthComment||'')}</p></div>
@@ -4895,16 +4866,16 @@ function orChart(log){
 function oralHistHTML(){
   const H=S.oralHist;const own=H.id===S.id;const name=own?'나':esc((typeof famName==='function'?famName(H.id):'')||H.id);
   const head=`<div class="ph"><h2>${own?'나의':name+'의'} 구술 테스트 기록<small>모든 구술 테스트를 모아 성장 흐름을 보여 줘요</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
-  if(H.loading)return `<div class="panel">${head}<div class="sk"></div><div class="sk"></div></div>`;
+  if(H.loading)return `<div class="panel pk">${head}<div class="sk"></div><div class="sk"></div></div>`;
   const log=(H.log||[]).slice().sort((a,b)=>a.at-b.at);
-  if(!log.length)return `<div class="panel">${head}<p class="hint">아직 구술 테스트 기록이 없어요.</p></div>`;
+  if(!log.length)return `<div class="panel pk">${head}<p class="hint">아직 구술 테스트 기록이 없어요.</p></div>`;
   const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):'-';
   const t1=log.map(x=>x.t1??x.total).filter(x=>x!=null),t2=log.map(x=>x.t2).filter(x=>x!=null),gr=log.filter(x=>x.t2!=null&&(x.t1??x.total)!=null).map(x=>x.t2-(x.t1??x.total));
   const recent=log.slice(-5);const items6=RB_OR.map(x=>x[0]);
   const iav=(k,f)=>{const v=recent.map(x=>(x[f]||{})[k]).filter(x=>x!=null).map(Number);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null};
   const tags={};log.slice(-8).forEach(x=>(x.tags||[]).forEach(t=>{tags[t]=(tags[t]||0)+1}));const weak=Object.entries(tags).sort((a,b)=>b[1]-a[1]).slice(0,6);
   const best=log.reduce((a,x)=>Math.max(a,x.t2??x.t1??x.total??0),0);
-  return `<div class="panel">${head}
+  return `<div class="panel pk">${head}
     <div class="fstat"><div><b>${log.length}</b><small>구술 테스트</small></div><div><b>${avg(t1)}</b><small>1차 평균</small></div><div><b>${avg(t2)}</b><small>2차 평균</small></div><div><b>${gr.length?sgn(avg(gr)):'-'}</b><small>평균 점수 변화</small></div><div><b>${best}</b><small>최고 점수</small></div></div>
     <div class="sec"><h3>점수 변화</h3>${orChart(log)}</div>
     <div class="sec"><h3>항목별 평균 <small class="hint">최근 5회 · 연한 막대 1차, 진한 막대 2차</small></h3><div class="orsc">${items6.map(k=>{const a=iav(k,'sc'),b=iav(k,'sc2');return a==null&&b==null?'':`<div class="sc"><span>${k}</span><div class="bar">${a!=null?`<i class="p1" style="width:${a}%"></i>`:''}${b!=null?`<i style="width:${b}%"></i>`:''}</div><b>${rbName(b??a)} ${b??a}</b></div>`}).join('')}</div></div>

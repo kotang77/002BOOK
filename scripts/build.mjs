@@ -97,7 +97,7 @@ fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
 try {
   const sharp = (await import('sharp')).default;
   const icon = Buffer.from(m[1], 'base64'); const full = Buffer.from(m2[1], 'base64');
-  const bg = { r: 255, g: 255, b: 255, alpha: 1 }; // 2026-11-24 포켓 스타일: 흰 바탕
+  const bg = { r: 243, g: 236, b: 223, alpha: 1 };
   const dir = path.join(DIST, 'icons'); fs.mkdirSync(dir, { recursive: true });
   // 홈 화면·앱 설치 아이콘: web/brand/app-icon.png(투명 배경 원형 로고)를 흰 바탕에 올린다. 없으면 앱 안의 로고를 쓴다
   const brand = path.join(ROOT, 'web/brand/app-icon.png');
