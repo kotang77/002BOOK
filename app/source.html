@@ -61,6 +61,13 @@ html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% 
 .todo-bar i{height:5px;border-radius:3px;background:rgba(0,0,0,.08)}
 .todo-bar i:nth-child(1){--sc:var(--st1)}.todo-bar i:nth-child(2){--sc:var(--st2)}.todo-bar i:nth-child(3){--sc:var(--st3)}.todo-bar i:nth-child(4){--sc:var(--st4)}
 .todo-bar i.dn{background:var(--sc)}.todo-bar i.nx{background:var(--sc);opacity:.75}
+.todo-s{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;margin-top:2px;padding:7px 4px 6px;border-radius:10px;background:rgba(255,255,255,.6);border:1px solid rgba(0,0,0,.05)}
+.todo-s:hover,.todo-s:focus-visible{background:rgba(255,255,255,.9);outline:2px solid var(--now-line);outline-offset:1px}
+.ts-c{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px}.ts-c+.ts-c{border-left:1px solid rgba(0,0,0,.07)}
+.ts-c>b{font-size:15px;font-weight:700;color:var(--ink);line-height:1.2}.ts-c>b small{font-size:10.5px;font-weight:500;color:var(--muted);margin-left:1px}
+.ts-c>small{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.ts-go{flex:none;display:grid;place-items:center;width:18px;color:var(--now-ink)}
+@media (min-width:721px){.todo-s{padding:10px 8px}.ts-c>b{font-size:18px}.ts-c>small{font-size:12px}.ts-c>b small{font-size:12px}}
 /* 2026-11-25 피그마 06 홈 컴팩트: 휴대폰은 한 줄(표지·제목·버튼)+진도 한 줄. 모니터는 예전 크기 */
 @media (min-width:721px){.todo{padding:16px 18px 14px;gap:12px;border-radius:18px;margin:2px 0 16px}.todo-k{font-size:13px}.todo-m{gap:16px}.todo-th{width:64px;height:86px}.todo-x{gap:4px}.todo-t{font-size:19px;line-height:1.4}.todo-x small{display:block}.todo-b{width:260px;min-height:52px;font-size:16.5px}.todo-p{font-size:13px}.todo-n b{font-size:15px}.todo-bar i{height:6px}}
 .mpanel:has(.mact){padding-bottom:0}
@@ -2462,23 +2469,6 @@ async function cardFill(i,k){
     }
   }catch(e){}
 }
-function dashHTML(pct,ct){
-  const m=S.me;const hx=hexScores();hx.n=hx.all;const p=hx.p;
-  const log=(S.progress.evalLog||[]);const last5=log.slice(-5);const pts=last5.map(x=>Number(x.total)||0);
-  const en=S.progress.evalN||log.length;const avg=pts.length?Math.round(pts.reduce((a,b)=>a+b,0)/pts.length):null;
-  const best=log.length?Math.max(...log.map(x=>Number(x.total)||0)):null;const last=log.length?log[log.length-1]:null;
-  const diff=pts.length>1?pts[pts.length-1]-pts[pts.length-2]:null;
-  const cnt={};last5.forEach(x=>(x.tags||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1}));const weak=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,3);
-  const mx=Math.max(...p),mn=Math.min(...p);const hi=p.indexOf(mx),lo=p.indexOf(mn);
-  const gs=gradeStats(S.me.grade&&GR.includes(S.me.grade)?S.me.grade:S.grade);
-  const kpi=(v,l,u)=>`<div class="kpi"><span>${l}</span><b>${v}${v==='-'?'':`<small>${u}</small>`}</b></div>`;
-  return `<section class="dash" aria-label="나의 성취도">
-  <div class="dcard dprof dgo" data-act="scopen" role="button" tabindex="0" aria-label="나의 논술 성적 자세히 보기">
-    <div class="kpis">${kpi(hx.n,'읽은 책','권')}${kpi(ct.f,'본 영화','편')}${kpi(en,'논술 첨삭','회')}${kpi(avg==null?'-':avg,'평균 점수','점')}</div>
-    <div class="dl2"><div><small>${GR.includes(m.grade)?esc(m.grade):esc(S.grade)} 과정 ${gs.pct}%</small><div class="bar"><i style="width:${gs.pct}%"></i></div></div><div><small>3년 전체 ${pct}%</small><div class="bar"><i style="width:${pct}%"></i></div></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div>
-  </div>
-  </section>`;
-}
 /* ---------- 2026-11-25 디자인 2차(피그마 06): 홈 맨 위 '지금 할 일' 카드. 누를 곳은 카드 속 버튼 하나 ---------- */
 const WKS=['book','m1','m2'];
 const wkName=(it,k)=>k==='book'?it.book:k==='m1'?it.m1:it.m2;
@@ -2491,8 +2481,16 @@ function wkNext(i){const D=S.progress.done,St=S.progress.started||{};
 const wkVerb=k=>k==='book'?['읽기','읽는','읽었어요']:['보기','보는','봤어요'];
 function wkThumb(it,i,k,cls){const t=wkName(it,k);const img=artOf(t,k==='book'?'book':'movie',k==='book'?'':yearOf(it,t));
   return img?`<span class="${cls}"><img src="${img}" alt=""></span>`:`<span class="${cls} ph">${artHTML(i+(k==='book'?0:k==='m1'?1:2),'')}</span>`}
-function todoHTML(){
-  const i=homeIdx();if(i<0)return '';
+/* 2026-11-25 피그마 06 홈: '지금 할 일'과 성취 요약을 카드 하나(홈 대시보드)로 합침. 아래 숫자 줄을 누르면 성적 자세히 */
+function todoStatsHTML(pct,ct){
+  const hx=hexScores();const log=S.progress.evalLog||[];const pts=log.slice(-5).map(x=>Number(x.total)||0);
+  const en=S.progress.evalN||log.length;const avg=pts.length?Math.round(pts.reduce((a,b)=>a+b,0)/pts.length):null;
+  const c=(v,u,l)=>`<span class="ts-c"><b>${v}${v==='-'?'':`<small>${u}</small>`}</b><small>${l}</small></span>`;
+  return `<button type="button" class="todo-s" data-act="scopen" aria-label="나의 성취 자세히 보기">${c(hx.all,'권','읽은 책')}${c(ct.f,'편','본 영화')}${c(en,'회','논술 첨삭')}${c(avg==null?'-':avg,'점','평균 점수')}${c(pct,'%','3년 전체')}<i class="ts-go" aria-hidden="true"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></i></button>`;
+}
+function todoHTML(pct,ct){
+  const i=homeIdx();const sx=ct?todoStatsHTML(pct,ct):'';
+  if(i<0)return sx?`<section class="todo" aria-label="나의 성취"><span class="todo-k">36개월 과정을 모두 마쳤어요. 정말 멋져요!</span>${sx}</section>`:'';
   const it=items()[i];const st=stepsOf(i);const nx=stepNext(i);const n=st.findIndex(x=>x.k===nx.k)+1;const dn=st.filter(x=>x.done).length;
   const kw=kwDisp(it);let k='book',title='',sub='',btn='',act=`data-act="month" data-i="${i}" data-tab="${nx.k}"`;
   if(nx.k==='work'){const w=wkNext(i)||{k:'book',s:'new'};k=w.k;const v=wkVerb(k);const nm=bTitle(wkName(it,k));const ln=cardInfoLines(it,k);
@@ -2505,6 +2503,7 @@ function todoHTML(){
   return `<section class="todo" aria-label="지금 할 일">
     <div class="todo-m">${wkThumb(it,i,nx.k==='work'?k:'book','todo-th')}<div class="todo-x"><span class="todo-k">지금 할 일 · ${n}단계 ${esc(nx.t)}</span><b class="todo-t">${title}</b><small>${sub}</small></div><button class="btn todo-b" ${act}>${btn}</button></div>
     <div class="todo-p"><span class="todo-g">${esc(it.g)} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kw?' · '+esc(kw):''}</span><div class="todo-bar" aria-hidden="true">${st.map(x=>`<i class="${x.done?'dn':x.k===nx.k?'nx':''}"></i>`).join('')}</div><span class="todo-n" aria-label="4단계 중 ${dn}단계 완료"><b>${dn}</b>/4</span></div>
+    ${sx}
   </section>`;
 }
 function courseHTML(){
@@ -2514,8 +2513,7 @@ function courseHTML(){
   const cur=stats.find(([g])=>g===S.grade)[1];
   return `${S.canWrite===false?'<p class="warn" style="margin-bottom:14px">지금 계정은 기록을 저장할 수 없어요. 서재 주인에게 기여자 권한으로 초대해 달라고 해 주세요.</p>':''}
   ${visionBanner()}
-  ${todoHTML()}
-  ${dashHTML(pct,ct)}
+  ${todoHTML(pct,ct)}
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
   <div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div>
