@@ -6218,7 +6218,8 @@ render();
 })();
 </script>
 
-<div id="legal" style="text-align:center;font-size:12px;color:#6F6155;padding:18px 0 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a> · <a href="/refund.html" style="color:inherit">환불정책</a><br>002BOOK의 첨삭·추천·피드백은 생성형 AI(Anthropic Claude)가 만들어요. 사실과 다를 수 있어요.<br>책 정보·표지: 국립중앙도서관 OpenAPI·카카오(다음 책) · 영화 포스터: 한국영상자료원(KMDb).<br>__BUSINESS_INFO__</div>
+<!-- 하단 정보(2026-11-25 간결화, Figma 06): 처리방침 공개(개인정보보호법 30조), 생성형 AI 고지(인공지능기본법 31조), 국립중앙도서관 OpenAPI 표시(이용약관 6조④)만. 유료 전환 때는 환불정책·사업자 정보·호스팅(전자상거래법 10조)이 빌드에서 붙는다 -->
+<div id="legal" style="text-align:center;font-size:11.5px;line-height:1.6;color:var(--muted,#6F6155);padding:18px 16px 28px"><a href="/terms.html" style="color:inherit">이용약관</a> · <a href="/privacy.html" style="color:inherit"><b>개인정보처리방침</b></a>__REFUND_LINK__<br>첨삭·추천은 생성형 AI가 만들어요<br>자료: 국립중앙도서관 OpenAPI · 카카오 · KMDb<br>__BUSINESS_INFO__</div>
 <style>#legal{max-width:1100px;margin:0 auto}@media (max-width:720px){#legal{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}}</style>
 <script>if('serviceWorker' in navigator)addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 </body></html>
