@@ -1892,6 +1892,34 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .panel.vbzp .vbz-c{background:rgba(251,248,238,.96);box-shadow:0 14px 30px -8px rgba(0,0,0,.55)}
 .panel.vbzp .vbz-nav .btn.ghost{background:rgba(255,246,232,.9);color:#3A2F28;border-color:transparent}
 .panel.vbzp .vbz-skip{color:rgba(255,246,232,.85)}
+
+/* 비전보드 파스텔 스크랩북(Figma 12) */
+.vph.vsb{display:block;padding:0;background:linear-gradient(rgba(233,211,207,.55) 1px,transparent 1px) 0 0/16px 16px,linear-gradient(90deg,rgba(233,211,207,.55) 1px,transparent 1px) 0 0/16px 16px,#FBF1EA}
+.sb-ph,.sb-cd{position:absolute;filter:drop-shadow(1px 3px 4px rgba(60,35,25,.28))}
+.sb-pp{width:100%;height:100%;background:#FFFDF8;padding:7px;box-sizing:border-box;display:flex;flex-direction:column;position:relative}
+.sb-im{flex:1;min-height:0;overflow:hidden}.sb-im img{width:100%;height:100%;object-fit:cover;display:block}
+.sb-im span{display:flex;width:100%;height:100%;align-items:center;justify-content:center}.sb-im i{font-style:normal;font-size:40px}
+.sb-ph em{position:absolute;left:12px;bottom:12px;max-width:78%;font:italic 700 13px/1.2 'Nanum Myeongjo',serif;color:#3A2A30;background:rgba(255,253,248,.92);padding:2px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-ph.pol .sb-pp{padding:9px 9px 0}.sb-ph.pol b{flex:none;padding:6px 2px 9px;text-align:center;font:400 17px/1.1 'Nanum Pen Script',cursive;color:#3A2A30;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-cdi{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
+.sb-cdi p{margin:0;font:700 17px/1.25 'Nanum Myeongjo',serif;color:#4A3A55;text-align:center;word-break:keep-all}
+.sb-blob{position:absolute;left:-24px;top:250px;width:160px;height:150px;border-radius:50%;background:#F6B8C8;z-index:20;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px #FFFDF8 inset}
+.sb-blob p{margin:0;font:800 21px/1.05 'Nanum Myeongjo',serif;color:#7A3E5A;transform:rotate(4deg);padding-left:20px}
+.sb-tt{position:absolute;left:0;right:0;top:360px;z-index:30;display:flex;flex-direction:column;align-items:center}
+.sb-tt small{font:400 18px/1 'Nanum Pen Script',cursive;color:#5B3A4A;background:#FFFDF8;padding:2px 10px;transform:rotate(-3deg);margin-bottom:-4px;z-index:1;box-shadow:1px 2px 3px rgba(0,0,0,.15)}
+.sb-r1,.sb-r2{display:flex;gap:3px}.sb-r2{margin-top:4px;margin-left:30px}
+.sb-r1 span,.sb-r2 span{display:inline-block;min-width:40px;text-align:center;font-size:50px;line-height:62px;padding:0 6px;box-shadow:1px 3px 4px rgba(40,20,20,.3)}
+.sb-r2 span{font-size:46px;line-height:58px}
+.sb-yr{position:absolute;left:78px;top:542px;width:200px;height:112px;background:#F6C9D2;transform:rotate(-4deg);z-index:25;display:flex;align-items:center;padding-left:18px;box-sizing:border-box}
+.sb-yr p{margin:0;font:800 29px/1.05 'Nanum Myeongjo',serif;color:#FFF6EE;text-shadow:0 1px 2px rgba(150,80,100,.35)}
+.sb-yr small{display:block;margin-top:6px;font:800 11px 'Noto Sans KR',sans-serif;color:#7A3E5A;text-shadow:none;letter-spacing:.04em}
+.sb-pl{position:absolute;left:150px;top:705px;width:236px;height:126px;background:#F7DDE3;transform:rotate(3deg);z-index:26;display:flex;align-items:center;padding:12px 18px;box-sizing:border-box}
+.sb-pl p{margin:0;font:italic 800 21px/1.25 'Nanum Myeongjo',serif;color:#4A6FD8;word-break:keep-all}
+.sb-tp{position:absolute;width:66px;height:19px;z-index:35}
+.sb-star{position:absolute;font-style:normal;z-index:36;line-height:1}
+.sb-star.b{color:#4A6FD8;text-shadow:0 1px 1px rgba(0,0,0,.2)}
+.sb-star.g{background:radial-gradient(circle at 30% 30%,#FFF4C2,#D9B44A 45%,#A8812A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.sb-dd{position:absolute;left:50%;top:330px;transform:translateX(-50%) rotate(-2deg);background:#1A1A1A;color:#F6B8C8;font:800 11px 'Noto Sans KR',sans-serif;padding:4px 10px;z-index:37;white-space:nowrap}
 </style>
 
 <div id="app"></div>
@@ -2321,36 +2349,36 @@ function vbScatter(root){(root||document).querySelectorAll('.vphg').forEach(g=>{
     el.style.cssText=`left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;width:${tw.toFixed(1)}px;transform:rotate(${rr(-7,7).toFixed(1)}deg);z-index:${1+Math.floor(R()*n)}`});
   g.classList.add('on')})}
 /* 폰 화면용 포스터: 390×844 고정, 저장하면 1170×2532 바탕화면. 위쪽은 잠금화면 시계 자리로 비워 둠 */
-/* 비전보드 = 실물 콜라주(2026-11-26, Figma 11): 색종이 바탕 위에 학생 답을 사진 인화(압정·마스킹 테이프), 포스트잇(손글씨),
-   여행 기념 마그네틱, 잡지 오린 글자, 동그란 스티커로 붙인다. 390×844 고정 캔버스(저장하면 바탕화면 1170×2532). 위쪽 80px은 잠금화면 시계 자리 */
-const VCNOTE=['me','give','want','skill','health'],VCMAG=['place','place2','place3'];
+/* 비전보드 = 파스텔 스크랩북(2026-11-26 사용자 참고 이미지, Figma 12): 모눈 크림지 위에 찢은 가장자리 사진들을 빽빽이 겹쳐 붙이고,
+   가운데 잡지에서 오린 'vision board' 글자, 분홍 말풍선 종이(키워드), 연도 카드, 파란 명조 다짐 카드, 금박·파란 별, 마스킹 테이프.
+   학생 답은 사진(올린 사진 → 공개 사진 → 파스텔 그림 칸) 또는 파스텔 글 카드로 들어간다. 390×844 고정(저장하면 1170×2532) */
+const VCNOTE=['me','give','want','skill','health'];
+const VBSLOT=[[-14,18,205,172,-6],[196,30,208,166,6],[116,168,152,178,-3,'pol'],[272,208,136,162,-5],[-22,452,124,176,7],[290,466,122,154,-5],[-16,648,184,206,-3],[252,598,154,154,5],[118,6,110,96,4],[140,612,108,92,-6]];
 function vbPhoneHTML(v){
-  const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';const L=vbRich(v);
-  let sd=(VBSEED^Math.imul(L.length+1,2654435761))>>>0||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};const rr=(a,c)=>a+(c-a)*R();
-  const PAL=['#19B5A5','#FF4F9A','#FF8A3D','#FFD23F'],NOTE=['#FFE066','#9BE7E0','#FFB3C7','#C9F29B'];
-  const n=L.length,cols=n<=4?2:n<=9?3:4,rows=Math.max(1,Math.ceil(n/cols)),top=212,bot=732,cw=358/cols,ch=(bot-top)/rows;
-  const tiles=L.map((it,k)=>{const r=Math.floor(k/cols),c=k%cols,m=r===rows-1?n-r*cols:cols,off=(cols-m)*cw/2;
-    const cx=16+off+c*cw+cw/2+rr(-.08,.08)*cw,cy=top+r*ch+ch/2+rr(-.06,.06)*ch,rot=rr(-6,6).toFixed(1),z=2+Math.floor(R()*n);
-    const type=it.img?'ph':VCMAG.includes(it.k)?'mg':VCNOTE.includes(it.k)||it.cus?'nt':'ph';
-    if(type==='nt'){const s=Math.min(cw*.98,ch*.94,156);const col=NOTE[k%NOTE.length];
-      return `<div class="vc-nt" style="left:${(cx-s/2).toFixed(1)}px;top:${(cy-s/2).toFixed(1)}px;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;background:${col};transform:rotate(${rot}deg);z-index:${z}"><p style="font-size:${Math.max(14,Math.min(21,s/6.4)).toFixed(1)}px">${esc(it.head)} ${esc(it.emoji||'')}</p>${it.when?`<small>${it.when}</small>`:''}</div>`}
-    if(type==='mg'){const w=Math.min(cw*.92,150),h=Math.min(ch*.62,74);const col=['#1D3557','#C0392B','#0E6E5C'][k%3];
-      return `<div class="vc-mg" style="left:${(cx-w/2).toFixed(1)}px;top:${(cy-h/2).toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;background:${col};transform:rotate(${rot}deg);z-index:${z}"><i>✈</i><b>${esc(it.head)}</b>${it.when?`<small>${it.when}</small>`:''}</div>`}
-    const a=Math.min(1.6,Math.max(.7,it.img?(it.ar||4/3):4/3));let w=Math.min(cw*1.02,(ch-36)*a+14,176);const ih=(w-12)/a,h=ih+40;
-    const deco=R()<.55?`<i class="vc-pin" style="background:${['#E63946','#1D3557','#F4D35E'][k%3]}"></i>`:`<em class="vc-tape" style="background:${['rgba(255,224,102,.85)','rgba(255,143,177,.8)','rgba(155,231,224,.85)'][k%3]};transform:translateX(-50%) rotate(${rr(-12,12).toFixed(1)}deg)"></em>`;
-    return `<div class="vc-ph" style="left:${(cx-w/2).toFixed(1)}px;top:${(cy-h/2).toFixed(1)}px;width:${w.toFixed(1)}px;transform:rotate(${rot}deg);z-index:${z}">${deco}<div class="vc-im" style="height:${ih.toFixed(1)}px">${it.img?`<img src="${it.img}" alt="" crossorigin="anonymous">`:`<span style="background:linear-gradient(150deg,${it.c2||'#FBF1D2'},${it.c1||'#F0C75E'})"><i>${esc(it.emoji||it.e)}</i></span>`}</div><b>${esc(it.head)}</b>${it.when?`<small>${it.when}</small>`:''}</div>`}).join('');
+  const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';
+  const ORD=['dream','job','univ','want','place','give','skill','me','health','house','car','high','place2','place3'];
+  const L=vbRich(v).sort((x,y)=>{const a=ORD.indexOf(x.k),c=ORD.indexOf(y.k);return (a<0?99:a)-(c<0?99:c)});
+  const PAS=['#F6B8C8','#C8CFA0','#B7A4D6','#F2C5A8','#B9D3D6','#E8C9A8'];
+  const tiles=VBSLOT.slice(0,L.length).map(([x,y,w,h,rot,kind],k)=>{const it=L[k];const card=!it.img&&VCNOTE.includes(it.k);const torn=vbTorn(k*7+3,2.6);
+    if(card)return `<div class="sb-cd" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform:rotate(${rot}deg);z-index:${3+k}"><div class="sb-cdi" style="background:${PAS[k%PAS.length]};clip-path:${torn}"><p>${esc(it.head)}</p></div></div>`;
+    const pic=it.img?`<img src="${it.img}" alt="" crossorigin="anonymous">`:`<span style="background:linear-gradient(150deg,${PAS[k%PAS.length]},${PAS[(k+2)%PAS.length]})"><i>${esc(it.emoji||it.e)}</i></span>`;
+    return `<div class="sb-ph${kind==='pol'?' pol':''}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform:rotate(${rot}deg);z-index:${3+k}"><div class="sb-pp" style="${kind==='pol'?'':'clip-path:'+torn}"><div class="sb-im">${pic}</div>${kind==='pol'?`<b>${esc(it.head)}</b>`:`<em>${esc(it.head)}</em>`}</div></div>`}).join('');
   const words=(Array.isArray(b.words)?b.words:[]).slice(0,3);
-  const stick=words.map((w,i)=>{const pos=[[300,118,74],[322,196,58],[14,196,58]][i];return `<span class="vc-st" style="left:${pos[0]}px;top:${pos[1]}px;width:${pos[2]}px;height:${pos[2]}px;background:${['#FFD23F','#FF8FB1','#9BE7E0'][i]};transform:rotate(${[-8,6,-5][i]}deg)">#${esc(w)}</span>`}).join('');
-  const title=[...'VISION BOARD'].map((ch,i)=>ch===' '?'<i class="vsp"></i>':`<span style="color:${PAL[i%4]}">${ch}</span>`).join('');
-  const pledge=String(b.pledge||(v.a&&v.a.word)||'').slice(0,70);
-  return `<div class="vphw"><div class="vph vcol" id="vbphone">
-    <div class="vc-bg" aria-hidden="true"><i style="left:-30px;top:-20px;width:160px;height:120px;background:#19B5A5;transform:rotate(8deg)"></i><i style="left:270px;top:-30px;width:160px;height:140px;background:#FFD23F;transform:rotate(-6deg)"></i><i style="left:-40px;top:330px;width:110px;height:170px;background:#FF4F9A;transform:rotate(10deg)"></i><i style="left:320px;top:440px;width:120px;height:170px;background:#FF8A3D;transform:rotate(-8deg)"></i><i style="left:250px;top:720px;width:180px;height:170px;background:#19B5A5;transform:rotate(6deg)"></i><i style="left:-30px;top:650px;width:140px;height:140px;background:#FFD23F;transform:rotate(-4deg)"></i></div>
-    <div class="vc-h"><div class="vc-t">${title}</div><small>${esc(nick)}'s dream · ${new Date(v.at||Date.now()).getFullYear()}</small><div class="vc-mz">${vbRansom(b.title||'나의 꿈 지도')}</div>${b.statement?`<p class="vc-sm">${esc(b.statement)}</p>`:''}</div>
-    ${stick}${tiles}
-    <span class="vc-dc" style="left:10px;top:150px">🌼</span><span class="vc-dc" style="left:352px;top:262px">🌸</span><span class="vc-dc" style="left:8px;top:480px">💖</span><span class="vc-dc" style="left:344px;top:640px">🌿</span>
-    ${pledge?`<div class="vc-pl"><em class="vc-tape" style="background:rgba(255,224,102,.85);transform:translateX(-50%) rotate(-4deg)"></em><p>${esc(pledge)}</p></div>`:''}
-    ${v.dday?`<div class="vc-dd">🏆 DREAM DAY ${vbDstr(v.dday)} · ${vbDday(v)}</div>`:''}
-    <div class="vc-f">002BOOK · 꿈이 이루어지는 곳이 천국이다</div></div></div>`;
+  const LET=[['v',"'Abril Fatface',serif",'#F6B8C8','#5B3A4A',-4],['i',"'Noto Sans KR',sans-serif",'#1A1A1A','#FFF',3],['s',"'Nanum Myeongjo',serif",'#B7A4D6','#FFF',-2],['i',"'Permanent Marker',cursive",'#C8CFA0','#3A3A2A',4],['o',"'Abril Fatface',serif",'#F2C5A8','#6A3A2A',-3],['n',"'Noto Sans KR',sans-serif",'#FFFDF8','#111',2]];
+  const LET2=[['b',"'Abril Fatface',serif",'#C8CFA0','#5A4A2A',4],['o',"'Noto Sans KR',sans-serif",'#1A1A1A','#FFF',-3],['a',"'Nanum Myeongjo',serif",'#F6B8C8','#FFF',3],['r',"'Permanent Marker',cursive",'#1E5E5A','#F6B8C8',-4],['d',"'Abril Fatface',serif",'#FFFDF8','#111',2]];
+  const row=A=>A.map(([c,f,bg,fg,r],i)=>`<span style="font-family:${f};background:${bg};color:${fg};transform:rotate(${r}deg) translateY(${i%2?4:0}px)">${c}</span>`).join('');
+  const yr=(v.dday&&String(v.dday).slice(0,4))||(L.find(x=>x.when)||{}).when||String(new Date().getFullYear()+1);
+  const pledge=String(b.statement||b.pledge||(v.a&&v.a.word)||'').slice(0,40);
+  const stars=[[300,140,30,'g'],[150,520,30,'b'],[346,598,28,'b'],[40,470,26,'g'],[120,690,26,'g'],[2,580,28,'b'],[250,330,24,'g']].map(([x,y,z,c])=>`<i class="sb-star ${c}" style="left:${x}px;top:${y}px;font-size:${z}px">★</i>`).join('');
+  return `<div class="vphw"><div class="vph vsb" id="vbphone">
+    ${tiles}
+    ${words.length?`<div class="sb-blob" style="clip-path:${vbTorn(41,3)}"><p>${words.map(w=>esc(w)+'.').join('<br>')}</p></div>`:''}
+    <div class="sb-tt"><small>${esc(nick)}'s</small><div class="sb-r1">${row(LET)}</div><div class="sb-r2">${row(LET2)}</div></div>
+    <div class="sb-yr" style="clip-path:${vbTorn(53,2.4)}"><p>${esc(yr)}년은<br>나의 해!${v.dday?`<small>${vbDstr(v.dday)} · ${vbDday(v)}</small>`:''}</p></div>
+    ${pledge?`<div class="sb-pl" style="clip-path:${vbTorn(67,2.2)}"><p>${esc(pledge)}</p></div>`:''}
+    <em class="sb-tp" style="left:206px;top:172px;transform:rotate(-35deg);background:rgba(231,168,192,.85)"></em><em class="sb-tp" style="left:118px;top:640px;transform:rotate(20deg);background:rgba(169,182,232,.85)"></em><em class="sb-tp" style="left:12px;top:440px;transform:rotate(-12deg);background:rgba(200,207,160,.85)"></em>
+    ${stars}
+    </div></div>`;
 }
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
 function visionBanner(){
