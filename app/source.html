@@ -1454,6 +1454,13 @@ html[data-theme="sky"]{--st1:#BFDDF8;--st2:#7DB8EE;--st3:#2F78C2;--st4:#1B4F8A;-
 .ad-cf{display:flex;flex-direction:column;gap:8px;padding:10px 0 14px}.ad-two2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .ad-adm li{align-items:center}
 @media(max-width:759px){.ad-tile{padding:10px 11px;border-radius:14px}.ad-tile b{font-size:22px}.ad-tile span{font-size:12px}.ad-tile small{font-size:11px}.ad-dist{padding:10px 12px}.ad-row{grid-template-columns:42px minmax(0,1fr) 16px;gap:6px;font-size:12px;margin:3px 0}.ad-row span{min-width:28px}.ad-rc{padding:4px 0}}
+/* 표지·포스터는 올린 그림의 비율 그대로(늘이거나 자르지 않음). 칸은 그대로 두고 그림을 칸 안에 맞춰 바닥(책장)에 세운다. 그림자는 그림 모양을 따라감 (2026-11-25) */
+:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb):has(>img){background:none!important;box-shadow:none!important;overflow:visible!important;border-radius:0!important}
+:is(.todo-th,.wk-th,.mdone-th,.pk-th,.fcv,.mcv){position:relative}
+:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb)>img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(2px 3px 3px rgba(40,25,15,.32));border-radius:0}
+.cvmain .cvimg>img{object-position:right bottom}
+.pth{object-fit:contain;object-position:center bottom;box-shadow:none;filter:drop-shadow(1px 1px 2px rgba(40,25,15,.3))}
+.hm-art.img{background-size:contain;background-position:center bottom}
 </style>
 
 <div id="app"></div>
