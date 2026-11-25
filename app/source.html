@@ -1789,10 +1789,11 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .shopin .cabp{position:absolute;left:50%;top:7px;transform:translateX(-50%);padding:2px 18px;border-radius:3px;background:var(--gold);color:#3B2414;font-family:var(--f-display);font-weight:800;font-size:12.5px;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.4)}
 .shopin .grid{margin:0!important;padding:14px 10px 4px;border-radius:3px;background:radial-gradient(120% 60px at 50% 0,rgba(255,214,150,.28),rgba(255,214,150,0)),linear-gradient(#22402F,#173025);box-shadow:inset 0 2px 8px rgba(0,0,0,.55)}
 .shopin .grid .shelf{background:linear-gradient(#A8774A,#7A5030 45%,#4E311C)!important;box-shadow:0 5px 7px -3px rgba(0,0,0,.6)!important;height:10px!important}
-.shopin .grid .cvinfo{background:var(--paper2);border-radius:2px;padding:4px 6px 5px;box-shadow:0 1px 3px rgba(0,0,0,.45);margin-top:2px}
-.shopin .grid .cvinfo .ctag{font-family:var(--tw2);font-weight:700;color:var(--lb2)!important}
-.shopin .grid .cvinfo .ct{color:#2E2A26!important}
-.shopin .grid .cvinfo .ca{color:#6F6155!important}
+.shopin .grid .cvinfo{background:none!important;box-shadow:none!important;padding:2px 2px 0;margin-top:2px}
+.shopin .grid .cvinfo .ctag{font-family:var(--tw2);font-weight:700;color:rgba(255,246,232,.82)!important;background:none!important;border:0!important;padding:0!important}
+.shopin .grid .cvinfo .ct{color:#FFF6E8!important;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+.shopin .grid .cvinfo .ca{color:rgba(255,246,232,.7)!important}
+.shopin .grid .cvinfo .dots i{background:rgba(255,246,232,.3)}.shopin .grid .cvinfo .dots i.on{background:#F6D58E}
 /* 내 서재 */
 .shopin .sec>h3{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--f-display);font-weight:800}
 .shopin .sec>h3 small,.shopin .sec>h3 .hint{-webkit-text-fill-color:#E8DCC8;color:#E8DCC8}
@@ -2717,7 +2718,6 @@ function coverHTML(i){
   return `<div class="cv${d===3?' done':''}${nm?' next':''}" data-i="${i}">
     <div class="cvw"><button type="button" class="cvmain" data-act="month" data-i="${i}" aria-label="${esc(it.g)} ${esc(it.m)} ${esc(bTitle(title))}, ${d}/3 완료">
       <span class="cvimg" style="--a:${k==='book'?p[0]:GP[(i+3)%GP.length][0]};--b:${k==='book'?p[1]:GP[(i+3)%GP.length][1]}">${inner}${(()=>{const vu=evOK(i)?vidOf(it):'';return vu?`<a class="ytm" href="${esc(vu)}" target="_blank" rel="noopener noreferrer" data-act="ytopen" aria-label="${esc(kwDisp(it))} 영상 보기" title="영상 보기"></a>`:done?'<span class="stk"></span>':''})()}</span></button>
-      ${img?'':`<label class="btn small up cvup" title="이 이미지는 모든 회원에게 보여요">${k==='book'?'표지 올리기':'포스터 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label>`}
       <div class="ctabs" role="group" aria-label="책과 영화 바꿔 보기">${(()=>{const ts=tabStyle(i,it);return ['book','m1','m2'].map((x,n)=>`<button type="button" class="ctab${x===k?' on':''}" style="${ts[n]}" data-act="cvtab" data-i="${i}" data-k="${x}" aria-pressed="${x===k}" aria-label="${CVK[x][1]} 보기"><span>${CVK[x][0]}</span></button>`).join('')})()}</div></div>
     <span class="shelf"></span>
     <button type="button" class="cvinfo" data-act="month" data-i="${i}">
