@@ -1902,8 +1902,8 @@ const seenNote=i=>{const D=S.progress.done;return D[ik(i,'book')]&&(!!D[ik(i,'m1
 function svStars(q,v){let h='';for(let n=1;n<=5;n++){const st=v>=n?'f':v>=n-.5?'h':'e';h+=`<span class="svs ${st}"><button type="button" class="l" data-act="svset" data-q="${q}" data-v="${n-.5}" aria-label="${n-.5}점"></button><button type="button" class="r" data-act="svset" data-q="${q}" data-v="${n}" aria-label="${n}점"></button></span>`}return h}
 function surveyHTML(){
   const V=S.survey;const it=items()[V.i];const isB=V.k==='book';const name=bTitle(isB?it.book:V.k==='m1'?it.m1:it.m2);
-  const QX={fun:['재미있었나요?',''],diff:['@기 어땠어요?','별이 많을수록 어려웠다는 뜻이에요'],again:['나중에 다시 @고 싶나요?','']};
-  const rows=SVQ.map(([q,t])=>{const v=Number(V.v[q])||0;const [a,s2]=QX[q]||[t,''];return `<div class="svq"><b>${esc(a.replace('@',isB?'읽':'보'))}</b>${s2?`<small>${s2}</small>`:''}<div class="svr" role="group" aria-label="${t} 별점">${svStars(q,v)}<span class="svn">${v?`${v.toFixed(1)}점`:''}</span></div></div>`}).join('');
+  const QX={fun:['재미있었나요?',''],diff:['@기 쉬웠나요?','별이 많을수록 쉬웠다는 뜻이에요'],again:['나중에 다시 @고 싶나요?','']};
+  const rows=SVQ.map(([q,t])=>{const raw=Number(V.v[q])||0;const v=q==='diff'&&raw?5.5-raw:raw;/* 난이도는 '쉬웠나요?'로 묻고(별 많을수록 쉬움) 저장은 그대로 '어려운 정도'(5.5-별)로 */const [a,s2]=QX[q]||[t,''];return `<div class="svq"><b>${esc(a.replace('@',isB?'읽':'보'))}</b>${s2?`<small>${s2}</small>`:''}<div class="svr" role="group" aria-label="${t} 별점">${svStars(q,v)}<span class="svn">${v?`${v.toFixed(1)}점`:''}</span></div></div>`}).join('');
   const ok=SVQ.every(([q])=>V.v[q]);
   return `<div class="panel svp"><div class="ph"><h2>「${esc(name)}」 어땠어요?<small>세 가지만 누르면 끝 · 10초</small></h2><button class="x" data-act="svclose" aria-label="닫기">${IC.x}</button></div>
   ${V.msg?`<p class="mok" role="status">${IC.check}<span>${esc(V.msg)}</span></p>`:''}${rows}
@@ -3012,6 +3012,7 @@ function wkRowHTML(i,k,cur){
   const stat=on?`<em class="dn">${IC.check} ${r?r.days+'일 만에 끝'+(r.ppd?' · 하루 '+r.ppd+'쪽':''):'끝'}</em>`:st?`<em class="nw">${v[1]} 중 · ${Math.max(1,Math.ceil((Date.now()-st)/864e5))}일째</em>`:`<em>아직</em>`;
   const a=on?(sv?`<button class="wk-b ok" data-act="wkundo" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 끝냄 (두 번 누르면 취소)">${IC.check}끝</button>`:`<button class="wk-b go" data-act="svopen" data-i="${i}" data-k="${k}">별점 남기기</button>`)
     :st?`<button class="wk-b go" data-act="done" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 다 ${v[2]}">다 ${v[2]}</button>`
+    :k!=='book'?`<button class="wk-b go" data-act="done" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 다 ${v[2]}">다 ${v[2]}</button>`/* 영화는 시작 없이 바로 '다 봤어요'(2026-11-26) */
     :`<button class="wk-b" data-act="start" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 ${v[0]} 시작">${v[0]} 시작</button>`;
   const pg=on&&k==='book'&&r&&!r.pg?(S.pgBusy===key?'<span class="pgin hint">책 쪽수를 찾고 있어요…</span>':`<span class="pgin"><input id="pg-${i}" type="number" inputmode="numeric" min="1" max="4999" placeholder="책 페이지" aria-label="책 총 쪽수"><button class="chip" data-act="pgsave" data-i="${i}">하루 읽은 페이지</button></span>`):'';
   return `<div class="wk${cur?' cur':''}${on?' on':''}">
@@ -3026,6 +3027,7 @@ function mactHTML(i){
   if(tab==='work'&&nx&&nx.k==='work'){const w=wkNext(i);if(w){const nm=bTitle(wkName(it,w.k));const v=wkVerb(w.k);
       if(w.s==='rate'){hint='세 가지만 누르면 끝 · 10초';b=`<button class="btn mact-b" data-act="svopen" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 별점 남기기</button>`}
       else if(w.s==='doing'){hint='누르면 10초 별점이 나와요';b=`<button class="btn mact-b" data-act="done" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 다 ${v[2]}</button>`}
+      else if(w.k!=='book'){hint='누르면 10초 별점이 나와요';b=`<button class="btn mact-b" data-act="done" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 다 ${v[2]}</button>`}
       else{hint='시작을 누르면 친구와 부모님께 알려요';b=`<button class="btn mact-b" data-act="start" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 ${v[0]} 시작</button>`}}}
   else if(tab==='note'&&!(pos>=0&&st[pos].done)){const n=(S.progress.notes||{})[nk(i)]||{};
     b=`<button class="btn mact-b" disabled>${!n.sentence?'책에서 마음에 남은 문장을 적어 주세요':'영화에서 기억에 남은 장면을 적어 주세요'}</button>`;hint='두 칸을 채우면 다음 단계로 갈 수 있어요'}
@@ -6156,7 +6158,7 @@ document.addEventListener('click',async e=>{
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
     case 'wropen':if(!svReady(+d.i)){toast('책과 영화 한 편을 끝내고 별점을 먼저 남겨 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
-    case 'svset':if(S.survey){S.survey.v[d.q]=+d.v;renderLayers()}break;
+    case 'svset':if(S.survey){S.survey.v[d.q]=d.q==='diff'?5.5-(+d.v):+d.v;renderLayers()}break;
     case 'mbrate':{const o=rateObj(d.sc,d.id);if(!o)break;o[d.q]=+d.v;
       const box=document.querySelector(`[data-rbox="${d.sc}:${CSS.escape(d.id)}"]`);if(box)box.outerHTML=rateBox(d.sc,d.id,o);  // 입력 중인 글이 지워지지 않게 별점 칸만 다시 그린다
       if(d.sc==='rv')bkBtn();if(d.sc==='shelf'){saveProgress();const l=document.querySelector('.sdrate');if(l)l.textContent=rateLine(o)}break}
