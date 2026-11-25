@@ -118,3 +118,31 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO)
   await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', kind, title, at: Date.now() }, null, row);
   return { url: art?.url ?? '', src: art?.src ?? '', cached: false };
 }
+
+/* ---------- 비전보드 공개 사진 (서버 op: media.pics, 2026-11-26) ----------
+   학생이 사진을 올리지 않은 꿈 칸에 어울리는 공개 사진을 붙인다. Openverse(api.openverse.org, 키 없음)에서
+   상업 이용 가능한 CC 라이선스(cc0·pdm·by·by-sa)만, 성인물 제외(mature=false)로 찾고 썸네일 주소와 출처(작가·라이선스)를 돌려준다.
+   검색어는 앱이 AI로 만든 영어 2~3단어(사물·장소 위주). 검색어 기준 30일 캐시, 회원당 하루 60번. */
+export async function picsOp(uid: string, b: Record<string, unknown>, io: BookIO) {
+  const q = clean(b.q, 60).replace(/[^A-Za-z0-9 \-]/g, '').trim().toLowerCase();
+  if (q.length < 2) fail('bad_request', '검색어가 필요해요.');
+  const p = `sys/pic_${(await sha256hex('v1|' + q)).slice(0, 24)}`;
+  const row = await io.read(p);
+  if (row && Date.now() - (Number(row.data.at) || 0) < 30 * DAY) return { pics: row.data.pics || [], cached: true };
+  const qp = `sys/picuse_${uid}`; const qr = await io.read(qp);
+  const day = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  const n = qr && qr.data.day === day ? Number(qr.data.n) || 0 : 0;
+  if (n >= Number(env('PIC_DAILY_LIMIT', '60'))) fail('rate_limited', '오늘 사진 찾기를 다 썼어요. 내일 다시 찾아요.', 429);
+  await io.write(qp, { day, n: n + 1 }, null, qr);
+  let pics: { u: string; by: string; lic: string; src: string }[] = [];
+  const fake = env('FAKE_PICS');
+  if (fake) { const m = JSON.parse(fake) as Record<string, string>; const u = m[q] || m['*']; if (u) pics = [{ u, by: 'test', lic: 'CC0', src: '' }]; }
+  else {
+    const j = await getJSON(`https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&license=cc0,pdm,by,by-sa&mature=false&page_size=6&aspect_ratio=square,wide`);
+    const rs = Array.isArray(j?.results) ? j.results : [];
+    pics = rs.map((r: Record<string, unknown>) => ({ u: https(r.thumbnail) || https(r.url), by: clean(r.creator, 40) || '알 수 없음', lic: (clean(r.license, 10).toUpperCase() + ' ' + clean(r.license_version, 6)).trim(), src: https(r.foreign_landing_url) }))
+      .filter((x: { u: string }) => x.u).slice(0, 3);
+  }
+  await io.write(p, { q, pics, at: Date.now() }, null, row);
+  return { pics, cached: false };
+}
