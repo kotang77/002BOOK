@@ -1631,21 +1631,26 @@ body{word-break:keep-all;overflow-wrap:break-word}
 .cvmain .cvimg:has(>img)::after{background:linear-gradient(90deg,rgba(255,255,255,.20) 0,rgba(255,255,255,0) 5%,rgba(0,0,0,.16) 6%,rgba(0,0,0,0) 9%)}
 .cvmain .cvimg:not(:has(>img)){background-image:linear-gradient(165deg,var(--a),var(--b))!important}
 
-/* 로그인 화면 · 서점 입구(2026-11-25 밤 신규, Figma '08 로그인 · 서점 입구'): 런던 골목 서점 분위기의 초록 가게 앞(Figma AI 생성 사진, 실제 가게 아님, web/login/shop*.webp).
-   빈 간판에 금박 글씨 '영원이북'(로고 원안 모양 그대로), 그 앞 보도에 작은 '어서 오세요' 카드. 버튼은 '문 열고 들어가기' */
-html:has(.auth){background:#3B2C22}
-body:has(.auth){background:linear-gradient(#6E5446,#3B2C22 60%) #3B2C22;min-height:100svh}
+/* 로그인 화면 · 서점 골목 한 화면 맞춤(2026-11-25 밤, Figma 08 v4): 휴대폰 한 화면에 간판부터 대출 카드·회사 로고까지 스크롤 없이.
+   서점 크기는 화면과 상관없이 같고(골목 사진 폭 650px 기준), 큰 화면은 주변(위층·이웃집·골목)이 더 보이고 작은 화면은 덜 보인다.
+   아주 작은 화면만 서점이 들어가게 조금 줄인다. 사진은 Figma AI 생성(web/login/lane.webp, 실제 가게 아님). 서점 바닥선 = 사진 높이 73% */
+body:has(.auth){background:#4A3D33;min-height:100svh;overflow-x:hidden}
 body:has(.auth) .sfx{display:none}
-.auth{display:block;position:relative;min-height:100svh;max-width:none;margin:0;padding:0!important}
-.auth .hero{display:block;position:relative;width:100vw;margin-left:calc(50% - 50vw)!important;aspect-ratio:934/1400;background:url(login/shop-m.webp) center/100% 100% no-repeat;gap:0;margin:0}
-.auth .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(rgba(110,84,70,0),#6E5446);pointer-events:none}
-.auth .sign{position:absolute;left:0;right:0;top:16.4%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:9px;z-index:1}
-.auth .sign .biglogo{width:7.4vw;max-width:34px;height:auto}
-.auth .sign h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:6.4vw;line-height:1;letter-spacing:.06em;
+.auth{display:grid;grid-template-rows:minmax(0,1fr) auto auto;height:100svh;max-width:none;margin:0;padding:0 0 calc(10px + env(safe-area-inset-bottom,0px))!important;position:relative;overflow:hidden;gap:0}
+.auth:not(:has(form.loan)){height:auto;min-height:100svh;grid-template-rows:44svh auto auto;overflow:visible;overflow-x:clip}
+html:has(.auth){overflow-x:clip}
+.auth .hero{container-type:size;position:relative;display:block;margin:0;min-height:0;z-index:0;gap:0;align-self:stretch;justify-self:stretch}
+.auth .authcard,.auth .tai{align-self:start}
+.auth .scene{--W:max(min(650px,100cqh * 1.969),100vw);position:absolute;left:50%;top:min(0px,100cqh - var(--W) * .745);width:var(--W);aspect-ratio:1;transform:translateX(-50%);pointer-events:none}
+.auth .scene>img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.auth .scene::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:22%;background:linear-gradient(rgba(74,61,51,0),#4A3D33)}
+.auth .sign{position:absolute;left:0;right:0;top:30.1%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:calc(var(--W) * .014);z-index:1}
+.auth .sign .biglogo{width:calc(var(--W) * .05);height:auto}
+.auth .sign h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:calc(var(--W) * .043);line-height:1;letter-spacing:.06em;
   background:linear-gradient(#FBE3A8,#D9AE62 55%,#B3874A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
 .auth .hero .tg,.auth .wm,.auth .sscene,.aval{display:none}
 /* 로그인 카드 = 옛 도서 대출 카드(2026-11-25 밤, Figma 08 v2): 크림 카드에 파란 인쇄 줄, 청구기호·번호는 타자기 글씨, 아래는 점선 테두리 크라프트 책 주머니(카드가 꽂힌 모양) */
-.authcard{position:relative;z-index:2;width:calc(100% - 64px);max-width:290px;margin:-27vw auto 0;border:0;border-radius:6px;padding:9px 12px 0;gap:0;
+.authcard{position:relative;z-index:2;width:calc(100% - 64px);max-width:290px;margin:0 auto;border:0;border-radius:6px;padding:9px 12px 0;gap:0;
   background:#FBF8EE;box-shadow:0 6px 14px -4px rgba(26,18,10,.35);--lb:#466C9E;--ll:rgba(120,156,200,.55);--tw:'Courier Prime','Courier New',ui-monospace,monospace}
 .lchead{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--tw);font-size:10px;line-height:1.2;color:#2E2A26;font-weight:700}
 .authcard .ahead{display:block;margin:4px 0 0}
@@ -1679,32 +1684,25 @@ form.loan .err,form.loan .okmsg{margin:6px 6px 0}
 .lnote{margin:0;font-family:var(--f-display);font-size:11px;color:#46321F;text-align:center}
 body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-index:1;padding-top:22px}
 @media (min-width:821px){
-  body:has(.auth){background:#3B2C22 url(login/shop.webp) center/cover no-repeat fixed}
-  .auth .hero{position:fixed;inset:0;width:auto;margin:0!important;aspect-ratio:auto;background:none}
-  .auth .hero::after{content:none}
-  /* 간판 위치: 사진(3:2)이 화면을 덮을 때 간판 중심은 사진 높이의 12.7% */
-  .auth .sign{top:calc(50vh - 24.9vw);gap:14px}
-  .auth .sign .biglogo{width:3.4vw;max-width:none}
-  .auth .sign h1{font-size:3.3vw}
-  .authcard{position:fixed;right:max(48px,7.5vw);bottom:max(40px,8.5vh);width:300px;margin:0;bottom:max(112px,15vh)}
-  body:has(.auth) #legal{position:fixed;left:0;right:0;bottom:0;max-width:none;padding:18px 16px 8px!important;font-size:11px!important;line-height:1.5;color:rgba(255,244,228,.9)!important;background:linear-gradient(rgba(30,22,16,0),rgba(30,22,16,.8))!important}
-}
-@media (min-width:821px) and (max-aspect-ratio:3/2){
-  .auth .sign{top:12.7vh}
-  .auth .sign .biglogo{width:5.1vh}
-  .auth .sign h1{font-size:4.9vh}
+  .auth,.auth:not(:has(form.loan)){display:block;height:100vh;min-height:0;overflow:hidden}
+  .auth .hero{position:fixed;inset:0}
+  .auth .scene{--W:max(100vw,100vh * 1.15);top:50%;transform:translate(-50%,-50%)}
+  .auth .scene::after{content:none}
+  .authcard{position:fixed;right:max(48px,7.5vw);bottom:max(112px,15vh);width:300px;margin:0}
+  /* 회원가입처럼 긴 카드는 고정하지 않고 화면을 내려 보게 */
+  .auth:not(:has(form.loan)){height:auto;min-height:100vh;overflow:visible;overflow-x:clip;padding:40px 0 40px!important}
+  .auth:not(:has(form.loan)) .authcard{position:relative;right:auto;bottom:auto;margin:0 max(48px,7.5vw) 0 auto;width:340px}
+  .auth:not(:has(form.loan)) .tai{display:none}
 }
 
 /* 로그인 서점 불 켜기(2026-11-25 밤, Figma 08): 창과 문 안쪽 실내만 어두운 막(web/login/shop*-dim.webp, 사진과 같은 비율·위치)을 덮었다가 2초 동안 걷어(시작은 예전 1초 지점 밝기, 막 70%)
    서점 안 등이 점점 환해진다. 가장 밝을 때가 원래 사진. 탭을 바꿔도 다시 어두워지지 않게 body 가상 요소로 둔다 */
-body:has(.auth)::after{content:"";position:absolute;left:0;top:0;width:100vw;aspect-ratio:934/1400;z-index:1;pointer-events:none;
-  background:url(login/shop-m-dim.webp) 0 0/100% 100% no-repeat;animation:shopLit 2s cubic-bezier(.4,0,.3,1) .2s both}
-@media (min-width:821px){body:has(.auth)::after{position:fixed;inset:0;width:auto;aspect-ratio:auto;background:url(login/shop-dim.webp) center/cover no-repeat}}
+.auth .scene>.sdim{animation:shopLit 2s cubic-bezier(.4,0,.3,1) .2s both}
 @keyframes shopLit{from{opacity:.7}to{opacity:0}}
-@media (prefers-reduced-motion:reduce){body:has(.auth)::after{animation:none;opacity:0}}
+@media (prefers-reduced-motion:reduce){.auth .scene>.sdim{animation:none;opacity:0}}
 
 /* 로그인 대출 카드 아래 회사 로고(TAi Edutech, 웜화이트 #FFF6E8 한 색, web/login/tai.png) */
-.auth .tai{position:relative;z-index:2;display:flex;justify-content:center;margin:24px auto 0;padding-bottom:28px}
+.auth .tai{position:relative;z-index:2;display:flex;justify-content:center;margin:14px auto 0;padding:0}
 .auth .tai{flex-direction:column;align-items:center;gap:3px;color:#FFF6E8;font-family:var(--f-body);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;line-height:1;user-select:none}
 .auth .tai .t1{display:flex;align-items:baseline;gap:3px}
 .auth .tai .t1 b{font-size:21px;font-weight:900;letter-spacing:-.02em}
@@ -2384,7 +2382,7 @@ function authHTML(){
     <button type="button" class="lnk" data-act="authtab" data-v="login">로그인으로 돌아가기</button></form>`;
   else if(t==='gsignup'&&S.gs)body=suFormHTML(true);
   else body=suFormHTML(false);
-  return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div>
+  return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="scene"><img class="sbg" src="login/lane.webp" width="1024" height="1024" alt=""><img class="sdim" src="login/lane-dim.webp" alt=""><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div></div>
     <p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p></section>
     <section class="authcard"><div class="lchead" aria-hidden="true"><span>002. JM. 고486</span><span>No. 1024</span></div><div class="ahead"><h2>영원이북 대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}">회원가입</button></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
     <div class="tai" role="img" aria-label="TAi Edutech · Think &amp; Action by Ai"><span class="t1"><b>TAi</b><i>Edutech</i></span><span class="t2"><b>T</b>hink &amp; <b>A</b>ction by <b>Ai</b></span></div></div>`;
