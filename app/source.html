@@ -1474,6 +1474,26 @@ html[data-month="2"] .top::after{background-image:url("data:image/svg+xml,%3Csvg
 .sscene .blb{animation:blb 1.8s ease-in-out infinite alternate}
 @keyframes blb{from{opacity:.55}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){html[data-month] .top::after,.sscene .blb{animation:none}}
+
+/* 홈 표지 격자 고급 선반(2026-11-25, Figma '04 서재 선반 (고급)'): 위 조명이 비치는 뒤판, 빛 받는 원목 윗면 + 앞판 나뭇결, 검은 금속 레일.
+   표지는 뒤판에 살짝 기대어 서고(위가 뒤로 넘어감), 뒤판 그림자와 바닥 접지 그림자를 넣어 실제 서가처럼 */
+.grid{--wall1:color-mix(in srgb,var(--bg) 62%,#A88A62);--wall2:color-mix(in srgb,var(--bg) 48%,#9C7C52);--wall3:color-mix(in srgb,var(--bg) 30%,#8A6A44)}
+.grid .cvw::before{content:"";position:absolute;left:calc(var(--gap)/-2);right:calc(var(--gap)/-2);top:-16px;bottom:0;z-index:0;pointer-events:none;
+  background:linear-gradient(rgba(62,47,38,.26),rgba(62,47,38,0) 12px),linear-gradient(rgba(255,246,226,0) 70%,rgba(43,30,20,.22)),linear-gradient(rgba(255,246,226,.8),rgba(255,246,226,0) 48%),linear-gradient(var(--wall1),var(--wall2) 55%,var(--wall3))}
+.grid .cvw::after{content:"";position:absolute;left:calc(var(--gap)/-2);right:calc(var(--gap)/-2);top:-13px;height:2px;border-radius:2px;z-index:0;pointer-events:none;background:#FFF6E2;box-shadow:0 3px 12px 3px rgba(255,238,200,.85)}
+.cvmain .cvimg{transform:perspective(520px) rotateX(9deg);transform-origin:50% 100%}
+.cv:hover .cvmain .cvimg{transform:perspective(520px) rotateX(5deg) translateY(-3px)}
+.cvmain .cvimg:has(>img)::before{content:"";position:absolute;left:14%;right:-5%;top:3%;bottom:2%;z-index:-1;background:rgba(43,30,20,.30);filter:blur(9px);border-radius:4px}
+.cvmain .cvimg::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-5px;height:9px;border-radius:50%;z-index:-1;background:rgba(43,30,20,.42);filter:blur(3px);pointer-events:none}
+.cvmain .cvimg>img{filter:drop-shadow(2px 3px 3px rgba(40,25,15,.32)) drop-shadow(0 1px 0 rgba(0,0,0,.08))}
+.cvmain .cvimg:not(:has(>img)){box-shadow:inset 3px 0 0 rgba(255,255,255,.4),inset 0 22px 18px -14px rgba(0,0,0,.18),3px 3px 6px -1px rgba(40,25,15,.35)!important}
+.grid .shelf{position:relative;z-index:3;height:22px;margin:0 calc(var(--gap)/-2) 10px;
+  background:linear-gradient(#F3DDB8,#F3DDB8) 0 8px/100% 1px no-repeat,linear-gradient(#E8CFA6,#CFAE80) 0 0/100% 8px no-repeat,
+    repeating-linear-gradient(90deg,transparent 0 37px,rgba(110,76,45,.16) 37px 38px,transparent 38px 91px) 0 10px/100% 12px no-repeat,
+    linear-gradient(#B98C5A,#A47A4C 50%,#8C6640) 0 9px/100% 13px no-repeat;
+  box-shadow:0 9px 12px -5px rgba(62,47,38,.42)}
+.grid .shelf::before{content:"";position:absolute;left:0;right:0;top:-10px;height:4px;border-radius:0;background:linear-gradient(#5E5650,#2E2A27 45%,#1E1B19);box-shadow:0 2px 3px rgba(0,0,0,.28)}
+@media (prefers-reduced-motion:reduce){.cvmain .cvimg{transition:none}}
 </style>
 
 <div id="app"></div>
