@@ -1492,7 +1492,6 @@ html[data-month="2"] .top::after{background-image:url("data:image/svg+xml,%3Csvg
     repeating-linear-gradient(90deg,transparent 0 37px,rgba(110,76,45,.16) 37px 38px,transparent 38px 91px) 0 10px/100% 12px no-repeat,
     linear-gradient(#B98C5A,#A47A4C 50%,#8C6640) 0 9px/100% 13px no-repeat;
   box-shadow:0 9px 12px -5px rgba(62,47,38,.42)}
-.grid .shelf::before{content:"";position:absolute;left:0;right:0;top:-10px;height:4px;border-radius:0;background:linear-gradient(#5E5650,#2E2A27 45%,#1E1B19);box-shadow:0 2px 3px rgba(0,0,0,.28)}
 @media (prefers-reduced-motion:reduce){.cvmain .cvimg{transition:none}}
 
 /* 계절 테마 재디자인(2026-11-25, Figma '05 계절 테마 (고급)'): 떨어지는 것은 작고 옅게, 글자 기호 대신 모양 */
@@ -1507,6 +1506,17 @@ html[data-month="2"] .top::after{background-image:url("data:image/svg+xml,%3Csvg
 /* 달마다 바탕 번짐도 앱의 크림 톤에 맞춰 옅고 따뜻하게 */
 .sfx.m1{background:linear-gradient(#F5E6C4 0,rgba(255,255,255,0) 46%)!important}.sfx.m2{background:linear-gradient(#F5DCE0 0,rgba(255,255,255,0) 46%)!important}.sfx.m3{background:linear-gradient(#F7E3E7 0,rgba(255,255,255,0) 46%)!important}.sfx.m4{background:linear-gradient(#F6DDE4 0,rgba(255,255,255,0) 46%)!important}.sfx.m5{background:linear-gradient(#F4E0DA 0,rgba(255,255,255,0) 46%)!important}.sfx.m6{background:linear-gradient(#E9E5EF 0,rgba(255,255,255,0) 46%)!important}.sfx.m7{background:linear-gradient(#EEE9D6 0,rgba(255,255,255,0) 46%)!important}.sfx.m8{background:linear-gradient(#F5DDCC 0,rgba(255,255,255,0) 46%)!important}.sfx.m9{background:linear-gradient(#F3E8C8 0,rgba(255,255,255,0) 46%)!important}.sfx.m10{background:linear-gradient(#EEDFDA 0,rgba(255,255,255,0) 46%)!important}.sfx.m11{background:linear-gradient(#F0DDC6 0,rgba(255,255,255,0) 46%)!important}.sfx.m12{background:linear-gradient(#F2DCD3 0,rgba(255,255,255,0) 46%)!important}
 .sfx .wv{opacity:.4}.sfx .sfloor{opacity:.7}
+
+/* 홈 책장의 책은 모두 같은 크기(3:4)·같은 기울기(2026-11-25, Figma 04 수정). 그림은 늘이지 않고 틀을 채운다.
+   비율이 15% 넘게 다른 그림(.xr)만 틀 안에 맞추고 남는 곳은 표지 바탕색 */
+.cvmain .cvimg:has(>img){background:var(--soft)!important;overflow:hidden!important;border-radius:2px 4px 4px 2px!important;
+  box-shadow:3px 3px 6px -1px rgba(40,25,15,.38),10px -2px 16px -6px rgba(43,30,20,.30),0 7px 7px -4px rgba(43,30,20,.40)!important}
+.cvmain .cvimg>img{object-fit:cover!important;object-position:center!important;filter:none!important}
+.cvmain .cvimg.xr>img{object-fit:contain!important}
+.cvmain .cvimg:has(>img)::before{content:none}
+.cvmain .cvimg:has(>img)::after{left:0;right:0;top:0;bottom:0;height:auto;border-radius:0;filter:none;z-index:1;
+  background:linear-gradient(90deg,rgba(255,255,255,.20) 0,rgba(255,255,255,0) 5%,rgba(0,0,0,.16) 6%,rgba(0,0,0,0) 9%),linear-gradient(rgba(0,0,0,.14),rgba(0,0,0,0) 22%)}
+.cvmain .cvimg>.stk,.cvmain .cvimg>.ytm{z-index:2}
 </style>
 
 <div id="app"></div>
@@ -6036,7 +6046,7 @@ render();
 /* 책표지 프레임을 올린 이미지의 원래 비율에 맞춤 */
 (function(){
   var SEL='.cvimg,.fcv,.mcv',cache=new Map();
-  function setAr(img,ar){var f=img.closest&&img.closest(SEL);if(!f||!ar)return;f.style.setProperty('--ar',ar);var w=f.closest('.cvw');if(w)w.style.setProperty('--ar',ar)}
+  function setAr(img,ar){var f=img.closest&&img.closest(SEL);if(!f||!ar)return;f.style.setProperty('--ar',ar);if(f.classList.contains('cvimg'))f.classList.toggle('xr',Math.abs(ar-.75)>.75*.15);var w=f.closest('.cvw');if(w)w.style.setProperty('--ar',ar)}
   function fit(img){
     if(!img||img.tagName!=='IMG'||!img.closest||!img.closest(SEL))return;
     var src=img.currentSrc||img.src;
