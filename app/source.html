@@ -1942,8 +1942,10 @@ function artOf(title,kind,yr){
   if(!title)return '';const h=hid(title);if(S.covers&&S.covers[h])return S.covers[h];
   const k=(kind==='movie'?'m':'b')+h;const v=ART[k];
   if(!(v&&Date.now()-v.t<(v.u?7:1)*864e5))artWant(k,{kind:kind==='movie'?'movie':'book',title:bTitle(title),author:kind==='movie'?'':bAuthor(title),year:yr?String(yr):''});
-  return (v&&v.u)||'';
+  return bigCover((v&&v.u)||'');
 }
+/* 카카오 작은 썸네일(120px) → 주소 안의 다음 책 원본(https). 서버도 같은 규칙(media.ts bigCover) */
+function bigCover(u){const m=/[?&]fname=([^&]+)/.exec(u||'');if(!m)return u;let f='';try{f=decodeURIComponent(m[1])}catch(e){return u}return /^https?:\/\/[a-z0-9.-]*daumcdn\.net\//i.test(f)?f.replace(/^http:/,'https:'):u}
 function artWant(k,q){if(S.artOff||!S.id||ARTP[k])return;ARTP[k]=1;artQ.push({k,q});setTimeout(artPump,0)}
 function artPump(){const SV=window.__002&&window.__002.server;if(!SV)return;
   while(artRun<3&&artQ.length&&!S.artOff){const {k,q}=artQ.shift();artRun++;
@@ -1955,7 +1957,7 @@ function artDirty(){artSave();clearTimeout(artT);artT=setTimeout(()=>{const a=do
 const coverOf=title=>artOf(title,'book');
 /* 자동으로 찾은 그림 주소가 열리지 않으면(지워졌거나 막힘) 그 그림은 하루 동안 쓰지 않고 도형 그림으로 바꾼다 */
 document.addEventListener('error',e=>{const im=e.target;if(!im||im.tagName!=='IMG')return;const src=im.getAttribute('src')||'';
-  const k=Object.keys(ART).find(x=>ART[x]&&ART[x].u&&ART[x].u===src);if(!k)return;ART[k]={u:'',t:Date.now(),bad:1};im.style.visibility='hidden';artDirty()},true);
+  const k=Object.keys(ART).find(x=>ART[x]&&ART[x].u&&(ART[x].u===src||bigCover(ART[x].u)===src));if(!k)return;if(src!==ART[k].u&&!im.dataset.small){im.dataset.small=1;im.src=ART[k].u;return}/* 원본이 안 열리면 작은 썸네일로 한 번 */ART[k]={u:'',t:Date.now(),bad:1};im.style.visibility='hidden';artDirty()},true);
 const yearOf=(it,t)=>{const x=it&&(it.m1===t?it.m1Info:it.m2===t?it.m2Info:null);return x&&x.year||''};
 const coverInner=it=>{const img=coverOf(it.book);return img?`<img src="${img}" alt="${esc(it.book)} 표지">`:`<span class="phd">${BOOKG}<span>${esc(it.genre)}</span></span>`};
 function coverBlock(it){

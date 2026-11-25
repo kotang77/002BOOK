@@ -12,6 +12,9 @@ const DAILY = () => Number(env('ART_DAILY_LIMIT', '300'));
 const clean = (s: unknown, n: number) => String(s ?? '').replace(/\s+/g, ' ').trim().slice(0, n);
 export const normT = (s: unknown) => String(s ?? '').replace(/<[^>]*>|!H[SE]/g, '').replace(/\(.*?\)|\[.*?\]/g, '').replace(/[^0-9A-Za-z가-힣]/g, '').toLowerCase();
 const https = (u: unknown) => { const s = clean(u, 400); return /^https?:\/\//.test(s) ? s.replace(/^http:/, 'https:') : ''; };
+/* 카카오 thumbnail은 120×174라 큰 화면에서 흐리다: 주소 안의 원본(다음 책 이미지, 보통 400px 넘음)을 https로 쓴다. 다음 이미지 주소가 아니면 그대로 */
+export const bigCover = (u: string) => { const m = /[?&]fname=([^&]+)/.exec(u); if (!m) return u; let f = ''; try { f = decodeURIComponent(m[1]); } catch { return u; }
+  return /^https?:\/\/[a-z0-9.-]*daumcdn\.net\//i.test(f) ? f.replace(/^http:/, 'https:') : u; };
 
 type Art = { url: string; src: string; title?: string };
 
@@ -37,7 +40,7 @@ async function kakaoBook(title: string, author: string): Promise<Art | null> {
     if (a && au.includes(a)) s += 2;
     if (s > bs) { bs = s; best = d; }
   }
-  return best ? { url: https(best.thumbnail), src: 'kakao', title: clean(best.title, 120) } : null;
+  return best ? { url: bigCover(https(best.thumbnail)), src: 'kakao', title: clean(best.title, 120) } : null;
 }
 export async function bookArt(title: string, author: string): Promise<Art | null> {
   if (env('NL_CERT_KEY') || env('FAKE_NL')) {
