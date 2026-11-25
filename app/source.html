@@ -1846,7 +1846,9 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .vbz-clip{position:absolute;left:50%;top:-7px;width:64px;height:14px;transform:translateX(-50%);border-radius:2px;background:linear-gradient(#FBE3A8,#D9AE62 55%,#B3874A);box-shadow:0 1px 2px rgba(0,0,0,.3)}
 .vbz-q{margin:0;font-family:var(--f-display);font-size:19px;line-height:1.5;color:#2E2A26;word-break:keep-all}
 .vbz textarea{border-radius:10px;font-size:16px;min-height:84px;background:#fff}
-.vbz-pic{display:flex;flex-direction:column;gap:6px}.vbz-pic small{font-size:11.5px;color:#8A7F73}
+.vbz-pic{display:flex;justify-content:flex-start}
+.vbz-pic .vbm-b{font-size:12.5px;padding:5px 12px}
+.vbm{display:flex;align-items:center;gap:6px}.vbm img{width:44px;height:44px;object-fit:cover;border-radius:6px}.vbm .chip{font-size:12px;padding:4px 10px}
 .vbz-ref{margin:0;font-size:11px;color:#8A7F73}
 .vbz-nav{display:grid;grid-template-columns:1fr 2fr;gap:10px}.vbz-nav .btn{min-height:48px;border-radius:12px}
 .vbz-nav .btn:not(.ghost){background:#1F4637;border-color:#1F4637;color:#FFF8EA;font-weight:700}
@@ -2315,6 +2317,8 @@ function vbBoardHTML(v){
     ${(()=>{const P=Object.entries(v.pub||{}).filter(([k,p])=>p&&p.u&&!(v.img||{})[k]);return P.length?`<p class="vcred">공개 사진: ${P.map(([,p])=>`${p.src?`<a href="${esc(p.src)}" target="_blank" rel="noopener">${esc(p.by)}</a>`:esc(p.by)} (${esc(p.lic)})`).join(' · ')} · Openverse</p>`:''})()}
     <div class="vbf">002BOOK · 꿈이 이루어지는 곳이 천국이다</div></div></details></div>`;
 }
+/* 꿈 인터뷰용 작은 사진 버튼(2026-11-26): 설명 없이 '📷 사진'만, 올리면 작은 미리보기 + 빼기 */
+const vbMini=(k,src)=>src?`<span class="vbm"><img src="${src}" alt="올린 사진"><label class="chip up">바꾸기<input type="file" accept="image/*" data-vbimg="${k}"></label><button type="button" class="chip" data-act="vbimgdel" data-k="${k}">빼기</button></span>`:`<label class="chip up vbm-b">📷 사진<input type="file" accept="image/*" data-vbimg="${k}"></label>`;
 const vbThumb=(k,src)=>src?`<span class="vbph"><img src="${src}" alt="올린 사진"></span><span class="vbpa"><label class="chip up">📷 사진 바꾸기<input type="file" accept="image/*" data-vbimg="${k}"></label><button type="button" class="chip" data-act="vbimgdel" data-k="${k}">사진 빼기</button></span>`:`<label class="vbup up"><i>📷</i><span><b>사진 올리기</b><small>꿈을 닮은 실제 사진을 붙이면 보드에 그대로 보여요</small></span><input type="file" accept="image/*" data-vbimg="${k}"></label>`;
 function vbCusRow(c,I){I=I||S.vbImgs||{};const sel=VSEC.map(([s,,ko])=>`<option value="${s}" ${c.sec===s?'selected':''}>${ko}</option>`).join('');
   return `<div class="vbq cus" data-cid="${c.id}"><div class="vbcr"><select name="csec-${c.id}" aria-label="붙일 자리">${sel}</select><button type="button" class="chip" data-act="vbdel" data-k="${c.id}">삭제</button></div><label for="vbc-${c.id}">✨ 꿈을 이룬 나의 모습을 적어 주세요<input id="vbc-${c.id}" name="ctext-${c.id}" maxlength="60" placeholder="예: 우리 가족과 오로라를 보고 있어요" value="${esc(c.text||'')}"></label><div class="vbqo"><select name="when-${c.id}" aria-label="이루는 때">${vbWhenOpts(c.when)}</select><span class="vbqi" id="vbth-${c.id}">${vbThumb(c.id,I[c.id])}</span></div></div>`}
@@ -2333,7 +2337,7 @@ async function vbImgUp(k,file){
     const iw=im.naturalWidth,ih=im.naturalHeight,s=Math.min(1,400/Math.max(iw,ih)),W=Math.max(1,Math.round(iw*s)),H=Math.max(1,Math.round(ih*s));
     const cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,W,H);cx.drawImage(im,0,0,W,H);
     let q=.82,d=cv.toDataURL('image/jpeg',q);while(d.length>36000&&q>.4){q-=.1;d=cv.toDataURL('image/jpeg',q)}
-    S.vbImgs=S.vbImgs||{};S.vbImgs[k]=d;S.vbIr=S.vbIr||{};S.vbIr[k]=+(iw/ih).toFixed(3);const t=document.getElementById('vbth-'+k);if(t)t.innerHTML=vbThumb(k,d);
+    S.vbImgs=S.vbImgs||{};S.vbImgs[k]=d;S.vbIr=S.vbIr||{};S.vbIr[k]=+(iw/ih).toFixed(3);const t=document.getElementById('vbth-'+k);if(t)t.innerHTML=(t.dataset.small?vbMini:vbThumb)(k,d);
   }catch(e){toast('사진을 넣지 못했어요. 다른 사진으로 해 주세요.')}finally{URL.revokeObjectURL(url)}
 }
 /* 꿈 인터뷰(2026-11-26, Figma 10): 심리학 연구에 기댄 10문항을 '지금의 나 → 바라는 나 → 최고의 미래 → 구체화 → 장애물 → 실행 계획' 흐름으로 하나씩 묻는다.
@@ -2357,8 +2361,7 @@ function vbWizHTML(){const W=S.vbW;const n=W.n,[k,stage,,ex,ref]=VBW[n];const A=
   return `<div class="vbz"><div class="vbz-h"><small>꿈 인터뷰 ${n+1} / ${VBW.length} · ${stage}</small><ol class="vbz-bar" aria-hidden="true">${VBW.map((_,i)=>`<li class="${i<=n?'on':''}"></li>`).join('')}</ol></div>
     <div class="vbz-c"><span class="vbz-clip" aria-hidden="true"></span><h3 class="vbz-q">${esc(vbWQ(n,A))}</h3>
       <textarea id="vbz-in" maxlength="60" rows="3" placeholder="${esc(ex)}" aria-label="답 적기">${esc(A[k]||'')}</textarea>
-      ${pic?`<div class="vbz-pic"><span class="vbqi" id="vbth-${k}">${vbThumb(k,I[k])}</span><small>사진이 없으면 꿈과 어울리는 공개 사진을 찾아 붙여요</small></div>`:''}
-      <p class="vbz-ref">왜 이 질문? ${esc(ref)}</p></div>
+      ${pic?`<div class="vbz-pic" id="vbth-${k}" data-small="1">${vbMini(k,I[k])}</div>`:''}</div>
     <div class="vbz-nav"><button class="btn ghost" data-act="vbwprev" ${n?'':'disabled'}>이전</button><button class="btn" data-act="vbwnext">${last?'✨ 비전보드 만들기':'다음'}</button></div>
     <button class="lnk vbz-skip" data-act="vbwskip">${last?'건너뛰고 만들기':'이 질문 건너뛰기'}</button></div>`}
 function vbWizSave(){const W=S.vbW;if(!W)return;const el=document.getElementById('vbz-in');if(el)W.a[VBW[W.n][0]]=String(el.value||'').trim().slice(0,60)}
@@ -6175,7 +6178,7 @@ document.addEventListener('click',async e=>{
     case 'vbaskgo':vbAnswer();break;
     case 'vbasknext':S.vbAsk=vbPickQ(vbOf(),S.vbAsk&&S.vbAsk.id);S.vbImgs=null;S.vbIr=null;renderLayers();break;
     case 'vbaskx':S.vbAsk=null;S.vbImgs=null;S.vbIr=null;renderLayers();break;
-    case 'vbimgdel':{if(S.vbImgs)delete S.vbImgs[d.k];if(S.vbIr)delete S.vbIr[d.k];const t=document.getElementById('vbth-'+d.k);if(t)t.innerHTML=vbThumb(d.k,'');break}
+    case 'vbimgdel':{if(S.vbImgs)delete S.vbImgs[d.k];if(S.vbIr)delete S.vbIr[d.k];const t=document.getElementById('vbth-'+d.k);if(t)t.innerHTML=(t.dataset.small?vbMini:vbThumb)(d.k,'');break}
     case 'vbremake':if(!S.vbBusy)vbMake();break;
     case 'vbsave':vbSave(false);break;
     case 'vbsaveall':vbSave(true);break;
