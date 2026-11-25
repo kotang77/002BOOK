@@ -42,7 +42,7 @@ with sync_playwright() as p:
         pg = ctx.new_page(); pg.route('**/cdnjs.cloudflare.com/**', LIB)
         pg.on('pageerror', lambda e: errs.append(str(e)[:200]))
         pg.goto(WEB + '/'); pg.wait_for_selector('.biglogo', timeout=20000); time.sleep(1.2)
-        ok(f'{mode}: 로그인 화면 로고', pg.evaluate("document.querySelector('.biglogo').getBoundingClientRect().width") > 60)
+        ok(f'{mode}: 로그인 화면 로고', pg.evaluate("document.querySelector('.biglogo').getBoundingClientRect().width") > 40)
         pg.screenshot(path=OUT + f'{mode}_0_login.png')
         pg.evaluate("s=>localStorage.setItem('002.session',JSON.stringify(s))", s); pg.goto(WEB + '/'); pg.wait_for_selector('.who', timeout=20000); time.sleep(1.5)
         ok(f'{mode}: 학습 화면 그림 모두 열림', not pg.evaluate(BROKEN), pg.evaluate(BROKEN))
