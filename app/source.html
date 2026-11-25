@@ -42,23 +42,27 @@ html[data-theme="sky"]{
 html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% -140px,rgba(190,220,126,.28),transparent 70%)}
 
 /* ---------- 2026-11-25 디자인 2차(피그마 06~17) ---------- */
-.todo{background:var(--now-bg);border:1.5px solid var(--now-line);border-radius:18px;padding:16px 16px 14px;margin:2px 0 16px;display:flex;flex-direction:column;gap:12px}
-.todo-k{font-size:13px;font-weight:700;color:var(--now-ink)}
-.todo-m{display:flex;gap:14px;align-items:center}
+.todo{background:var(--now-bg);border:1.5px solid var(--now-line);border-radius:16px;padding:12px 14px;margin:2px 0 14px;display:flex;flex-direction:column;gap:10px}
+.todo-k{font-size:12px;font-weight:700;color:var(--now-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.todo-m{display:flex;gap:12px;align-items:center}
 .todo-th,.wk-th,.mdone-th{flex:none;width:64px;height:86px;border-radius:8px;overflow:hidden;background:var(--soft);box-shadow:0 2px 6px var(--shadow);display:block}
+.todo-th{width:46px;height:64px}
 .todo-th img,.wk-th img,.mdone-th img{width:100%;height:100%;object-fit:cover;display:block}
 .todo-th.ph .art,.wk-th.ph .art,.mdone-th.ph .art{width:100%;height:100%;border-radius:0}
-.todo-x{display:flex;flex-direction:column;gap:4px;min-width:0}
-.todo-t{font-family:var(--f-display);font-size:19px;line-height:1.4;font-weight:700;color:var(--ink)}
-.todo-x small{font-size:13px;color:var(--muted)}
-.todo-b{width:100%;min-height:52px;font-size:16.5px;border-radius:999px}
-.todo-p{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--muted)}
-.todo-n b{font-family:var(--f-display);font-size:22px;color:var(--ink)}
-.todo-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.todo-bar i{height:6px;border-radius:3px;background:rgba(0,0,0,.08)}
+.todo-x{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.todo-t{font-family:var(--f-display);font-size:16px;line-height:1.35;font-weight:700;color:var(--ink);word-break:keep-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:380px){.todo-m{gap:10px}.todo-th{width:40px;height:56px}.todo-t{font-size:15px}.todo-b{padding:0 12px;font-size:13.5px;min-height:38px}}
+.todo-x small{display:none;font-size:13px;color:var(--muted)}
+.todo-b{flex:none;min-height:40px;padding:0 16px;font-size:14px;border-radius:999px;white-space:nowrap}
+.todo-p{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.todo-g{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.todo-n{flex:none}.todo-n b{color:var(--ink);font-weight:700}
+.todo-bar{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.todo-bar i{height:5px;border-radius:3px;background:rgba(0,0,0,.08)}
 .todo-bar i:nth-child(1){--sc:var(--st1)}.todo-bar i:nth-child(2){--sc:var(--st2)}.todo-bar i:nth-child(3){--sc:var(--st3)}.todo-bar i:nth-child(4){--sc:var(--st4)}
 .todo-bar i.dn{background:var(--sc)}.todo-bar i.nx{background:var(--sc);opacity:.75}
-@media (min-width:721px){.todo{display:grid;grid-template-columns:minmax(0,1fr) 260px;align-items:center;column-gap:22px}.todo-k,.todo-p,.todo-bar{grid-column:1/-1}.todo-m{grid-column:1}.todo-b{grid-column:2}}
+/* 2026-11-25 피그마 06 홈 컴팩트: 휴대폰은 한 줄(표지·제목·버튼)+진도 한 줄. 모니터는 예전 크기 */
+@media (min-width:721px){.todo{padding:16px 18px 14px;gap:12px;border-radius:18px}.todo-k{font-size:13px}.todo-m{gap:16px}.todo-th{width:64px;height:86px}.todo-x{gap:4px}.todo-t{font-size:19px;line-height:1.4}.todo-x small{display:block}.todo-b{width:260px;min-height:52px;font-size:16.5px}.todo-p{font-size:13px}.todo-n b{font-size:15px}.todo-bar i{height:6px}}
 .mpanel:has(.mact){padding-bottom:0}
 .mhead{font-family:var(--f-display);font-size:19px;line-height:1.45;margin:6px 0 2px;color:var(--ink)}
 .wks{display:flex;flex-direction:column;gap:10px}
@@ -2496,11 +2500,8 @@ function todoHTML(){
   else if(nx.k==='essay'){const ev=S.evals&&S.evals[nk(i)];title=nx.part?'쓰던 글을 이어서 써요':'질문 하나를 골라<br>글 한 편을 써요';sub=ev?'첨삭 결과가 나왔어요':'다 쓰면 AI 선생님이 첨삭해요';btn=nx.part?'이어서 쓰기':'글쓰기'}
   else{title='질문을 듣고<br>말로 답해요';sub=nx.part?'2차 답변이 남았어요':'모범 답안을 따라 읽고 다시 답해요';btn='말하기'}
   return `<section class="todo" aria-label="지금 할 일">
-    <span class="todo-k">지금 할 일 · ${n}단계 ${esc(nx.t)}</span>
-    <div class="todo-m">${wkThumb(it,i,nx.k==='work'?k:'book','todo-th')}<div class="todo-x"><b class="todo-t">${title}</b><small>${sub}</small></div></div>
-    <button class="btn todo-b" ${act}>${btn}</button>
-    <div class="todo-p"><span class="todo-g">${esc(it.g)} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kw?' · '+esc(kw):''}</span><span class="todo-n"><b>${dn}</b> / 4단계</span></div>
-    <div class="todo-bar" aria-hidden="true">${st.map(x=>`<i class="${x.done?'dn':x.k===nx.k?'nx':''}"></i>`).join('')}</div>
+    <div class="todo-m">${wkThumb(it,i,nx.k==='work'?k:'book','todo-th')}<div class="todo-x"><span class="todo-k">지금 할 일 · ${n}단계 ${esc(nx.t)}</span><b class="todo-t">${title}</b><small>${sub}</small></div><button class="btn todo-b" ${act}>${btn}</button></div>
+    <div class="todo-p"><span class="todo-g">${esc(it.g)} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kw?' · '+esc(kw):''}</span><div class="todo-bar" aria-hidden="true">${st.map(x=>`<i class="${x.done?'dn':x.k===nx.k?'nx':''}"></i>`).join('')}</div><span class="todo-n" aria-label="4단계 중 ${dn}단계 완료"><b>${dn}</b>/4</span></div>
   </section>`;
 }
 function courseHTML(){
