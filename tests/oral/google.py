@@ -74,7 +74,7 @@ api('auth.withdraw', s2['token'], pw='testpass1234')
 
 # ---- 앱 ----
 FAKE_GSI = """window.google={accounts:{id:{initialize(o){window.__gcfg=o},disableAutoSelect(){},prompt(){},
- renderButton(el,o){const b=document.createElement('button');b.type='button';b.className='fakegsi';b.textContent='G '+o.text;b.style.cssText='height:40px;border:1px solid #dadce0;border-radius:20px;background:#fff;width:'+o.width+'px';
+ renderButton(el,o){const b=document.createElement('button');b.type='button';b.className='fakegsi';b.textContent='G '+o.text;b.style.cssText='height:40px;border:1px solid #dadce0;border-radius:20px;background:#fff;width:'+(o.width||40)+'px;overflow:hidden';
  b.onclick=()=>window.__gcfg.callback({credential:window.__gTok});el.appendChild(b)}}}};"""
 def setup(ctx, google=True):
     gid = 'test.apps.googleusercontent.com' if google else ''

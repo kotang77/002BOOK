@@ -1712,6 +1712,17 @@ body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-
 /* 로그인 화면에서는 하단 안내 글자를 모두 숨김(11-25 사용자 지시). 앱 안 화면에는 그대로 */
 body:has(.auth) #legal{display:none!important}
 @media (min-width:821px){.auth .tai{position:fixed;right:max(48px,7.5vw);bottom:max(44px,7vh);width:300px;margin:0;padding:0}.auth .tai{text-shadow:0 1px 3px rgba(30,20,10,.8),0 0 10px rgba(30,20,10,.5)}}
+
+/* 대출 카드 정리(2026-11-26, Figma 08 v5): '잊었어요?'는 비밀번호 칸 오른쪽 끝으로, 구글 로그인은 초록 버튼 옆 네모 아이콘 버튼(구글 공식 아이콘 버튼)으로 → 주머니가 한 줄 */
+.authcard .lrow.lpw{grid-template-columns:64px 1fr auto}
+.authcard .lrow.lpw>label{display:block;font-size:12px;gap:0;border-right:1px solid var(--ll)}
+.authcard .lrow.lpw>label>span{display:block;padding:0 0 0 6px;line-height:36px;color:var(--lb);font-weight:500;border:0}
+.authcard .lrow.lpw>.lnk{align-self:center;margin:0 4px 0 0;padding:6px 4px;font-size:11.5px;color:#789CC8;white-space:nowrap;text-decoration:underline;text-underline-offset:2px}
+.lpocket{flex-direction:row;align-items:center;gap:8px;padding:14px 18px}
+.lpocket .btn[type=submit]{flex:1;width:auto;margin-top:0!important}
+.lpocket .gsi.gico{flex:none;width:40px;height:40px;margin:0;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(90,62,36,.35)}
+.lpocket .gsi.gico [data-gsi]{min-height:40px;width:40px}
+.lpocket .gsi.gico[hidden]{display:none}
 </style>
 
 <div id="app"></div>
@@ -2372,9 +2383,9 @@ function authHTML(){
   if(S.dbState==='loading')body='<p class="hint">서재 문을 여는 중이에요…</p>';
   else if(S.dbState==='none')body='<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>';
   else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span>아이디</span><input id="li-id" name="id" placeholder="아이디를 적어요" autocomplete="username" autocapitalize="none" required></label>
-    <label for="li-pw" class="lrow"><span>비밀번호</span><input id="li-pw" name="pw" type="password" placeholder="비밀번호" autocomplete="current-password" required></label>
+    <div class="lrow lpw"><label for="li-pw"><span>비밀번호</span></label><input id="li-pw" name="pw" type="password" placeholder="비밀번호" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi"><div data-gsi="auth" data-txt="signin_with"></div></div>':''}<button type="button" class="lnk" data-act="authtab" data-v="find">비밀번호를 잊었어요</button></div></form>`;
+    <div class="lpocket"><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}</div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
@@ -4062,10 +4073,10 @@ async function gsiMount(){
   if(!els.length||!gOn())return;
   els.forEach(e=>e.dataset.done='1');
   const ok=await gsiScript();
-  if(!ok){els.forEach(e=>{if(e.isConnected)e.innerHTML='<p class="hint">구글 버튼을 불러오지 못했어요. 인터넷 연결을 확인하거나 아이디로 진행해 주세요.</p>'});return}
+  if(!ok){els.forEach(e=>{if(e.isConnected&&e.dataset.type==='icon'){e.parentElement.hidden=true;return}if(e.isConnected)e.innerHTML='<p class="hint">구글 버튼을 불러오지 못했어요. 인터넷 연결을 확인하거나 아이디로 진행해 주세요.</p>'});return}
   if(!gsiInit){google.accounts.id.initialize({client_id:gCid(),callback:r=>gCred(r&&r.credential),ux_mode:'popup',auto_select:false,cancel_on_tap_outside:true,use_fedcm_for_button:true});gsiInit=true}
   els.forEach(e=>{if(!e.isConnected)return;const w=Math.max(200,Math.min(400,(e.parentElement&&e.parentElement.clientWidth)||320));
-    google.accounts.id.renderButton(e,{type:'standard',theme:'outline',size:'large',shape:'pill',text:e.dataset.txt||'continue_with',logo_alignment:'left',locale:'ko',width:w})});
+    google.accounts.id.renderButton(e,e.dataset.type==='icon'?{type:'icon',theme:'outline',size:'large',shape:'square',text:e.dataset.txt||'signin_with',locale:'ko'}:{type:'standard',theme:'outline',size:'large',shape:e.closest('.authcard')?'rectangular':'pill',text:e.dataset.txt||'continue_with',logo_alignment:'left',locale:'ko',width:w})});
 }
 // 구글이 돌려준 ID 토큰을 화면 상황(로그인·계정 연결·탈퇴 확인)에 맞게 쓴다. 시험에서는 window.__002gcb로 부른다
 async function gCred(cred){
