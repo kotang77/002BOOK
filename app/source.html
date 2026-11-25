@@ -1565,6 +1565,32 @@ html[data-month="2"] .top::after{background-image:url("data:image/svg+xml,%3Csvg
 .cvmain .cvimg:has(>img)::after{left:0;right:0;top:0;bottom:0;height:auto;border-radius:0;filter:none;z-index:1;
   background:linear-gradient(90deg,rgba(255,255,255,.20) 0,rgba(255,255,255,0) 5%,rgba(0,0,0,.16) 6%,rgba(0,0,0,0) 9%),linear-gradient(rgba(0,0,0,.14),rgba(0,0,0,0) 22%)}
 .cvmain .cvimg>.stk,.cvmain .cvimg>.ytm{z-index:2}
+/* 홈 책장 물푸레 열린 선반(2026-11-25, Figma 04 '홈 책장 · 물푸레 열린 선반'): 서재보다 얇은 윗판(6px)·아랫판(10px), 양옆이 트인 선반,
+   밝은 물푸레 무늬목(web/shelf/ash-h.webp). 등은 윗판 속에 숨긴 3000K 간접등이라 빛만 벽에 번진다 */
+.grid{row-gap:24px;margin-top:6px}
+@media (min-width:640px){.grid{row-gap:28px}}
+@media (min-width:960px){.grid{row-gap:30px}}
+.grid .cvw::before{top:-15px;
+  background:linear-gradient(rgba(70,48,26,.20),rgba(70,48,26,0) 3px),
+    linear-gradient(rgba(255,198,130,.78),rgba(255,180,106,.40) 13%,rgba(255,172,98,.14) 36%,rgba(255,170,96,0) 62%),
+    linear-gradient(rgba(255,246,226,0) 72%,rgba(43,30,20,.16)),linear-gradient(var(--wall1),var(--wall2) 55%,var(--wall3))}
+.grid .cvw::after{top:-21px;height:6px;border-radius:0;z-index:1;
+  background:linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,0) 1.5px),linear-gradient(rgba(0,0,0,0) 70%,rgba(120,84,44,.35)),
+    url(shelf/ash-h.webp) 0 30%/1800px 200px repeat-x,#E9D3AE;
+  box-shadow:0 1px 0 rgba(255,214,150,.65),0 -2px 4px -2px rgba(70,48,26,.25)}
+.grid .shelf{height:10px;margin:0 calc(var(--gap)/-2) 10px;
+  background:linear-gradient(rgba(255,236,200,.95),rgba(255,220,170,.55) 3px,rgba(0,0,0,0) 3.5px),linear-gradient(rgba(0,0,0,0) 3px,rgba(255,255,255,.18) 4px,rgba(0,0,0,0) 6px,rgba(0,0,0,0) 80%,rgba(110,76,40,.35)),
+    url(shelf/ash-h.webp) 0 60%/1800px 200px repeat-x,#E6CFA8;
+  box-shadow:0 7px 9px -5px rgba(62,47,38,.38),0 1px 0 rgba(120,84,44,.18)}
+/* 양옆이 트인 선반: 줄 처음과 끝은 나무 끝면(마구리)이 보이게 */
+.grid>.cv:nth-child(3n+1) .shelf,.grid>.cv:nth-child(3n+1) .cvw::after{border-top-left-radius:1px;border-bottom-left-radius:1px;box-shadow:inset 2px 0 0 rgba(150,110,60,.28),0 7px 9px -5px rgba(62,47,38,.38)}
+.grid>.cv:nth-child(3n) .shelf,.grid>.cv:nth-child(3n) .cvw::after{border-top-right-radius:1px;border-bottom-right-radius:1px;box-shadow:inset -2px 0 0 rgba(150,110,60,.28),0 7px 9px -5px rgba(62,47,38,.38)}
+@media (min-width:640px){.grid>.cv:nth-child(n) .shelf,.grid>.cv:nth-child(n) .cvw::after{border-radius:0;box-shadow:0 7px 9px -5px rgba(62,47,38,.38)}
+  .grid>.cv:nth-child(4n+1) .shelf,.grid>.cv:nth-child(4n+1) .cvw::after{box-shadow:inset 2px 0 0 rgba(150,110,60,.28),0 7px 9px -5px rgba(62,47,38,.38)}
+  .grid>.cv:nth-child(4n) .shelf,.grid>.cv:nth-child(4n) .cvw::after{box-shadow:inset -2px 0 0 rgba(150,110,60,.28),0 7px 9px -5px rgba(62,47,38,.38)}}
+@media (min-width:960px){.grid>.cv:nth-child(n) .shelf,.grid>.cv:nth-child(n) .cvw::after{box-shadow:0 7px 9px -5px rgba(62,47,38,.38)}
+  .grid>.cv:nth-child(6n+1) .shelf,.grid>.cv:nth-child(6n+1) .cvw::after{box-shadow:inset 2px 0 0 rgba(150,110,60,.28),0 7px 9px -5px rgba(62,47,38,.38)}
+  .grid>.cv:nth-child(6n) .shelf,.grid>.cv:nth-child(6n) .cvw::after{box-shadow:inset -2px 0 0 rgba(150,110,60,.28),0 7px 9px -5px rgba(62,47,38,.38)}}
 </style>
 
 <div id="app"></div>
