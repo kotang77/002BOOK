@@ -1633,7 +1633,8 @@ body{word-break:keep-all;overflow-wrap:break-word}
 
 /* 로그인 화면 · 서점 입구(2026-11-25 밤 신규, Figma '08 로그인 · 서점 입구'): 런던 골목 서점 분위기의 초록 가게 앞(Figma AI 생성 사진, 실제 가게 아님, web/login/shop*.webp).
    빈 간판에 금박 글씨 '영원이북'(로고 원안 모양 그대로), 그 앞 보도에 작은 '어서 오세요' 카드. 버튼은 '문 열고 들어가기' */
-body:has(.auth){background:linear-gradient(#6E5446,#3B2C22) fixed;min-height:100svh}
+html:has(.auth){background:#3B2C22}
+body:has(.auth){background:linear-gradient(#6E5446,#3B2C22 60%) #3B2C22;min-height:100svh}
 body:has(.auth) .sfx{display:none}
 .auth{display:block;position:relative;min-height:100svh;max-width:none;margin:0;padding:0!important}
 .auth .hero{display:block;position:relative;width:100vw;margin-left:calc(50% - 50vw)!important;aspect-ratio:934/1400;background:url(login/shop-m.webp) center/100% 100% no-repeat;gap:0;margin:0}
@@ -1643,23 +1644,39 @@ body:has(.auth) .sfx{display:none}
 .auth .sign h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:6.4vw;line-height:1;letter-spacing:.06em;
   background:linear-gradient(#FBE3A8,#D9AE62 55%,#B3874A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
 .auth .hero .tg,.auth .wm,.auth .sscene,.aval{display:none}
-.authcard{position:relative;z-index:2;width:calc(100% - 48px);max-width:330px;margin:-30vw auto 0;border:1px solid rgba(201,168,106,.55);border-radius:16px;padding:16px;gap:10px;
-  background:rgba(255,250,240,.95);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 16px 40px -12px rgba(20,15,8,.45)}
-.authcard .ahead{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.authcard .ahead h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--ink)}
-.authcard .tabs{gap:12px;border:0}
-.authcard .tabs button{border:0;margin:0;padding:2px 0;font-size:13px;font-weight:400;color:var(--muted)}
-.authcard .tabs button[aria-pressed=true]{color:#1F4637;font-weight:700}
-.authcard .gsi{margin:0;gap:8px}.authcard .gor{font-size:11.5px}
-.authcard form{gap:10px}
+/* 로그인 카드 = 옛 도서 대출 카드(2026-11-25 밤, Figma 08 v2): 크림 카드에 파란 인쇄 줄, 청구기호·번호는 타자기 글씨, 아래는 점선 테두리 크라프트 책 주머니(카드가 꽂힌 모양) */
+.authcard{position:relative;z-index:2;width:calc(100% - 64px);max-width:300px;margin:-40vw auto 0;border:0;border-radius:6px;padding:12px 14px 0;gap:0;
+  background:#FBF8EE;box-shadow:0 6px 14px -4px rgba(26,18,10,.35);--lb:#466C9E;--ll:rgba(120,156,200,.55);--tw:'Courier Prime','Courier New',ui-monospace,monospace}
+.lchead{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--tw);font-size:11px;line-height:1.25;color:#2E2A26;font-weight:700}
+.authcard .ahead{display:block;margin:8px 0 0}
+.authcard .ahead h2{margin:0 0 7px;font-family:var(--f-display);font-weight:700;font-size:16px;color:#2E2A26}
+.authcard .tabs{gap:0;border:0;border-top:1px solid var(--lb);border-bottom:1px solid var(--ll);margin:0 -4px}
+.authcard .tabs button{flex:none;border:0;border-right:1px solid var(--ll);border-radius:0;margin:0;padding:5px 12px;font-size:12.5px;font-weight:400;color:#789CC8;background:none}
+.authcard .tabs button[aria-pressed=true]{color:var(--lb);font-weight:700}
+.authcard>.gsi{margin:10px 0 0;gap:8px}.authcard .gor{font-size:11.5px}
+.authcard form{gap:10px;margin-top:10px}
 .authcard label{gap:4px;font-size:12.5px}
-form[data-form=login] label{font-size:0;gap:0}
-.authcard input,.authcard select{height:40px;border-radius:10px;padding:0 12px;font-size:16px;background:#fff;border-color:#DED2C0}
-.authcard textarea{border-radius:10px}
+.authcard input,.authcard select{height:40px;border-radius:8px;padding:0 12px;font-size:16px;background:#fff;border-color:#DCD2C2}
+.authcard textarea{border-radius:8px}
 .authcard .err:empty{display:none}
-.authcard form .btn[type=submit]:not(.ghost):not(.small){height:44px;border-radius:10px;font-size:15px;font-weight:700;margin-top:2px;background:#1F4637;border-color:#1F4637;color:#FFF8EA}
+.authcard form .btn[type=submit]:not(.ghost):not(.small){height:42px;border-radius:6px;font-family:var(--f-display);font-size:15px;font-weight:700;margin-top:2px;background:#1F4637;border-color:#1F4637;color:#FFF8EA}
 .authcard form>.lnk{align-self:center;font-size:12px}
-.authcard>.hint{margin:4px 0}
+.authcard>.hint{margin:10px 0 4px}
+.authcard>:last-child:not(form.loan){margin-bottom:14px}
+form.loan{gap:0;margin:0 -4px}
+.authcard .lrow{display:grid;grid-template-columns:72px 1fr;align-items:center;gap:0;border-bottom:1px solid var(--ll);font-size:12px;font-weight:500;color:var(--lb)}
+.authcard .lrow>span{padding:0 0 0 6px;border-right:1px solid var(--ll);line-height:40px}
+.authcard .lrow input{height:40px;border:0;border-radius:0;background:transparent;padding:0 10px;color:#2E2A26}
+.authcard .lrow input:focus{box-shadow:inset 0 -2px 0 var(--lb)}
+form.loan .err,form.loan .okmsg{margin:6px 6px 0}
+.lpocket{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px -14px -14px;padding:20px 24px 16px;border-radius:4px;
+  background:radial-gradient(rgba(255,240,215,.18) 1px,transparent 1.5px) 0 0/5px 5px,linear-gradient(#C49B6C,#B98E5F);box-shadow:0 12px 26px -8px rgba(20,12,6,.5),inset 0 1px 0 rgba(255,240,215,.4)}
+.lpocket::before{content:"";position:absolute;inset:10px;border:1.2px dashed rgba(90,62,36,.75);border-radius:2px;pointer-events:none}
+.lpocket>*{position:relative}
+.lpocket .btn[type=submit]{width:100%}
+.lpocket .gsi{margin:0;width:100%}
+.lpocket .lnk{align-self:center;color:#3E2C1C;font-size:12px}
+.lnote{margin:0;font-family:var(--f-display);font-size:11px;color:#46321F;text-align:center}
 body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-index:1;padding-top:22px}
 @media (min-width:821px){
   body:has(.auth){background:#3B2C22 url(login/shop.webp) center/cover no-repeat fixed}
@@ -1669,7 +1686,7 @@ body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-
   .auth .sign{top:calc(50vh - 24.9vw);gap:14px}
   .auth .sign .biglogo{width:3.4vw;max-width:none}
   .auth .sign h1{font-size:3.3vw}
-  .authcard{position:fixed;right:max(48px,7.5vw);bottom:max(40px,8.5vh);width:320px;margin:0}
+  .authcard{position:fixed;right:max(48px,7.5vw);bottom:max(40px,8.5vh);width:300px;margin:0;bottom:max(56px,10vh)}
   body:has(.auth) #legal{position:fixed;left:0;right:0;bottom:0;max-width:none;padding:18px 16px 8px!important;font-size:11px!important;line-height:1.5;color:rgba(255,244,228,.9)!important;background:linear-gradient(rgba(30,22,16,0),rgba(30,22,16,.8))!important}
 }
 @media (min-width:821px) and (max-aspect-ratio:3/2){
@@ -2336,10 +2353,10 @@ function authHTML(){
   let body;
   if(S.dbState==='loading')body='<p class="hint">서재 문을 여는 중이에요…</p>';
   else if(S.dbState==='none')body='<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>';
-  else if(t==='login')body=`<form data-form="login"><label for="li-id">아이디<input id="li-id" name="id" placeholder="아이디" autocomplete="username" autocapitalize="none" required></label>
-    <label for="li-pw">비밀번호<input id="li-pw" name="pw" type="password" placeholder="비밀번호" autocomplete="current-password" required></label>
-    ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p><button class="btn" type="submit">문 열고 들어가기</button>
-    <button type="button" class="lnk" data-act="authtab" data-v="find">비밀번호를 잊었어요</button></form>`;
+  else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span>아이디</span><input id="li-id" name="id" placeholder="아이디를 적어요" autocomplete="username" autocapitalize="none" required></label>
+    <label for="li-pw" class="lrow"><span>비밀번호</span><input id="li-pw" name="pw" type="password" placeholder="비밀번호" autocomplete="current-password" required></label>
+    ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
+    <div class="lpocket"><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi"><div data-gsi="auth" data-txt="signin_with"></div></div>':''}<button type="button" class="lnk" data-act="authtab" data-v="find">비밀번호를 잊었어요</button><p class="lnote">♧ 비밀번호는 나만 알아요 &nbsp; ♧ 한 달에 책 한 권</p></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
@@ -2347,9 +2364,9 @@ function authHTML(){
     <button type="button" class="lnk" data-act="authtab" data-v="login">로그인으로 돌아가기</button></form>`;
   else if(t==='gsignup'&&S.gs)body=suFormHTML(true);
   else body=suFormHTML(false);
-  return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="sign">${logoSVG(512,'biglogo')}<h1>영원이북</h1></div>
+  return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div>
     <p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p></section>
-    <section class="authcard"><div class="ahead"><h2>어서 오세요</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}">회원가입</button></div></div>${(t==='login'||t==='signup')&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section></div>`;
+    <section class="authcard"><div class="lchead" aria-hidden="true"><span>002.5<br>영67ㅇ</span><span>No. 002BOOK</span></div><div class="ahead"><h2>영원이북 대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}">회원가입</button></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section></div>`;
 }
 
 /* ---------- 화면: 앱 ---------- */
