@@ -104,7 +104,7 @@ try {
   // 홈 화면·앱 설치 아이콘: web/brand/app-icon.png(투명 배경 원형 로고)를 흰 바탕에 올린다. 없으면 앱 안의 로고를 쓴다
   const brand = path.join(ROOT, 'web/brand/app-icon.png');
   const src = fs.existsSync(brand) ? fs.readFileSync(brand) : icon;
-  const white = { r: 31, g: 70, b: 55, alpha: 1 }; // 2026-11-26: 로그인 서점 간판과 같은 짙은 초록 바탕 + 금박 로고
+  const white = { r: 255, g: 255, b: 255, alpha: 1 }; // 2026-11-26: 흰 바탕 + 서점 간판 초록(#1F4637) 로고
   const onBg = async (size, ratio) => { const inner = Math.round(size * ratio); const lg = await sharp(src).resize(inner, inner, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } }).png().toBuffer();
     return sharp({ create: { width: size, height: size, channels: 4, background: white } }).composite([{ input: lg, gravity: 'center' }]).flatten({ background: white }).png(); };
   for (const s of [192, 512]) await (await onBg(s, 0.92)).toFile(path.join(dir, `icon-${s}.png`));
