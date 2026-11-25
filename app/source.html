@@ -1832,6 +1832,11 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .authcard .lchead,.authcard .ahead h2,.authcard .tabs button,.authcard .lrow>span,.authcard .lrow.lpw>label>span,.authcard .lrow input,.authcard .lrow.lpw>.lnk{font-weight:400!important;font-synthesis:none;text-shadow:0 0 .5px rgba(30,28,25,.6)}
 .authcard .lrow>span,.authcard .lrow.lpw>label>span{color:#4E6A90}.authcard .lchead,.authcard .ahead h2,.authcard .lrow input{color:#2F2D2A}
 .authcard .tabs button:not([aria-pressed=true]){opacity:.75}
+
+/* 홈 진열장 책 옆 색 탭(책·영화 1·영화 2): 작은 손글씨(나눔펜) */
+.shopin .ctab,.shopin .ctab span{font-family:'Nanum Pen Script','Gaegu',cursive!important;font-weight:400!important;letter-spacing:-.02em}
+.shopin .ctab{font-size:11px;line-height:17px;width:30px!important;min-width:30px!important;max-width:30px!important;padding-left:7px!important}
+@media (max-width:560px){.shopin .ctab{font-size:10.5px;width:29px!important;min-width:29px!important;max-width:29px!important}}
 </style>
 
 <div id="app"></div>
@@ -2821,7 +2826,7 @@ function courseHTML(){
   ${todoHTML(pct,ct)}
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
-  <div class="cab"><span class="cabp">${esc(S.grade)} · 12개월</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
+  <div class="cab"><span class="cabp">${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
   <p class="hint" style="margin-top:14px">${S.mode==='custom'?'AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.':'계획표 출처: '+esc(S.source)}</p>`;
 }
 function homeCardHTML(){
