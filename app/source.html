@@ -55,7 +55,8 @@ html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% 
 .todo-n b{font-family:var(--f-display);font-size:22px;color:var(--ink)}
 .todo-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
 .todo-bar i{height:6px;border-radius:3px;background:rgba(0,0,0,.08)}
-.todo-bar i.dn{background:var(--done)}.todo-bar i.nx{background:var(--accent)}
+.todo-bar i:nth-child(1){--sc:var(--st1)}.todo-bar i:nth-child(2){--sc:var(--st2)}.todo-bar i:nth-child(3){--sc:var(--st3)}.todo-bar i:nth-child(4){--sc:var(--st4)}
+.todo-bar i.dn{background:var(--sc)}.todo-bar i.nx{background:var(--sc);opacity:.75}
 @media (min-width:721px){.todo{display:grid;grid-template-columns:minmax(0,1fr) 260px;align-items:center;column-gap:22px}.todo-k,.todo-p,.todo-bar{grid-column:1/-1}.todo-m{grid-column:1}.todo-b{grid-column:2}}
 .mpanel:has(.mact){padding-bottom:0}
 .mhead{font-family:var(--f-display);font-size:19px;line-height:1.45;margin:6px 0 2px;color:var(--ink)}
@@ -1378,19 +1379,25 @@ section.dash .dgo .dl2 .bar{flex:1;min-width:24px;margin:0}
 .pk-vid{font-size:11px;color:#C8463B;font-weight:700;text-decoration:none}
 
 /* 월 화면: 단계 */
+/* 단계 원: 한 가지 색이 1→4단계로 갈수록 진해진다(2026-11-25 사용자 지시). 숫자 대비 4.5:1 이상 */
+:root{--st1:#F6D6A2;--st2:#E6A653;--st3:#A5652A;--st4:#74441F;--st1i:#3E2F26;--st2i:#3E2F26;--st3i:#FFFFFF;--st4i:#FFFFFF}
+html[data-theme="sky"]{--st1:#BFDDF8;--st2:#7DB8EE;--st3:#2F78C2;--st4:#1B4F8A;--st1i:#183250;--st2i:#183250;--st3i:#FFFFFF;--st4i:#FFFFFF}
 .msteps{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
 .msteps li{position:relative}
-.msteps li+li::before{content:"";position:absolute;top:18px;left:calc(-50% + 22px);right:calc(50% + 22px);height:2px;border-radius:2px;background:var(--line)}
-.msteps li.s-dn+li::before{background:var(--done)}
+.msteps li:nth-child(1){--sc:var(--st1);--si:var(--st1i)}
+.msteps li:nth-child(2){--sc:var(--st2);--si:var(--st2i);--sp:var(--st1)}
+.msteps li:nth-child(3){--sc:var(--st3);--si:var(--st3i);--sp:var(--st2)}
+.msteps li:nth-child(4){--sc:var(--st4);--si:var(--st4i);--sp:var(--st3)}
+.msteps li+li::before{content:"";position:absolute;top:17px;left:calc(-50% + 22px);right:calc(50% + 22px);height:3px;border-radius:3px;background:var(--line)}
+.msteps li.s-dn+li::before{background:linear-gradient(90deg,var(--sp),var(--sc))}
 .msteps button{width:100%;min-height:62px;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:12.5px;font-weight:500;box-shadow:none}
-.msteps .mn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);background:var(--paper);color:var(--muted);font-size:14px;font-weight:700;transition:box-shadow .15s}
-.msteps li.s-pt .mn{border-color:var(--now-line);color:var(--now-ink)}
-.msteps li.s-dn .mn{background:var(--done);border-color:var(--done);color:#fff}
-.msteps li.s-dn button{color:var(--done)}
-.msteps li.s-nx:not(.s-dn) .mn{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.msteps li.s-nx:not(.s-dn) button{color:var(--now-ink);font-weight:700}
+.msteps .mn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--sc);background:var(--paper);color:var(--muted);font-size:14px;font-weight:700;transition:background .2s,box-shadow .15s}
+.msteps li.s-pt .mn{background:color-mix(in srgb,var(--sc) 30%,var(--paper));color:var(--ink)}
+.msteps li.s-dn .mn,.msteps li.s-nx:not(.s-dn) .mn{background:var(--sc);color:var(--si);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.msteps li.s-dn button,.msteps li.s-nx:not(.s-dn) button{color:var(--ink)}
+.msteps li.s-nx:not(.s-dn) button{font-weight:700}
 .msteps button[aria-pressed=true]{color:var(--ink);font-weight:700}
-.msteps button[aria-pressed=true] .mn{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--primary)}
+.msteps button[aria-pressed=true] .mn{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--sc)}
 .mguide{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--soft);border-radius:12px;padding:9px 12px;font-size:13px;line-height:1.5}
 .mguide b{color:var(--ink)}
 .mguide.all{background:#EEF8F6;color:#0F6E63}
