@@ -1705,10 +1705,15 @@ body:has(.auth)::after{content:"";position:absolute;left:0;top:0;width:100vw;asp
 
 /* 로그인 대출 카드 아래 회사 로고(TAi Edutech, 웜화이트 #FFF6E8 한 색, web/login/tai.png) */
 .auth .tai{position:relative;z-index:2;display:flex;justify-content:center;margin:24px auto 0;padding-bottom:28px}
-.auth .tai img{width:115px;height:auto}
+.auth .tai{flex-direction:column;align-items:center;gap:3px;color:#FFF6E8;font-family:var(--f-body);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;line-height:1;user-select:none}
+.auth .tai .t1{display:flex;align-items:baseline;gap:3px}
+.auth .tai .t1 b{font-size:21px;font-weight:900;letter-spacing:-.02em}
+.auth .tai .t1 i{font-style:normal;font-size:9.5px;font-weight:700}
+.auth .tai .t2{border-top:1px solid rgba(255,246,232,.45);padding-top:4px;font-size:8px;font-weight:500;letter-spacing:.03em;white-space:nowrap}
+.auth .tai .t2 b{font-weight:900}
 /* 로그인 화면에서는 하단 안내 글자를 모두 숨김(11-25 사용자 지시). 앱 안 화면에는 그대로 */
 body:has(.auth) #legal{display:none!important}
-@media (min-width:821px){.auth .tai{position:fixed;right:max(48px,7.5vw);bottom:max(40px,6vh);width:300px;margin:0;opacity:1}.auth .tai img{width:115px;filter:drop-shadow(0 1px 3px rgba(30,20,10,.75)) drop-shadow(0 0 10px rgba(30,20,10,.45))}}
+@media (min-width:821px){.auth .tai{position:fixed;right:max(48px,7.5vw);bottom:max(44px,7vh);width:300px;margin:0;padding:0}.auth .tai{text-shadow:0 1px 3px rgba(30,20,10,.8),0 0 10px rgba(30,20,10,.5)}}
 </style>
 
 <div id="app"></div>
@@ -2382,7 +2387,7 @@ function authHTML(){
   return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div>
     <p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p></section>
     <section class="authcard"><div class="lchead" aria-hidden="true"><span>002.5 영67ㅇ</span><span>No. 002BOOK</span></div><div class="ahead"><h2>영원이북 대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}">로그인</button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}">회원가입</button></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
-    <div class="tai"><img src="login/tai.svg" width="115" height="54" alt="TAi Edutech · Think & Action by Ai"></div></div>`;
+    <div class="tai" role="img" aria-label="TAi Edutech · Think &amp; Action by Ai"><span class="t1"><b>TAi</b><i>Edutech</i></span><span class="t2"><b>T</b>hink &amp; <b>A</b>ction by <b>Ai</b></span></div></div>`;
 }
 
 /* ---------- 화면: 앱 ---------- */
