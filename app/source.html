@@ -1750,6 +1750,59 @@ body:has(.auth) #legal{display:none!important}
 .authcard .tabs button{padding:2px 11px}
 .authcard .ahead h2{margin-bottom:4px}
 .auth .tai{text-shadow:0 1px 3px rgba(20,14,8,.8)}
+
+/* 홈·내 서재 = 서점 안 진열장(2026-11-26, Figma 09 먼저): 로그인에서 문 열고 들어간 서점 안.
+   배경은 흐린 서점 안 책장 벽(web/shelf/shop-in.webp, Figma AI 생성), 위아래 바는 간판 초록 + 금박 글씨,
+   12개월 표지는 월넛 진열장(황동 명판·초록 펠트) 선반에, 제목은 가격표 카드. '지금 할 일'·성취는 크림 종이 카드. 기능은 그대로 */
+body:has(.wrap.shopin){background:#22170F url(shelf/shop-in.webp) center top/cover no-repeat fixed}
+body:has(.wrap.shopin)::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(rgba(24,15,9,.55),rgba(24,15,9,.42) 40%,rgba(20,12,7,.8))}
+body:has(.wrap.shopin) .sfx{display:none}
+.shopin{--gold:linear-gradient(#FBE3A8,#D9AE62 55%,#B3874A);--paper2:#FBF8EE;--lb2:#466C9E;--tw2:'Courier Prime','Nanum Gothic Coding','Courier New',monospace}
+.shopin .top{background:linear-gradient(#24503F,#1A3B2E)!important;box-shadow:0 0 0 100vmax #1E4535,0 3px 10px rgba(0,0,0,.35)!important;clip-path:inset(0 -100vmax -12px)}
+.shopin .top::after{display:none!important}
+.shopin .top .brand span{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--f-display);font-weight:800;letter-spacing:.04em}
+.shopin .top .who,.shopin .top .x,.shopin .top .lo,.shopin .top .bdg,.shopin .top .seg{background:rgba(255,246,232,.12)!important;color:#F5E9D6!important;border-color:rgba(255,246,232,.22)!important}
+.shopin .top .seg button{color:#E8DCC8}.shopin .top .seg button[aria-pressed=true]{background:#F5E9D6!important;color:#1A3B2E!important}
+.shopin .top svg{color:#F5E9D6}
+.shopin .dtabs{border-bottom-color:rgba(255,246,232,.2)}
+.shopin .dtabs button{color:#D8CBB5}.shopin .dtabs button[aria-pressed=true]{color:#F6D58E;border-bottom-color:#D9AE62}
+body:has(.wrap.shopin) .nav{background:linear-gradient(#1A3B2E,#12291F)!important;border-top:1px solid rgba(217,174,98,.35)!important}
+body:has(.wrap.shopin) .nav button{color:#CDBFA8!important}
+body:has(.wrap.shopin) .nav button[aria-pressed=true]{color:#F6D58E!important}
+body:has(.wrap.shopin) .nav button[aria-pressed=true] svg{color:#F6D58E}
+body:has(.wrap.shopin) #legal{color:rgba(245,233,214,.7)!important}
+body:has(.wrap.shopin) #legal a{color:inherit}
+/* 지금 할 일 = 서점 추천 카드(크림 종이 + 황동 클립, 타자기 머리말) */
+.shopin .todo{position:relative;background:var(--paper2)!important;border:0!important;border-radius:8px;box-shadow:0 8px 20px -6px rgba(10,6,3,.55)!important;margin-top:16px}
+.shopin .todo::before{content:"";position:absolute;left:50%;top:-7px;width:54px;height:14px;transform:translateX(-50%);border-radius:2px;background:var(--gold);box-shadow:0 1px 2px rgba(0,0,0,.35)}
+.shopin .todo-k{font-family:var(--tw2);font-weight:700;color:var(--lb2)!important;letter-spacing:.01em}
+.shopin .todo-b{background:#1F4637!important;border-color:#1F4637!important;color:#FFF8EA!important}
+/* 학년 머리 */
+.shopin .ghead{border-bottom-color:rgba(255,246,232,.18)!important}
+.shopin .ghead h2{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.shopin .ghead h2 small{-webkit-text-fill-color:#E8DCC8;color:#E8DCC8}
+.shopin .ghead .bar{background:rgba(255,246,232,.18)}.shopin .ghead .bar i{background:#D9AE62}
+.shopin .gsw .btn{background:rgba(255,246,232,.1)!important;color:#F5E9D6!important;border-color:rgba(255,246,232,.3)!important}
+.shopin main>.hint,.shopin main>p.hint{color:rgba(245,233,214,.75)!important}
+/* 월넛 진열장 */
+.shopin .cab{position:relative;margin:22px 0 6px;padding:30px 12px 14px;border-radius:8px;background:linear-gradient(#5A3A22,#3B2414);box-shadow:0 16px 34px -10px rgba(8,4,2,.7),inset 0 1px 0 rgba(255,220,170,.18)}
+.shopin .cabp{position:absolute;left:50%;top:7px;transform:translateX(-50%);padding:2px 18px;border-radius:3px;background:var(--gold);color:#3B2414;font-family:var(--f-display);font-weight:800;font-size:12.5px;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.4)}
+.shopin .grid{margin:0!important;padding:14px 10px 4px;border-radius:3px;background:radial-gradient(120% 60px at 50% 0,rgba(255,214,150,.28),rgba(255,214,150,0)),linear-gradient(#22402F,#173025);box-shadow:inset 0 2px 8px rgba(0,0,0,.55)}
+.shopin .grid .shelf{background:linear-gradient(#A8774A,#7A5030 45%,#4E311C)!important;box-shadow:0 5px 7px -3px rgba(0,0,0,.6)!important;height:10px!important}
+.shopin .grid .cvinfo{background:var(--paper2);border-radius:2px;padding:4px 6px 5px;box-shadow:0 1px 3px rgba(0,0,0,.45);margin-top:2px}
+.shopin .grid .cvinfo .ctag{font-family:var(--tw2);font-weight:700;color:var(--lb2)!important}
+.shopin .grid .cvinfo .ct{color:#2E2A26!important}
+.shopin .grid .cvinfo .ca{color:#6F6155!important}
+/* 내 서재 */
+.shopin .sec>h3{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--f-display);font-weight:800}
+.shopin .sec>h3 small,.shopin .sec>h3 .hint{-webkit-text-fill-color:#E8DCC8;color:#E8DCC8}
+.shopin .sec>h3 .btn{-webkit-text-fill-color:#F5E9D6;background:rgba(255,246,232,.12)!important;color:#F5E9D6!important;border-color:rgba(255,246,232,.3)!important}
+.shopin .sec:not(:has(.bshf)){background:var(--paper2);border-radius:8px;padding:14px 14px 16px;box-shadow:0 8px 20px -6px rgba(10,6,3,.55)}
+.shopin .sec:not(:has(.bshf))>h3{background:none;-webkit-text-fill-color:#2E2A26;color:#2E2A26}
+.shopin .sec:not(:has(.bshf))>h3 small,.shopin .sec:not(:has(.bshf))>h3 .hint{-webkit-text-fill-color:var(--lb2);color:var(--lb2);font-family:var(--tw2);font-weight:700}
+.shopin .sec:not(:has(.bshf))>h3 .btn{-webkit-text-fill-color:#2E2A26;background:transparent!important;color:#2E2A26!important;border-color:#D9CBB4!important}
+.shopin main>.note,.shopin .shnote{color:rgba(245,233,214,.8)!important;background:none!important}
+.shopin .bshf{margin-top:4px}
 </style>
 
 <div id="app"></div>
@@ -2444,7 +2497,7 @@ function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progre
 function shellHTML(){
   const v=S.view;
   const tabs=[['course','독서'],['me','내 서재'],['friends','친구']];if(isAdmin())tabs.push(['admin','관리']);
-  return `<div class="wrap"><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
+  return `<div class="wrap${v==='course'||v==='me'?' shopin':''}"><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
@@ -2740,7 +2793,7 @@ function courseHTML(){
   ${todoHTML(pct,ct)}
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
-  <div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div>
+  <div class="cab"><span class="cabp">${esc(S.grade)} · 12개월</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
   <p class="hint" style="margin-top:14px">${S.mode==='custom'?'AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.':'계획표 출처: '+esc(S.source)}</p>`;
 }
 function homeCardHTML(){
