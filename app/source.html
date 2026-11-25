@@ -1618,6 +1618,10 @@ html[data-month="2"] .top::after{background-image:url("data:image/svg+xml,%3Csvg
   .grid>.cv:nth-child(n) .shelf{box-shadow:0 8px 10px -6px rgba(62,40,20,.42),0 16px 18px -10px rgba(62,40,20,.18)}
   .grid>.cv:nth-child(6n+1) .shelf{box-shadow:inset 2px 0 0 rgba(160,118,66,.32),inset 3px 0 0 rgba(255,240,210,.25),0 8px 10px -6px rgba(62,40,20,.42),0 16px 18px -10px rgba(62,40,20,.18)}
   .grid>.cv:nth-child(6n) .shelf{box-shadow:inset -2px 0 0 rgba(160,118,66,.32),inset -3px 0 0 rgba(255,240,210,.25),0 8px 10px -6px rgba(62,40,20,.42),0 16px 18px -10px rgba(62,40,20,.18)}}
+
+/* 한글 낱말이 중간에서 끊기지 않게(별/점), 좁은 화면에서 '표지 바꾸기' 버튼 줄바꿈 막기 */
+body{word-break:keep-all;overflow-wrap:break-word}
+.mcov .btn{white-space:nowrap;flex:none}
 </style>
 
 <div id="app"></div>
@@ -1882,6 +1886,8 @@ function seasonScene(m){
   const lab={1:'새해 해돋이와 금빛 반짝이',2:'겹친 두 하트와 편지, 발렌타인데이',3:'봉오리 맺힌 벚나무 가지와 사탕, 새 학기',4:'활짝 핀 벚꽃 가지',5:'리본으로 묶은 카네이션 꽃다발, 가정의 달',6:'수국과 빗줄기, 초여름 장마',7:'파라솔과 해, 물결, 여름 방학',8:'노을 지는 바다와 돛단배',9:'토끼가 비치는 보름달과 억새, 한가위',10:'할로윈 호박과 초승달, 박쥐',11:'단풍잎과 펼친 책, 따뜻한 차',12:'리본을 단 크리스마스 리스와 금별'}[m];
   return `<div class="sscene"><svg viewBox="0 0 300 130" role="img" aria-label="${lab}">${SCN(m)}</svg></div>`;
 }
+/* 받침이 있으면 '이에요', 없으면 '예요' (기록하기예요, 첫째 달이에요) */
+const yeyo=t=>{const c=String(t||'').slice(-1).charCodeAt(0);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?'이에요':'예요'};
 const jc=n=>{n=String(n||'');const c=n.slice(-1).charCodeAt(0);return n+((c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28!==0)?'아':'야')};
 const cutS=(t,n)=>{t=String(t||'').replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n-1)+'…':t};
 function budSlot(){const h=new Date().getHours();return h<5?0:h<9?1:h<12?2:h<14?3:h<18?4:h<21?5:6}
@@ -2328,8 +2334,10 @@ function artOf(title,kind,yr){
   if(!title)return '';const h=hid(title);if(S.covers&&S.covers[h])return S.covers[h];
   const k=(kind==='movie'?'m':'b')+h;const v=ART[k];
   if(!(v&&Date.now()-v.t<(v.u?7:1)*864e5))artWant(k,{kind:kind==='movie'?'movie':'book',title:bTitle(title),author:kind==='movie'?'':bAuthor(title),year:yr?String(yr):''});
-  return (v&&v.u)||'';
+  return bigCover((v&&v.u)||'');
 }
+/* 카카오 작은 썸네일(120px) → 주소 안의 다음 책 원본(https). 서버도 같은 규칙(media.ts bigCover) */
+function bigCover(u){const m=/[?&]fname=([^&]+)/.exec(u||'');if(!m)return u;let f='';try{f=decodeURIComponent(m[1])}catch(e){return u}return /^https?:\/\/[a-z0-9.-]*daumcdn\.net\//i.test(f)?f.replace(/^http:/,'https:'):u}
 function artWant(k,q){if(S.artOff||!S.id||ARTP[k])return;ARTP[k]=1;artQ.push({k,q});setTimeout(artPump,0)}
 function artPump(){const SV=window.__002&&window.__002.server;if(!SV)return;
   while(artRun<3&&artQ.length&&!S.artOff){const {k,q}=artQ.shift();artRun++;
@@ -2341,7 +2349,7 @@ function artDirty(){artSave();clearTimeout(artT);artT=setTimeout(()=>{const a=do
 const coverOf=title=>artOf(title,'book');
 /* 자동으로 찾은 그림 주소가 열리지 않으면(지워졌거나 막힘) 그 그림은 하루 동안 쓰지 않고 도형 그림으로 바꾼다 */
 document.addEventListener('error',e=>{const im=e.target;if(!im||im.tagName!=='IMG')return;const src=im.getAttribute('src')||'';
-  const k=Object.keys(ART).find(x=>ART[x]&&ART[x].u&&ART[x].u===src);if(!k)return;ART[k]={u:'',t:Date.now(),bad:1};im.style.visibility='hidden';artDirty()},true);
+  const k=Object.keys(ART).find(x=>ART[x]&&ART[x].u&&(ART[x].u===src||bigCover(ART[x].u)===src));if(!k)return;if(src!==ART[k].u&&!im.dataset.small){im.dataset.small=1;im.src=ART[k].u;return}/* 원본이 안 열리면 작은 썸네일로 한 번 */ART[k]={u:'',t:Date.now(),bad:1};im.style.visibility='hidden';artDirty()},true);
 const yearOf=(it,t)=>{const x=it&&(it.m1===t?it.m1Info:it.m2===t?it.m2Info:null);return x&&x.year||''};
 const coverInner=it=>{const img=coverOf(it.book);return img?`<img src="${img}" alt="${esc(it.book)} 표지">`:`<span class="phd">${BOOKG}<span>${esc(it.genre)}</span></span>`};
 function coverBlock(it){
@@ -2853,7 +2861,7 @@ function monthHTML(i){
   const later=pos>=0&&st[pos].done?st.slice(pos+1).find(x=>!x.done):null;
   const guide=!nx?(tab==='work'?mdoneHTML(i):'<div class="mguide all"><span><b>이번 달 과정을 모두 마쳤어요.</b> 다음 달로 넘어가요.</span></div>')
     :tab===nx.k?`<h3 class="mhead">${esc(STEP_H[nx.k])}</h3>`
-    :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>이에요.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
+    :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>${yeyo(nx.t)}.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
   const cov=!S.covers[hid(it.book)]&&tab==='work'?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
   const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
   return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
@@ -2914,7 +2922,7 @@ function infoHTML(){
   const done=!!S.progress.done[ik(i,k)];
   const rv=S.info.reviews;const avg=rv&&rv.length?(rv.reduce((a,x)=>a+(x.stars||0),0)/rv.length).toFixed(1):null;
   const mine=S.info.mine||{stars:0,text:''};
-  const infoIn=`<dl style="display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0 0 8px">${rows.map(([a,b])=>`<dt style="margin:0">${a}</dt><dd style="margin:0">${b?esc(b):`<span class="hint">${S.info.busy?'Claude가 찾는 중…':'정보 준비 중'}</span>`}</dd>`).join('')}</dl>${inf.intro?`<p style="margin:0 0 10px">${esc(inf.intro)}</p>`:''}`;
+  const infoIn=`<dl style="display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0 0 8px">${rows.map(([a,b])=>`<dt style="margin:0">${a}</dt><dd style="margin:0">${b?esc(b):`<span class="hint">${S.info.busy?'찾는 중…':'—'}</span>`}</dd>`).join('')}</dl>${inf.intro?`<p style="margin:0 0 10px">${esc(inf.intro)}</p>`:''}`;
   const cvRe=/<div class="cvside">\s*<p class="hint">[\s\S]*?<\/p>/;let blk=isBook?coverBlock(it):posterBlock(title,i);const moved=cvRe.test(blk);
   if(moved){const lk=`<div class="chips" style="margin:0 0 12px">${links.map(([n,u])=>`<a class="btn ghost small" style="text-decoration:none" href="${esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('')}</div>`;
     const sideIn=infoIn.replace('<p style="margin:0 0 10px">','<p style="margin:0">');
@@ -4834,7 +4842,7 @@ function orTickOn(){if(!ORTICK)ORTICK=setInterval(orTick,1000);setTimeout(orTick
 /* 구술 탭 (2026-11-21 재디자인): 맨 위 4단계 진행 줄 → 지금 할 일 → 평가 바. 녹음·판정·잠금·평가 로직은 그대로 */
 const orThinkL=()=>orThinkR();
 function oralHTML(i){
-  if(!svAll(i))return svLockHTML(i).replace('논술은 책과 영화 한 편을 끝낸 뒤에 쓸 수 있어요','말하기는 영화 두 편까지 끝낸 뒤에 할 수 있어요').replace('책 1권과 영화 1편 이상을 완료하고, 끝낸 작품마다 별점 설문 3가지를 해 주세요. 두 번째 영화는 나중에 봐도 돼요.','말하기 질문은 세 작품 모두에서 나와요. 책과 영화 두 편을 완료하고 작품마다 별점 설문 3가지를 해 주세요.');
+  if(!svAll(i))return svLockHTML(i).replace(/<h3>[^<]*<\/h3><p class="hint">[^<]*<\/p>/,'<h3>말하기는 책과 영화 두 편을 모두 끝낸 뒤에 열려요</h3><p class="hint">말하기 질문은 세 작품 모두에서 나와요. 끝낸 작품마다 별점 세 개를 남겨 주세요.</p>');
   const key=nk(i);
   if(!S.odoc[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
   const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];const ev2=S.orals2[key];
