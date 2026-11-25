@@ -42,18 +42,18 @@ html[data-theme="sky"]{
 html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% -140px,rgba(190,220,126,.28),transparent 70%)}
 
 /* ---------- 2026-11-25 디자인 2차(피그마 06~17) ---------- */
-.todo{background:var(--now-bg);border:1.5px solid var(--now-line);border-radius:16px;padding:12px 14px;margin:2px 0 14px;display:flex;flex-direction:column;gap:10px}
+.todo{background:var(--now-bg);border:1.5px solid var(--now-line);border-radius:14px;padding:10px 12px;margin:0 0 10px;display:flex;flex-direction:column;gap:8px}
 .todo-k{font-size:12px;font-weight:700;color:var(--now-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .todo-m{display:flex;gap:12px;align-items:center}
 .todo-th,.wk-th,.mdone-th{flex:none;width:64px;height:86px;border-radius:8px;overflow:hidden;background:var(--soft);box-shadow:0 2px 6px var(--shadow);display:block}
-.todo-th{width:46px;height:64px}
+.todo-th{width:42px;height:58px}
 .todo-th img,.wk-th img,.mdone-th img{width:100%;height:100%;object-fit:cover;display:block}
 .todo-th.ph .art,.wk-th.ph .art,.mdone-th.ph .art{width:100%;height:100%;border-radius:0}
 .todo-x{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
-.todo-t{font-family:var(--f-display);font-size:16px;line-height:1.35;font-weight:700;color:var(--ink);word-break:keep-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-@media (max-width:380px){.todo-m{gap:10px}.todo-th{width:40px;height:56px}.todo-t{font-size:15px}.todo-b{padding:0 12px;font-size:13.5px;min-height:38px}}
+.todo-t{font-family:var(--f-display);font-size:15px;line-height:1.3;font-weight:700;color:var(--ink);word-break:keep-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:380px){.todo-m{gap:10px}.todo-th{width:38px;height:52px}.todo-t{font-size:14px}.todo-b{padding:0 11px;font-size:13px;min-height:36px}}
 .todo-x small{display:none;font-size:13px;color:var(--muted)}
-.todo-b{flex:none;min-height:40px;padding:0 16px;font-size:14px;border-radius:999px;white-space:nowrap}
+.todo-b{flex:none;min-height:38px;padding:0 14px;font-size:13.5px;border-radius:999px;white-space:nowrap}
 .todo-p{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
 .todo-g{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
 .todo-n{flex:none}.todo-n b{color:var(--ink);font-weight:700}
@@ -62,7 +62,7 @@ html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% 
 .todo-bar i:nth-child(1){--sc:var(--st1)}.todo-bar i:nth-child(2){--sc:var(--st2)}.todo-bar i:nth-child(3){--sc:var(--st3)}.todo-bar i:nth-child(4){--sc:var(--st4)}
 .todo-bar i.dn{background:var(--sc)}.todo-bar i.nx{background:var(--sc);opacity:.75}
 /* 2026-11-25 피그마 06 홈 컴팩트: 휴대폰은 한 줄(표지·제목·버튼)+진도 한 줄. 모니터는 예전 크기 */
-@media (min-width:721px){.todo{padding:16px 18px 14px;gap:12px;border-radius:18px}.todo-k{font-size:13px}.todo-m{gap:16px}.todo-th{width:64px;height:86px}.todo-x{gap:4px}.todo-t{font-size:19px;line-height:1.4}.todo-x small{display:block}.todo-b{width:260px;min-height:52px;font-size:16.5px}.todo-p{font-size:13px}.todo-n b{font-size:15px}.todo-bar i{height:6px}}
+@media (min-width:721px){.todo{padding:16px 18px 14px;gap:12px;border-radius:18px;margin:2px 0 16px}.todo-k{font-size:13px}.todo-m{gap:16px}.todo-th{width:64px;height:86px}.todo-x{gap:4px}.todo-t{font-size:19px;line-height:1.4}.todo-x small{display:block}.todo-b{width:260px;min-height:52px;font-size:16.5px}.todo-p{font-size:13px}.todo-n b{font-size:15px}.todo-bar i{height:6px}}
 .mpanel:has(.mact){padding-bottom:0}
 .mhead{font-family:var(--f-display);font-size:19px;line-height:1.45;margin:6px 0 2px;color:var(--ink)}
 .wks{display:flex;flex-direction:column;gap:10px}
@@ -414,6 +414,9 @@ div.vban2 .vbct p::before{content:'“';margin-right:3px}div.vban2 .vbct p::afte
 @media (min-width:720px){div.vban2 .vbct p{font-size:18px}div.vban2 .vbcap{padding:3px 6px 2px}}
 .vpw.vcol.vwide{display:none;aspect-ratio:2133/320}.vpo.vcol.vwide{width:2133px}
 @media (min-width:720px){div.vban2 .vpw.vcol:not(.vwide){display:none}div.vban2 .vpw.vcol.vwide{display:block}}
+/* 2026-11-25 피그마 06 홈(휴대폰): 비전보드는 맨 위 얇은 띠(웹과 같은 가로 긴 보드)+한 줄 설명. 책장 2줄까지 첫 화면에 */
+@media (max-width:719px){div.vban2{gap:5px;padding:5px 5px 6px;margin-bottom:10px}div.vban2 .vpw.vcol:not(.vwide){display:none}div.vban2 .vpw.vcol.vwide{display:block}
+div.vban2 .vbct small,div.vban2.empty .vbct p{display:none}div.vban2 .vbct b{font-size:14px}div.vban2 .vbct p{font-size:13.5px;-webkit-line-clamp:1}div.vban2 .mbtn{padding:3px 10px;font-size:12.5px}}
 .vcc{position:absolute;background:#fff;padding:6px 6px 0;box-shadow:2px 6px 10px rgba(40,20,5,.38);text-align:center}
 .vcc.hero{padding:8px 8px 0;box-shadow:3px 10px 18px rgba(40,20,5,.48)}
 .vcci{aspect-ratio:4/3;overflow:hidden;background:#eee}.vcci img{width:100%;height:100%;object-fit:cover;display:block}.vcci{container-type:inline-size;width:100%;align-self:stretch}.vcci .vill i{font-size:46cqw}
@@ -2510,8 +2513,8 @@ function courseHTML(){
   const pct=tot.t?Math.round(tot.d/tot.t*100):0;const ct=counts();
   const cur=stats.find(([g])=>g===S.grade)[1];
   return `${S.canWrite===false?'<p class="warn" style="margin-bottom:14px">지금 계정은 기록을 저장할 수 없어요. 서재 주인에게 기여자 권한으로 초대해 달라고 해 주세요.</p>':''}
-  ${todoHTML()}
   ${visionBanner()}
+  ${todoHTML()}
   ${dashHTML(pct,ct)}
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
