@@ -25,6 +25,7 @@
   --rose:#B06F3C; --rose-soft:#F2E4D2; --rose-ink:#8A5024; --sky-soft:#E2E6D9; --mint-d:#557257;
   --gold:#C29A4B; --gold-ink:#7A5C1E; --brick:#A8443A; --latte:#E9CFA6;
   --shadow:rgba(62,47,38,.22);
+  --now-bg:#FCEFD9; --now-line:#EDB65E; --now-ink:#8A5024; --done:#3F6B47;
   --f-display:'Nanum Myeongjo',serif; --f-body:'Noto Sans KR',sans-serif;
   color-scheme:light;
 }
@@ -35,8 +36,93 @@ html[data-theme="sky"]{
   --primary:#264B74; --primary-d:#183250; --on-primary:#F3F7FB; --accent:#4BA3F2; --on-accent:#183250;
   --rose:#1F6FC4; --rose-soft:#E1EDFB; --rose-ink:#1A5DA6; --sky-soft:#E2EBF5; --latte:#B7D3F2;
   --shadow:rgba(24,50,80,.20);
+  --now-bg:#E1EDFB; --now-line:#8DBDEB; --now-ink:#1A5DA6; --done:#2D6A45;
 }
 html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% -140px,rgba(120,170,230,.28),transparent 70%)}
+
+/* ---------- 2026-11-25 디자인 2차(피그마 06~17) ---------- */
+.todo{background:var(--now-bg);border:1.5px solid var(--now-line);border-radius:18px;padding:16px 16px 14px;margin:2px 0 16px;display:flex;flex-direction:column;gap:12px}
+.todo-k{font-size:13px;font-weight:700;color:var(--now-ink)}
+.todo-m{display:flex;gap:14px;align-items:center}
+.todo-th,.wk-th,.mdone-th{flex:none;width:64px;height:86px;border-radius:8px;overflow:hidden;background:var(--soft);box-shadow:0 2px 6px var(--shadow);display:block}
+.todo-th img,.wk-th img,.mdone-th img{width:100%;height:100%;object-fit:cover;display:block}
+.todo-th.ph .art,.wk-th.ph .art,.mdone-th.ph .art{width:100%;height:100%;border-radius:0}
+.todo-x{display:flex;flex-direction:column;gap:4px;min-width:0}
+.todo-t{font-family:var(--f-display);font-size:19px;line-height:1.4;font-weight:700;color:var(--ink)}
+.todo-x small{font-size:13px;color:var(--muted)}
+.todo-b{width:100%;min-height:52px;font-size:16.5px;border-radius:999px}
+.todo-p{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--muted)}
+.todo-n b{font-family:var(--f-display);font-size:22px;color:var(--ink)}
+.todo-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.todo-bar i{height:6px;border-radius:3px;background:rgba(0,0,0,.08)}
+.todo-bar i.dn{background:var(--done)}.todo-bar i.nx{background:var(--accent)}
+@media (min-width:721px){.todo{display:grid;grid-template-columns:minmax(0,1fr) 260px;align-items:center;column-gap:22px}.todo-k,.todo-p,.todo-bar{grid-column:1/-1}.todo-m{grid-column:1}.todo-b{grid-column:2}}
+.mpanel:has(.mact){padding-bottom:0}
+.mhead{font-family:var(--f-display);font-size:19px;line-height:1.45;margin:6px 0 2px;color:var(--ink)}
+.wks{display:flex;flex-direction:column;gap:10px}
+.wk{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px}
+.wk.cur{background:var(--now-bg);border:1.5px solid var(--now-line)}
+.wk-i{flex:1 1 0;min-width:0;display:flex;gap:12px;align-items:center;border:0;background:none;padding:0;text-align:left;color:var(--ink)}
+.wk-th{width:48px;height:66px;box-shadow:0 1px 4px var(--shadow)}
+.wk-x{display:flex;flex-direction:column;gap:2px;min-width:0}
+.wk-x small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wk-x strong{font-family:var(--f-display);font-size:17px;line-height:1.35}
+.wk-x em{font-style:normal;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:3px}
+.wk-x em.nw{color:var(--now-ink);font-weight:700}.wk-x em.dn{color:var(--done);font-weight:500}
+.wk-a{flex:none}
+.wk-b{min-height:44px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:0 16px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.wk-b.go{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.wk-b.ok{background:none;border-color:transparent;color:var(--done);padding:0 10px}
+.wk-pg{flex-basis:100%}
+.mtip{display:flex;gap:6px;align-items:flex-start;background:var(--soft);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;color:var(--muted);margin:2px 0 0}
+.mtip svg{flex:none;margin-top:2px}
+.mok{display:flex;align-items:center;gap:6px;background:#E6F1E7;color:var(--done);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:700;margin:0}
+html[data-theme="sky"] .mok{background:#E3F0E7}
+.pk .ocr{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;min-height:50px;border:1.5px solid var(--primary);border-radius:999px;background:var(--paper);color:var(--primary);font-weight:700;font-size:15px;cursor:pointer}
+.pk .ocr input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pk .ocr:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.mact{position:sticky;bottom:0;margin:14px -18px 0;padding:10px 18px calc(12px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;z-index:3}
+.mact small{text-align:center;font-size:12.5px;color:var(--muted)}
+.mact-b{width:100%;min-height:52px;border-radius:999px;font-size:16px}
+.mact-b:disabled{background:var(--soft);border-color:var(--soft);color:var(--muted);opacity:1}
+.mdone{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:8px 0 4px}
+.mdone-b{width:88px;height:88px;border-radius:50%;border:4px solid var(--done);background:#E6F1E7;color:var(--done);display:flex;align-items:center;justify-content:center}
+.mdone-b svg{width:42px;height:42px}
+.mdone-k{font-size:12px;font-weight:700;color:var(--done);background:#E6F1E7;border-radius:999px;padding:3px 10px}
+.mdone h3{font-family:var(--f-display);font-size:22px;margin:2px 0 0}
+.mdone p{margin:0;color:var(--muted);font-size:14px}
+.mdone-s{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:6px}
+.mdone-s span{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;font-size:12px;color:var(--muted)}
+.mdone-s b{font-family:var(--f-display);font-size:22px;color:var(--ink)}
+.mdone-n{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px;color:var(--ink);margin-top:4px}
+.mdone-n>span:not(.mdone-th){flex:1;display:flex;flex-direction:column;gap:2px}.mdone-n small{color:var(--muted);font-size:12.5px}.mdone-n b{font-family:var(--f-display);font-size:17px}
+.mdone-th{width:44px;height:60px}
+#layer2:has(.svp){align-items:flex-end;justify-content:center}
+.panel.svp{height:auto;max-height:92%;width:min(520px,100%);border-left:0;border-radius:22px 22px 0 0;padding-top:10px;display:flex;flex-direction:column;gap:14px}
+.svp .ph h2{font-size:21px}
+.svp .svq{background:none;border:0;padding:0}
+.svp .svq b{font-family:var(--f-body);font-size:15px;font-weight:700}
+.svp .svq small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.svp .svr{margin-top:4px}
+.svp .svs{width:44px;height:44px}.svp .svs::before{font-size:40px;line-height:44px}
+.svgo{width:100%;min-height:52px;border-radius:999px;font-size:16px}
+.svh{text-align:center;margin:-4px 0 0}
+.esck{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;border:0;background:none;padding:0;text-align:left;font-size:15px;color:var(--ink)}
+.esck .bx{flex:none;width:26px;height:26px;border-radius:7px;border:2px solid var(--line-strong,#9A8B7A);display:flex;align-items:center;justify-content:center;color:#fff}
+.esck.on .bx{background:var(--primary);border-color:var(--primary)}
+.esai{display:flex;align-items:center;gap:8px;margin:0;font-size:14px;color:var(--muted)}
+.esub{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 0}
+.esub span{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 12px 6px 8px;font-size:13.5px;font-weight:700;background:var(--soft);color:var(--muted)}
+.esub span i{font-style:normal;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:inline-flex;align-items:center;justify-content:center;font-size:11.5px}
+.esub span.on{background:var(--primary);color:var(--on-primary)}
+.esub span.dn{background:#E6F1E7;color:var(--done)}
+.esnow{margin:6px 0 0;font-size:13.5px;color:var(--muted);line-height:1.55}
+.es-busy{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.ring{width:64px;height:64px;border-radius:50%;border:6px solid var(--soft);border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ring{animation-duration:3s}}
+.eslook{list-style:none;margin:4px 0;padding:0;width:100%;text-align:left;border-top:1px solid var(--line)}
+.eslook li{padding:10px 4px;border-bottom:1px solid var(--line);font-size:14px}
 /* 가입 4단계 */
 form[data-step] .sus{display:none}
 form[data-step="1"] .sus[data-s="1"],form[data-step="2"] .sus[data-s="2"],form[data-step="3"] .sus[data-s="3"],form[data-step="4"] .sus[data-s="4"]{display:flex;flex-direction:column;gap:14px}
@@ -1208,7 +1294,8 @@ section.dash .dgo .dl2 .bar{flex:1;min-width:24px;margin:0}
 .ybox .ylk:hover{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
 
 /* ---------- 2026-11-24 포켓 스타일 (11-24 저녁: 메인 화면은 원래 디자인으로 되돌리고, 논술·구술 화면(.pk)과 관리자(.ad)에만 적용): 흰 바탕, 검은 글자, 호박색 강조 하나, 카드·목록, 둥근 버튼 ---------- */
-.pk,.ad{
+.pk{--pk-teal:#8FD0C9; --pk-coral:#F7B29A; --pk-mint:#A8DEC3; --pk-sun:#F3D98F}
+.ad{
   --bg:#FFFFFF; --paper:#FFFFFF; --soft:#F3F4F6; --field:#FFFFFF;
   --ink:#1F2328; --muted:#6B7078; --line:#E8EAED;
   --primary:#1F2328; --primary-d:#000000; --on-primary:#FFFFFF;
@@ -1291,14 +1378,19 @@ section.dash .dgo .dl2 .bar{flex:1;min-width:24px;margin:0}
 .pk-vid{font-size:11px;color:#C8463B;font-weight:700;text-decoration:none}
 
 /* 월 화면: 단계 */
-.msteps{list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-.msteps button{width:100%;border:1px solid #ECEEF1;background:#fff;border-radius:12px;padding:8px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:12.5px;font-weight:500}
-.msteps .mn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--muted);font-size:12px;font-weight:700}
-.msteps li.s-pt .mn{background:var(--latte);color:var(--gold-ink)}
-.msteps li.s-dn .mn{background:var(--mint-d);color:#fff}
-.msteps li.s-dn button{color:var(--mint-d)}
-.msteps button[aria-pressed=true]{border-color:var(--ink);color:var(--ink);font-weight:700;box-shadow:0 0 0 1px var(--ink) inset}
-.msteps li.s-nx:not(.s-dn) button[aria-pressed=false]{border-color:var(--rose)}
+.msteps{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.msteps li{position:relative}
+.msteps li+li::before{content:"";position:absolute;top:18px;left:calc(-50% + 22px);right:calc(50% + 22px);height:2px;border-radius:2px;background:var(--line)}
+.msteps li.s-dn+li::before{background:var(--done)}
+.msteps button{width:100%;min-height:62px;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:12.5px;font-weight:500;box-shadow:none}
+.msteps .mn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);background:var(--paper);color:var(--muted);font-size:14px;font-weight:700;transition:box-shadow .15s}
+.msteps li.s-pt .mn{border-color:var(--now-line);color:var(--now-ink)}
+.msteps li.s-dn .mn{background:var(--done);border-color:var(--done);color:#fff}
+.msteps li.s-dn button{color:var(--done)}
+.msteps li.s-nx:not(.s-dn) .mn{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.msteps li.s-nx:not(.s-dn) button{color:var(--now-ink);font-weight:700}
+.msteps button[aria-pressed=true]{color:var(--ink);font-weight:700}
+.msteps button[aria-pressed=true] .mn{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--primary)}
 .mguide{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--soft);border-radius:12px;padding:9px 12px;font-size:13px;line-height:1.5}
 .mguide b{color:var(--ink)}
 .mguide.all{background:#EEF8F6;color:#0F6E63}
@@ -1420,16 +1512,17 @@ const seenNote=i=>{const D=S.progress.done;return D[ik(i,'book')]&&(!!D[ik(i,'m1
 function svStars(q,v){let h='';for(let n=1;n<=5;n++){const st=v>=n?'f':v>=n-.5?'h':'e';h+=`<span class="svs ${st}"><button type="button" class="l" data-act="svset" data-q="${q}" data-v="${n-.5}" aria-label="${n-.5}점"></button><button type="button" class="r" data-act="svset" data-q="${q}" data-v="${n}" aria-label="${n}점"></button></span>`}return h}
 function surveyHTML(){
   const V=S.survey;const it=items()[V.i];const isB=V.k==='book';const name=bTitle(isB?it.book:V.k==='m1'?it.m1:it.m2);
-  const rows=SVQ.map(([q,t,ask])=>{const v=Number(V.v[q])||0;return `<div class="svq"><b>${t}</b><p>${esc(ask.replace('@',isB?'읽':'보'))}</p><div class="svr" role="group" aria-label="${t} 별점">${svStars(q,v)}<span class="svn">${v?`${v.toFixed(1)}점 <small>(10점 만점 ${(v*2).toFixed(0)}점)</small>`:'<small>별을 눌러 주세요</small>'}</span></div></div>`}).join('');
+  const QX={fun:['재미있었나요?',''],diff:['@기 어땠어요?','별이 많을수록 어려웠다는 뜻이에요'],again:['나중에 다시 @고 싶나요?','']};
+  const rows=SVQ.map(([q,t])=>{const v=Number(V.v[q])||0;const [a,s2]=QX[q]||[t,''];return `<div class="svq"><b>${esc(a.replace('@',isB?'읽':'보'))}</b>${s2?`<small>${s2}</small>`:''}<div class="svr" role="group" aria-label="${t} 별점">${svStars(q,v)}<span class="svn">${v?`${v.toFixed(1)}점`:''}</span></div></div>`}).join('');
   const ok=SVQ.every(([q])=>V.v[q]);
-  return `<div class="panel"><div class="ph"><h2>${isB?'책':'영화'} 설문<small>「${esc(name)}」 다 ${isB?'읽었어요':'봤어요'}! 세 가지만 알려 주세요.</small></h2><button class="x" data-act="svclose" aria-label="닫기">${IC.x}</button></div>
-  ${rows}<p class="hint">별 한 개는 1점, 별의 왼쪽 반을 누르면 0.5점이에요. 책과 영화 세 작품의 설문을 모두 끝내면 논술을 쓸 수 있어요.</p>
-  <button class="btn" data-act="svsave" ${ok?'':'disabled'}>설문 완료</button></div>`;
+  return `<div class="panel svp"><div class="ph"><h2>「${esc(name)}」 어땠어요?<small>세 가지만 누르면 끝 · 10초</small></h2><button class="x" data-act="svclose" aria-label="닫기">${IC.x}</button></div>
+  ${V.msg?`<p class="mok" role="status">${IC.check}<span>${esc(V.msg)}</span></p>`:''}${rows}
+  <button class="btn svgo" data-act="svsave" ${ok?'':'disabled'}>남기기</button><p class="hint svh">별의 왼쪽 반을 누르면 0.5점이에요 · 한 줄 후기는 제목을 눌러 나중에 써도 돼요</p></div>`;
 }
 function svLockHTML(i){
   const it=items()[i];const L=[['book','책',it.book],['m1','영화1',it.m1],['m2','영화2',it.m2]];
-  return `<div class="note2"><h3>논술은 책과 영화 한 편을 끝낸 뒤에 쓸 수 있어요</h3><p class="hint">책 1권과 영화 1편 이상을 완료하고, 끝낸 작품마다 별점 설문 3가지를 해 주세요. 두 번째 영화는 나중에 봐도 돼요.</p>
-  ${L.map(([k,t,n])=>{const on=!!S.progress.done[ik(i,k)];const sv=svOK(i,k);return `<div class="frr"><div class="fi"><b>${t} · ${esc(bTitle(n))}</b><small>${sv?'설문 완료':on?'설문 전':'아직 완료 전'}</small></div><div class="fa">${sv?'<span class="tagk">완료</span>':on?`<button class="btn small" data-act="svopen" data-i="${i}" data-k="${k}">설문하기</button>`:`<button class="btn ghost small" data-act="stab" data-v="work">작품으로</button>`}</div></div>`}).join('')}</div>`;
+  return `<div class="note2"><h3>글쓰기는 책과 영화 한 편을 끝낸 뒤에 열려요</h3><p class="hint">책 1권과 영화 1편 이상을 끝내고, 끝낸 작품마다 별점 세 개를 남겨 주세요. 두 번째 영화는 나중에 봐도 돼요.</p>
+  ${L.map(([k,t,n])=>{const on=!!S.progress.done[ik(i,k)];const sv=svOK(i,k);return `<div class="frr"><div class="fi"><b>${t} · ${esc(bTitle(n))}</b><small>${sv?'별점 끝':on?'별점 전':'아직 안 끝냄'}</small></div><div class="fa">${sv?'<span class="tagk">끝</span>':on?`<button class="btn small" data-act="svopen" data-i="${i}" data-k="${k}">별점 남기기</button>`:`<button class="btn ghost small" data-act="stab" data-v="work">작품으로</button>`}</div></div>`}).join('')}</div>`;
 }
 function pagesOf(i){const it=items()[i];const key=ik(i,'book');const c=(S.cinfo||{})[hid(it.book)]||{};return Number((S.progress.pages||{})[key]||infoOf(it,'book').pages||c.pages||0)}
 function readStat(i,k){const key=ik(i,k);const st=(S.progress.started||{})[key],dn=S.progress.done[key];if(!st||typeof dn!=='number')return null;const days=Math.max(1,Math.ceil((dn-st)/864e5));const pg=k==='book'?pagesOf(i):0;return {days,pg,ppd:pg?Math.round(pg/days):0}}
@@ -1984,6 +2077,7 @@ const IC={course:ICO('<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V
   out:ICO('<path d="M10 4.5H6.5a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5H10"/><path d="M14.5 8l4 4-4 4M18.5 12H9.5"/>',16),
   x:ICO('<path d="M6 6l12 12M18 6L6 18"/>',16),back:ICO('<path d="M15 5l-7 7 7 7"/>',16),next:ICO('<path d="M9 5l7 7-7 7"/>',16),
   pen:ICO('<path d="M4 20l4-1L19 8l-3-3L5 16z"/><path d="M14 7l3 3"/>',16),clock:ICO('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',15),check:ICO('<path d="M5 12.5l4.5 4.5L19 7.5"/>',14)};
+IC.cam=ICO('<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.2"/>',16);
 function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progress.done[ik(i,'book')])b++;if(S.progress.done[ik(i,'m1')])f++;if(S.progress.done[ik(i,'m2')])f++});return{b,f}}
 function shellHTML(){
   const v=S.view;
@@ -2188,7 +2282,7 @@ function stepsOf(i){
   const o2=ol.some(x=>x.t2!=null)||!!(S.orals2&&S.orals2[k]);const o1=o2||ol.length>0||!!(S.orals&&S.orals[k]);
   const ess=evOK(i);const dr=!!((S.progress.drafts||{})[k]||Number.isInteger((S.progress.picks||{})[k]));
   return [
-    {k:'work',done:sv,part:d>0,sub:two&&!sv?'설문 남음':d+'/3'},
+    {k:'work',done:sv,part:d>0,sub:two&&!sv?'별점 남음':d+'/3'},
     {k:'note',done:!!(n.sentence&&n.scene),part:!!(n.sentence||n.scene),sub:(n.sentence?1:0)+(n.scene?1:0)+'/2'},
     {k:'essay',done:ess,part:dr,sub:ess?'첨삭 완료':dr?'쓰는 중':''},
     {k:'oral',done:o2,part:o1,sub:o2?'2차 완료':o1?'1차 완료':''}].map(x=>Object.assign(x,{t:STEP_T[x.k]}))}
@@ -2252,12 +2346,44 @@ function dashHTML(pct,ct){
   </div>
   </section>`;
 }
+/* ---------- 2026-11-25 디자인 2차(피그마 06): 홈 맨 위 '지금 할 일' 카드. 누를 곳은 카드 속 버튼 하나 ---------- */
+const WKS=['book','m1','m2'];
+const wkName=(it,k)=>k==='book'?it.book:k==='m1'?it.m1:it.m2;
+/* 1단계(읽고 보기) 안에서 지금 할 작품: 별점이 남은 것 → 하는 중인 것 → 아직 안 한 것 */
+function wkNext(i){const D=S.progress.done,St=S.progress.started||{};
+  for(const k of WKS)if(D[ik(i,k)]&&!svOK(i,k))return {k,s:'rate'};
+  for(const k of WKS)if(!D[ik(i,k)]&&St[ik(i,k)])return {k,s:'doing'};
+  for(const k of WKS)if(!D[ik(i,k)])return {k,s:'new'};
+  return null}
+const wkVerb=k=>k==='book'?['읽기','읽는','읽었어요']:['보기','보는','봤어요'];
+function wkThumb(it,i,k,cls){const t=wkName(it,k);const img=artOf(t,k==='book'?'book':'movie',k==='book'?'':yearOf(it,t));
+  return img?`<span class="${cls}"><img src="${img}" alt=""></span>`:`<span class="${cls} ph">${artHTML(i+(k==='book'?0:k==='m1'?1:2),'')}</span>`}
+function todoHTML(){
+  const i=homeIdx();if(i<0)return '';
+  const it=items()[i];const st=stepsOf(i);const nx=stepNext(i);const n=st.findIndex(x=>x.k===nx.k)+1;const dn=st.filter(x=>x.done).length;
+  const kw=kwDisp(it);let k='book',title='',sub='',btn='',act=`data-act="month" data-i="${i}" data-tab="${nx.k}"`;
+  if(nx.k==='work'){const w=wkNext(i)||{k:'book',s:'new'};k=w.k;const v=wkVerb(k);const nm=bTitle(wkName(it,k));const ln=cardInfoLines(it,k);
+    if(w.s==='rate'){title=`「${esc(nm)}」 어땠는지 별점만 남겨요`;sub='세 가지만 누르면 끝 · 10초';btn='별점 남기기';act=`data-act="svopen" data-i="${i}" data-k="${k}"`}
+    else if(w.s==='doing'){const d0=(S.progress.started||{})[ik(i,k)];title=`「${esc(nm)}」 ${v[1]} 중이에요`;sub=`${esc(ln.a||'')}${ln.a?' · ':''}${Math.max(1,Math.ceil((Date.now()-d0)/864e5))}일째`;btn='이어서 하기'}
+    else{title=k==='book'?`「${esc(nm)}」부터 읽기 시작해요`:`영화 「${esc(nm)}」를 볼 차례예요`;sub=esc(ln.a||'');btn=k==='book'?'책 읽기 시작':'영화 보러 가기'}}
+  else if(nx.k==='note'){title='마음에 남은 문장 하나,<br>장면 하나를 적어요';sub='한두 문장이면 돼요';btn='기록하러 가기'}
+  else if(nx.k==='essay'){const ev=S.evals&&S.evals[nk(i)];title=nx.part?'쓰던 글을 이어서 써요':'질문 하나를 골라<br>글 한 편을 써요';sub=ev?'첨삭 결과가 나왔어요':'다 쓰면 AI 선생님이 첨삭해요';btn=nx.part?'이어서 쓰기':'글쓰기'}
+  else{title='질문을 듣고<br>말로 답해요';sub=nx.part?'2차 답변이 남았어요':'모범 답안을 따라 읽고 다시 답해요';btn='말하기'}
+  return `<section class="todo" aria-label="지금 할 일">
+    <span class="todo-k">지금 할 일 · ${n}단계 ${esc(nx.t)}</span>
+    <div class="todo-m">${wkThumb(it,i,nx.k==='work'?k:'book','todo-th')}<div class="todo-x"><b class="todo-t">${title}</b><small>${sub}</small></div></div>
+    <button class="btn todo-b" ${act}>${btn}</button>
+    <div class="todo-p"><span class="todo-g">${esc(it.g)} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kw?' · '+esc(kw):''}</span><span class="todo-n"><b>${dn}</b> / 4단계</span></div>
+    <div class="todo-bar" aria-hidden="true">${st.map(x=>`<i class="${x.done?'dn':x.k===nx.k?'nx':''}"></i>`).join('')}</div>
+  </section>`;
+}
 function courseHTML(){
   const stats=GR.map(g=>[g,gradeStats(g)]);
   const tot=stats.reduce((a,[,s])=>({d:a.d+s.done,t:a.t+s.total}),{d:0,t:0});
   const pct=tot.t?Math.round(tot.d/tot.t*100):0;const ct=counts();
   const cur=stats.find(([g])=>g===S.grade)[1];
   return `${S.canWrite===false?'<p class="warn" style="margin-bottom:14px">지금 계정은 기록을 저장할 수 없어요. 서재 주인에게 기여자 권한으로 초대해 달라고 해 주세요.</p>':''}
+  ${todoHTML()}
   ${visionBanner()}
   ${dashHTML(pct,ct)}
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
@@ -2438,6 +2564,45 @@ function qHTML(i){
   </div>
   <p class="es-src">${q.ai?'Claude(생성형 AI)가 책과 두 영화를 엮어 새로 낸 질문이에요.':'기본 질문이에요.'}</p>`;
 }
+const STEP_H={work:'책 1권과 영화 1편을 끝내고 별점을 남기면 글쓰기가 열려요',note:'책에서 문장 하나, 영화에서 장면 하나를 적어요',
+  essay:'질문 하나를 골라 글을 쓰고 첨삭을 받아요',oral:'질문을 듣고 말로 답해요'};
+/* 작품 한 줄: 지금 할 행동 버튼 하나(시작 → 다 읽었어요 → 별점 → 끝) */
+function wkRowHTML(i,k,cur){
+  const it=items()[i];const key=ik(i,k);const on=!!S.progress.done[key];const st=(S.progress.started||{})[key];const v=wkVerb(k);
+  const name=bTitle(wkName(it,k));const ln=cardInfoLines(it,k);const r=on?readStat(i,k):null;const sv=svOK(i,k);
+  const kind=k==='book'?'책':'영화';
+  const stat=on?`<em class="dn">${IC.check} ${r?r.days+'일 만에 끝'+(r.ppd?' · 하루 '+r.ppd+'쪽':''):'끝'}</em>`:st?`<em class="nw">${v[1]} 중 · ${Math.max(1,Math.ceil((Date.now()-st)/864e5))}일째</em>`:`<em>아직</em>`;
+  const a=on?(sv?`<button class="wk-b ok" data-act="wkundo" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 끝냄 (두 번 누르면 취소)">${IC.check}끝</button>`:`<button class="wk-b go" data-act="svopen" data-i="${i}" data-k="${k}">별점 남기기</button>`)
+    :st?`<button class="wk-b go" data-act="done" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 다 ${v[2]}">다 ${v[2]}</button>`
+    :`<button class="wk-b" data-act="start" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 ${v[0]} 시작">${v[0]} 시작</button>`;
+  const pg=on&&k==='book'&&r&&!r.pg?(S.pgBusy===key?'<span class="pgin hint">책 쪽수를 찾고 있어요…</span>':`<span class="pgin"><input id="pg-${i}" type="number" inputmode="numeric" min="1" max="4999" placeholder="책 페이지" aria-label="책 총 쪽수"><button class="chip" data-act="pgsave" data-i="${i}">하루 읽은 페이지</button></span>`):'';
+  return `<div class="wk${cur?' cur':''}${on?' on':''}">
+    <button class="wk-i" data-act="info" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 정보">${wkThumb(it,i,k,'wk-th')}<span class="wk-x"><small>${kind}${ln.a?' · '+esc(ln.a):''}</small><strong>${esc(name)}</strong>${stat}</span></button>
+    <div class="wk-a">${a}</div>${pg?`<div class="wk-pg">${pg}</div>`:''}</div>`;
+}
+/* 월 화면 맨 아래 큰 버튼 하나. 지금 단계에서 할 일을 그대로 한 번 더 */
+function mactHTML(i){
+  const tab=S.sheetTab||'work';const st=stepsOf(i);const nx=stepNext(i);const pos=st.findIndex(x=>x.k===tab);
+  const it=items()[i];const go=(x,lab)=>`<button class="btn mact-b" data-act="stab" data-v="${x.k}">${lab||`${st.indexOf(x)+1}단계 · ${esc(x.t)}로 가기`}</button>`;
+  let hint='',b='';
+  if(tab==='work'&&nx&&nx.k==='work'){const w=wkNext(i);if(w){const nm=bTitle(wkName(it,w.k));const v=wkVerb(w.k);
+      if(w.s==='rate'){hint='세 가지만 누르면 끝 · 10초';b=`<button class="btn mact-b" data-act="svopen" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 별점 남기기</button>`}
+      else if(w.s==='doing'){hint='누르면 10초 별점이 나와요';b=`<button class="btn mact-b" data-act="done" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 다 ${v[2]}</button>`}
+      else{hint='시작을 누르면 친구와 부모님께 알려요';b=`<button class="btn mact-b" data-act="start" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 ${v[0]} 시작</button>`}}}
+  else if(tab==='note'&&!(pos>=0&&st[pos].done)){const n=(S.progress.notes||{})[nk(i)]||{};
+    b=`<button class="btn mact-b" disabled>${!n.sentence?'책에서 마음에 남은 문장을 적어 주세요':'영화에서 기억에 남은 장면을 적어 주세요'}</button>`;hint='두 칸을 채우면 다음 단계로 갈 수 있어요'}
+  else if(pos>=0&&st[pos].done&&nx&&tab!=='edu'){b=go(nx)}
+  return b?`<div class="mact" id="mact">${hint?`<small>${hint}</small>`:''}${b}</div>`:'<div id="mact" hidden></div>';
+}
+/* 한 달 완료(피그마 17): 배지와 네 숫자, 다음 달로 */
+function mdoneHTML(i){
+  const it=items()[i];const D=S.progress.done;const f=(D[ik(i,'m1')]?1:0)+(D[ik(i,'m2')]?1:0);const ev=S.evals&&S.evals[nk(i)];
+  const nx=items()[i+1];const kw2=nx?kwDisp(nx):'';
+  return `<div class="mdone"><span class="mdone-b" aria-hidden="true">${BOOKG}</span><span class="mdone-k">배지 · 이달의 독서왕</span>
+    <h3>${esc(ordM(it.m).replace(/ \(.*\)$/,''))}을 모두 마쳤어요!</h3><p>책과 영화가 내 서재에 꽂혔어요.</p>
+    <div class="mdone-s"><span><b>4/4</b>단계</span><span><b>1</b>책</span><span><b>${f}</b>영화</span><span><b>${ev&&ev.total!=null?esc(ev.total):'-'}</b>글 점수</span></div>
+    ${nx?`<button class="mdone-n" data-act="month" data-i="${i+1}">${wkThumb(nx,i+1,'book','mdone-th')}<span><small>다음 · ${esc(nx.g)} ${esc(ordM(nx.m).replace(/ \(.*\)$/,''))}${kw2?' · '+esc(kw2):''}</small><b>${esc(bTitle(nx.book))}</b></span>${IC.next}</button>`:''}</div>`;
+}
 function monthHTML(i){
   const it=items()[i];const n=S.progress.notes[nk(i)]||{};const tab=S.sheetTab||'work';const p=GP[i%GP.length];
   const item=(k,t,name,cls)=>{const key=ik(i,k);const on=!!S.progress.done[key];const st=(S.progress.started||{})[key];
@@ -2454,33 +2619,34 @@ function monthHTML(i){
     return `<div class="item ${cls}">${th}
       <button class="nm" data-act="info" data-i="${i}" data-k="${k}"><small>${t}${info?' · '+info:''}</small><strong>${esc(name)}</strong><em>정보와 후기 ›</em></button>
       ${on&&!svOK(i,k)?`<button class="rb sv" data-act="svopen" data-i="${i}" data-k="${k}">설문</button>`:''}<div class="rdb"><button class="rb${st||on?' on':''}" data-act="start" data-i="${i}" data-k="${k}" aria-pressed="${!!(st||on)}" aria-label="${t} 시작" ${on?'disabled':''}>시작</button><button class="rb${on?' on':''}" data-act="done" data-i="${i}" data-k="${k}" aria-pressed="${on}" aria-label="${t} 완료">완료</button></div>${pg}</div>`};
+  const wn=stepNext(i);const cw=wn&&wn.k==='work'?wkNext(i):null;
   const work=`${it.parent?'<p class="note">이달의 작품 중에는 부모님과 함께 보면 좋은 소재가 있어요.</p>':''}
-    ${item('book','책',it.book,'bk2')}
-    <div class="two">${item('m1','영화',it.m1,'tk')}${item('m2','영화',it.m2,'tk')}</div>
-    <p class="hint">읽기(보기) 전에 시작, 다 끝내면 완료를 눌러요. 걸린 날과 하루 읽은 쪽수를 알려 주고, 친구와 부모님께 알림이 가요. 제목을 누르면 저자·가격·볼 수 있는 곳을 볼 수 있어요.${canGuide()?' 부모님은 제목을 누른 뒤 "논술 첨삭자료"에서 지도 안내서를 볼 수 있어요.':''}</p>`;
+    <div class="wks">${WKS.map(k=>wkRowHTML(i,k,cw&&cw.k===k)).join('')}</div>
+    <p class="mtip">${IC.next}<span>제목을 누르면 작품 정보와 볼 수 있는 곳이 나와요. 시작과 끝을 누르면 친구와 부모님께 알림이 가요.${canGuide()?' 부모님은 제목을 누른 뒤 "논술 첨삭자료"에서 지도 안내서를 볼 수 있어요.':''}</span></p>`;
   const essay=svReady(i)?essayHTML(i):svLockHTML(i);
-  const note=`<div class="note2"><h3>책에서 가장 인상 깊은 문장</h3>
-      <label class="ocr" for="ph-sentence">사진으로 올리기 <small class="hint">글을 읽어서 칸을 채워 줘요</small><input id="ph-sentence" type="file" accept="image/*" data-ocr="sentence"></label>
+  const wDone=stepsOf(i)[0].done;const nDone=stepsOf(i)[1].done;
+  const note=`${wDone&&!nDone?'<p class="mok">'+IC.check+'<span>1단계 끝! 이제 기록하기 차례예요</span></p>':''}<div class="note2"><h3>책에서 마음에 남은 문장</h3>
+      <label class="ocr" for="ph-sentence">${IC.cam}<span>책 사진 찍어서 채우기</span><input id="ph-sentence" type="file" accept="image/*" data-ocr="sentence"></label>
       <label for="n-sentence">문장<textarea id="n-sentence" data-note="sentence" placeholder="마음에 남은 문장을 그대로 옮겨 적어요">${esc(n.sentence||'')}</textarea></label>
-      <label for="n-sreason">그 이유<textarea id="n-sreason" data-note="sreason" placeholder="왜 이 문장이 마음에 남았나요?">${esc(n.sreason||'')}</textarea></label></div>
-    <div class="note2"><h3>영화에서 가장 인상 깊은 장면</h3>
-      <label class="ocr" for="ph-scene">장면 사진으로 올리기 <small class="hint">장면을 글로 적어 줘요</small><input id="ph-scene" type="file" accept="image/*" data-ocr="scene"></label>
+      <label for="n-sreason">그 이유<textarea id="n-sreason" data-note="sreason" placeholder="왜 마음에 남았나요? 한두 문장이면 돼요">${esc(n.sreason||'')}</textarea></label></div>
+    <div class="note2"><h3>영화에서 기억에 남은 장면</h3>
+      <label class="ocr" for="ph-scene">${IC.cam}<span>장면 사진으로 채우기</span><input id="ph-scene" type="file" accept="image/*" data-ocr="scene"></label>
       <label for="n-scene">장면<textarea id="n-scene" data-note="scene" placeholder="어떤 장면이었는지 적어요">${esc(n.scene||'')}</textarea></label>
-      <label for="n-creason">그 이유<textarea id="n-creason" data-note="creason" placeholder="왜 이 장면이 기억에 남았나요?">${esc(n.creason||'')}</textarea></label></div>
-    <p class="hint">쓰는 대로 자동 저장돼요.</p>`;
+      <label for="n-creason">그 이유<textarea id="n-creason" data-note="creason" placeholder="왜 기억에 남았나요? 한두 문장이면 돼요">${esc(n.creason||'')}</textarea></label></div>
+    <p class="hint">${IC.check} 쓰는 대로 저장돼요.</p>`;
   const st=stepsOf(i);const nx=stepNext(i);const pos=st.findIndex(x=>x.k===tab);
   const later=pos>=0&&st[pos].done?st.slice(pos+1).find(x=>!x.done):null;
-  const guide=!nx?'<div class="mguide all"><span><b>이번 달 과정을 모두 마쳤어요.</b> 다음 달로 넘어가요.</span></div>'
-    :tab===nx.k?`<div class="mguide"><span><b>지금 할 일 · ${esc(nx.t)}</b> ${esc(STEP_G[nx.k])}</span></div>`
+  const guide=!nx?(tab==='work'?mdoneHTML(i):'<div class="mguide all"><span><b>이번 달 과정을 모두 마쳤어요.</b> 다음 달로 넘어가요.</span></div>')
+    :tab===nx.k?`<h3 class="mhead">${esc(STEP_H[nx.k])}</h3>`
     :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>이에요.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
-  const cov=!S.covers[hid(it.book)]?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
-  const body=tab==='work'?cov+work:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
-  return `<div class="panel pk"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
+  const cov=!S.covers[hid(it.book)]&&tab==='work'?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
+  const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
+  return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
   <div class="mmore"><button class="chip" data-act="stab" data-v="edu" aria-pressed="${tab==='edu'}">교육자료</button></div>
   ${guide}
   ${body}
-  ${later?`<button class="btn ghost mnextb" data-act="stab" data-v="${later.k}">다음 단계 · ${esc(later.t)} →</button>`:''}</div>`;
+  ${mactHTML(i)}</div>`;
 }
 
 /* ---------- 작품 정보 ---------- */
@@ -3541,6 +3707,7 @@ function renderLayers(){
     l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
     const p=l1.querySelector('.panel');if(p&&keep)p.scrollTop=top}
   if(S.id&&S.survey){l2.hidden=false;l2.innerHTML=surveyHTML();return}
+  if(S.id&&S.esConf){l2.hidden=false;l2.innerHTML=esConfHTML();return}
   if(!S.id||(!S.info&&!S.evalView&&!S.oralView&&!S.oralHist)){l2.hidden=true;l2.innerHTML=''}
   else{l2.hidden=false;const k2=l2.querySelector('.panel');const gd=!S.evalView&&S.info&&S.info.guide&&canGuide();const t2=k2&&gd&&k2.classList.contains('gd')?k2.scrollTop:0;l2.innerHTML=S.oralView?oralEvalHTML():S.oralHist?oralHistHTML():S.evalView?evalHTML():gd?guideHTML():infoHTML();fitMn();if(t2){const p2=l2.querySelector('.panel');if(p2)p2.scrollTop=t2}}
 }
@@ -3725,6 +3892,15 @@ function esPast(i,P){
   return `<details class="es-past"><summary>✓ 묻기 ${P.asks.length?P.asks.length+'개':'없이 시작'}${P.roadDone?' · ✓ 계획 완료':''} <span>지난 준비 보기</span></summary>
     <div class="es-pastin">${asks||'<p class="hint">선생님께 묻지 않고 시작했어요.</p>'}${P.roadDone?roadHTML(i):''}</div></details>`;
 }
+/* 제출 전 확인(피그마 13): 두 가지를 체크해야 제출 버튼이 켜진다 */
+function esConfHTML(){
+  const C=S.esConf;const ok=C.a&&C.b;const ck=(k,t)=>`<button type="button" class="esck${C[k]?' on':''}" role="checkbox" aria-checked="${!!C[k]}" data-act="esck" data-k="${k}"><span class="bx">${C[k]?IC.check:''}</span><span>${t}</span></button>`;
+  return `<div class="panel svp esc"><div class="ph"><h2>제출하기 전에 확인해요</h2><button class="x" data-act="esback" aria-label="닫기">${IC.x}</button></div>
+    ${ck('a','글에 내 이름이나 학교를 쓰지 않았어요')}${ck('b','첨삭을 마친 친구들에게 <b>닉네임으로만</b> 보여요')}
+    <p class="esai">${IC.clock}<span>AI 선생님(Claude)이 1~2분 동안 첨삭해요</span></p>
+    <button class="btn svgo" data-act="esgo" ${ok?'':'disabled'}>제출하고 첨삭 받기</button>
+    <button class="btn ghost svgo" data-act="esback">조금 더 고칠래요</button></div>`;
+}
 function essayHTML(i){
   const key=nk(i);const ev=S.evals[key];const ev2=S.evals2[key];const q=qState(i);const qs=q?q.shown:[];const d=S.essayDraft.i===i?S.essayDraft:{q:-1,text:'',files:[]};
   const it=items()[i];const h=hid(it.book);const others=(S.essays[h]||[]).filter(x=>x.uid!==S.id);
@@ -3733,7 +3909,8 @@ function essayHTML(i){
   const stv=ev?5:st;  // 보기용: 첨삭을 받았으면 다섯 칸 모두 ✓
   const wsec=(S.progress.wtime||{})[key]||0;const has=!!(d.text&&d.text.trim());const off=S.essayOff&&S.essayOff.i===i;
   const now=busy?'선생님이 첨삭하고 있어요. 1~2분만 기다려요.':ev?(ev2?'2차 첨삭까지 마쳤어요. 결과를 확인해요.':'첨삭이 끝났어요. 결과를 확인하고, 3일 뒤 고쳐 쓰면 2차 점수를 받아요.'):['질문 세 개를 넘겨 읽고, 쓰고 싶은 질문 하나를 골라요.','헷갈리는 게 있으면 선생님께 물어봐요. 없으면 바로 다음으로 넘어가요.','주장·근거·맺음말을 한 문장씩 메모해요.',has||d.files.length?'다 썼으면 아래 \'제출하고 첨삭 받기\'를 눌러요.':'원고지를 열어 계획대로 글을 써요. 노트 사진으로 내도 돼요.'][st];
-  const head=flowHTML('논술 순서',ES_FLOW,busy?4:stv>=5?5:stv===3&&(has||d.files.length)?4:stv,now);
+  const ci=ev||busy?3:st<=1?0:st===2?1:2;
+  const head=`<div class="esub" role="group" aria-label="글쓰기 순서">${['질문','계획','쓰기'].map((t,n)=>`<span class="${ci>n?'dn':ci===n?'on':''}"${ci===n?' aria-current="step"':''}>${ci>n?IC.check:'<i>'+(n+1)+'</i>'}${t}</span>`).join('')}${ev?`<span class="dn">${IC.check}첨삭</span>`:''}</div><p class="esnow">${esc(now)}</p>`;
   const tm=picked?qTime(qs[d.q]):null;
   const chg=!ev&&!busy&&st>=1&&S.esQChg===i;
   const qline=picked?`<details class="es-q"${chg?' open':''}><summary><span class="qn">질문 ${d.q+1}</span>${esc(qs[d.q])}</summary>
@@ -3745,7 +3922,9 @@ function essayHTML(i){
   const nos=!S.sample?'<p class="warn">지금은 Claude에 연결되지 않아 첨삭을 받을 수 없어요.</p>':'';
   let card='';
   if(busy){
-    card=`<div class="es-card es-busy"><div class="sk"></div><h3>${S.essayBusy===key+'_r2'?'2차 첨삭을 하고 있어요':'선생님이 첨삭하고 있어요'}</h3><p class="hint" role="status" id="es-msg">${esc(S.essayMsg)}</p><p class="hint">1~2분 걸려요. 이 창을 닫지 말아 주세요.</p></div>`;
+    card=`<div class="es-card es-busy"><span class="ring" aria-hidden="true"></span><h3>${S.essayBusy===key+'_r2'?'2차 첨삭을 하고 있어요':'첨삭하고 있어요'}</h3><p class="hint" role="status" id="es-msg">${esc(S.essayMsg)}</p>
+      <ul class="eslook"><li>맞춤법과 띄어쓰기</li><li>문장 다듬기</li><li>문단 구성</li><li>점수와 모범 답안 2개</li></ul>
+      <p class="hint">AI 선생님(Claude)이 위 네 가지를 봐요. 1~2분 걸리니 이 화면을 닫지 말고 기다려 주세요.</p></div>`;
   }else if(ev){
     const open=!rwLeft(ev);const at=new Date(ev.at).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'});
     const left=rwLeft(ev),lh=Math.ceil(left/3600000);
@@ -3775,8 +3954,8 @@ function essayHTML(i){
       ${files?`<p class="es-meta">📷 사진 ${files}장 <button class="chip" data-act="clearfiles">지우기</button></p>`:'<p class="es-meta">여러 장 가능 · 밝은 곳에서 또렷하게</p>'}
       </div><div class="es-plan">${roadHTML(i)}</div></div>
       ${esPast(i,P)}
-      ${has||files?`<div class="es-submit"><ul class="es-chk"><li>🔒 제출한 글은 첨삭을 마친 친구들에게 닉네임으로 보여요. 이름·학교는 쓰지 마세요.</li><li>⭐ 묻기·계획·쓴 시간도 '적극성' 점수에 들어가요.</li></ul>
-        <button class="btn main" data-act="evaluate" data-i="${i}" ${busy||!S.sample?'disabled':''}>제출하고 첨삭 받기</button><small class="hint">첨삭은 생성형 AI(Claude)가 해요 · 1~2분 걸려요</small></div>`:''}`;
+      ${has||files?`<div class="es-submit"><small class="hint">묻기·계획·쓴 시간도 '적극성' 점수에 들어가요.</small>
+        <button class="btn main" data-act="esconf" data-i="${i}" ${busy||!S.sample?'disabled':''}>다 썼어요</button><small class="hint">누르면 제출 전에 한 번 더 확인해요</small></div>`:''}`;
   }
   return `<div class="sec es" data-st="${stv}">${head}${nos}${st>=1&&!busy?qline:''}${card}${friends}</div>`;
 }
@@ -5442,7 +5621,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('input',e=>{
   const el=e.target;
   if(el.dataset&&el.dataset.rv&&S.bkRev){const it=S.bkRev.items.find(x=>x.id===el.dataset.id);if(it){it[el.dataset.rv]=el.value;if(el.dataset.rv==='title'||el.dataset.rv==='author')bkBtn();}return}
-  if(el.dataset.note&&S.sheet&&S.sheet.type==='month'){const k=nk(S.sheet.i);S.progress.notes[k]=Object.assign({},S.progress.notes[k],{[el.dataset.note]:el.value});saveProgress()}
+  if(el.dataset.note&&S.sheet&&S.sheet.type==='month'){const k=nk(S.sheet.i);S.progress.notes[k]=Object.assign({},S.progress.notes[k],{[el.dataset.note]:el.value});saveProgress();const ma=$('#mact');if(ma)ma.outerHTML=mactHTML(S.sheet.i)}
   else if(el.dataset.pref){S.me.prefs=Object.assign({},S.me.prefs,{[el.dataset.pref]:el.value})}
   else if(el.id==='adm-q'){admF().q=el.value;const l=document.querySelector('.ad-mlist');const L=admList();if(l)l.innerHTML=L.map(memberRowHTML).join('')||'<p class="hint" style="padding:14px">조건에 맞는 회원이 없어요.</p>';const c=document.querySelector('.ad-cnt b');if(c)c.textContent=L.length+'명'}
   else if(el.dataset.rbw!==undefined){const f=el.form;if(f){const t=[...f.querySelectorAll('[data-rbw]')].reduce((a,x)=>a+(Number(x.value)||0),0);const o=document.querySelector('#rbsum-'+f.dataset.kind+' b');if(o){o.textContent=t;o.style.color=t===100?'':'var(--brick)'}}}
@@ -5539,14 +5718,14 @@ document.addEventListener('click',async e=>{
     case 'cvtab':{const i=+d.i;S.cvTab=Object.assign({},S.cvTab,{[i]:d.k});repaintCard(i);cardFill(i,d.k);break}
     case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab=['work','note','essay','oral'].includes(d.tab)?d.tab:'work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();{const qq=qState(i);if((!qq||(qq.v!==3&&!Number.isInteger((S.progress.picks||{})[nk(i)]))||(!qq.ai&&S.sample))&&!S.qBusy[nk(i)])genQs(i)};loadMonthData(i);break}
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
-    case 'wropen':if(!svAll(+d.i)){toast('책과 영화 세 작품의 설문을 먼저 끝내 주세요.');break}wrOpen(+d.i);break;
+    case 'wropen':if(!svReady(+d.i)){toast('책과 영화 한 편을 끝내고 별점을 먼저 남겨 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
     case 'svset':if(S.survey){S.survey.v[d.q]=+d.v;renderLayers()}break;
     case 'mbrate':{const o=rateObj(d.sc,d.id);if(!o)break;o[d.q]=+d.v;
       const box=document.querySelector(`[data-rbox="${d.sc}:${CSS.escape(d.id)}"]`);if(box)box.outerHTML=rateBox(d.sc,d.id,o);  // 입력 중인 글이 지워지지 않게 별점 칸만 다시 그린다
       if(d.sc==='rv')bkBtn();if(d.sc==='shelf'){saveProgress();const l=document.querySelector('.sdrate');if(l)l.textContent=rateLine(o)}break}
-    case 'svclose':S.survey=null;renderLayers();toast('설문은 작품 옆 "설문" 버튼으로 다시 할 수 있어요.');break;
-    case 'svsave':{const V=S.survey;if(!V||!SVQ.every(([q])=>V.v[q]))break;S.progress.survey=Object.assign({},S.progress.survey,{[ik(V.i,V.k)]:{fun:V.v.fun,diff:V.v.diff,again:V.v.again,at:Date.now()}});saveProgress();S.survey=null;renderLayers();render();toast(svAll(V.i)?'설문 완료! 이제 논술을 쓸 수 있어요.':'설문 완료! 고마워요.');break}
+    case 'svclose':S.survey=null;renderLayers();toast('별점은 작품 옆 "별점 남기기"로 다시 할 수 있어요.');break;
+    case 'svsave':{const V=S.survey;if(!V||!SVQ.every(([q])=>V.v[q]))break;S.progress.survey=Object.assign({},S.progress.survey,{[ik(V.i,V.k)]:{fun:V.v.fun,diff:V.v.diff,again:V.v.again,at:Date.now()}});saveProgress();S.survey=null;renderLayers();render();toast(svReady(V.i)?'고마워요! 이제 글쓰기도 할 수 있어요.':'고마워요! 별점을 남겼어요.');break}
     case 'rewrite':{if(rwLeft(S.evals[nk(+d.i)])>0){toast('다시 쓰기는 첫 제출 72시간 뒤부터 할 수 있어요.');break}wrOpen(+d.i,'r2');break}
     case 'rwsubmit':{if(!S.wr||S.wr.mode!=='r2')break;const i=S.wr.i;{const ta=$('#wr-ta'),e1=S.evals[nk(i)];if(!ta||!ta.value.trim()){toast('글을 써 주세요.');break}if(e1&&ta.value.trim()===String(e1.transcript||'').trim()){toast('1차 글에서 고쳐 쓴 곳이 아직 없어요. 고쳐 쓴 뒤 제출해 주세요.');break}}wrSave();clearTimeout(wrT);clearInterval(wrSw);S.wr=null;const L=$('#layer3');L.hidden=true;L.innerHTML='';S.evalView=null;renderLayers();evaluate(i,2);break}
     case 'viewe2':S.evalView={key:nk(+d.i),i:+d.i,r:2};renderLayers();break;
@@ -5562,8 +5741,10 @@ document.addEventListener('click',async e=>{
       if(S.progress.done[key]){delete S.progress.done[key];saveProgress();render();toast('완료를 취소했어요.');break}
       const now=Date.now();if(!S.progress.started[key])S.progress.started[key]=now;S.progress.done[key]=now;saveProgress();render();
       const r=readStat(+d.i,d.k);rdAlert(+d.i,d.k,'done');
-      toast(`${r?r.days+'일 만에 완료! ':'완료! '}${r&&r.ppd?'하루 평균 '+r.ppd+'쪽 읽었어요.':'친구와 부모님께 알렸어요.'}`);
-      if(d.k==='book'&&r&&!r.pg)rdPages(+d.i);S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break}
+      const msg=`${r?r.days+'일 만에 끝! ':'끝! '}${r&&r.ppd?'하루 평균 '+r.ppd+'쪽 읽었어요.':'친구와 부모님께 알렸어요.'}`;
+      if(d.k==='book'&&r&&!r.pg)rdPages(+d.i);S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k)),msg};renderLayers();break}
+    case 'wkundo':{const a=d.i+':'+d.k;if(S._wku!==a){S._wku=a;toast('한 번 더 누르면 끝낸 것을 취소해요.');setTimeout(()=>{if(S._wku===a)S._wku=null},3500);break}
+      S._wku=null;const key=ik(+d.i,d.k);delete S.progress.done[key];saveProgress();render();toast('끝낸 것을 취소했어요.');break}
     case 'pgsave':{const el=document.getElementById('pg-'+d.i);const v=parseInt(el&&el.value,10);if(!(v>0&&v<5000)){toast('쪽수를 숫자로 넣어 주세요.');break}
       S.progress.pages=Object.assign({},S.progress.pages,{[ik(+d.i,'book')]:v});saveProgress();render();const r=readStat(+d.i,'book');if(r&&r.ppd)toast('하루 평균 '+r.ppd+'쪽 읽었어요.');break}
     case 'info':S.info={i:+d.i,k:d.k,reviews:null,mine:null};renderLayers();loadInfo();break;
@@ -5667,6 +5848,10 @@ document.addEventListener('click',async e=>{
     case 'stab':if(OREC&&d.v!=='oral')orStop();if(d.v!=='oral')orSayStop();S.sheetTab=d.v;renderLayers();break;
     case 'edugo':eduLoad(+d.i,d.f==='1');break;
     case 'evaluate':evaluate(+d.i);break;
+    case 'esconf':S.esConf={i:+d.i,a:false,b:false};renderLayers();break;
+    case 'esck':if(S.esConf){S.esConf[d.k]=!S.esConf[d.k];renderLayers()}break;
+    case 'esback':S.esConf=null;renderLayers();break;
+    case 'esgo':{const C=S.esConf;if(!C||!(C.a&&C.b))break;S.esConf=null;renderLayers();evaluate(C.i);break}
     case 'vieweval':S.evalView={key:nk(+d.i),i:+d.i};renderLayers();break;
     case 'pdf':makePdf();break;
     case 'clearfiles':S.essayDraft.files=[];renderLayers();break;
