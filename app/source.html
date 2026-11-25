@@ -171,7 +171,7 @@ svg{flex:none}
 :focus-visible{outline:2px solid var(--rose);outline-offset:2px}
 
 /* 상단바 */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;gap:10px;padding:7px 0;background:rgba(243,236,223,.94);box-shadow:0 0 0 100vmax rgba(243,236,223,.94),0 1px 0 var(--line);clip-path:inset(0 -100vmax -1px)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;gap:10px;padding:7px 0;background:color-mix(in srgb,var(--bg) 94%,transparent);box-shadow:0 0 0 100vmax color-mix(in srgb,var(--bg) 94%,transparent),0 1px 0 var(--line);clip-path:inset(0 -100vmax -1px)}
 .brand{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:19px;letter-spacing:.02em;border:0;background:none;padding:0;color:var(--ink)}
 .brand img{width:34px;height:34px;border-radius:50%;background:var(--paper);object-fit:cover;box-shadow:0 0 0 1px var(--gold)}
 .seg{margin-left:auto;display:flex;gap:2px;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:2px}
@@ -826,13 +826,16 @@ form{display:flex;flex-direction:column;gap:12px}
 .bqs{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 @media (max-width:560px){.sbs{width:84px}.bqq{font-size:13.5px}.bqs{font-size:11.5px}}
 .sfx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.s-winter{background:linear-gradient(#D9E8F5 0,rgba(217,232,245,0) 58%)}
+.s-winter{background:linear-gradient(#EDE6DC 0,rgba(237,230,220,0) 58%)}
+.sfx.m12{background:linear-gradient(#F3DAD2 0,rgba(243,218,210,0) 52%,rgba(110,143,90,.10) 100%)}.sfx.m1{background:linear-gradient(#F7E7BF 0,rgba(247,231,191,0) 55%)}.sfx.m2{background:linear-gradient(#F8DDE2 0,rgba(248,221,226,0) 55%)}
 .s-spring{background:linear-gradient(#FBE3EA 0,rgba(251,227,234,0) 58%)}
 .s-summer{background:linear-gradient(#D3ECF4 0,rgba(211,236,244,0) 45%,rgba(110,185,212,.28) 100%)}
 .s-autumn{background:linear-gradient(#F6DDBA 0,rgba(246,221,186,0) 55%,rgba(122,60,40,.10) 100%)}
 .sp{position:absolute;left:var(--x);top:-40px;width:var(--s);height:var(--s);opacity:.85;animation:sfall var(--d) linear var(--dl) infinite;will-change:transform}
-.s-winter .sp{font-size:var(--s);width:auto;height:auto;line-height:1;color:#A5C8E6;text-shadow:0 0 3px #fff}
-.s-winter .sp.dot{width:calc(var(--s)*.5);height:calc(var(--s)*.5);border-radius:50%;background:#fff;box-shadow:0 0 0 1px #C3D9EC,0 0 6px #fff}
+.s-winter .sp{font-size:var(--s);width:auto;height:auto;line-height:1;color:#FFFFFF;text-shadow:0 0 2px rgba(150,120,90,.55),0 0 6px #fff}
+.s-winter .sp.dot{width:calc(var(--s)*.5);height:calc(var(--s)*.5);border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(190,165,135,.45),0 0 6px #fff}
+.sp.gl{width:auto!important;height:auto!important;background:none!important;border:0!important;border-radius:0!important;-webkit-mask:none!important;mask:none!important;font-size:var(--s);line-height:1;color:var(--c);text-shadow:0 0 3px rgba(255,255,255,.9);opacity:.8}
+.s-summer .sp.gl{animation-name:sfall;top:-40px;bottom:auto}
 .s-spring .sp{background:var(--c);border-radius:150% 0 150% 0}
 .s-autumn .sp{background:var(--c);border-radius:0 100% 0 100%;width:calc(var(--s)*1.2)}
 .s-autumn .sp[class*=lf-]{border-radius:0;width:calc(var(--s)*1.7);height:calc(var(--s)*1.7);opacity:.9;-webkit-mask:var(--lm) center/contain no-repeat;mask:var(--lm) center/contain no-repeat}
@@ -1461,6 +1464,16 @@ html[data-theme="sky"]{--st1:#DDE5C0;--st2:#B7C77F;--st3:#627838;--st4:#45572A;-
 .cvmain .cvimg>img{object-position:right bottom}
 .pth{object-fit:contain;object-position:center bottom;box-shadow:none;filter:drop-shadow(1px 1px 2px rgba(40,25,15,.3))}
 .hm-art.img{background-size:contain;background-position:center bottom}
+
+/* 기념일 달: 상단 바 아래 장식 띠 (12월 전구, 1월 새해 깃발, 2월 하트) */
+html[data-month="12"] .top::after,html[data-month="1"] .top::after,html[data-month="2"] .top::after{content:"";position:absolute;left:-100vmax;right:-100vmax;bottom:0;height:14px;background-repeat:repeat-x;background-position:center bottom;pointer-events:none;opacity:.95}
+html[data-month="12"] .top::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='14' viewBox='0 0 120 14'%3E%3Cpath d='M0 2Q30 10 60 2T120 2' fill='none' stroke='%236B4A2B' stroke-width='.9'/%3E%3Cg%3E%3Crect x='13' y='5' width='3' height='2' fill='%236B4A2B'/%3E%3Cellipse cx='14.5' cy='9.5' rx='2.6' ry='3.4' fill='%23C9584A'/%3E%3Crect x='43' y='7' width='3' height='2' fill='%236B4A2B'/%3E%3Cellipse cx='44.5' cy='11.5' rx='2.6' ry='2.4' fill='%23E7B93F'/%3E%3Crect x='73' y='5' width='3' height='2' fill='%236B4A2B'/%3E%3Cellipse cx='74.5' cy='9.5' rx='2.6' ry='3.4' fill='%236E8F5A'/%3E%3Crect x='103' y='7' width='3' height='2' fill='%236B4A2B'/%3E%3Cellipse cx='104.5' cy='11.5' rx='2.6' ry='2.4' fill='%23E7B93F'/%3E%3C/g%3E%3C/svg%3E");animation:twk 2.6s ease-in-out infinite alternate}
+html[data-month="1"] .top::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='12' viewBox='0 0 96 12'%3E%3Cpath d='M0 1Q24 5 48 1T96 1' fill='none' stroke='%23B08A3E' stroke-width='.8'/%3E%3Cpath d='M8 2l5 9 5-8z' fill='%23E7B93F'/%3E%3Cpath d='M32 3l5 8 5-8z' fill='%23C9584A'/%3E%3Cpath d='M56 2l5 9 5-8z' fill='%23F2CF6B'/%3E%3Cpath d='M80 3l5 8 5-8z' fill='%23D9A441'/%3E%3C/svg%3E");height:12px}
+html[data-month="2"] .top::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='12' viewBox='0 0 96 12'%3E%3Cpath d='M0 1Q24 5 48 1T96 1' fill='none' stroke='%23C98A96' stroke-width='.8'/%3E%3Cpath d='M14 5c-2-2-5-1-5 1.5 0 2.3 3 3.8 5 5.5 2-1.7 5-3.2 5-5.5 0-2.5-3-3.5-5-1.5z' fill='%23D9667A'/%3E%3Cpath d='M62 5c-2-2-5-1-5 1.5 0 2.3 3 3.8 5 5.5 2-1.7 5-3.2 5-5.5 0-2.5-3-3.5-5-1.5z' fill='%23F2B6C0'/%3E%3C/svg%3E");height:12px}
+@keyframes twk{from{filter:brightness(1)}to{filter:brightness(1.25) saturate(1.2)}}
+.sscene .blb{animation:blb 1.8s ease-in-out infinite alternate}
+@keyframes blb{from{opacity:.55}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){html[data-month] .top::after,.sscene .blb{animation:none}}
 </style>
 
 <div id="app"></div>
@@ -1592,37 +1605,39 @@ async function flush(){
 
 /* ---------- 월별 테마 ---------- */
 function monthNow(){const q=(location.hash||'')+(location.search||'');let m=q.match(/month=(\d{1,2})/);if(m&&+m[1]>=1&&+m[1]<=12)return +m[1];m=q.match(/season=(winter|spring|summer|autumn)/);if(m)return {winter:12,spring:4,summer:7,autumn:10}[m[1]];return new Date().getMonth()+1;}
+/* 달마다 바뀌는 계절 테마(매달 1일, 기기 날짜 기준). 계절감과 그달의 기념일(새해·발렌타인·화이트데이·가정의 달·추석·할로윈·크리스마스)을 살린다 (2026-11-25 개편) */
 const MT={
-1:['winter','1월 · 새해 눈사람','새해 복 많이 받아요! 올해도 책 한 권씩 천천히 읽어 가요'],
-2:['winter','2월 · 눈 내리는 끝겨울','눈 쌓인 2월, 포근한 곳에서 읽기 좋은 날이에요'],
-3:['spring','3월 · 새 학기 벚꽃 봉오리','새 학기, 벚꽃 봉오리가 톡톡 터져요'],
+1:['winter','1월 · 해피 뉴 이어','새해 복 많이 받아요! 올해도 책 한 권씩 천천히 읽어 가요'],
+2:['winter','2월 · 발렌타인데이','마음을 전하는 2월, 좋아하는 책을 친구에게 권해 봐요'],
+3:['spring','3월 · 새 학기와 화이트데이','새 학기, 벚꽃 봉오리가 톡톡 터져요'],
 4:['spring','4월 · 벚꽃 만개','벚꽃이 흩날리는 봄, 새 이야기를 시작해요'],
-5:['spring','5월 · 신록과 꽃잎','푸르른 5월, 꽃잎 진 자리에 새잎이 돋아요'],
+5:['spring','5월 · 가정의 달 카네이션','고마운 마음을 전하는 5월, 가족과 함께 볼 영화 어때요?'],
 6:['summer','6월 · 초여름 바다','첫 파도 소리가 들려요, 책 속 바다로 떠나요'],
-7:['summer','7월 · 한여름 바다','쨍한 한여름, 파라솔 아래서 책 한 권'],
+7:['summer','7월 · 여름 방학','쨍한 한여름, 파라솔 아래서 책 한 권'],
 8:['summer','8월 · 노을 바다','노을 지는 바다, 여름의 끝자락을 책과 함께'],
-9:['autumn','9월 · 초가을','선선한 바람에 단풍이 물들기 시작해요. 할로윈 준비!'],
+9:['autumn','9월 · 한가위 보름달','둥근 보름달처럼 넉넉한 한가위 보내요'],
 10:['autumn','10월 · 할로윈','해피 할로윈! 오싹하게 재미있는 이야기가 기다려요'],
 11:['autumn','11월 · 늦가을 단풍','단풍 가득한 11월, 따뜻한 차와 책 한 권'],
 12:['winter','12월 · 크리스마스','메리 크리스마스! 따뜻한 책 한 권 어때요?']};
 const BATSVG='<svg viewBox="-24 -12 48 26"><path d="M0 0C-6-8-16-8-22-2C-18-2-14 0-12 4C-9 1-5 1-3 4L0 1L3 4C5 1 9 1 12 4C14 0 18-2 22-2C16-8 6-8 0 0z" fill="#4A3350"/></svg>';
 const BATG=BATSVG.replace('<svg viewBox="-24 -12 48 26">','<g>').replace('</svg>','</g>');
-const MCFG={1:{n:20,bat:0},2:{n:26,bat:0},12:{n:22,bat:0},3:{n:9,bat:0,c:['#F8C9D6','#FBE1E8']},4:{n:22,bat:0,c:['#F8C9D6','#F3A8BE','#FBE1E8']},5:{n:18,bat:0,c:['#F8C9D6','#FBE1E8','#9CC77A','#B7D98F']},
- 6:{n:12},7:{n:16},8:{n:10},9:{n:14,bat:1,c:['#E3B63C','#C9A23A','#9BAA4A','#D9822B']},10:{n:20,bat:3,c:['#C8542E','#E0912F','#9C3B2A','#8E5BA8']},11:{n:28,bat:1,c:['#C8542E','#B5832A','#9C3B2A','#7C4A2A']}};
+const MCFG={1:{n:22,bat:0,mix:['snow','spark','snow','spark','snow'],c:['#E7B93F','#F2CF6B','#D9A441']},2:{n:22,bat:0,mix:['snow','heart','snow','heart'],c:['#E58C9A','#D9667A','#F2B6C0']},12:{n:26,bat:0,mix:['snow','snow','star','snow','spark','snow'],c:['#E7B93F','#C9584A','#6E8F5A']},3:{n:11,bat:0,mix:['petal','petal','petal','candy'],c:['#F8C9D6','#FBE1E8','#F3A8BE']},4:{n:22,bat:0,c:['#F8C9D6','#F3A8BE','#FBE1E8']},5:{n:18,bat:0,mix:['petal','flower','petal','flower','petal'],c:['#E06A6A','#F09AA5','#9CC77A','#B7D98F']},
+ 6:{n:12},7:{n:16},8:{n:10},9:{n:12,bat:0,c:['#E3B63C','#C9A23A','#9BAA4A','#D9822B']},10:{n:20,bat:3,c:['#C8542E','#E0912F','#9C3B2A','#8E5BA8']},11:{n:26,bat:0,c:['#C8542E','#B5832A','#9C3B2A','#7C4A2A']}};
 const WAVEC={6:['#8CC7DD','#4F9FC2'],7:['#6FC3DA','#2F86B4'],8:['#F0B48C','#C86F5A']};
 function seasonFxHTML(m,lite){
   const k=MT[m][0],cf=MCFG[m],R=i=>((i*9301+49297)%233280)/233280;
   let h='';const n=lite?Math.ceil(cf.n*.5):cf.n;
   for(let i=0;i<n;i++){
     const x=Math.round(R(i+1)*100),sz=k==='winter'?8+Math.round(R(i+7)*12):8+Math.round(R(i+7)*9),d=(k==='summer'?9:8)+Math.round(R(i+3)*9),dl=-Math.round(R(i+5)*18),dx=Math.round((R(i+9)-.5)*160),r=Math.round(180+R(i+11)*360),ty=Math.round(R(i+13)*80);
-    let c='',txt='',cls='sp';
-    if(k==='winter'){if(i%2)cls+=' dot';else txt='❄';}
+    let c='',txt='',cls='sp';const t=cf.mix?cf.mix[i%cf.mix.length]:'';
+    if(t&&t!=='snow'&&t!=='petal'){cls+=' gl';txt={heart:'♥',spark:'✦',star:'★',flower:'✿',candy:'♡'}[t]||'✦';c=cf.c[i%cf.c.length];h+=`<span class="${cls}" style="--x:${x}%;--s:${sz+4}px;--d:${d+3}s;--dl:${dl}s;--dx:${dx}px;--r:${Math.round(r/6)}deg;--ty:${ty}vh;--c:${c}">${txt}</span>`;continue}
+    if(k==='winter'){if(i%3)cls+=' dot';else txt='❄';}
     else if(cf.c)c=cf.c[i%cf.c.length];
     if(k==='autumn'){const LS=['maple','ginkgo','oak','birch'];const LK=window.__leafK||(window.__leafK=['maple','ginkgo','oak','birch','mix','mix'][Math.floor(Math.random()*6)]);const lk=LK==='mix'?LS[(i+(window.__leafO||(window.__leafO=1+Math.floor(Math.random()*4))))%4]:LK;cls+=' lf-'+lk;if(lk==='ginkgo')c=['#F2C230','#E8B21E','#F6D45A'][i%3];}
     h+=`<span class="${cls}" style="--x:${x}%;--s:${sz}px;--d:${d}s;--dl:${dl}s;--dx:${dx}px;--r:${r}deg;--ty:${ty}vh;${c?'--c:'+c:''}">${txt}</span>`;
   }
   if(lite)return h;
-  if(k==='winter')h+='<svg class="sfloor" viewBox="0 0 400 70" preserveAspectRatio="none"><path d="M0 40C60 18 120 30 180 36S320 20 400 34V70H0z" fill="#fff" stroke="#C3D9EC" stroke-width="1.5"/><path d="M0 56C80 44 160 52 240 48S350 44 400 52V70H0z" fill="#EEF5FB"/></svg>';
+  if(k==='winter')h+='<svg class="sfloor" viewBox="0 0 400 70" preserveAspectRatio="none"><path d="M0 40C60 18 120 30 180 36S320 20 400 34V70H0z" fill="#fff" stroke="#E3D5C2" stroke-width="1.5"/><path d="M0 56C80 44 160 52 240 48S350 44 400 52V70H0z" fill="#FBF6EE"/></svg>';
   if(k==='summer'){const wc=WAVEC[m],w=(c,o)=>`<svg class="wv ${o}" viewBox="0 0 800 80" preserveAspectRatio="none"><path d="M0 30Q50 8 100 30T200 30T300 30T400 30T500 30T600 30T700 30T800 30V80H0z" fill="${c}"/></svg>`;h+=w(wc[0],'w1')+w(wc[1],'w2');}
   const bats=[[12,26,-4,1],[26,34,-18,.8],[6,30,-10,.9]];
   for(let i=0;i<(cf.bat||0);i++)h+=`<span class="bat" style="--y:${bats[i][0]}%;--d:${bats[i][1]}s;--dl:${bats[i][2]}s;transform:scale(${bats[i][3]})">${BATSVG}</span>`;
@@ -1631,10 +1646,10 @@ function seasonFxHTML(m,lite){
 const GHOST='<g transform="translate(236 70)"><path d="M0 40V14a15 15 0 0130 0v26l-5-5-5 5-5-5-5 5-5-5z" fill="#fff" stroke="#CDBBDA" stroke-width="1.4"/><circle cx="10" cy="17" r="2.4" fill="#3A2A3E"/><circle cx="20" cy="17" r="2.4" fill="#3A2A3E"/><ellipse cx="15" cy="25" rx="3" ry="3.6" fill="#3A2A3E"/></g>';
 function pumpkin(x,y,sc){return `<g transform="translate(${x} ${y}) scale(${sc})"><rect x="-4" y="-38" width="7" height="12" rx="2" fill="#4F6B3A"/><ellipse cx="0" cy="0" rx="40" ry="32" fill="#E8832A"/><path d="M-20 -26q-12 26 0 52M0 -30v60M20 -26q12 26 0 52" fill="none" stroke="#C86A1C" stroke-width="2.4"/><path d="M-20 -6l8-9 8 9zM4 -6l8-9 8 9z" fill="#3A2A1E"/><path d="M-20 10q20 16 40 0l-6 8-6-5-8 6-8-6-6 5z" fill="#3A2A1E"/><path d="M-14 8l6-4 5 4 5-4 5 4 5-4" fill="none" stroke="#F6D060" stroke-width="1.4"/></g>`;}
 function mapleLeaf(x,y,rot,c,sc){return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc||1})"><path d="M0 0c10-18 22-26 38-30-2 14-12 28-38 30z" fill="${c}"/><path d="M0 0c10-10 20-18 38-30" stroke="rgba(0,0,0,.25)" fill="none" stroke-width="1.4"/></g>`;}
-const SNOWMAN='<g stroke="#9DB6CF" stroke-width="1.5"><circle cx="82" cy="100" r="22" fill="#fff"/><circle cx="82" cy="68" r="16" fill="#fff"/><circle cx="82" cy="45" r="11" fill="#fff"/></g><rect x="68" y="30" width="28" height="6" rx="2" fill="#3E2F26"/><rect x="73" y="16" width="18" height="16" rx="2" fill="#3E2F26"/><circle cx="78" cy="43" r="1.6" fill="#2B241F"/><circle cx="86" cy="43" r="1.6" fill="#2B241F"/><path d="M82 47l9 2-9 2z" fill="#E8833A"/><path d="M69 55q13 7 26 0v6q-13 7-26 0z" fill="#B5473C"/><circle cx="82" cy="72" r="1.6" fill="#2B241F"/><circle cx="82" cy="82" r="1.6" fill="#2B241F"/><path d="M60 66l-18-8M104 66l18-8" stroke="#6B4A2B" stroke-width="2.5" stroke-linecap="round"/>';
+const SNOWMAN='<g stroke="#D8C8B2" stroke-width="1.5"><circle cx="82" cy="100" r="22" fill="#fff"/><circle cx="82" cy="68" r="16" fill="#fff"/><circle cx="82" cy="45" r="11" fill="#fff"/></g><rect x="68" y="30" width="28" height="6" rx="2" fill="#3E2F26"/><rect x="73" y="16" width="18" height="16" rx="2" fill="#3E2F26"/><circle cx="78" cy="43" r="1.6" fill="#2B241F"/><circle cx="86" cy="43" r="1.6" fill="#2B241F"/><path d="M82 47l9 2-9 2z" fill="#E8833A"/><path d="M69 55q13 7 26 0v6q-13 7-26 0z" fill="#B5473C"/><circle cx="82" cy="72" r="1.6" fill="#2B241F"/><circle cx="82" cy="82" r="1.6" fill="#2B241F"/><path d="M60 66l-18-8M104 66l18-8" stroke="#6B4A2B" stroke-width="2.5" stroke-linecap="round"/>';
 function tree(x,orn){return `<g transform="translate(${x-198} 0)"><rect x="193" y="100" width="10" height="16" fill="#6B4A2B"/><path d="M198 30l-26 34h52z" fill="#3F7A55"/><path d="M198 52l-32 40h64z" fill="#4A8A62"/><path d="M198 74l-38 30h76z" fill="#3F7A55"/><path d="M198 30l-9 12h18zM198 52l-11 14h22z" fill="#fff" opacity=".85"/>${orn?'<path d="M198 16l2.6 6 6.4.6-4.8 4.2 1.5 6.2-5.7-3.4-5.7 3.4 1.5-6.2-4.8-4.2 6.4-.6z" fill="#E7B93F"/><circle cx="188" cy="62" r="3" fill="#C94B3C"/><circle cx="208" cy="80" r="3" fill="#E7B93F"/><circle cx="186" cy="88" r="3" fill="#5B8FD0"/><circle cx="212" cy="56" r="2.6" fill="#E7B93F"/>':''}</g>`;}
 const GIFT='<rect x="238" y="96" width="24" height="20" rx="2" fill="#C94B3C"/><rect x="247" y="96" width="6" height="20" fill="#F3D27A"/><path d="M250 96q-9-12-12-4t12 4q9-12 12-4t-12 4" fill="none" stroke="#F3D27A" stroke-width="2.2"/>';
-const SNOWGROUND='<ellipse cx="150" cy="118" rx="140" ry="9" fill="#EAF3FA" stroke="#C3D9EC"/>';
+const SNOWGROUND='<ellipse cx="150" cy="118" rx="140" ry="9" fill="#FBF6EE" stroke="#E3D5C2"/>';
 function cherry(lv){
   const L=lv===3?['#9CC77A','#B7D98F','#DDEBC6']:['#F8C9D6','#F3A8BE','#FBE1E8'];
   let g='<ellipse cx="150" cy="119" rx="140" ry="8" fill="#DDE8CF"/><path d="M150 118c-2-24-4-42-14-62M148 82c14-12 34-26 58-34M140 66C118 56 100 50 78 52" fill="none" stroke="#6B4A2B" stroke-width="7" stroke-linecap="round"/>';
@@ -1656,17 +1671,26 @@ function sea(m){
   if(m===7)return `<circle cx="150" cy="34" r="24" fill="#F7B93B"/><g stroke="#F7B93B" stroke-width="3.4" stroke-linecap="round"><path d="M150-2v-4M150 70v4M112 34h-6M194 34h-6M122 8l-4-4M178 60l4 4M178 8l4-4M122 60l-4 4"/></g><path d="M214 100V48" stroke="#6B4A2B" stroke-width="3"/><path d="M186 52a28 22 0 0156 0z" fill="#E4553F"/><path d="M200 52a14 22 0 0128 0" fill="#FFFDF8" opacity=".9"/><path d="M186 52h56" stroke="#B83A2A" stroke-width="1.5"/><ellipse cx="226" cy="112" rx="60" ry="8" fill="#F2DDB0"/><path d="M20 70q5-6 10 0q5-6 10 0" fill="none" stroke="#6F6155" stroke-width="1.6" stroke-linecap="round"/>${waves.replace('M0 96','M0 100').replace('M0 108','M0 112')}<circle cx="70" cy="96" r="12" fill="none" stroke="#fff" stroke-width="5"/><circle cx="70" cy="96" r="12" fill="none" stroke="#E4553F" stroke-width="2" stroke-dasharray="6 6"/>`;
   return `<circle cx="200" cy="92" r="30" fill="#F08A4B"/><circle cx="200" cy="92" r="40" fill="#F6B07A" opacity=".35"/><path d="M60 30q5-6 10 0q5-6 10 0M240 44q5-6 10 0q5-6 10 0" fill="none" stroke="#7A5A5E" stroke-width="1.6" stroke-linecap="round"/><path d="M60 88h56l-8 12H70z" fill="#5A4A5E"/><rect x="88" y="44" width="3" height="44" fill="#5A4A5E"/><path d="M92 46l24 38H92z" fill="#6E5A6E"/><path d="M86 52l-18 32h18z" fill="#7C6680"/>${waves}<g transform="translate(236 114)"><path d="M0-9l2.6 6 6.4.4-5 4.2 1.7 6.4L0 4l-5.7 3.4 1.7-6.4-5-4.2 6.4-.4z" fill="#F2A36B" stroke="#C86F5A"/></g>`;
 }
+/* 달마다 첫 화면 그림 소품 */
+const LIGHTS=(y)=>{const C=['#C9584A','#E7B93F','#6E8F5A','#E7B93F'];let g=`<path d="M6 ${y}Q78 ${y+16} 150 ${y}T294 ${y}" fill="none" stroke="#6B4A2B" stroke-width="1.2"/>`;for(let i=0;i<12;i++){const x=12+i*25;const yy=y+8*Math.sin(((x-6)%144)/144*Math.PI);g+=`<circle class="blb" cx="${x}" cy="${yy+3}" r="3.2" fill="${C[i%4]}" style="animation-delay:${(i%4)*.5}s"/>`}return g};
+const HEART=(x,y,sc,c)=>`<path transform="translate(${x} ${y}) scale(${sc})" d="M0 6C-6 0-12 2-12 8c0 6 8 10 12 14 4-4 12-8 12-14 0-6-6-8-12-2z" fill="${c}"/>`;
+const FIREWORK=(x,y,r,c)=>{let g='';for(let i=0;i<12;i++){const a=i/12*Math.PI*2;g+=`<path d="M${(x+Math.cos(a)*r*.35).toFixed(1)} ${(y+Math.sin(a)*r*.35).toFixed(1)}L${(x+Math.cos(a)*r).toFixed(1)} ${(y+Math.sin(a)*r).toFixed(1)}" stroke="${c}" stroke-width="2" stroke-linecap="round"/>`}return g+`<circle cx="${x}" cy="${y}" r="2.4" fill="${c}"/>`};
+const CARNATION=(x,y,sc)=>`<g transform="translate(${x} ${y}) scale(${sc})"><path d="M0 0v34" stroke="#6E8F4A" stroke-width="3"/><path d="M0 22q-12-4-14-14 10 2 14 10" fill="#8DB26A"/><g fill="#E06A6A"><circle cx="0" cy="-6" r="10"/><circle cx="-8" cy="-2" r="7"/><circle cx="8" cy="-2" r="7"/></g><path d="M-10-8l4 3 3-5 3 5 3-5 3 5 4-3" fill="none" stroke="#F4A9A9" stroke-width="1.6"/><path d="M-6 2h12l-2 8h-8z" fill="#7FA25A"/></g>`;
+const SONGPYEON=(x,y,c)=>`<path transform="translate(${x} ${y})" d="M-11 4C-11-6 11-6 11 4z" fill="${c}" stroke="rgba(0,0,0,.08)"/>`;
+const ACORN=(x,y,sc)=>`<g transform="translate(${x} ${y}) scale(${sc})"><ellipse cx="0" cy="4" rx="7" ry="9" fill="#B5832A"/><path d="M-8 0q8-8 16 0z" fill="#7C4A2A"/><path d="M0-6v-4" stroke="#7C4A2A" stroke-width="2"/></g>`;
+const TEACUP='<g transform="translate(206 84)"><rect x="-26" y="26" width="64" height="6" rx="3" fill="#C9A77C"/><path d="M-8 4h34v12a17 12 0 01-34 0z" fill="#FFFDF8" stroke="#C9A77C" stroke-width="1.5"/><path d="M26 8q10 0 8 8-2 5-9 4" fill="none" stroke="#C9A77C" stroke-width="2"/><path d="M2-4q-4-6 0-10M12-4q-4-6 0-10" fill="none" stroke="#C9A77C" stroke-width="1.6" stroke-linecap="round" opacity=".7"/><rect x="-42" y="12" width="30" height="14" rx="2" fill="#A8443A"/><rect x="-42" y="12" width="30" height="3" fill="#C96A5C"/></g>';
 function seasonScene(m){
   const k=MT[m][0];let g='';
-  if(m===12)g=SNOWGROUND+SNOWMAN+tree(198,true)+GIFT;
-  else if(m===1)g='<circle cx="226" cy="96" r="28" fill="#F4B84F"/><circle cx="226" cy="96" r="38" fill="#F8D88A" opacity=".4"/>'+SNOWGROUND+SNOWMAN+'<g transform="scale(.6) translate(150 66)">'+tree(198,false)+'</g>';
-  else if(m===2)g=SNOWGROUND+SNOWMAN+tree(196,false)+'<g transform="scale(.6) translate(266 66)">'+tree(198,false)+'</g><circle cx="262" cy="110" r="5" fill="#fff" stroke="#C3D9EC"/><circle cx="270" cy="113" r="3.4" fill="#fff" stroke="#C3D9EC"/>';
+  if(m===12)g=LIGHTS(8)+SNOWGROUND+SNOWMAN+'<path d="M70 32l24 0" stroke="#C9584A" stroke-width="5" stroke-linecap="round"/>'+tree(198,true)+GIFT+'<g transform="translate(-46 4)">'+GIFT.replace(/#C94B3C/g,'#6E8F5A')+'</g>';
+  else if(m===1)g=FIREWORK(230,30,20,'#E7B93F')+FIREWORK(270,52,12,'#C9584A')+FIREWORK(196,56,10,'#D9A441')+'<text x="150" y="16" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2.5" fill="#A2701E">HAPPY NEW YEAR</text><circle cx="232" cy="104" r="18" fill="#F4B84F"/><circle cx="232" cy="104" r="27" fill="#F8D88A" opacity=".4"/>'+SNOWGROUND+SNOWMAN+'<g transform="scale(.6) translate(166 66)">'+tree(198,false)+'</g>';
+  else if(m===2)g=SNOWGROUND+SNOWMAN+'<path d="M104 66l14-10" stroke="#6B4A2B" stroke-width="2.5"/>'+HEART(124,44,1,'#D9667A')+HEART(188,30,.7,'#E58C9A')+HEART(232,50,.9,'#D9667A')+HEART(262,24,.55,'#F2B6C0')+HEART(160,62,.5,'#F2B6C0')+'<text x="200" y="104" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.5" fill="#B5475A">Happy Valentine\'s Day</text>';
+  else if(m===5)g=cherry(3)+CARNATION(232,74,1.1)+CARNATION(258,82,.85)+'<path d="M218 110h56l-6 10h-44z" fill="#D9A28A"/>';
   else if(k==='spring')g=cherry(m-2);
   else if(k==='summer')g=sea(m);
-  else if(m===9)g='<ellipse cx="150" cy="119" rx="140" ry="8" fill="#E8D8A8"/>'+pumpkin(120,96,.6)+mapleLeaf(190,114,-10,'#E3B63C',.9)+mapleLeaf(226,112,20,'#C9A23A',.8)+mapleLeaf(76,112,160,'#9BAA4A',.7)+'<g transform="translate(230 40)">'+BATG+'</g>';
+  else if(m===9)g='<circle cx="206" cy="46" r="40" fill="#F8E7AE" opacity=".45"/><circle cx="206" cy="46" r="30" fill="#F6DE92"/><g fill="#E6C66E" opacity=".8"><ellipse cx="198" cy="50" rx="7" ry="5"/><ellipse cx="203" cy="40" rx="2.4" ry="6" transform="rotate(-15 203 40)"/><ellipse cx="208" cy="40" rx="2.4" ry="6" transform="rotate(10 208 40)"/><rect x="210" y="52" width="8" height="3" rx="1.5"/></g><ellipse cx="150" cy="119" rx="140" ry="8" fill="#E8D8A8"/><ellipse cx="110" cy="108" rx="44" ry="8" fill="#FFFDF8" stroke="#D9C59A"/>'+SONGPYEON(88,100,'#F3EFE4')+SONGPYEON(106,98,'#F2C7CF')+SONGPYEON(124,100,'#C9DDA8')+SONGPYEON(116,92,'#F6E1A6')+SONGPYEON(97,92,'#F3EFE4')+mapleLeaf(250,116,-10,'#E3B63C',.8)+mapleLeaf(40,114,170,'#C9A23A',.7)+'<path d="M276 118c-2-20 2-40 8-54M282 118c0-16 6-30 14-38" stroke="#C9B27A" stroke-width="2" fill="none"/><path d="M284 64q-6-8 2-14M296 80q-2-8 6-12" stroke="#E8DDB8" stroke-width="5" stroke-linecap="round" fill="none"/>';
   else if(m===10)g='<ellipse cx="150" cy="119" rx="140" ry="8" fill="#E2C9A8"/><circle cx="60" cy="34" r="20" fill="#F6E7B0"/><circle cx="66" cy="30" r="3" fill="#EAD58E"/>'+pumpkin(130,90,.95)+GHOST+'<g transform="translate(190 36)">'+BATG+'</g><g transform="translate(96 22) scale(.8)">'+BATG+'</g><g transform="translate(60 98) scale(.5)">'+pumpkin(0,0,1).replace(/^<g[^>]*>/,'<g>')+'</g>';
-  else g='<ellipse cx="150" cy="119" rx="140" ry="8" fill="#E8D2AC"/><circle cx="244" cy="34" r="16" fill="#F6E7B0"/>'+pumpkin(120,94,.8)+mapleLeaf(186,118,-20,'#C8542E',1.2)+mapleLeaf(230,116,10,'#9C3B2A',1)+mapleLeaf(262,114,-30,'#B5832A',.8)+mapleLeaf(58,116,170,'#7C4A2A',.9)+'<g transform="translate(212 42)">'+BATG+'</g>';
-  const lab={1:'새해 첫 해와 눈사람',2:'눈 쌓인 소나무와 눈사람',12:'눈사람과 크리스마스 트리',3:'봉오리가 맺힌 벚나무',4:'활짝 핀 벚나무',5:'새잎이 돋는 벚나무',6:'바다 위 돛단배와 해',7:'파라솔과 튜브가 있는 한여름 바다',8:'노을 지는 바다',9:'호박과 낙엽',10:'할로윈 호박, 유령, 박쥐',11:'호박과 단풍잎'}[m];
+  else g='<ellipse cx="150" cy="119" rx="140" ry="8" fill="#E8D2AC"/><path d="M60 118c0-30 4-60 10-78" stroke="#7C4A2A" stroke-width="6" stroke-linecap="round" fill="none"/><g fill="#C8542E"><circle cx="70" cy="38" r="16"/><circle cx="52" cy="50" r="13"/><circle cx="88" cy="48" r="13"/></g><g fill="#B5832A"><circle cx="64" cy="58" r="9"/><circle cx="84" cy="30" r="8"/></g>'+TEACUP+ACORN(132,112,1)+ACORN(150,114,.8)+mapleLeaf(110,118,-20,'#C8542E',1)+mapleLeaf(262,116,-30,'#B5832A',.8)+mapleLeaf(286,114,170,'#9C3B2A',.7);
+  const lab={1:'새해 불꽃놀이와 해돋이, 눈사람',2:'하트를 든 눈사람, 발렌타인데이',12:'전구 장식과 크리스마스 트리, 선물, 눈사람',3:'봉오리가 맺힌 벚나무',4:'활짝 핀 벚나무',5:'새잎이 돋는 나무와 카네이션',6:'바다 위 돛단배와 해',7:'파라솔과 튜브가 있는 한여름 바다',8:'노을 지는 바다',9:'한가위 보름달과 송편',10:'할로윈 호박, 유령, 박쥐',11:'단풍나무와 따뜻한 차, 도토리'}[m];
   return `<div class="sscene"><svg viewBox="0 0 300 130" role="img" aria-label="${lab}">${g}</svg></div>`;
 }
 const jc=n=>{n=String(n||'');const c=n.slice(-1).charCodeAt(0);return n+((c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28!==0)?'아':'야')};
@@ -2013,7 +2037,7 @@ function seasonFx(){
   const m=monthNow(),key=m+(S.id?'l':'f');
   if(el&&el.dataset.k===key)return;
   if(!el){el=document.createElement('div');el.id='sfx';el.setAttribute('aria-hidden','true');document.body.prepend(el);}
-  el.dataset.k=key;el.className='sfx m'+m+' s-'+MT[m][0]+(S.id?' lite':'');el.innerHTML=seasonFxHTML(m,!!S.id);
+  el.dataset.k=key;el.className='sfx m'+m+' s-'+MT[m][0]+(S.id?' lite':'');el.innerHTML=seasonFxHTML(m,!!S.id);document.documentElement.dataset.month=m;
 }
 
 function suFormHTML(g){
