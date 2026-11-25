@@ -1854,6 +1854,44 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .vbz-nav .btn:not(.ghost){background:#1F4637;border-color:#1F4637;color:#FFF8EA;font-weight:700}
 .vbz-skip{align-self:center;font-size:13px}
 .vcred{margin:10px 0 0;font-size:10.5px;color:rgba(60,40,25,.75);text-align:center}.vcred a{color:inherit}
+
+/* 비전보드 실물 콜라주(Figma 11) */
+.vph.vcol{display:block;padding:0;background:#FFF9F0;font-family:'Noto Sans KR',sans-serif}
+.vc-bg i{position:absolute;display:block;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.vc-h{position:absolute;left:0;right:0;top:78px;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:1}
+.vc-t{background:#fff;padding:6px 16px 4px;transform:rotate(-1.5deg);box-shadow:1px 3px 6px rgba(40,20,5,.22);font:900 31px/1 'Noto Sans KR',sans-serif;letter-spacing:.02em;display:flex}
+.vc-t .vsp{display:inline-block;flex:none;width:12px}
+.vc-h>small{font:400 16px/1 'Nanum Pen Script',cursive;color:#3A2F28}
+.vc-mz .vrn{margin:0}.vc-mz .vrn span,.vc-mz span{font-size:20px}
+.vc-sm{margin:0;max-width:300px;font:400 17px/1.2 'Nanum Pen Script',cursive;color:#2E2A26;background:#fff;padding:2px 10px;transform:rotate(1deg);box-shadow:1px 2px 3px rgba(0,0,0,.15)}
+.vc-ph{position:absolute;background:#fff;padding:6px 6px 0;box-shadow:2px 5px 9px rgba(40,20,5,.33)}
+.vc-im{overflow:hidden;background:#eee}.vc-im img{width:100%;height:100%;object-fit:cover;display:block}
+.vc-im span{display:flex;width:100%;height:100%;align-items:center;justify-content:center}.vc-im i{font-style:normal;font-size:34px}
+.vc-ph b{display:block;padding:5px 2px 7px;font:400 17px/1.15 'Nanum Pen Script',cursive;color:#2E2A26;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vc-ph small,.vc-nt small,.vc-mg small{position:absolute;right:6px;bottom:4px;font:700 10px 'Noto Sans KR',sans-serif;background:#E63946;color:#fff;padding:0 5px}
+.vc-pin{position:absolute;left:50%;top:-6px;width:14px;height:14px;margin-left:-7px;border-radius:50%;box-shadow:inset -2px -3px 3px rgba(0,0,0,.3),1px 3px 3px rgba(0,0,0,.35);z-index:2}
+.vc-tape{position:absolute;left:50%;top:-9px;width:62px;height:18px;z-index:2}
+.vc-nt{position:absolute;box-shadow:2px 6px 9px rgba(40,20,5,.28);padding:12px 12px 10px;display:flex;align-items:flex-start}
+.vc-nt::after{content:"";position:absolute;right:0;bottom:0;width:18px;height:18px;background:linear-gradient(135deg,rgba(0,0,0,.08) 50%,rgba(255,255,255,.6) 50%)}
+.vc-nt p{margin:0;font-family:'Nanum Pen Script',cursive;line-height:1.15;color:#2E2A26;word-break:keep-all;overflow:hidden}
+.vc-mg{position:absolute;border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:6px;color:#FFE066;box-shadow:inset 0 2px 2px rgba(255,255,255,.35),inset 0 -3px 4px rgba(0,0,0,.3),2px 6px 8px rgba(0,0,0,.4)}
+.vc-mg i{font-style:normal;font-size:20px}.vc-mg b{font:800 13px/1.2 'Noto Sans KR',sans-serif;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.vc-st{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font:800 12px/1.1 'Noto Sans KR',sans-serif;color:#2E2A26;padding:6px;box-shadow:1px 3px 4px rgba(0,0,0,.28);z-index:30;word-break:keep-all}
+.vc-dc{position:absolute;font-size:24px;z-index:31}
+.vc-pl{position:absolute;left:36px;right:36px;top:742px;background:#fff;padding:12px 14px 10px;transform:rotate(-1.2deg);box-shadow:2px 4px 8px rgba(40,20,5,.28);z-index:40}
+.vc-pl p{margin:0;font:400 18px/1.2 'Nanum Pen Script',cursive;color:#2E2A26;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.vc-dd{position:absolute;left:50%;top:722px;transform:translateX(-50%) rotate(-2deg);background:#1D3557;color:#FFE066;font:800 11px 'Noto Sans KR',sans-serif;padding:4px 10px;border-radius:10px;z-index:41;white-space:nowrap;box-shadow:inset 0 -2px 3px rgba(0,0,0,.3),1px 3px 4px rgba(0,0,0,.35)}
+.vc-f{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:10px;color:rgba(58,47,40,.7);letter-spacing:.05em;z-index:41}
+
+/* 꿈 인터뷰 배경 = 서재 안 창가 안락의자(인터뷰하는 느낌, 사용자 지시 11-26). 사진은 Figma AI 생성(web/shelf/interview.webp) */
+.panel.vbzp{background:linear-gradient(rgba(30,20,12,.55),rgba(30,20,12,.35) 40%,rgba(30,20,12,.7)),url(shelf/interview.webp) center/cover no-repeat #2A1D14!important;color:#F5E9D6}
+.panel.vbzp .ph h2{color:#FFF6E8}.panel.vbzp .ph h2 small{color:rgba(255,246,232,.8)}
+.panel.vbzp .ph .x{background:rgba(255,246,232,.9)}
+.panel.vbzp .vbz-h small{color:#F6D58E}
+.panel.vbzp .vbz-bar li{background:rgba(255,246,232,.3)}.panel.vbzp .vbz-bar li.on{background:#F6D58E}
+.panel.vbzp .vbz-c{background:rgba(251,248,238,.96);box-shadow:0 14px 30px -8px rgba(0,0,0,.55)}
+.panel.vbzp .vbz-nav .btn.ghost{background:rgba(255,246,232,.9);color:#3A2F28;border-color:transparent}
+.panel.vbzp .vbz-skip{color:rgba(255,246,232,.85)}
 </style>
 
 <div id="app"></div>
@@ -2283,16 +2321,36 @@ function vbScatter(root){(root||document).querySelectorAll('.vphg').forEach(g=>{
     el.style.cssText=`left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;width:${tw.toFixed(1)}px;transform:rotate(${rr(-7,7).toFixed(1)}deg);z-index:${1+Math.floor(R()*n)}`});
   g.classList.add('on')})}
 /* 폰 화면용 포스터: 390×844 고정, 저장하면 1170×2532 바탕화면. 위쪽은 잠금화면 시계 자리로 비워 둠 */
+/* 비전보드 = 실물 콜라주(2026-11-26, Figma 11): 색종이 바탕 위에 학생 답을 사진 인화(압정·마스킹 테이프), 포스트잇(손글씨),
+   여행 기념 마그네틱, 잡지 오린 글자, 동그란 스티커로 붙인다. 390×844 고정 캔버스(저장하면 바탕화면 1170×2532). 위쪽 80px은 잠금화면 시계 자리 */
+const VCNOTE=['me','give','want','skill','health'],VCMAG=['place','place2','place3'];
 function vbPhoneHTML(v){
   const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';const L=vbRich(v);
-  let sd=(VBSEED^Math.imul(L.length+1,2654435761))>>>0||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};
-  const tiles=L.map(it=>{const a=(it.ar||4/3).toFixed(3),pin=R()<.6?`<i class="vpin2 ${['','red','blue'][Math.floor(R()*3)]}"></i>`:`<em class="vctape" style="transform:translateX(-50%) rotate(${(R()*18-9).toFixed(1)}deg)"></em>`;
-    return `<div class="vpht${it.sec==='travel'?' tr':''}" data-ar="${a}">${pin}<div class="vphi" style="aspect-ratio:${a}">${vbPic(it)}</div><b>${esc(it.head)}</b>${it.when?`<em>${it.when}</em>`:''}</div>`}).join('');
-  return `<div class="vphw"><div class="vph vcork" id="vbphone">
-    <div class="vphh"><small>${esc(nick)}'s VISION BOARD</small><h3 class="vrn">${vbRansom(b.title||'나의 꿈 지도')}</h3>${b.statement?`<p class="vst">${esc(b.statement)}</p>`:''}${Array.isArray(b.words)&&b.words.length?`<div class="vbw">${b.words.slice(0,4).map((w,i)=>`<span style="transform:rotate(${i%2?2:-2}deg)">#${esc(w)}</span>`).join('')}</div>`:''}</div>
-    <div class="vphg" data-seed="${sd}">${tiles}</div>
-    ${v.dday?`<div class="vphd">🏆 DREAM DAY ${vbDstr(v.dday)} · ${vbDday(v)}</div>`:''}
-    <div class="vphf">002BOOK · 꿈이 이루어지는 곳이 천국이다</div></div></div>`;
+  let sd=(VBSEED^Math.imul(L.length+1,2654435761))>>>0||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};const rr=(a,c)=>a+(c-a)*R();
+  const PAL=['#19B5A5','#FF4F9A','#FF8A3D','#FFD23F'],NOTE=['#FFE066','#9BE7E0','#FFB3C7','#C9F29B'];
+  const n=L.length,cols=n<=4?2:n<=9?3:4,rows=Math.max(1,Math.ceil(n/cols)),top=212,bot=732,cw=358/cols,ch=(bot-top)/rows;
+  const tiles=L.map((it,k)=>{const r=Math.floor(k/cols),c=k%cols,m=r===rows-1?n-r*cols:cols,off=(cols-m)*cw/2;
+    const cx=16+off+c*cw+cw/2+rr(-.08,.08)*cw,cy=top+r*ch+ch/2+rr(-.06,.06)*ch,rot=rr(-6,6).toFixed(1),z=2+Math.floor(R()*n);
+    const type=it.img?'ph':VCMAG.includes(it.k)?'mg':VCNOTE.includes(it.k)||it.cus?'nt':'ph';
+    if(type==='nt'){const s=Math.min(cw*.98,ch*.94,156);const col=NOTE[k%NOTE.length];
+      return `<div class="vc-nt" style="left:${(cx-s/2).toFixed(1)}px;top:${(cy-s/2).toFixed(1)}px;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;background:${col};transform:rotate(${rot}deg);z-index:${z}"><p style="font-size:${Math.max(14,Math.min(21,s/6.4)).toFixed(1)}px">${esc(it.head)} ${esc(it.emoji||'')}</p>${it.when?`<small>${it.when}</small>`:''}</div>`}
+    if(type==='mg'){const w=Math.min(cw*.92,150),h=Math.min(ch*.62,74);const col=['#1D3557','#C0392B','#0E6E5C'][k%3];
+      return `<div class="vc-mg" style="left:${(cx-w/2).toFixed(1)}px;top:${(cy-h/2).toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;background:${col};transform:rotate(${rot}deg);z-index:${z}"><i>✈</i><b>${esc(it.head)}</b>${it.when?`<small>${it.when}</small>`:''}</div>`}
+    const a=Math.min(1.6,Math.max(.7,it.img?(it.ar||4/3):4/3));let w=Math.min(cw*1.02,(ch-36)*a+14,176);const ih=(w-12)/a,h=ih+40;
+    const deco=R()<.55?`<i class="vc-pin" style="background:${['#E63946','#1D3557','#F4D35E'][k%3]}"></i>`:`<em class="vc-tape" style="background:${['rgba(255,224,102,.85)','rgba(255,143,177,.8)','rgba(155,231,224,.85)'][k%3]};transform:translateX(-50%) rotate(${rr(-12,12).toFixed(1)}deg)"></em>`;
+    return `<div class="vc-ph" style="left:${(cx-w/2).toFixed(1)}px;top:${(cy-h/2).toFixed(1)}px;width:${w.toFixed(1)}px;transform:rotate(${rot}deg);z-index:${z}">${deco}<div class="vc-im" style="height:${ih.toFixed(1)}px">${it.img?`<img src="${it.img}" alt="" crossorigin="anonymous">`:`<span style="background:linear-gradient(150deg,${it.c2||'#FBF1D2'},${it.c1||'#F0C75E'})"><i>${esc(it.emoji||it.e)}</i></span>`}</div><b>${esc(it.head)}</b>${it.when?`<small>${it.when}</small>`:''}</div>`}).join('');
+  const words=(Array.isArray(b.words)?b.words:[]).slice(0,3);
+  const stick=words.map((w,i)=>{const pos=[[300,118,74],[322,196,58],[14,196,58]][i];return `<span class="vc-st" style="left:${pos[0]}px;top:${pos[1]}px;width:${pos[2]}px;height:${pos[2]}px;background:${['#FFD23F','#FF8FB1','#9BE7E0'][i]};transform:rotate(${[-8,6,-5][i]}deg)">#${esc(w)}</span>`}).join('');
+  const title=[...'VISION BOARD'].map((ch,i)=>ch===' '?'<i class="vsp"></i>':`<span style="color:${PAL[i%4]}">${ch}</span>`).join('');
+  const pledge=String(b.pledge||(v.a&&v.a.word)||'').slice(0,70);
+  return `<div class="vphw"><div class="vph vcol" id="vbphone">
+    <div class="vc-bg" aria-hidden="true"><i style="left:-30px;top:-20px;width:160px;height:120px;background:#19B5A5;transform:rotate(8deg)"></i><i style="left:270px;top:-30px;width:160px;height:140px;background:#FFD23F;transform:rotate(-6deg)"></i><i style="left:-40px;top:330px;width:110px;height:170px;background:#FF4F9A;transform:rotate(10deg)"></i><i style="left:320px;top:440px;width:120px;height:170px;background:#FF8A3D;transform:rotate(-8deg)"></i><i style="left:250px;top:720px;width:180px;height:170px;background:#19B5A5;transform:rotate(6deg)"></i><i style="left:-30px;top:650px;width:140px;height:140px;background:#FFD23F;transform:rotate(-4deg)"></i></div>
+    <div class="vc-h"><div class="vc-t">${title}</div><small>${esc(nick)}'s dream · ${new Date(v.at||Date.now()).getFullYear()}</small><div class="vc-mz">${vbRansom(b.title||'나의 꿈 지도')}</div>${b.statement?`<p class="vc-sm">${esc(b.statement)}</p>`:''}</div>
+    ${stick}${tiles}
+    <span class="vc-dc" style="left:10px;top:150px">🌼</span><span class="vc-dc" style="left:352px;top:262px">🌸</span><span class="vc-dc" style="left:8px;top:480px">💖</span><span class="vc-dc" style="left:344px;top:640px">🌿</span>
+    ${pledge?`<div class="vc-pl"><em class="vc-tape" style="background:rgba(255,224,102,.85);transform:translateX(-50%) rotate(-4deg)"></em><p>${esc(pledge)}</p></div>`:''}
+    ${v.dday?`<div class="vc-dd">🏆 DREAM DAY ${vbDstr(v.dday)} · ${vbDday(v)}</div>`:''}
+    <div class="vc-f">002BOOK · 꿈이 이루어지는 곳이 천국이다</div></div></div>`;
 }
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
 function visionBanner(){
@@ -2372,7 +2430,7 @@ async function vbWizDone(){const W=S.vbW;const a={};VBW.forEach(([k])=>{if(W.a[k
 function visionHTML(){
   const v=vbOf();const head=`<div class="ph"><h2>나의 비전보드<small>미래의 나를 코르크 보드에 꽂아요</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
   if(S.vbBusy)return `<div class="panel">${head}<div class="sk"></div><div class="sk"></div><p class="hint" role="status">꿈을 오려 코르크 보드에 꽂고 있어요. 20초쯤 걸려요.</p></div>`;
-  if((!v||!v.board)&&!S.vbEdit){if(!S.vbW)S.vbW={n:0,a:{}};if(!S.vbImgs){S.vbImgs={};S.vbIr={}}return `<div class="panel">${head}${vbWizHTML()}</div>`}
+  if((!v||!v.board)&&!S.vbEdit){if(!S.vbW)S.vbW={n:0,a:{}};if(!S.vbImgs){S.vbImgs={};S.vbIr={}}return `<div class="panel vbzp">${head}${vbWizHTML()}</div>`}
   if(!v||!v.board||S.vbEdit){if(!S.vbImgs){S.vbImgs=Object.assign({},(v&&v.img)||{});S.vbIr=Object.assign({},(v&&v.ir)||{})}if(!S.vbCus)S.vbCus=clone((v&&v.cus)||[]);return `<div class="panel">${head}${vbFormHTML(v)}</div>`}
   return `<div class="panel">${head}${vbBoardHTML(v)}
     <div class="brow" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="vbsaveall" ${S.downloads?'':'disabled'}>📱 바탕화면용 저장</button><button class="btn ghost" data-act="vbsave" ${S.downloads?'':'disabled'}>가로 보드 저장</button><button class="btn ghost" data-act="vbedit">꿈 고치기·추가</button>${S.sample?'<button class="btn ghost" data-act="vbremake">문구 다시 꾸미기</button>':''}</div>${S.vbAsk?`<div style="margin-top:18px">${vbAskHTML(v)}</div>`:''}</div>`;
