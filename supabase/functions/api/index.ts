@@ -182,7 +182,7 @@ async function signup(req: Request, b: Record<string, unknown>) {
     id, nick: str('nick', 12) || id, region: str('region', 10), grade: str('grade', 6) || '중1', gender: str('gender', 4),
     bio: str('bio', 40), buddy: str('buddy', 10), buddyAv: str('buddyAv', 20), buddyImg: String(b.buddyImg ?? '').slice(0, 60000),
     email, birth: String(b.birth), mode: 'base', prefs: {}, pub: {}, at: Date.now(), agreedAt: Date.now(), policyVersion: env('POLICY_VERSION', '2026-12-01'),
-    marketing: !minor && !!b.agreeMarketing, aiNoticeAt: Date.now(),
+    marketing: !minor && !!b.agreeMarketing, aiNoticeAt: Date.now(), theme: b.theme === 'sky' ? 'sky' : 'cream',
   };
   await writeRow('members/' + id, member, id, null);
   if (minor) {
