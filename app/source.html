@@ -2952,7 +2952,7 @@ function visionHTML(page){setTimeout(vbPubRetry,0);if(page)return visionHTML().r
   if((!v||!v.board)&&!S.vbEdit){if(!S.vbW)S.vbW={n:0,a:{}};if(!S.vbImgs){S.vbImgs={};S.vbIr={}}setTimeout(()=>vbzGo(S.vbW.n,false),0);return `<div class="panel vbzp">${head}${vbWizHTML()}</div>`}
   if(!v||!v.board||S.vbEdit){if(!S.vbImgs){S.vbImgs=Object.assign({},(v&&v.img)||{});S.vbIr=Object.assign({},(v&&v.ir)||{})}if(!S.vbCus)S.vbCus=clone((v&&v.cus)||[]);return `<div class="panel">${head}${vbFormHTML(v)}</div>`}
   return `<div class="panel">${head}${vbBoardHTML(v)}
-    <div class="brow" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="vbsaveall" ${S.downloads?'':'disabled'}>📱 바탕화면용 저장</button><button class="btn ghost" data-act="vbsave" ${S.downloads?'':'disabled'}>가로 보드 저장</button><button class="btn ghost" data-act="vbedit">꿈 고치기·추가</button>${S.sample?'<button class="btn ghost" data-act="vbremake">문구 다시 꾸미기</button>':''}</div>${S.vbAsk?`<div style="margin-top:18px">${vbAskHTML(v)}</div>`:''}</div>`;
+    ${S.vbAsk?`<div style="margin-top:14px">${vbAskHTML(v)}</div>`:''}</div>`;
 }
 /* 비전보드에 들어올 때마다 꿈 질문 하나: 아직 답하지 않은 기본 질문이나 더 하기 질문 가운데 하나를 골라요. 답하면 그 자리에서 보드에 꽂혀요 */
 function vbPickQ(v,ex){if(!v||!v.board)return null;const a=v.a||{},no=v.none||{},cu=(v.cus||[]),has=new Set(cu.map(c=>c&&c.id));
