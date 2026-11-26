@@ -3071,7 +3071,7 @@ function courseHTML(){
   ${todoHTML(pct,ct)}
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
-  <div class="cab"><span class="cabp">${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
+  <div class="cab"><span class="cabp">영원이북</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
   ${S.mode==='custom'?'<p class="hint" style="margin-top:14px">AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.</p>':''}`;
 }
 function homeCardHTML(){
