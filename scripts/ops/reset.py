@@ -1,14 +1,14 @@
 """운영 데이터 초기화(그랜드 오픈). GitHub Actions '운영 데이터 초기화'에서만 실행한다.
 지우는 것: 회원 계정·세션·AI 사용량·결제 기록, 회원이 만든 모든 문서(진도·논술·구술·후기·친구·가족·엽서·사진 등),
           관리자 추가 목록·구글 연결, 업로드 사진(Storage 'uploads' 버킷).
-남기는 것: 운영 설정(config/: 코스·평가 기준·요금·공지·영상), 작품 정보(info/), 학습지도 자료(guides/),
+남기는 것: 운영 설정(config/: 코스·평가 기준·요금·공지·영상), 작품 정보(info/), 학습지도 자료(guides/), 작품 표지(covers/, 2026-11-26 결정),
           표지·포스터·사진 검색 캐시(sys/art_·pic_·isbn_·bkt_), 알림 서명 키(sys/vapid).
 MODE=check 는 개수만 보여 주고 아무것도 지우지 않는다. MODE=delete + CONFIRM=전체삭제 일 때만 지운다."""
 import json, os, sys, urllib.request
 
 REF = os.environ['REF']; TOKEN = os.environ['TOKEN']
 MODE = os.environ.get('MODE', 'check'); CONFIRM = os.environ.get('CONFIRM', '')
-KEEP = "(parent in ('config','info','guides') or path = 'sys/vapid' or path ~ '^sys/(art|pic|isbn|bkt)_')"
+KEEP = "(parent in ('config','info','guides','covers') or path = 'sys/vapid' or path ~ '^sys/(art|pic|isbn|bkt)_')"
 SUM = os.environ.get('GITHUB_STEP_SUMMARY')
 
 def call(url, body=None, headers=None, method=None):
