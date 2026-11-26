@@ -1850,6 +1850,11 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .cso-src{margin:16px 0 0;font-size:11.5px;line-height:1.55;color:#7A6E60}
 .shopin .ghead{align-items:center!important;flex-wrap:nowrap}.shopin .ghead>div:first-child{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;position:relative}.shopin .ghead>div:first-child h2{margin:0;text-align:center;white-space:nowrap}.shopin .ghead>div:first-child .bar{position:absolute;top:calc(100% + 3px);left:50%;transform:translateX(-50%)}
 .mysh>h3{position:relative;transform:translateY(40px)}@media (min-width:721px){.mysh>h3{transform:translateY(48px)}}
+.vbmore summary{list-style:none;display:flex;justify-content:center;padding:14px 0 16px!important;cursor:pointer}.vbmore summary::-webkit-details-marker{display:none}.vbmore summary::marker{content:""}
+.vbm-b{position:relative;display:inline-flex;align-items:center;gap:8px;padding:9px 20px 9px 24px;background:#FBF6EA;color:#2A2118;font-family:var(--f-display);font-size:16px;font-weight:700;letter-spacing:.06em;transform:rotate(-1.5deg);box-shadow:0 3px 8px rgba(60,40,20,.28);clip-path:none}
+.vbm-b::before{content:"";position:absolute;left:50%;top:-9px;width:54px;height:17px;margin-left:-27px;background:rgba(244,182,200,.85);transform:rotate(2deg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.vbm-b svg{transition:transform .2s;color:#B5483A}.vbmore[open] .vbm-b svg{transform:rotate(180deg)}
+.vbmore summary:active .vbm-b{transform:rotate(-1.5deg) scale(.97)}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
 /* 홈 진열장 책 옆 색 탭(책·영화 1·영화 2): 작은 손글씨(나눔펜) */
@@ -2959,7 +2964,7 @@ function vbBoardHTML(v){
   const tlh=tl.length||v.dday?`<div class="vtl"><h4>DREAM TIMELINE<small>꿈이 이루어지는 순서</small></h4><ol>${tl.map(it=>`<li><span>${it.when}${vbStage(+it.when)?'<small>'+vbStage(+it.when)+'</small>':''}</span><i>${esc(it.emoji)}</i><b>${esc(it.head)}</b></li>`).join('')}${v.dday?`<li class="fin"><span>${vbDstr(v.dday)}</span><i>🏆</i><b>모든 꿈이 완성되는 날 · ${vbDday(v)}</b></li>`:''}</ol></div>`:'';
   const pledge=b.pledge||v.a&&v.a.word||'';
   return `<div class="vb" id="vboard">${vbPhoneHTML(v)}
-   <details class="vbmore"><summary>꿈 자세히 · 연대표 · 다짐 보기</summary><div class="vdet vcork" id="vbdetail"><div class="vbt"><small>${esc(nick)}'s VISION BOARD</small><h3 class="vrn">${vbRansom(b.title||'나의 꿈 지도')}</h3>${b.statement?`<p class="vst" style="clip-path:${vbTorn(1,6)}">${esc(b.statement)}</p>`:''}${Array.isArray(b.words)&&b.words.length?`<div class="vbw">${b.words.slice(0,5).map((w,i)=>`<span style="transform:rotate(${i%2?2:-2}deg)">#${esc(w)}</span>`).join('')}</div>`:''}${v.dday?`<div><span class="vdd">🏆 DREAM DAY ${vbDstr(v.dday)} · ${vbDday(v)}</span></div>`:''}</div>
+   <details class="vbmore"><summary aria-label="나를 찾아서 — 꿈 자세히, 연대표, 다짐 보기"><span class="vbm-b">나를 찾아서<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="vdet vcork" id="vbdetail"><div class="vbt"><small>${esc(nick)}'s VISION BOARD</small><h3 class="vrn">${vbRansom(b.title||'나의 꿈 지도')}</h3>${b.statement?`<p class="vst" style="clip-path:${vbTorn(1,6)}">${esc(b.statement)}</p>`:''}${Array.isArray(b.words)&&b.words.length?`<div class="vbw">${b.words.slice(0,5).map((w,i)=>`<span style="transform:rotate(${i%2?2:-2}deg)">#${esc(w)}</span>`).join('')}</div>`:''}${v.dday?`<div><span class="vdd">🏆 DREAM DAY ${vbDstr(v.dday)} · ${vbDday(v)}</span></div>`:''}</div>
     <div class="vdg">${secs}</div>${tlh}
     ${pledge?`<div class="vpl" style="clip-path:${vbTorn(9,2.2)}"><small>나의 다짐</small><p>${esc(pledge)}</p>${v.a&&v.a.word&&b.pledge?`<p class="vps">P.S. ${esc(v.a.word)}</p>`:''}
       <div class="vsig"><span>${vbDate(v.at)}</span><span>다짐한 사람 <b>${esc(nick)}</b><i class="vseal">${esc(String(nick).slice(0,3))}</i></span></div></div>`:''}
