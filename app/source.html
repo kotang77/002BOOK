@@ -2568,6 +2568,23 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgadm .btn{background:rgba(255,246,232,.92)!important;color:#2E2A26!important;border-color:transparent!important}
 @media(min-width:720px){.lghero{display:grid;grid-template-columns:1fr minmax(300px,380px);column-gap:28px;align-items:center}.lghero{grid-template-rows:1fr auto auto auto 1fr}.lghero>:not(.lgcvs){grid-column:1}.lghero>small{grid-row:2}.lghero>h3{grid-row:3}.lghero>p{grid-row:4}.lghero .lgcvs{grid-column:2;grid-row:1/-1;margin-top:0}}
 .lgdisc{background:#F1EADB;border-radius:12px;padding:10px 12px;font-size:12px;color:#5B5149;line-height:1.5;margin-bottom:6px!important}
+.lgpickw{display:flex;flex-direction:column;gap:8px}
+.lgpick{display:flex;align-items:center;gap:6px;background:#F1EADB;border-radius:14px;padding:8px 8px 8px 14px}
+.lgpg{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}.lgpg small{font:700 11.5px var(--f-body);color:#A57A35}.lgpg b{font:700 16px var(--f-display);color:#1F4637;white-space:nowrap}
+@media(max-width:380px){.lgpg b{font-size:14.5px}.lggb{padding:6px 8px!important;font-size:11.5px!important}}
+.lggb{flex:none;display:inline-flex;align-items:center;gap:3px;border:1px solid #E6DCCB;background:#fff;border-radius:99px;padding:6px 9px;font:700 12px var(--f-body);color:#1F4637;cursor:pointer}.lggb .lgi{margin:0}
+.lggb[aria-expanded=true] .lgi{transform:rotate(180deg)}
+.lgmon{flex:none;display:flex;align-items:center;background:#1F4637;border-radius:99px;padding:3px}
+.lgmon button{border:0;background:none;color:#FFF6E8;font:700 18px/1 var(--f-body);width:30px;height:30px;border-radius:50%;cursor:pointer}.lgmon button:disabled{opacity:.3;cursor:default}
+.lgmon b{color:#FFF6E8;font:700 14px var(--f-body);min-width:36px;text-align:center}
+.lggopt{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.lggopt button{border:1px solid #E6DCCB;background:#fff;border-radius:12px;padding:9px 4px;font:700 13px var(--f-body);color:#3B332C;cursor:pointer}.lggopt button[aria-pressed=true]{background:#1F4637;border-color:#1F4637;color:#FFF6E8}
+.lgevsum{background:#F7F1E4;border-radius:18px;padding:16px;scroll-margin-top:80px}
+.lgevl{margin:-4px 0 12px!important}
+.lgevrows{display:grid;gap:8px;margin-bottom:12px}
+.lgevr{display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;padding:10px 12px}.lgevr>div{flex:none;width:78px;display:flex;flex-direction:column;line-height:1.25}.lgevr small{font-weight:700;font-size:12px;color:#A57A35}.lgevr b{font:700 17px var(--f-display);color:#1F4637}.lgevr p{font-size:12.5px;color:#3B332C;line-height:1.45}
+.lgevbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:4px;border:0;border-radius:12px;padding:12px;background:#1F4637;color:#FFF8EA;font:700 14px var(--f-body);cursor:pointer}.lgevbtn .lgi{margin:0}
+.lgevbtn.ghost{background:#fff;color:#1F4637;border:1px solid #E6DCCB;margin-top:14px}.lgevbtn.ghost .lgi{transform:rotate(180deg)}
+.lgevfull{display:flex;flex-direction:column;gap:22px}.lgevfull .lgtile:not([aria-pressed=true]),.lgevfull .lgsteps li,.lgevfull .lgpt3 div,.lgevfull .lgref{background:#fff}
 /* PDF(A4 794×1123) */
 .lgpdf{width:794px;height:1123px;box-sizing:border-box;padding:44px 52px;background:#fff;font-family:'Noto Sans KR',sans-serif}
 .lgpdf .lgs{box-shadow:none;border-radius:0;padding:0;font-size:16px;line-height:1.75;background:#fff}
@@ -7031,24 +7048,31 @@ function lgEvalHTML(){const v=['essay','oral','hex'].includes(S.lg.ev)?S.lg.ev:'
   const refs=S.lg.refs?`<div class="lgrefl">${LG_REFS.map(r=>`<div class="lgref" title="${lgT(r[1])}"><div><b>${lgT(r[0])}</b><span class="lgtag">${lgT(r[3])}</span><small>${lgT(r[4])}</small></div>${r[2]?`<a class="lgdoi" href="${r[2]}" target="_blank" rel="noopener noreferrer" aria-label="${lgT(r[0])} 원문 보기">원문 ${lgI('ext',12)}</a>`:''}</div>`).join('')}</div>
      <p class="lgdisc">평가 영역과 배점은 위 연구가 말하는 원칙(분명한 기준, 수준별 설명, 고칠 점을 알려 주는 피드백)에 맞춰 영원이북이 정했어요. 연구가 이 점수표 자체를 검증한 것은 아니에요.</p><button class="lgmore" data-act="lgrefs" aria-expanded="true">접기</button>`
    :`<button class="lgrefbtn" data-act="lgrefs" aria-expanded="false">${lgI('book',20)}<span><b>근거 문헌 ${LG_REFS.length}편 보기</b><small>루브릭 신뢰도 · 피드백 효과 · 교육과정</small></span><em aria-hidden="true">›</em></button>`;
-  return `<div class="lgnote">${lgI('info')}<p>모든 점수는 AI가 공개된 기준표로 매기는 참고 점수예요. 관리자가 기준표를 고치면 여기에도 바로 반영돼요.</p></div>
-   <div class="lgtiles" role="group" aria-label="평가 종류">${tiles.map(([k,l,n,u])=>`<button class="lgtile" data-act="lgev" data-v="${k}" aria-pressed="${k===v}"><small>${l}</small><b>${n}</b><span>${u}</span></button>`).join('')}</div>
+  return `<div class="lgtiles" role="group" aria-label="평가 종류">${tiles.map(([k,l,n,u])=>`<button class="lgtile" data-act="lgev" data-v="${k}" aria-pressed="${k===v}"><small>${l}</small><b>${n}</b><span>${u}</span></button>`).join('')}</div>
    <div class="lgpanel">${body}</div>
    <section class="lgrefs">${lgSec('근거가 된 연구·자료',LG_REFS.length)}${refs}</section>`}
+/* 학습지도 v4 (2026-11-27 사용자 지시, Figma 16 v4): 학년·달 칩 줄 삭제 → 시트 맨 위 '중학교 N학년 + 학년 바꾸기 + ‹ 달 ›',
+   탭 대신 지도안 아래에 평가 방식 요약 카드, '자세히 보기'를 누르면 상세(lgEvalHTML) */
+const lgGN=g=>/^중\d$/.test(g)?`중학교 ${g.slice(1)}학년`:g;
+function lgEvalSumHTML(){const sum=a=>a.reduce((n,x)=>n+(Number(x.w)||0),0);
+  const rows=[['논술',sum(RBC.essay)+'점','손글씨 답을 '+RBC.essay.length+'개 영역·5수준으로 채점하고, 다시 쓰면 1차와 비교해 성장을 봐요.'],['구술',sum(RBC.oral)+'점','말로 답하고 모범 답안을 따라 읽은 뒤 다시 답해 성장 점수를 받아요.'],['육각형 독서','목표 '+HXT.reduce((x,y)=>x+y,0)+'점','읽은 책의 분야와 깊이를 그려요. 한 권에 1~2점.']];
+  return `<section class="lgevsum" id="lgev">${lgSec('평가 방식')}<p class="lgsm2 lgevl">모든 점수는 AI가 공개된 기준표로 매기는 참고 점수예요. 관리자가 기준표를 고치면 바로 반영돼요.</p>
+    ${S.lg.evOpen?`<div class="lgevfull">${lgEvalHTML()}</div><button class="lgevbtn ghost" data-act="lgevopen" aria-expanded="true">평가 방식 접기 ${lgI('chev',16)}</button>`
+    :`<div class="lgevrows">${rows.map(([a,n,d])=>`<div class="lgevr"><div><small>${a}</small><b>${n}</b></div><p>${d}</p></div>`).join('')}</div><button class="lgevbtn" data-act="lgevopen" aria-expanded="false">평가 방식 자세히 보기 ${lgI('chev',16)}</button>`}</section>`}
 function lgHTML(){
   const {ids,i,it}=lgCur();if(!it)return '<p class="hint">코스를 불러오지 못했어요.</p>';
-  const L=items();const key=lgKey(it);const G=gdGet(key);const tab=S.lg.tab==='ev'?'ev':'plan';
-  setTimeout(()=>{const o=document.querySelector('.lgm .on');if(o&&o.parentElement)o.parentElement.scrollLeft=o.offsetLeft-o.parentElement.clientWidth/2+o.clientWidth/2},0);
+  const L=items();const key=lgKey(it);const G=gdGet(key);const pos=ids.indexOf(i);
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(lgKey(it));if(!g||(!g.data&&!g.busy&&!g.err))lgLoad(false)},0);
   const plan=!G||G.busy?'<div class="lgload"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
     :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
-  const ready=n=>{const g=L[n]&&gdGet(lgKey(L[n]));return !!(g&&g.data)};
   return `<div class="lgh"><h2>학습지도</h2><p>부모님·선생님이 이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
-    <div class="lgsel"><div class="lgg">${GR.map(g=>`<button class="${g===S.lg.g?'on':''}" data-act="lgg" data-g="${g}" aria-pressed="${g===S.lg.g}">${g}</button>`).join('')}</div>
-      <div class="lgm">${ids.map(n=>`<button class="${n===i?'on':''}" data-act="lgm" data-i="${n}" aria-pressed="${n===i}">${esc(L[n].m)}${ready(n)?'<i aria-label="자료 있음"></i>':''}</button>`).join('')}</div></div>
-    <div class="lgsh"><div class="lgtabs" role="tablist"><button role="tab" aria-selected="${tab==='plan'}" data-act="lgtab" data-v="plan">이달 지도안</button><button role="tab" aria-selected="${tab==='ev'}" data-act="lgtab" data-v="ev">평가 방식</button></div>
-      ${tab==='ev'?lgEvalHTML():plan}
-      ${tab==='plan'&&G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">모범 답안</button></div>`:''}
+    <div class="lgsh"><div class="lgpickw"><div class="lgpick"><div class="lgpg"><small>이달 지도안</small><b>${lgT(lgGN(S.lg.g))}</b></div>
+        <button class="lggb" data-act="lggsel" aria-expanded="${!!S.lg.gsel}">학년 바꾸기 ${lgI('chev',14)}</button>
+        <div class="lgmon" role="group" aria-label="달 고르기"><button data-act="lgmstep" data-d="-1" aria-label="이전 달" ${pos<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(it.m)}</b><button data-act="lgmstep" data-d="1" aria-label="다음 달" ${pos>=ids.length-1?'disabled':''}>›</button></div></div>
+      ${S.lg.gsel?`<div class="lggopt" role="group" aria-label="학년 고르기">${GR.map(g=>`<button data-act="lgg" data-g="${g}" aria-pressed="${g===S.lg.g}">${lgT(lgGN(g))}</button>`).join('')}</div>`:''}</div>
+      ${plan}
+      ${lgEvalSumHTML()}
+      ${G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">모범 답안</button></div>`:''}
     </div>
     ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습지도 자료를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')})</p>`:`<button class="btn ghost small" data-act="lgall">중1 3월부터 전체 자료 만들기 (없는 달만)</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
     ${G&&G.data?`<div class="lgprint" aria-hidden="true">${lgSheetHTML(it,G.data)}</div>`:''}`}
@@ -7514,7 +7538,10 @@ document.addEventListener('click',async e=>{
     case 'famok':famAccept(d.id);break;
     case 'famno':{if(famRel(d.id)==='family'&&S._fam!==d.id){S._fam=d.id;toast('한 번 더 누르면 가족 연결이 끊어져요.');setTimeout(()=>{if(S._fam===d.id)S._fam=null},3500);break}S._fam=null;famRemove(d.id);break}
     case 'famkid':S.sheet={type:'kid',id:d.id};renderLayers();famLoadKid(d.id);break;
-    case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;S.lg.q=null;S.lg.more=false;render();break;
+    case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;S.lg.q=null;S.lg.more=false;S.lg.gsel=false;render();break;
+    case 'lggsel':S.lg.gsel=!S.lg.gsel;renderLayers();break;
+    case 'lgmstep':{const c=lgCur();const n=c.ids[c.ids.indexOf(c.i)+(+d.d)];if(n!==undefined){S.lg.i=n;S.lg.q=null;S.lg.more=false;render()}break}
+    case 'lgevopen':S.lg.evOpen=!S.lg.evOpen;renderLayers();if(!S.lg.evOpen)setTimeout(()=>{const e=document.getElementById('lgev');if(e)e.scrollIntoView({block:'start'})},0);break;
     case 'lgm':S.lg=S.lg||{};S.lg.i=+d.i;S.lg.q=null;S.lg.more=false;render();break;
     case 'lgtab':S.lg=S.lg||{};S.lg.tab=d.v;renderLayers();break;
     case 'lgev':S.lg=S.lg||{};S.lg.ev=d.v;renderLayers();break;
