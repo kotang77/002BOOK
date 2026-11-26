@@ -1855,6 +1855,9 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .vbm-b::before{content:"";position:absolute;left:50%;top:-9px;width:54px;height:17px;margin-left:-27px;background:rgba(244,182,200,.85);transform:rotate(2deg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
 .vbm-b svg{transition:transform .2s;color:#B5483A}.vbmore[open] .vbm-b svg{transform:rotate(180deg)}
 .vbmore summary:active .vbm-b{transform:rotate(-1.5deg) scale(.97)}
+.frl .stabs.lgtabs{overflow:visible}.frl .stabs.lgtabs button{flex:1 1 0;min-width:0;padding:6px 2px;font-size:12.5px;position:relative}
+.lgn{display:inline-block;min-width:15px;height:15px;margin-left:3px;padding:0 4px;border-radius:99px;background:#C0533F;color:#fff;font-size:10px;font-style:normal;font-weight:700;line-height:15px;vertical-align:1px}
+.lgal{border-left:3px solid #C0533F}.lgclub{margin:0 0 8px;color:#E8DCC8}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
 /* 홈 진열장 책 옆 색 탭(책·영화 1·영화 2): 작은 손글씨(나눔펜) */
@@ -4740,7 +4743,7 @@ async function doWithdraw(fd){
 /* ---------- 친구 ---------- */
 const CHEERS=['오늘도 같이 읽어 보자!','논술 쓰느라 수고했어. 끝까지 해 보자!','이번 달 책 다 읽었어?','힘들어도 조금씩 하면 돼. 응원해!','내가 읽은 책 정말 좋았어. 너도 읽어 봐!'];
 const pairId=(a,b)=>[a,b].sort().join('__');
-const frNew=()=>({loaded:false,tab:'post',out:[],ms:null,docs:[],inc:[],thread:null,prof:null});
+const frNew=()=>({loaded:false,tab:'my',out:[],ms:null,docs:[],inc:[],thread:null,prof:null});
 const frDoc=id=>((S.fr&&S.fr.docs)||[]).find(d=>d.a===id||d.b===id);
 function frRel(id){const d=frDoc(id);if(!d)return 'none';if(d.status==='accepted')return 'friend';return d.from===S.id?'sent':'recv'}
 const frMem=id=>(S.fr&&S.fr.ms&&S.fr.ms[id])||{id,nick:(()=>{const d=frDoc(id);return d?((d.from===id?d.fromNick:d.toNick)||id):id})()};
@@ -4783,26 +4786,27 @@ async function loadFriends(full){
 function friendsHTML(){
   const F=S.fr;
   if(!F||!F.loaded)return '<div class="lead"><div><h2>라운지</h2><p>친구·부모님·선생님과 엽서로 응원을 주고받아요.</p></div></div><div class="sk"></div>';
-  const tab=F.tab||'post';
+  const tab=({find:'club',req:'alarm'})[F.tab]||F.tab||'my';
   const fr=F.docs.filter(d=>d.status==='accepted').map(d=>d.a===S.id?d.b:d.a);
   const recv=F.docs.filter(d=>d.status==='pending'&&d.to===S.id).map(d=>d.from);
   const sent=F.docs.filter(d=>d.status==='pending'&&d.from===S.id).map(d=>d.to);
   const pn=pcIn().filter(x=>!x.openedAt).length;
-  const tabs=`<div class="stabs" style="margin-bottom:12px">${[['post','엽서함'+(pn?' '+pn:'')],['my','내 친구 '+fr.length],['req','받은 요청'+(recv.length?' '+recv.length:'')],['find','회원 찾기'],['fam','가족'+(famRecv().length?' '+famRecv().length:'')]].map(([k,t])=>`<button data-act="frtab" data-v="${k}" aria-pressed="${tab===k}">${t}</button>`).join('')}</div>`;
+  const fq=famRecv().length;const an=pn+recv.length+fq;
+  const tabs=`<div class="stabs lgtabs" style="margin-bottom:12px">${[['my','친구',0],['fam','가족',0],['club','북클럽',0],['post','엽서함',0],['alarm','알람',an]].map(([k,t,n])=>`<button data-act="frtab" data-v="${k}" aria-pressed="${tab===k}">${t}${n?`<i class="lgn">${n}</i>`:''}</button>`).join('')}</div>`;
   const sub=id=>{const m=frMem(id);return [m.grade,m.region].filter(Boolean).join(' · ')};
   let body='';
-  if(tab==='post')body=pcBoxHTML();
-  else if(tab==='my'){
+  if(tab==='my'){
     body=fr.length?fr.map(id=>{const u=frUnread(id);return `<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}${u?` <i class="fbd">${u}</i>`:''}</b><small>${esc(sub(id))}</small>${frMem(id).bio?`<small style="display:block;color:var(--ink)">${esc(frMem(id).bio)}</small>`:''}</div><div class="fa"><button class="btn small" data-act="frchat" data-id="${esc(id)}">대화</button><button class="btn ghost small" data-act="frprof" data-id="${esc(id)}">진도·논술</button></div></div>`}).join('')
-      :'<div class="fr-empty"><b>라운지에 아직 친구가 없어요</b><p>회원 찾기에서 함께 읽을 친구를 초대해 보세요.</p><button class="btn" data-act="frtab" data-v="find">회원 찾기</button></div>';
+      :'<div class="fr-empty"><b>라운지에 아직 친구가 없어요</b><p>북클럽에서 함께 읽을 친구를 찾아보세요.</p><button class="btn" data-act="frtab" data-v="club">북클럽 가기</button></div>';
     if(fr.length)body+=`<p class="hint" style="margin-top:10px">친구끼리는 서로의 진도와 논술을 볼 수 있고, 응원·추천·논술 결과를 메시지로 나눌 수 있어요.</p>`;
-  }else if(tab==='req'){
-    body=`<div class="sec"><h3>받은 친구 요청 ${recv.length}건</h3>${recv.length?recv.map(id=>`<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}</b><small>${esc(sub(id))}</small></div><div class="fa"><button class="btn small" data-act="fra" data-id="${esc(id)}">수락</button><button class="btn ghost small" data-act="frd" data-id="${esc(id)}">거절</button></div></div>`).join(''):'<p class="hint">받은 요청이 없어요.</p>'}</div>
-    <div class="sec" style="margin-top:16px"><h3>보낸 요청 ${sent.length}건</h3>${sent.length?sent.map(id=>`<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}</b><small>수락을 기다리고 있어요</small></div><div class="fa"><button class="btn ghost small" data-act="frd" data-id="${esc(id)}">요청 취소</button></div></div>`).join(''):'<p class="hint">보낸 요청이 없어요.</p>'}</div>`;
+  }else if(tab==='alarm'){
+    body=`${pn?`<div class="frr lgal"><div class="fi"><b>새 엽서 ${pn}장</b><small>아직 열지 않은 엽서가 있어요</small></div><div class="fa"><button class="btn small" data-act="lgpost">열어 보기</button></div></div>`:''}${fq?`<div class="frr lgal"><div class="fi"><b>가족 요청 ${fq}건</b><small>부모님·선생님 연결 요청이에요</small></div><div class="fa"><button class="btn small" data-act="frtab" data-v="fam">확인</button></div></div>`:''}${!an&&!sent.length?'<div class="fr-empty"><b>새 알람이 없어요</b><p>새 엽서와 친구·가족 요청이 오면 여기에 모여요.</p></div>':''}`+(recv.length||sent.length?`<div class="sec"><h3>받은 친구 요청 ${recv.length}건</h3>${recv.length?recv.map(id=>`<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}</b><small>${esc(sub(id))}</small></div><div class="fa"><button class="btn small" data-act="fra" data-id="${esc(id)}">수락</button><button class="btn ghost small" data-act="frd" data-id="${esc(id)}">거절</button></div></div>`).join(''):'<p class="hint">받은 요청이 없어요.</p>'}</div>
+    <div class="sec" style="margin-top:16px"><h3>보낸 요청 ${sent.length}건</h3>${sent.length?sent.map(id=>`<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}</b><small>수락을 기다리고 있어요</small></div><div class="fa"><button class="btn ghost small" data-act="frd" data-id="${esc(id)}">요청 취소</button></div></div>`).join(''):'<p class="hint">보낸 요청이 없어요.</p>'}</div>`:'');
   }else if(tab==='fam'){body=famHTML();
+  }else if(tab==='post'){body=pcBoxHTML();
   }else{
     const ms=Object.values(F.ms||{}).filter(m=>m.id!==S.id).sort((a,b)=>String(a.nick).localeCompare(String(b.nick),'ko'));
-    body=`<label for="fr-q" style="margin-bottom:8px">회원 찾기<input id="fr-q" placeholder="닉네임이나 아이디로 찾기" autocomplete="off"></label>
+    body=`<p class="hint lgclub">북클럽은 영원이북의 모든 회원이에요. ${ms.length}명과 함께 읽고 있어요.</p><label for="fr-q" style="margin-bottom:8px">회원 찾기<input id="fr-q" placeholder="닉네임이나 아이디로 찾기" autocomplete="off"></label>
     ${ms.length?ms.slice(0,300).map(m=>{const rel=frRel(m.id);
       const btn=rel==='friend'?'<span class="tagk">친구</span>':rel==='sent'?'<span class="hint">요청 보냄</span>':rel==='recv'?`<button class="btn small" data-act="fra" data-id="${esc(m.id)}">요청 수락</button>`:`<button class="btn small" data-act="frreq" data-id="${esc(m.id)}">친구 맺기</button>`;
       return `<div class="frr" data-k="${esc((m.nick+' '+m.id).toLowerCase())}">${frAv(m.id)}<div class="fi"><b>${esc(m.nick)}</b><small>${esc(sub(m.id))}</small>${m.bio?`<small style="display:block;color:var(--ink)">${esc(m.bio)}</small>`:''}</div><div class="fa">${btn}</div></div>`}).join(''):'<p class="hint">다른 회원이 아직 없어요.</p>'}`;
@@ -7102,6 +7106,7 @@ document.addEventListener('click',async e=>{
       if(d.v==='friends'){if(!S.fr)S.fr=frNew();loadFriends(true)}
       window.scrollTo(0,0);break;
     case 'frtab':S.fr.tab=d.v;render();break;
+    case 'lgpost':S.fr.tab='post';S.fr.pbox='in';render();break;
     case 'frreq':frRequest(d.id);break;
     case 'fra':frAccept(d.id);break;
     case 'frd':frRemove(d.id,'처리했어요.');break;
@@ -7113,7 +7118,7 @@ document.addEventListener('click',async e=>{
     case 'pcbox':S.fr.pbox=S.fr.pbox===d.v?'':d.v;render();break;
     case 'pcopen':pcOpen(d.id);break;
     case 'pccancel':pcCancel(d.id);break;
-    case 'pcfind':S.sheet=null;S.view='friends';S.fr.tab='find';render();break;
+    case 'pcfind':S.sheet=null;S.view='friends';S.fr.tab='club';render();break;
     case 'frprof':openChat(d.id,'prof');break;
     case 'frsub':S.sheet.tab=d.v;S.fr.thread=null;renderLayers();if(d.v==='chat')frLoadThread(S.sheet.id);else frLoadProf(S.sheet.id);break;
     case 'frpane':S.sheet.pane=S.sheet.pane===d.v?'':d.v;renderLayers();frMsgsDraw(true);break;
