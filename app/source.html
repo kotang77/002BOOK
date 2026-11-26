@@ -2648,7 +2648,7 @@ const GR=['중1','중2','중3'];
 const STU=[['중1','중학교 1학년'],['중2','중학교 2학년'],['중3','중학교 3학년']],ADULT=[['아빠','아빠'],['엄마','엄마'],['선생님','선생님']];
 const SCHOOL=[...STU,...ADULT];const PARENTG=['아빠','엄마','선생님','부모'];const isParentG=g=>PARENTG.includes(g);
 const gradeFields=(cur,p)=>{const ad=PARENTG.includes(cur);const o=c=>([v,t])=>`<option value="${v}"${v===c?' selected':''}>${t}</option>`;const rb='style="flex-direction:row;gap:6px;align-items:center;display:inline-flex;margin-right:18px"';
-  return `<div class="gkind"><span>구분</span><div style="margin-top:4px"><label ${rb}><input type="radio" name="${p}-kind" value="stu" data-gkind style="width:auto"${ad?'':' checked'}> 학생</label><label ${rb}><input type="radio" name="${p}-kind" value="adult" data-gkind style="width:auto"${ad?' checked':''}> 성인</label></div></div>`
+  return `<div class="gkind"><span>구분</span><div style="margin-top:4px"><label ${rb}><input type="radio" name="${p}-kind" value="stu" data-gkind style="width:auto"${ad?'':' checked'}> 중학생</label><label ${rb}><input type="radio" name="${p}-kind" value="adult" data-gkind style="width:auto"${ad?' checked':''}> 성인</label></div></div>`
   +`<label for="${p}-grade" data-gpane="stu"${ad?' hidden':''}>학년<select id="${p}-grade" name="grade"${ad?' disabled':''}>${STU.map(o(ad?'':cur)).join('')}</select></label>`
   +`<label for="${p}-adult" data-gpane="adult"${ad?'':' hidden'}>성인 구분<select id="${p}-adult" name="grade"${ad?'':' disabled'}>${ADULT.map(o(ad?cur:'')).join('')}${cur==='부모'?'<option value="부모" selected>부모</option>':''}</select></label>`};
 const SCODES=SCHOOL.map(x=>x[0]);const GENDERS=['여자','남자'];
@@ -3343,11 +3343,13 @@ function seasonFx(){
 function suFormHTML(g){
   const step=(n,t,body)=>`<section class="sus" data-s="${n}"><h3 class="sus-t">${t}</h3>${body}</section>`;
   const s1=step(1,'나를 알려 주세요',`<label for="su-id">아이디 <small class="hint">영문 소문자·숫자 3~20자</small><input id="su-id" name="id" autocomplete="username" autocapitalize="none" required value="${g?esc(S.gs.idHint||''):''}"></label>
-    ${g?'':`<label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>`}
+    ${g?'':`<label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>
+    <label for="su-pw2">비밀번호 다시 입력 <small class="hint" id="su-pwm" aria-live="polite"></small><input id="su-pw2" name="pw2" type="password" autocomplete="new-password" required></label>`}
     <label for="su-nick">닉네임 <small class="hint">친구에게 보이는 이름 · 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12" value="${g?esc(S.gs.name||''):''}"></label>
     ${g?'':`<label for="su-email">이메일 <small class="hint">비밀번호를 잊었을 때 받을 주소</small><input id="su-email" name="email" type="email" autocomplete="email" required></label>`}`);
-  const s2=step(2,'학년과 나이를 알려 주세요',`${gradeFields('중1','su')}
-    <div class="chipf"><span>성별</span><div class="chipset" role="radiogroup" aria-label="성별">${GENDERS.map((v,k)=>`<label class="chipr" for="su-g${k}"><input type="radio" id="su-g${k}" name="gender" value="${v}"><span>${v}</span></label>`).join('')}</div></div>
+  /* 11-27 사용자 지시: 가입 2단계 순서 = 성별(남자·여자) → 중학생·성인 → 학년 → 태어난 연월 → 지역 */
+  const s2=step(2,'학년과 나이를 알려 주세요',`<div class="chipf"><span>성별</span><div class="chipset" role="radiogroup" aria-label="성별">${['남자','여자'].map((v,k)=>`<label class="chipr" for="su-g${k}"><input type="radio" id="su-g${k}" name="gender" value="${v}"><span>${v}</span></label>`).join('')}</div></div>
+    ${gradeFields('중1','su')}
     <label for="su-birth">태어난 연월 <small class="hint">만 14세 미만이면 마지막에 보호자 동의를 받아요</small><input id="su-birth" name="birth" type="month" min="1940-01" max="${new Date().toISOString().slice(0,7)}" required></label>
     <label for="su-region">사는 지역<select id="su-region" name="region">${REGIONS.map(r=>`<option${r==='경기'?' selected':''}>${r}</option>`).join('')}</select></label>`);
   const s3=step(3,'앱 색을 골라요',`<p class="hint">마음에 드는 쪽을 누르면 바로 바뀌어요. 나중에 내 정보에서 바꿀 수 있어요.</p>${themePick(themeNow(),'su')}`);
@@ -3373,9 +3375,11 @@ function suFormHTML(g){
 }
 /* 가입 단계 이동(다시 그리지 않고 단계만 바꿔 입력값을 지킨다) */
 function suErr(f,st){const v=k=>String((f.elements[k]&&f.elements[k].value)||'').trim();const G=f.dataset.form==='gsignup';
-  if(st===1){if(!/^[a-z0-9_-]{3,20}$/.test(v('id').toLowerCase()))return '아이디는 영문 소문자와 숫자로 3~20자여야 해요.';if(!G&&String((f.elements.pw&&f.elements.pw.value)||'').length<8)return '비밀번호는 8자 이상이어야 해요.';if(!G&&!EMAILRE.test(v('email')))return '이메일 주소를 정확히 적어 주세요.'}
+  if(st===1){if(!/^[a-z0-9_-]{3,20}$/.test(v('id').toLowerCase()))return '아이디는 영문 소문자와 숫자로 3~20자여야 해요.';if(!G&&String((f.elements.pw&&f.elements.pw.value)||'').length<8)return '비밀번호는 8자 이상이어야 해요.';if(!G&&String(f.elements.pw.value)!==String((f.elements.pw2&&f.elements.pw2.value)||''))return '비밀번호가 서로 달라요. 다시 확인해 주세요.';if(!G&&!EMAILRE.test(v('email')))return '이메일 주소를 정확히 적어 주세요.'}
   if(st===2){if(!f.querySelector('input[name=gender]:checked'))return '성별을 골라 주세요.';if(!/^(\d{4})-(\d{2})$/.test(v('birth')))return '태어난 연도와 월을 골라 주세요.'}
   return ''}
+document.addEventListener('input',e=>{const t=e.target;if(!t||(t.id!=='su-pw'&&t.id!=='su-pw2'))return;const a=$('#su-pw'),b=$('#su-pw2'),m=$('#su-pwm');if(!a||!b||!m)return;
+  m.textContent=!b.value?'':a.value===b.value?'✓ 같아요':'비밀번호가 달라요';m.style.color=!b.value?'':a.value===b.value?'var(--done,#2E7D4F)':'var(--rose-ink,#C0533F)'});
 function suGuard(){const b=$('#su-birth'),w=$('#su-guard');if(!b||!w)return;const m=/^(\d{4})-(\d{2})$/.exec(b.value||'');let minor=false;if(m){const now=new Date();let age=now.getFullYear()-(+m[1]);if(now.getMonth()+1<+m[2])age--;minor=age<14}w.hidden=!minor}
 function suSet(f,n){f.dataset.step=n;if(n===4)suGuard();window.scrollTo(0,0)}
 function suGo(dir){const f=document.querySelector('form[data-form=signup],form[data-form=gsignup]');if(!f)return;const st=+f.dataset.step||1;const e=$('#autherr');
@@ -5348,6 +5352,7 @@ async function doSignup(fd){
   const id=g('id').toLowerCase();const pw=String(fd.get('pw')||'');const nick=g('nick')||id;
   if(!/^[a-z0-9_-]{3,20}$/.test(id))return er('아이디는 영문 소문자와 숫자로 3~20자여야 해요.');
   if(!G&&pw.length<8)return er('비밀번호는 8자 이상이어야 해요.');
+  if(!G&&pw!==String(fd.get('pw2')||''))return er('비밀번호가 서로 달라요. 다시 확인해 주세요.');
   if(!G&&!EMAILRE.test(g('email')))return er('이메일 주소를 정확히 적어 주세요.');
   if(!GENDERS.includes(g('gender')))return er('성별을 골라 주세요.');
   const bm=/^(\d{4})-(\d{2})$/.exec(g('birth'));if(!bm)return er('태어난 연도와 월을 골라 주세요.');
