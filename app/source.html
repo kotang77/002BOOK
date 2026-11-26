@@ -1874,6 +1874,10 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .top.tnav .tsep{flex:none;width:1px;height:24px;margin:0 2px 0 4px;background:rgba(205,191,168,.25)}
 .top.tnav .bell .dot{position:absolute;top:1px;right:auto;left:calc(50% + 4px)}
 @media (min-width:721px){.wrap .top.tnav .ti{width:52px;font-size:11px}}
+/* 표지·포스터: 불러온 그림의 실제 비율로 틀을 맞춤 — 잘리지도, 빈 여백도 없게 (2026-11-26) */
+:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv).fitd{aspect-ratio:var(--ar)!important;height:auto!important}
+:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv).fitd>img{object-fit:fill!important;object-position:center!important;width:100%!important;height:100%!important}
+img.pth.fitd{height:auto!important;aspect-ratio:var(--ar);object-fit:fill!important}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
 /* 홈 진열장 책 옆 색 탭(책·영화 1·영화 2): 작은 손글씨(나눔펜) */
@@ -5645,6 +5649,15 @@ function mnPage(ev,lines,marks,p,total,geo){
 }
 function fitMn(){document.querySelectorAll('.mnw').forEach(w=>{const p=w.firstElementChild;if(p)p.style.zoom=Math.max(w.clientWidth/794,innerWidth<720?.4:.72)})}
 window.addEventListener('resize',fitMn);
+/* 표지·포스터 자동 맞춤: 그림이 다 불러와지면 틀의 비율을 그림 비율로 바꾼다 */
+(()=>{const FR='.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv';
+  const fit=im=>{if(!im||!im.naturalWidth||!im.naturalHeight)return;const r=im.naturalWidth/im.naturalHeight;if(r<.4||r>2.5)return;
+    const t=im.classList.contains('pth')?im:(im.parentElement&&im.parentElement.matches(FR)?im.parentElement:null);if(!t)return;
+    t.style.setProperty('--ar',r.toFixed(4));t.classList.add('fitd')};
+  document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG')fit(t)},true);
+  let q=0;const scan=()=>{q=0;document.querySelectorAll('img').forEach(im=>{if(im.complete&&!(im.parentElement&&im.parentElement.classList.contains('fitd'))&&!im.classList.contains('fitd'))fit(im)})};
+  try{new MutationObserver(()=>{if(!q)q=requestAnimationFrame(scan)}).observe(document.body,{childList:true,subtree:true})}catch(e){}})();
+
 {const sb=()=>document.documentElement.style.setProperty('--sbw',Math.max(0,innerWidth-document.documentElement.clientWidth)+'px');sb();window.addEventListener('resize',sb);try{new ResizeObserver(sb).observe(document.documentElement)}catch(e){}}
 document.addEventListener('toggle',e=>{if(e.target&&e.target.classList&&e.target.classList.contains('ev-d'))fitMn()},true);  // 접었던 원고지 첨삭을 펼치면 크기를 다시 맞춘다
 function rewriteAll(ev){return Array.isArray(ev.paraReview)?ev.paraReview.map(x=>String(x.rewrite||'').trim()).filter(Boolean).join('\n\n'):''}
