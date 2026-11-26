@@ -1871,7 +1871,7 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .wrap .top.tnav .ti{flex:none;width:clamp(34px,10vw,46px);height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;margin:0;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:#CDBFA8!important;font-size:10px;font-weight:500;position:relative;line-height:1.1;box-shadow:none!important}
 .top.tnav .ti svg{width:21px;height:21px;color:currentColor!important}
 .top.tnav .ti>span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.top.tnav .tsep{flex:none;width:1px;height:24px;margin:0 2px 0 4px;background:rgba(205,191,168,.25)}
+.top.tnav .tsep{flex:none;width:1px;height:24px;margin:0 1px 0 calc(5px + (clamp(34px,10vw,46px) - 21px)/2);background:rgba(205,191,168,.25)}@media (min-width:721px){.top.tnav .tsep{margin-left:calc(5px + (52px - 21px)/2)}}
 .top.tnav .bell .dot{position:absolute;top:7px;right:auto;left:calc(50% + 4px)}
 @media (min-width:721px){.wrap .top.tnav .ti{width:52px;font-size:11px}}
 /* 표지·포스터: 불러온 그림의 실제 비율로 틀을 맞춤 — 잘리지도, 빈 여백도 없게 (2026-11-26) */
