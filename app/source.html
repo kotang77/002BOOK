@@ -1858,6 +1858,22 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .frl .stabs.lgtabs{overflow:visible}.frl .stabs.lgtabs button{flex:1 1 0;min-width:0;padding:6px 2px;font-size:12.5px;position:relative}
 .lgn{display:inline-block;min-width:15px;height:15px;margin-left:3px;padding:0 4px;border-radius:99px;background:#C0533F;color:#fff;font-size:10px;font-style:normal;font-weight:700;line-height:15px;vertical-align:1px}
 .lgal{border-left:3px solid #C0533F}.lgclub{margin:0 0 8px;color:#E8DCC8}
+
+/* 상단 바: 하단 메뉴와 같은 아이콘+글자, 녹색 점무늬 (2026-11-26) */
+.wrap .top.tnav{gap:0!important;background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A!important;box-shadow:0 3px 10px rgba(0,0,0,.35)!important;clip-path:none!important;margin-inline:calc(50% - 50vw + var(--sbw,0px)/2)!important;padding:6px calc(50vw - 50% - var(--sbw,0px)/2)!important;border-bottom:1px solid rgba(217,174,98,.35)}
+.top.tnav .avb{flex:none;margin-right:8px}.top.tnav .avb img{width:clamp(30px,9vw,36px);height:auto}
+.top.tnav .tbr{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;line-height:1;margin-right:auto;flex:none}
+.top.tnav .brand{padding:0;gap:0}.top.tnav .brand span{display:inline!important;background:linear-gradient(#FBE3A8,#D9AE62 55%,#B3874A);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--f-display);font-weight:800;font-size:clamp(15px,4.6vw,18px);letter-spacing:.04em;white-space:nowrap}
+.top.tnav .bdg{margin-top:3px;padding:0!important;border:0!important;background:none!important;color:#CDBFA8!important;font-size:10px;font-weight:500;letter-spacing:.08em}
+.top.tnav .seg{display:flex;gap:0;padding:0!important;border:0!important;background:none!important;border-radius:0}
+.wrap .top.tnav .ti,.wrap .top.tnav .seg button.ti[aria-pressed]{flex:none;width:clamp(38px,11vw,46px);height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;margin:0;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:#CDBFA8!important;font-size:10px;font-weight:500;position:relative;line-height:1.1;box-shadow:none!important}
+.top.tnav .ti svg{width:19px;height:19px;color:currentColor!important}
+.top.tnav .ti>span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wrap .top.tnav .seg button.ti[aria-pressed=true]{color:#F6D58E!important;font-weight:700}
+.top.tnav .seg .ti[aria-pressed=true]::after{content:"";position:absolute;bottom:-6px;left:50%;width:18px;height:2px;margin-left:-9px;border-radius:2px;background:#F6D58E}
+.top.tnav .tsep{flex:none;width:1px;height:24px;margin:0 3px;background:rgba(205,191,168,.25)}
+.top.tnav .bell .dot{position:absolute;top:1px;right:auto;left:calc(50% + 4px)}
+@media (min-width:721px){.top.tnav .ti{width:52px;font-size:11px}.top.tnav .brand span{font-size:20px}}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
 /* 홈 진열장 책 옆 색 탭(책·영화 1·영화 2): 작은 손글씨(나눔펜) */
@@ -3278,6 +3294,8 @@ const IC={course:ICO('<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V
   admin:ICO('<path d="M12 3.5l7 2.5v5c0 4.2-2.8 7.6-7 9.5-4.2-1.9-7-5.3-7-9.5V6z"/><path d="M9 12l2.2 2.2L15 10.2"/>'),
   bell:ICO('<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5H5z"/><path d="M10 20.5h4"/>',17),lock:ICO('<rect x="6" y="11" width="12" height="8.5" rx="1.5"/><path d="M8.5 11V8.5a3.5 3.5 0 0 1 7 0V11"/>',13),
   out:ICO('<path d="M10 4.5H6.5a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5H10"/><path d="M14.5 8l4 4-4 4M18.5 12H9.5"/>',16),
+  spark:ICO('<path d="M12 3.5l1.8 5.2 5.2 1.8-5.2 1.8L12 17.5l-1.8-5.2L5 10.5l5.2-1.8z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>'),
+  user:ICO('<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>'),
   x:ICO('<path d="M6 6l12 12M18 6L6 18"/>',16),back:ICO('<path d="M15 5l-7 7 7 7"/>',16),next:ICO('<path d="M9 5l7 7-7 7"/>',16),
   pen:ICO('<path d="M4 20l4-1L19 8l-3-3L5 16z"/><path d="M14 7l3 3"/>',16),clock:ICO('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',15),check:ICO('<path d="M5 12.5l4.5 4.5L19 7.5"/>',14)};
 IC.cam=ICO('<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.2"/>',16);
@@ -3285,11 +3303,13 @@ function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progre
 function shellHTML(){
   const v=S.view;
   const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','라운지']];if(isAdmin())tabs.push(['admin','관리']);if(canGuide())tabs.push(['guide','학습지도']);
-  return `<div class="wrap${v==='course'||v==='me'||v==='vision'||v==='guide'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:'<img class="avlogo" src="brand/app-icon.png" width="36" height="36" alt="">'}</button>
-    <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
-    <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
-    <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
-    <div class="seg" role="group" aria-label="코스 선택"><button data-act="basemode" aria-pressed="${S.mode==='base'}">기본</button><button data-act="custommode" aria-pressed="${S.mode==='custom'}">${isPaid()?'':IC.lock}맞춤</button></div></header>
+  return `<div class="wrap${v==='course'||v==='me'||v==='vision'||v==='guide'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top tnav"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:'<img class="avlogo" src="brand/app-icon.png" width="36" height="36" alt="">'}</button>
+    <div class="tbr"><button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span></div>
+    <div class="seg" role="group" aria-label="코스 선택"><button class="ti" data-act="basemode" aria-pressed="${S.mode==='base'}">${IC.course}<span>기본</span></button><button class="ti" data-act="custommode" aria-pressed="${S.mode==='custom'}">${IC.spark}<span>맞춤</span></button></div>
+    <i class="tsep" aria-hidden="true"></i>
+    <button class="x bell ti" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}<span>알림</span>${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
+    <button class="who ti" data-act="profile" aria-label="내 정보 바꾸기">${IC.user}<span>${esc((S.me&&S.me.nick)||S.id)}</span></button>
+    <button class="lo ti" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}<span>나가기</span></button></header>
     <div class="dtabs">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${n}${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</div>
     <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='vision'?`<div class="vpage">${visionHTML(true)}</div>`:v==='guide'&&canGuide()?`<div class="lgpage">${lgHTML()}</div>`:v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
     <nav class="nav" aria-label="메뉴">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${IC[k]}<span>${n}</span>${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</nav>`;
