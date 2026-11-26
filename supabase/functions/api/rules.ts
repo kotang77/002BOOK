@@ -162,7 +162,7 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
         if (kind === 'delete') return (od.from === me && od.to !== me && !od.openedAt) || ctx.admin;
         if (!existing) return nd.from === me && typeof nd.to === 'string' && !!nd.to && !nd.openedAt && Number(nd.deliverAt) > Date.now();
         // 받는 사람만, 배달된 뒤에 '열어 봄'을 표시할 수 있고, 내용·보낸 사람·받는 사람·디자인·보낸 시각·배달 시각은 못 바꾼다
-        return od.to === me && Date.now() >= Number(od.deliverAt ?? 0) && ['from', 'to', 'text', 'design', 'at', 'deliverAt', 'fromNick', 'kind'].every(k => nd[k] === od[k]);
+        return od.to === me && Date.now() >= Number(od.deliverAt ?? 0) && ['from', 'to', 'text', 'design', 'stamp', 'at', 'deliverAt', 'fromNick', 'kind'].every(k => nd[k] === od[k]);
       }
       if (kind === 'delete') return od.to === me || od.from === me || ctx.admin;
       if (!existing) return nd.from === me;

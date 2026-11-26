@@ -2246,6 +2246,44 @@ div.pc-row{cursor:default}
     repeating-linear-gradient(88deg,rgba(70,45,20,.04) 0 1px,transparent 1px 6px),linear-gradient(rgba(60,38,15,.12),rgba(60,38,15,.04)),#B08A5E!important}
 .auth:has(form.loan) .lpocket{border-top:2px solid #7E5A33;
   box-shadow:inset 0 1px 0 rgba(255,236,205,.55),inset 0 2px 0 rgba(255,236,205,.18),0 -3px 4px -1px rgba(30,18,8,.45),0 -10px 14px -8px rgba(30,18,8,.4),0 14px 26px -8px rgba(20,12,6,.55)!important}
+
+/* 엽서 v2(2026-11-26 사용자 지시): 더 부드럽게 — 둥근 모서리·옅은 선·가벼운 제목, 글씨는 작게 손글씨(나눔펜), FROM/TO 삭제, 우표 5종 */
+.pc{border-radius:3.2cqw;box-shadow:0 8px 22px -12px rgba(0,0,0,.45),inset 0 0 0 1px rgba(0,0,0,.04)}
+.pc-forest{--pi:#2F5E4C}.pc.pc-kraft{--pi:#4A3526;background:radial-gradient(rgba(60,38,15,.1) .5px,transparent .9px) 0 0/3px 3px,#CDAA7E}
+.pc.pc-gold{--pi:#A9834A}.pc.pc-air{--pi:#3D5A80}.pc.pc-air::before{opacity:.75;border-radius:3.2cqw}.pc.pc-rose{--pi:#A0505C;background:radial-gradient(circle at 8% 92%,rgba(232,169,182,.28),transparent 24%),#FCF1F1}
+.pc-h{font:600 4.2cqw/1 var(--f-display);letter-spacing:.22em;opacity:.85}
+.pc-v{border-left-color:color-mix(in srgb,var(--pi) 40%,transparent);opacity:.6;font-size:1.5cqw}
+.pc-l{background:repeating-linear-gradient(transparent 0 calc(6.6cqw - 1px),color-mix(in srgb,var(--pi) 14%,transparent) calc(6.6cqw - 1px) 6.6cqw)}
+.pc-msg{font:400 4.6cqw/6.6cqw 'Nanum Pen Script',cursive!important;letter-spacing:.01em}
+.pc-ad{column-gap:1.6cqw;margin-top:3.2cqw;align-items:center}
+.pc-ad:first-of-type{margin-top:23cqw}
+.pc-pill{grid-row:1;border-color:color-mix(in srgb,var(--pi) 45%,transparent);font-size:1.9cqw;padding:.25cqw 1.4cqw;opacity:.85}
+.pc-ad b{grid-row:1!important;border-bottom-color:color-mix(in srgb,var(--pi) 40%,transparent);font:400 4.4cqw/1.1 'Nanum Pen Script',cursive!important}
+.pc-zip i{opacity:.35}.pc-zip u{opacity:.35}
+.pc-stamp{width:15cqw;height:18cqw;filter:drop-shadow(0 .3cqw .5cqw rgba(0,0,0,.22))}
+.pc-stamp>span{background:linear-gradient(var(--sl,#E6F2EA),color-mix(in srgb,var(--sl,#E6F2EA) 80%,var(--sc,#2E6A55)));box-shadow:inset 0 0 0 .35cqw color-mix(in srgb,var(--sc,#2E6A55) 60%,transparent);border-radius:.6cqw;gap:.3cqw}
+.pc-stamp svg{width:7cqw;height:7cqw;fill:var(--sc,#2E6A55);stroke:var(--sc,#2E6A55);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.pc-stamp b{color:var(--sc,#2E6A55);font:700 2.6cqw/1 var(--f-display)}
+.pc-stamp i{color:color-mix(in srgb,var(--sc,#2E6A55) 80%,#000);font-size:1.25cqw}
+.pc-mark{opacity:.55}
+.pc-sts{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-bottom:6px;scrollbar-width:none}
+.pc-sch{flex:none;width:52px;border:0;background:none;padding:0;cursor:pointer;container-type:inline-size;border-radius:8px}
+.pc-sch .pc-stamp{position:relative;width:100cqw;height:120cqw;padding:7cqw;-webkit-mask-size:auto,13cqw 13cqw;mask-size:auto,13cqw 13cqw}
+.pc-sch .pc-stamp svg{width:46cqw;height:46cqw}.pc-sch .pc-stamp b{font-size:17cqw}.pc-sch .pc-stamp i{display:none}
+.pc-sch.on{outline:3px solid #D9AE62;outline-offset:2px}
+/* 홈: '지금 할 일' 위 황동 집게와 진열장 '영원이북' 명판 삭제. 과정 안내판은 선반에서 떼어 작게, 네 모서리 리벳 */
+.shopin .todo::before{display:none}
+.shopin .cab .cabp{display:none}
+.shopin .cab{padding-top:14px}
+.shopin .grid>.cv>.cvinfo{margin:6px 0 8px 10px!important;width:calc(100% - 33px);padding:5px 8px 4px!important;border-radius:3px!important;
+  background:radial-gradient(circle at 4px 4px,#8A6420 1.2px,#F7E3A8 1.8px,transparent 2.4px),radial-gradient(circle at calc(100% - 4px) 4px,#8A6420 1.2px,#F7E3A8 1.8px,transparent 2.4px),
+    radial-gradient(circle at 4px calc(100% - 4px),#8A6420 1.2px,#F7E3A8 1.8px,transparent 2.4px),radial-gradient(circle at calc(100% - 4px) calc(100% - 4px),#8A6420 1.2px,#F7E3A8 1.8px,transparent 2.4px),
+    linear-gradient(180deg,#F3DC9A,#D3AD5B 38%,#B08636 62%,#E1C277)!important}
+.shopin .grid .cvinfo .ctag{font-size:8.5px!important;line-height:12px}
+.shopin .grid .cvinfo .ct{font-size:10.5px!important;line-height:14px}
+.pc-sch .pc-stamp{-webkit-mask:none!important;mask:none!important;background:none!important;padding:0!important;height:62px!important;width:52px!important;filter:none}
+.pc-sch .pc-stamp>span{border-radius:8px;outline:1.5px dashed color-mix(in srgb,var(--sc) 45%,transparent);outline-offset:-4px}
+.pc-sch .pc-stamp svg{width:22px;height:22px}.pc-sch .pc-stamp b{font-size:11px}
 </style>
 
 <div id="app"></div>
@@ -4555,7 +4593,13 @@ const pcRole=id=>{const g=frMem(id).grade;return g==='선생님'?'선생님':(g=
 function pcTargets(){const out=[[S.id,'나에게 · 받을 날짜 고르기']],seen=new Set([S.id]);const add=(id,rel)=>{if(!id||seen.has(id))return;seen.add(id);out.push([id,rel])};
   famParents().forEach(id=>add(id,pcRole(id)));famKids().forEach(id=>add(id,'자녀·학생'));
   ((S.fr&&S.fr.docs)||[]).filter(d=>d.status==='accepted').forEach(d=>add(d.a===S.id?d.b:d.a,'친구'));return out}
-const pcStamp=()=>`<span class="pc-stamp" aria-hidden="true"><span>${logoSVG(40,'pc-lg','#1F4637')}<b>영원이북</b><i>KOREA · 1024</i></span></span>`;
+/* 우표 5종(키워드): 사랑·감사·응원·우정·꿈. 톱니 가장자리, 가운데 그림, 아래 키워드와 '영원이북 1024' */
+const PCS=[['love','사랑','#C9677A','#FCE7EA','<path d="M12 20.3s-7.6-4.6-7.6-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.6 2.7c0 5.4-7.6 10-7.6 10z"/>'],
+  ['thanks','감사','#C08A3E','#FFF3D6','<path d="M12 21v-7"/><path d="M12 14c-3.2 0-5.4-2.3-5.4-5.2 2.4 0 4.2 1 5.4 2.8 1.2-1.8 3-2.8 5.4-2.8 0 2.9-2.2 5.2-5.4 5.2z"/><path d="M12 11.6C10.6 9.6 10.6 6.4 12 4c1.4 2.4 1.4 5.6 0 7.6z"/><path d="M9.2 18.4c1-.9 1.9-1.3 2.8-1.3s1.8.4 2.8 1.3"/>'],
+  ['cheer','응원','#2E6A55','#E6F2EA','<path d="M12 3.6l2.3 4.8 5.2.7-3.8 3.6.9 5.2L12 15.4l-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/>'],
+  ['friend','우정','#4C76A6','#E7EFF8','<circle cx="8.6" cy="8.6" r="2.6"/><circle cx="15.4" cy="8.6" r="2.6"/><path d="M3.8 19c.6-3.2 2.4-5 4.8-5s4.2 1.8 4.8 5M10.6 19c.6-3.2 2.4-5 4.8-5s4.2 1.8 4.8 5"/>'],
+  ['dream','꿈','#3D4A82','#E9EBF7','<path d="M15.6 4.4A7.6 7.6 0 1 0 19.6 16a6.2 6.2 0 0 1-4-11.6z"/><path d="M18.2 4.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5z"/>']];
+const pcStamp=k=>{const st=PCS.find(x=>x[0]===k)||PCS[2];return `<span class="pc-stamp" style="--sc:${st[2]};--sl:${st[3]}" aria-label="${st[1]} 우표"><span><svg viewBox="0 0 24 24" aria-hidden="true">${st[4]}</svg><b>${st[1]}</b><i>영원이북 · 1024</i></span></span>`};
 /* 영원이북 우체국 날인: 이중 원 + 둥근 글씨 + 날짜, 왼쪽으로 물결 소인선 */
 const pcMark=t=>`<span class="pc-mark" aria-label="영원이북 우체국 ${pcDate(t)} 소인"><svg viewBox="0 0 160 100" aria-hidden="true"><g fill="none" stroke="currentColor"><circle cx="110" cy="50" r="38" stroke-width="2.6"/><circle cx="110" cy="50" r="30" stroke-width="1.2"/>
   <path d="M4 30q9-6 18 0t18 0t18 0t18 0M4 44q9-6 18 0t18 0t18 0t18 0M4 58q9-6 18 0t18 0t18 0t18 0M4 72q9-6 18 0t18 0t18 0t18 0" stroke-width="2.2"/></g>
@@ -4566,9 +4610,9 @@ const pcMark=t=>`<span class="pc-mark" aria-label="영원이북 우체국 ${pcDa
 function pcHTML(p,o){o=o||{};const d=PCD.some(x=>x[0]===p.design)?p.design:'forest';
   return `<div class="pc pc-${d}${o.seal?' seal':''}"><h5 class="pc-h">POST CARD</h5><span class="pc-v" aria-hidden="true">영원이북 · 책과 영화로 꿈을 그리는 우편</span>
     <div class="pc-l"><p class="pc-msg">${esc(p.text||'')}</p></div>
-    <div class="pc-r">${pcStamp()}${o.mark?pcMark(p.at||Date.now()):''}
-      <div class="pc-ad"><span class="pc-pill">보내는 사람</span><small>FROM</small><b>${esc(p.fromNick||'')}</b></div>
-      <div class="pc-ad"><span class="pc-pill">받는 사람</span><small>TO</small><b>${esc(p.toNick||'')}</b></div>
+    <div class="pc-r">${pcStamp(p.stamp)}${o.mark?pcMark(p.at||Date.now()):''}
+      <div class="pc-ad"><span class="pc-pill">보내는 사람</span><b>${esc(p.fromNick||'')}</b></div>
+      <div class="pc-ad"><span class="pc-pill">받는 사람</span><b>${esc(p.toNick||'')}</b></div>
       <div class="pc-zip" aria-hidden="true"><i></i><i></i><i></i><u></u><i></i><i></i></div></div>
     ${o.seal?'<span class="pc-new">새 엽서 · 눌러서 읽기</span>':''}</div>`}
 function pcBoxHTML(){
@@ -4588,8 +4632,9 @@ function pcComposeHTML(){
   if(!T.length)return `<div class="panel pcp">${head}<div class="fr-empty"><b>엽서를 받을 사람이 아직 없어요</b><p>친구를 맺거나 부모님·선생님과 가족을 맺으면 엽서를 보낼 수 있어요.</p><button class="btn" data-act="pcfind">회원 찾기</button></div></div>`;
   const toNick=sh.to===S.id?(S.me.nick||S.id):(frName(sh.to)||famName(sh.to));const self=sh.to===S.id;if(!sh.day)sh.day=pcDay(30);
   return `<div class="panel pcp">${head}
-    <div class="pc-prev" id="pc-prev">${pcHTML({design:PCD[sh.d][0],text:sh.text||'',fromNick:S.me.nick||S.id,toNick},{})}</div>
+    <div class="pc-prev" id="pc-prev">${pcHTML({design:PCD[sh.d][0],stamp:PCS[sh.st||0][0],text:sh.text||'',fromNick:S.me.nick||S.id,toNick},{})}</div>
     <div class="pc-des" role="radiogroup" aria-label="엽서 디자인">${PCD.map(([k,t],n)=>`<button type="button" class="pc-dch pc-${k}${n===sh.d?' on':''}" data-act="pcdes" data-k="${n}" role="radio" aria-checked="${n===sh.d}"><i></i>${t}</button>`).join('')}</div>
+    <div class="pc-sts" role="radiogroup" aria-label="우표">${PCS.map((x,n)=>`<button type="button" class="pc-sch${n===(sh.st||0)?' on':''}" data-act="pcst" data-k="${n}" role="radio" aria-checked="${n===(sh.st||0)}">${pcStamp(x[0])}</button>`).join('')}</div>
     <form data-form="pcsend" class="pc-form">
       <label for="pc-to">받는 사람<select id="pc-to" name="to">${T.map(([id,rel])=>`<option value="${esc(id)}"${id===sh.to?' selected':''}>${id===S.id?'나':esc(frName(id)||famName(id))} · ${rel}</option>`).join('')}</select></label>
       <label for="pc-day" class="pc-day"${self?'':' hidden'}>받을 날짜 <small class="hint">그날 아침 8시에 나에게 도착해요 · 보낸 뒤에는 취소할 수 없어요</small><input id="pc-day" name="day" type="date" min="${pcDay(1)}" max="${pcDay(365*5)}" value="${esc(sh.day)}"></label>
@@ -4606,7 +4651,7 @@ function pcViewHTML(){
 function pcDraw(){const sh=S.sheet;if(!sh||sh.type!=='post')return;const el=$('#pc-prev');if(!el)return;
   const ta=$('#pc-in'),to=$('#pc-to'),dy=$('#pc-day');if(ta)sh.text=ta.value;if(to)sh.to=to.value;if(dy&&dy.value)sh.day=dy.value;
   const self=sh.to===S.id;const lb=document.querySelector('.pc-day');if(lb)lb.hidden=!self;const et=$('#pc-eta');if(et)et.hidden=self;
-  el.innerHTML=pcHTML({design:PCD[sh.d][0],text:sh.text||'',fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(sh.to)||famName(sh.to))},{});
+  el.innerHTML=pcHTML({design:PCD[sh.d][0],stamp:PCS[sh.st||0][0],text:sh.text||'',fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(sh.to)||famName(sh.to))},{});
   const c=$('#pc-cnt');if(c)c.textContent=(sh.text||'').length+'/120'}
 document.addEventListener('input',e=>{const t=e.target;if(t&&(t.id==='pc-in'||t.id==='pc-to'||t.id==='pc-day'))pcDraw()});
 document.addEventListener('change',e=>{const t=e.target;if(t&&(t.id==='pc-to'||t.id==='pc-day'))pcDraw()});
@@ -4618,7 +4663,7 @@ async function pcSend(fd){
   const self=to===S.id;const at=Date.now();const id='post_'+S.id+'_'+at+'_'+Math.random().toString(36).slice(2,6);
   let deliverAt=at+86400000;
   if(self){const day=String(fd.get('day')||sh.day||'');const t=new Date(day+'T08:00:00').getTime();if(!day||!(t>at)){toast('받을 날짜를 내일 이후로 골라 주세요.');return}deliverAt=t}
-  const doc={id,kind:'post',pair:pairId(S.id,to),from:S.id,to,fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(to)||famName(to)),design:PCD[sh.d][0],text,at,deliverAt,openedAt:0};
+  const doc={id,kind:'post',pair:pairId(S.id,to),from:S.id,to,fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(to)||famName(to)),design:PCD[sh.d][0],stamp:PCS[sh.st||0][0],text,at,deliverAt,openedAt:0};
   sh.busy=true;
   try{await S.db.doc('msgs/'+id).set(doc);if(!self)S.fr.out=(S.fr.out||[]).concat([doc]);S.sheet=null;S.fr.tab='post';
     toast(self?pcWhen(deliverAt)+'에 나에게 도착해요. 영원이북 우체국이 그날까지 잘 보관할게요.':doc.toNick+'님에게 24시간 뒤 '+pcWhen(deliverAt)+'에 도착해요.');render();loadFriends(false)}
@@ -6755,9 +6800,10 @@ document.addEventListener('click',async e=>{
     case 'fra':frAccept(d.id);break;
     case 'frd':frRemove(d.id,'처리했어요.');break;
     case 'frchat':openChat(d.id,'chat');break;
-    case 'pcnew':S.sheet={type:'post',d:0,to:'',text:''};renderLayers();break;
-    case 'pcreply':S.sheet={type:'post',d:0,to:d.id,text:''};renderLayers();break;
+    case 'pcnew':S.sheet={type:'post',d:0,st:2,to:'',text:''};renderLayers();break;
+    case 'pcreply':S.sheet={type:'post',d:0,st:2,to:d.id,text:''};renderLayers();break;
     case 'pcdes':{const sh=S.sheet;if(!sh||sh.type!=='post')break;const ta=$('#pc-in'),to=$('#pc-to');if(ta)sh.text=ta.value;if(to)sh.to=to.value;sh.d=+d.k||0;renderLayers();break}
+    case 'pcst':{const sh=S.sheet;if(!sh||sh.type!=='post')break;const ta=$('#pc-in'),to=$('#pc-to');if(ta)sh.text=ta.value;if(to)sh.to=to.value;sh.st=+d.k||0;renderLayers();break}
     case 'pcopen':pcOpen(d.id);break;
     case 'pccancel':pcCancel(d.id);break;
     case 'pcfind':S.sheet=null;S.view='friends';S.fr.tab='find';render();break;
