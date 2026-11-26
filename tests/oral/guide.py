@@ -44,9 +44,11 @@ with sync_playwright() as p:
     act('[data-act=lgevopen]'); time.sleep(.3)
     m0 = pg.inner_text('.lgmon b'); act('[data-act=lgmstep][data-d="1"]'); time.sleep(.5)
     ok('달 넘기기', pg.inner_text('.lgmon b') != m0, m0)
-    act('[data-act=lggsel]'); time.sleep(.3); act('[data-act=lgg][data-g=중2]'); time.sleep(.6)
+    act('[data-act=lggnext]'); time.sleep(.6)
     ok('학년 바꾸기', '중학교 2학년' in pg.inner_text('.lgpick'))
-    act('[data-act=lggsel]'); time.sleep(.3); act('[data-act=lgg][data-g=중1]'); time.sleep(.6)
+    act('[data-act=lggnext]'); time.sleep(.6); act('[data-act=lggnext]'); time.sleep(.6)
+    ok('학년 한 바퀴', '중학교 1학년' in pg.inner_text('.lgpick'))
+    ok('학년 줄 가운데 정렬', pg.evaluate("(()=>{const c=e=>{const r=document.querySelector(e).getBoundingClientRect();return r.top+r.height/2};return Math.max(Math.abs(c('.lgpg')-c('.lggb')),Math.abs(c('.lgpg')-c('.lgmon')))})()") < 2)
     pg.evaluate("document.querySelector('[data-act=lgall]').click()")
     for _ in range(120):
         n = len(api('db.query', T, collection='guides').get('result', []))
