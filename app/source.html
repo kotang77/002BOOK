@@ -2284,6 +2284,15 @@ div.pc-row{cursor:default}
 .pc-sch .pc-stamp{-webkit-mask:none!important;mask:none!important;background:none!important;padding:0!important;height:62px!important;width:52px!important;filter:none}
 .pc-sch .pc-stamp>span{border-radius:8px;outline:1.5px dashed color-mix(in srgb,var(--sc) 45%,transparent);outline-offset:-4px}
 .pc-sch .pc-stamp svg{width:22px;height:22px}.pc-sch .pc-stamp b{font-size:11px}
+/* 과정 안내판 두 줄(2026-11-26 사용자 지시): 첫 줄 '3월' 작게, 둘째 줄 과정 키워드 크게(길면 글자를 줄여 다 보이게), 책 제목은 안내판에서 뺌 */
+.ckw::before{content:' · '}
+.shopin .grid .cvinfo{container-type:inline-size;display:block!important;text-align:center;padding:5px 6px 5px!important}
+.shopin .grid .cvinfo .ct,.shopin .grid .cvinfo .ca{display:none!important}
+.shopin .grid .cvinfo .ctag{display:flex!important;flex-direction:column;align-items:center;gap:1px;overflow:visible;white-space:nowrap;max-width:none;line-height:1.1!important}
+.shopin .grid .cvinfo .cmo{font:700 8.5px/1.1 var(--f-display);color:#5A3A12;letter-spacing:.04em}
+.shopin .grid .cvinfo .ckw{font:800 min(15px,calc((100cqw - 2px) / var(--n,2)))/1.15 var(--f-display);color:#3B2611;letter-spacing:0}
+.shopin .grid .cvinfo .ckw::before{content:none}
+.shopin .grid>.cv>.cvw{margin-top:auto}
 </style>
 
 <div id="app"></div>
@@ -3281,7 +3290,7 @@ function coverHTML(i){
       <div class="ctabs" role="group" aria-label="책과 영화 바꿔 보기">${(()=>{const ts=tabStyle(i,it);return ['book','m1','m2'].map((x,n)=>`<button type="button" class="ctab${x===k?' on':''}" style="${ts[n]}" data-act="cvtab" data-i="${i}" data-k="${x}" aria-pressed="${x===k}" aria-label="${CVK[x][1]} 보기"><span>${CVK[x][0]}</span></button>`).join('')})()}</div></div>
     <span class="shelf"></span>
     <button type="button" class="cvinfo" data-act="month" data-i="${i}">
-      <span class="ctag">${esc(it.m)}${kw?' · '+esc(kw):''}</span>
+      <span class="ctag"><span class="cmo">${esc(it.m)}</span>${kw?`<span class="ckw" style="--n:${[...String(kw)].length}">${esc(kw)}</span>`:''}</span>
       <span class="ct">${esc(ln.t)}</span>
       <span class="ca">${esc(ln.a)||'&nbsp;'}</span>
       <span class="dots">${['book','m1','m2'].map(x=>`<i class="${S.progress.done[ik(i,x)]?'on':''}"></i>`).join('')}</span></button></div>`;
