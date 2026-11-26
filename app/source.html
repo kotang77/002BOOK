@@ -2311,6 +2311,15 @@ div.pc-row{cursor:default}
 /* 안내판 키워드 글씨 20% 축소, 표지가 안내판을 가리지 않게 간격 */
 .shopin .grid .cvinfo .ckw{font-size:min(12px,calc((100cqw - 2px) * .8 / var(--n,2)))!important}
 .shopin .grid>.cv>.cvinfo{margin-bottom:13px!important;z-index:6}
+/* 등장이 끝난 뒤 다시 그릴 때(비밀번호 틀림 안내 등)는 등장을 되풀이하지 않음 */
+.auth.played .authcard,.auth.played .lpocket,.auth.played .tai,.auth.played .sdim{animation:none!important}
+.auth.played .sdim{opacity:0}
+/* 추천 도서: 표지 + 한 줄(분야 · 작품명 · 작가) */
+.rcb{align-items:center;gap:12px}
+.rcv{flex:none;width:52px;aspect-ratio:2/3;border-radius:3px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(160deg,#E8D8C4,#CFB392);color:#7A6B5C;box-shadow:0 3px 8px -3px rgba(0,0,0,.4)}
+.rcv img{width:100%;height:100%;object-fit:cover;display:block}
+.rc1{margin:0 0 4px;display:flex;align-items:center;gap:7px;min-width:0;white-space:nowrap}
+.rc1 .tg{flex:none}.rc1 b{min-width:0;overflow:hidden;text-overflow:ellipsis}.rc1 .hint{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis}
 </style>
 
 <div id="app"></div>
@@ -3047,12 +3056,14 @@ function suGo(dir){const f=document.querySelector('form[data-form=signup],form[d
 function authHTML(){
   const t=S.authTab;
   let body;
-  if(S.dbState==='loading')body='<p class="hint">서재 문을 여는 중이에요…</p>';
-  else if(S.dbState==='none')body='<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>';
+  /* 로그인 등장(배경 → 봉투 → 카드 2초)은 화면에 처음 설 때 한 번만. 서버를 불러오는 동안에도 같은 카드·봉투를 그려서
+     불러오기가 끝나도 다시 그리지 않는다(다시 그리면 봉투 없는 카드가 잠깐 보이거나 등장이 처음부터 다시 시작됨) */
+  const intro=t==='login'&&S.dbState!=='none'&&!S.introAt;if(intro)S.introAt=Date.now();
+  if(S.dbState==='none')body='<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>';
   else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span><i class="tw">아이디</i></span><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 분당구 운중동 어느 예쁜 마을</span></div></form>`;
+    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 분당구 운중동 어느 예쁜 마을</span></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
@@ -3060,7 +3071,7 @@ function authHTML(){
     <button type="button" class="lnk" data-act="authtab" data-v="login">로그인으로 돌아가기</button></form>`;
   else if(t==='gsignup'&&S.gs)body=suFormHTML(true);
   else body=suFormHTML(false);
-  return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="scene"><img class="sbg" src="login/lane.webp" width="1024" height="1024" alt=""><img class="sdim" src="login/lane-dim.webp" alt=""><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div></div>
+  return `<div class="wrap auth${intro?'':' played'}"><section class="hero" aria-label="영원이북 서점 입구"><div class="scene"><img class="sbg" src="login/lane.webp" width="1024" height="1024" alt=""><img class="sdim" src="login/lane-dim.webp" alt=""><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div></div>
     <p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p></section>
     <svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><section class="authcard"><div class="lchead" aria-hidden="true"><span>002. JM. 고486</span><span>No. 1024</span></div><div class="ahead"><h2>도서대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}"><i class="tw">로그인</i></button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}"><i class="tw">회원가입</i></button></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
     <div class="tai" role="img" aria-label="TAi Edutech · Think &amp; Action by Ai"><span class="t1"><b>TAi</b><i>Edutech</i></span><span class="t2"><b>T</b>hink &amp; <b>A</b>ction by <b>Ai</b></span></div></div>`;
@@ -3412,7 +3423,7 @@ function recHTML(){
   if(S.recBusy)return '<div class="sk"></div><p class="hint" role="status">읽은 책을 살펴보고 다음 책을 고르고 있어요…</p>';
   if(!R||!R.list||!R.list.length)return `<p class="hint">${S.sample?'\'새로 추천받기\'를 누르면 읽은 책에 맞춘 추천 도서를 골라 드려요.':'Claude 연결이 있어야 추천을 받을 수 있어요.'}</p>`;
   if(!Number.isInteger(S.recPick)||!R.list[S.recPick])S.recPick=Math.floor(Math.random()*R.list.length);
-  return `<div class="rcl">${R.list.map((b,n)=>n!==S.recPick?'':`<div class="rcb"><div class="rci"><b>${esc(bTitle(b.title))}</b>${b.author?` <span class="hint">${esc(b.author)}</span>`:''}<br><span class="tg">${AX[b.main]?AX[b.main][1]:''}</span>${b.why?`<p class="hint">${esc(b.why)}</p>`:''}</div><button class="btn small" data-act="recread" data-n="${n}">읽음</button></div>${S.recRate&&S.recRate.n===n?`<div class="mbrw"><b>평가하고 서가에 꽂기</b>${rateBox('rec',n,S.recRate.v)}<div class="sdb"><button class="btn small" data-act="recok" data-n="${n}">서가에 꽂기</button><button class="btn ghost small" data-act="recno">취소</button></div></div>`:''}`).join('')}</div>
+  return `<div class="rcl">${R.list.map((b,n)=>n!==S.recPick?'':`<div class="rcb">${(()=>{const u=coverOf(bTitle(b.title)+(b.author?' ('+b.author+')':''));return `<span class="rcv">${u?`<img src="${esc(u)}" alt="${esc(bTitle(b.title))} 표지" loading="lazy">`:IC.course}</span>`})()}<div class="rci"><p class="rc1">${AX[b.main]?`<span class="tg">${AX[b.main][1]}</span>`:''}<b>${esc(bTitle(b.title))}</b>${b.author?`<span class="hint">${esc(b.author)}</span>`:''}</p>${b.why?`<p class="hint">${esc(b.why)}</p>`:''}</div><button class="btn small" data-act="recread" data-n="${n}">읽음</button></div>${S.recRate&&S.recRate.n===n?`<div class="mbrw"><b>평가하고 서가에 꽂기</b>${rateBox('rec',n,S.recRate.v)}<div class="sdb"><button class="btn small" data-act="recok" data-n="${n}">서가에 꽂기</button><button class="btn ghost small" data-act="recno">취소</button></div></div>`:''}`).join('')}</div>
     <p class="hint" style="margin-top:6px">'읽음'을 누르면 내 서재에 꽂히고, 추천은 읽은 책에 맞춰 새로 바뀌어요. 들어올 때마다 한 권씩 골라 보여 줘요.</p>`;
 }
 async function recLoad(force){
@@ -4501,7 +4512,7 @@ async function deleteMember(id){
 
 
 /* ---------- 로그아웃·탈퇴 ---------- */
-function doLogout(){window.__002.auth.logout();S.gs=null;S.admX=false;try{if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect()}catch(e){}
+function doLogout(){S.introAt=0;window.__002.auth.logout();S.gs=null;S.admX=false;try{if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect()}catch(e){}
   Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,gd:{},progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
   render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
 async function doWithdraw(fd){
@@ -4887,7 +4898,7 @@ async function gCred(cred){
     return;
   }
   if(mode==='withdraw'){S.wdCred=cred;const f=$('form[data-form=withdraw]');if(f)f.requestSubmit();return}
-  S.authErr='';S.authMsg='';
+  S.authErr='';S.authMsg='';await bootReady;await introWait();
   try{
     const r=await window.__002.auth.google({credential:cred});
     if(r.needSignup){S.gs={cred,email:r.email,name:r.name||'',idHint:r.idHint||''};S.authTab='gsignup';render();window.scrollTo(0,0);return}
@@ -4895,9 +4906,14 @@ async function gCred(cred){
   }catch(e){S.authErr=(e&&e.code&&e.code!=='server_error'&&e.message)?e.message:'구글로 로그인하지 못했어요. 잠시 뒤 다시 해 주세요.';render()}
 }
 window.__002gcb=gCred;
+/* 부팅(서버 연결·계획표·설정)이 끝났는지. 로그인 화면은 먼저 보이므로 로그인 처리는 이것을 기다린다 */
+let bootDone;const bootReady=new Promise(r=>{bootDone=r});
+/* 로그인 화면 등장(0.5초 뒤 봉투 → 1.1초부터 2초 동안 카드)이 끝나는 시각까지 기다림 */
+const INTRO_MS=3200;const introWait=()=>new Promise(r=>setTimeout(r,Math.max(0,(S.introAt||Date.now())+INTRO_MS-Date.now())));
 async function doLogin(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
   if(!id||!pw){S.authErr='아이디와 비밀번호를 넣어 주세요.';return render()}
+  await bootReady;if(S.dbState==='none')return render();
   try{
     const r=await window.__002.auth.login(id,pw);
     S.authErr='';S.authMsg='';await enter(id,r.member);
@@ -7021,7 +7037,6 @@ document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(S.wr)wrClo
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(S.wr)wrSave();clearTimeout(pT);flush()}});
 
 /* ---------- 부팅 ---------- */
-const bootAt=Date.now();
 render();
 try{
   const c=window.claude;
@@ -7044,11 +7059,14 @@ if(S.db){
     loadConfig().catch(()=>{}),
     (async()=>{try{const r=await S.db.doc('config/rubric').get();if(r.exists)rbApply(r.data())}catch(e){}})()
   ]);
+  bootDone();
   const saved=(window.__002.auth.session()||{}).uid||null;
-  /* 자동 로그인(저장된 세션·구글)이어도 서점 입구(로그인 화면)를 2초 보여 준 뒤 메인으로(2026-11-26 사용자 지시) */
-  if(saved){const w=3200-(Date.now()-bootAt);if(w>0)await new Promise(r=>setTimeout(r,w));try{await enter(saved);return}catch(e){}}
+  /* 자동 로그인(저장된 세션)도 카드가 봉투에서 다 올라와 멈춘 뒤에 메인으로 */
+  if(saved){await introWait();try{await enter(saved);return}catch(e){}}
 }
-render();
+bootDone();
+/* 로그인 카드가 이미 화면에 있으면 다시 그리지 않는다(등장이 끊기지 않게). 서버 연결 실패 안내나 다른 화면일 때만 다시 그림 */
+if(S.dbState==='none'||S.id||!document.querySelector('.auth form.loan'))render();
 })();
 </script>
 <script>
