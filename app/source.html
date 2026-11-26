@@ -2076,6 +2076,25 @@ body:has(.wrap.frl)::before{background:linear-gradient(rgba(20,12,6,.35),rgba(20
 .fr-empty p{margin:6px 0 12px;font-size:13.5px;color:#7A6B5C}
 .fr-empty .btn{background:#1F4637;border-color:#1F4637;color:#FFF8EA;min-width:140px;border-radius:99px}
 body:has(.wrap.frl) #legal{color:rgba(245,233,214,.75)!important}
+
+/* 이름표를 선반에 꽂은 모양으로(2026-11-26 사용자 지시): 라벨 윗부분이 월넛 선반 앞판 뒤로 들어가 꽂힌 것처럼(책 바로 아래),
+   종이는 오래된 아이보리 양피지 느낌(따뜻한 상아색·섬유 결·가장자리 그을림), 글씨는 세피아 잉크 */
+.shopin .grid .shelf{position:relative;z-index:5}
+.shopin .grid .cvinfo{z-index:4;margin-top:-19px!important;padding:14px 7px 7px!important;border-radius:0 0 2px 2px;
+  background:radial-gradient(120% 90% at 50% 40%,rgba(255,250,235,.0) 55%,rgba(120,84,40,.18)),
+    repeating-linear-gradient(97deg,rgba(140,105,60,.035) 0 1px,transparent 1px 4px),
+    radial-gradient(rgba(120,90,50,.07) 1px,transparent 1.4px) 0 0/5px 5px,
+    linear-gradient(#F1E6CC,#E6D6B2)!important;
+  box-shadow:inset 0 0 0 1px rgba(120,84,40,.22),inset 0 -6px 10px -8px rgba(90,60,25,.45),0 4px 7px -3px rgba(0,0,0,.6)!important}
+.shopin .grid .cvinfo::before,.shopin .grid .cvinfo::after{display:none}
+.shopin .grid .cvinfo .ctag{color:#7A3B26!important;font-family:var(--f-display)!important;font-weight:700;font-size:11px}
+.shopin .grid .cvinfo .ct{color:#3B2A1A!important}
+.shopin .grid .cvinfo .dots i{background:rgba(122,90,50,.28)}.shopin .grid .cvinfo .dots i.on{background:#7A3B26}
+/* 이름표 글씨·크기 줄임(2026-11-26 사용자 지시) */
+.shopin .grid .cvinfo{padding:13px 6px 5px!important;row-gap:0!important}
+.shopin .grid .cvinfo .ctag{font-size:9.5px!important;line-height:14px}
+.shopin .grid .cvinfo .ct{font-size:12px!important;line-height:16px}
+.shopin .grid .cvinfo .dots i{width:3.5px;height:3.5px}
 </style>
 
 <div id="app"></div>
