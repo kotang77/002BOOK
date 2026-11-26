@@ -2004,6 +2004,12 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .vbcam.on label{position:relative;display:block;width:100%;height:100%;cursor:pointer}
 .vbcam.on img{width:100%;height:100%;object-fit:cover;border-radius:2px;display:block}
 .vbcx{position:absolute;top:-8px;right:-8px;width:20px;height:20px;border:0;border-radius:50%;padding:0;background:#3A2F28;color:#FFF;font-size:13px;line-height:20px;cursor:pointer}
+
+/* 꿈 인터뷰 화면 전체를 아래로(2026-11-26 사용자 지시): 제목·진행 막대·카드·건너뛰기를 화면 아래쪽(하단 탭 바로 위)에 모으고 위쪽은 서재 배경으로 비움 */
+.vpg.vbzp{display:flex;flex-direction:column;justify-content:flex-end;min-height:calc(100svh - var(--vbtop,128px));padding-bottom:6px}
+.vpg.vbzp>.ph{margin-top:auto}
+.vpg.vbzp .vbz-skip{margin-bottom:0}
+.vbz-sl .vbz-tr{overflow-y:hidden;box-sizing:border-box;transition:height .2s}
 </style>
 
 <div id="app"></div>
@@ -2542,7 +2548,9 @@ function vbWizHTML(){const n=S.vbW.n;
       <button class="vbz-ar r" data-act="vbwnext" id="vbz-nx" aria-label="다음 질문" ${n===VBW.length-1?'disabled':''}><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
     <button class="lnk vbz-skip" data-act="vbwskip">${n===VBW.length-1?'건너뛰고 만들기':'이 질문 건너뛰기'}</button></div>`}
 /* 카드 n으로 이동(좌우 밀기와 버튼 모두). 이동할 때 답을 저장하고, 앞 답을 이어 쓴 질문 문장을 새로 고친다 */
-function vbzFit(el){el.style.height='auto';el.style.height=Math.max(72,Math.ceil((el.scrollHeight-6)/36)*36)+'px'}
+function vbzFit(el){el.style.height='auto';el.style.height=Math.max(72,Math.ceil((el.scrollHeight-6)/36)*36)+'px';vbzH()}
+/* 넘기는 줄 높이 = 지금 카드 높이(긴 카드 때문에 카드 아래가 비지 않게) */
+function vbzH(){const tr=document.getElementById('vbz-tr');if(!tr||!S.vbW)return;const c=tr.children[S.vbW.n];if(c)tr.style.height=(c.offsetHeight+22)+'px'}
 function vbzGo(n,smooth){const tr=document.getElementById('vbz-tr');if(!tr||!S.vbW)return;tr.querySelectorAll('.vbz-in').forEach(vbzFit);n=Math.max(0,Math.min(VBW.length-1,n));
   const c=tr.children[n];if(c)tr.scrollTo({left:c.offsetLeft-tr.offsetLeft-(tr.clientWidth-c.clientWidth)/2,behavior:smooth?'smooth':'auto'});vbzSet(n)}
 function vbzSet(n){const W=S.vbW;if(!W)return;vbWizSave();W.n=n;const last=n===VBW.length-1;
@@ -2551,7 +2559,7 @@ function vbzSet(n){const W=S.vbW;if(!W)return;vbWizSave();W.n=n;const last=n===V
   const nx=document.getElementById('vbz-nx');if(nx)nx.disabled=last;
   const pv=document.querySelector('.vbz-ar.l');if(pv)pv.disabled=!n;
   const sk=document.querySelector('.vbz-skip');if(sk)sk.textContent=last?'건너뛰고 만들기':'이 질문 건너뛰기';
-  document.querySelectorAll('.vbz-c').forEach(c=>{const i=+c.dataset.n,q=c.querySelector('.vbz-q');if(q)q.textContent=vbWQ(i,W.a);c.classList.toggle('on',i===n)})}
+  document.querySelectorAll('.vbz-c').forEach(c=>{const i=+c.dataset.n,q=c.querySelector('.vbz-q');if(q)q.textContent=vbWQ(i,W.a);c.classList.toggle('on',i===n)});vbzH()}
 document.addEventListener('input',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('vbz-in'))vbzFit(t)});
 document.addEventListener('scroll',e=>{const tr=e.target;if(!tr||tr.id!=='vbz-tr'||!S.vbW)return;clearTimeout(tr._t);tr._t=setTimeout(()=>{const C=[...tr.children];const mid=tr.scrollLeft+tr.clientWidth/2;let best=0,bd=1e9;C.forEach((c,i)=>{const d=Math.abs(c.offsetLeft-tr.offsetLeft+c.clientWidth/2-mid);if(d<bd){bd=d;best=i}});if(best!==S.vbW.n)vbzSet(best)},90)},true);
 function vbWizSave(){const W=S.vbW;if(!W)return;VBW.forEach(([k],i)=>{const el=document.getElementById('vbz-in-'+i);if(el){const t=String(el.value||'').trim().slice(0,60);if(t)W.a[k]=t;else delete W.a[k]}})}
