@@ -2152,6 +2152,71 @@ body:has(.wrap.frl) #legal{color:rgba(245,233,214,.75)!important}
 .shopin .ctab{width:23px!important;min-width:23px!important;max-width:23px!important;padding-left:5px!important;font-size:9.5px!important}
 .shopin .ctabs{gap:9px!important}
 @media (max-width:560px){.shopin .ctab{width:22px!important;min-width:22px!important;max-width:22px!important;font-size:9.5px!important}.shopin .ctabs{gap:8px!important}}
+
+/* 라운지 엽서(2026-11-26, Figma 15): 엽서 뒷면(POST CARD·가운데 세로줄·우표 칸·FROM/TO 알약·우편번호 칸) 5종, 영원이북 우표(톱니 가장자리), 영원이북 우체국 소인 */
+.pc{--pp:#FBF8EE;--pi:#1F4637;position:relative;width:100%;aspect-ratio:3/2;container-type:inline-size;border-radius:2cqw;background:var(--pp);color:var(--pi);
+  box-shadow:0 10px 24px -10px rgba(0,0,0,.65),inset 0 0 0 1px rgba(0,0,0,.05);overflow:hidden;text-align:left;font-family:var(--f-body)}
+.pc.pc-kraft{--pp:#C29A6B;--pi:#33241A;background:radial-gradient(rgba(60,38,15,.14) .5px,transparent .9px) 0 0/3px 3px,repeating-linear-gradient(88deg,rgba(70,45,20,.05) 0 1px,transparent 1px 6px),#BF976A}
+.pc.pc-gold{--pp:#FFFDF6;--pi:#9C7330;box-shadow:0 10px 24px -10px rgba(0,0,0,.65),inset 0 0 0 1.6cqw #FFFDF6,inset 0 0 0 calc(1.6cqw + 1.5px) #C99A45,inset 0 0 0 calc(2.4cqw + 1.5px) #FFFDF6,inset 0 0 0 calc(2.4cqw + 2.3px) #C99A45}
+.pc.pc-air{--pp:#FFFFFF;--pi:#2F4E78}
+.pc.pc-air::before{content:"";position:absolute;inset:0;pointer-events:none;border:1.8cqw solid transparent;border-radius:2cqw;
+  background:repeating-linear-gradient(135deg,#C8393B 0 3cqw,#FFFFFF 3cqw 4.5cqw,#2F4E78 4.5cqw 7.5cqw,#FFFFFF 7.5cqw 9cqw) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.pc.pc-rose{--pp:#FBEFEF;--pi:#8E3B46;background:radial-gradient(circle at 8% 92%,rgba(232,169,182,.35),transparent 22%),#FBEFEF}
+.pc-h{position:absolute;left:5cqw;top:3.6cqw;margin:0;font:800 5.2cqw/1 var(--f-body);letter-spacing:.14em;color:var(--pi)}
+.pc-v{position:absolute;left:57.5cqw;top:13cqw;bottom:6cqw;border-left:1px solid var(--pi);opacity:.75;writing-mode:vertical-rl;font-size:1.7cqw;line-height:1;padding-left:.8cqw;letter-spacing:.06em;white-space:nowrap;overflow:hidden}
+.pc-l{position:absolute;left:5cqw;top:14cqw;width:49cqw;bottom:6cqw;
+  background:repeating-linear-gradient(transparent 0 calc(7.2cqw - 1px),color-mix(in srgb,var(--pi) 22%,transparent) calc(7.2cqw - 1px) 7.2cqw)}
+.pc-msg{margin:0;font:400 5.4cqw/7.2cqw 'Nanum Pen Script','Gaegu',cursive;color:var(--pi);word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap;max-height:100%;overflow:hidden}
+.pc-r{position:absolute;left:61cqw;right:4.5cqw;top:4cqw;bottom:4cqw}
+.pc-stamp{position:absolute;right:0;top:0;width:16cqw;height:19cqw;box-sizing:border-box;padding:1.2cqw;background:#FFFDF8;filter:drop-shadow(0 .4cqw .6cqw rgba(0,0,0,.3));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,radial-gradient(circle at 50% 50%,transparent .62cqw,#000 .7cqw) -1cqw -1cqw/2cqw 2cqw;-webkit-mask-composite:source-over;
+  mask:linear-gradient(#000 0 0) content-box,radial-gradient(circle at 50% 50%,transparent .62cqw,#000 .7cqw) -1cqw -1cqw/2cqw 2cqw;mask-composite:add}
+.pc-stamp>span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4cqw;width:100%;height:100%;background:linear-gradient(#24503F,#183A2D);box-shadow:inset 0 0 0 .4cqw #D9AE62}
+.pc-stamp .pc-lg{width:7.2cqw;height:7.2cqw}
+.pc-stamp b{font:800 2.3cqw/1 var(--f-display);color:#F6D58E;letter-spacing:.04em}
+.pc-stamp i{font:600 1.35cqw/1 var(--f-body);font-style:normal;color:#E8DCC8;letter-spacing:.06em}
+.pc-mark{position:absolute;right:7cqw;top:5cqw;width:24cqw;color:#2B2420;opacity:.72;transform:rotate(-14deg);mix-blend-mode:multiply;pointer-events:none}
+.pc-mark svg{display:block;width:100%;height:auto}
+.pc-ad{display:grid;grid-template-columns:auto 1fr;column-gap:1.8cqw;align-items:end;margin-top:2.6cqw}
+.pc-ad:first-of-type{margin-top:22cqw}
+.pc-pill{grid-column:1;border:1px solid var(--pi);border-radius:99px;padding:.3cqw 1.6cqw;font-size:2.3cqw;white-space:nowrap}
+.pc-ad small{grid-column:1;justify-self:center;font:800 2cqw/1.4 var(--f-body);letter-spacing:.06em;color:var(--pi)}
+.pc-ad b{grid-column:2;grid-row:1/3;align-self:end;border-bottom:1px solid var(--pi);padding:0 .6cqw .4cqw;font:700 3.6cqw/1.2 var(--f-display);color:var(--pi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-zip{position:absolute;left:0;bottom:0;display:flex;gap:1.1cqw;align-items:center}
+.pc-zip i{width:3.6cqw;height:4.4cqw;border:1px dashed var(--pi);opacity:.7}.pc-zip u{width:2cqw;border-top:1px solid var(--pi);opacity:.7}
+.pc.seal .pc-msg{filter:blur(1.2cqw);opacity:.6}
+.pc-new{position:absolute;left:5cqw;bottom:9cqw;background:#C8393B;color:#fff;font:700 3cqw/1 var(--f-body);padding:1.4cqw 2.4cqw;border-radius:99px;box-shadow:0 .6cqw 1.6cqw rgba(0,0,0,.3)}
+/* 라운지 엽서함 */
+.pc-write{width:100%;min-height:48px;border-radius:99px!important;background:#1F4637!important;border-color:#1F4637!important;color:#FFF8EA!important;font-weight:700;box-shadow:0 8px 18px -8px rgba(0,0,0,.7)}
+.pc-box{background:rgba(24,15,8,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:16px;padding:12px;box-shadow:inset 0 0 0 1px rgba(255,246,232,.14)}
+.pc-box h3{margin:0 0 10px;color:#FFF6E8;font-family:var(--f-display);font-size:16px}.pc-box h3 small{color:#F6D58E;margin-left:4px}
+.pc-row{display:grid;grid-template-columns:132px 1fr;gap:12px;align-items:center;width:100%;padding:8px;border:0;border-radius:12px;background:rgba(255,246,232,.08);text-align:left;color:inherit;cursor:pointer;margin-bottom:8px;font:inherit}
+div.pc-row{cursor:default}
+.pc-th{display:block;width:132px;border:0;padding:0;background:none;cursor:pointer}
+.pc-mt{display:flex;flex-direction:column;gap:3px;min-width:0;color:#F2E4CC}
+.pc-mt b{font-family:var(--f-display);color:#FFF6E8;font-size:15px}
+.pc-mt small{font-size:12.5px;color:#E8DCC8}.pc-mt small em{font-style:normal;color:#FFB4A8;font-weight:700}
+.pc-mt .btn{align-self:flex-start;margin-top:4px;background:rgba(255,246,232,.92)!important;color:#3A2F28!important;border-color:transparent!important}
+.pc-none{margin:0;color:#E8DCC8;font-size:13.5px}
+/* 쓰기·보기 시트 */
+.pcp .pc-prev,.pcp .pc-big{margin:6px 0 14px}
+.pc-des{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none}
+.pc-dch{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:2px;font-size:12px;color:var(--muted);cursor:pointer}
+.pc-dch i{display:block;width:58px;height:39px;border-radius:6px;background:var(--pp,#FBF8EE);box-shadow:inset 0 0 0 1.5px var(--pi,#1F4637),0 2px 6px rgba(0,0,0,.15)}
+.pc-dch.pc-kraft i{background:#BF976A}.pc-dch.pc-air i{background:repeating-linear-gradient(135deg,#C8393B 0 5px,#fff 5px 7px,#2F4E78 7px 12px,#fff 12px 14px)}.pc-dch.pc-rose i{background:#FBEFEF}
+.pc-dch.on{color:var(--ink);font-weight:700}.pc-dch.on i{box-shadow:inset 0 0 0 1.5px var(--pi,#1F4637),0 0 0 3px #D9AE62}
+.pc-form{display:flex;flex-direction:column;gap:10px}
+.pc-form textarea{font-family:'Nanum Pen Script','Gaegu',cursive;font-size:20px;line-height:1.4}
+.pc-go{min-height:48px;border-radius:99px!important;background:#1F4637!important;border-color:#1F4637!important;color:#FFF8EA!important;font-weight:700}
+.pc-info{font-size:13.5px;color:var(--muted);margin:0 0 12px}
+/* 소인은 우표 위에 겹쳐 찍힘, 디자인 고르기 칩 색 */
+.pc-mark{z-index:2;right:6cqw;top:7cqw}
+.pc-dch.pc-forest{--pp:#FBF8EE;--pi:#1F4637}.pc-dch.pc-kraft{--pp:#BF976A;--pi:#33241A}.pc-dch.pc-gold{--pp:#FFFDF6;--pi:#C99A45}.pc-dch.pc-air{--pp:#fff;--pi:#2F4E78}.pc-dch.pc-rose{--pp:#FBEFEF;--pi:#8E3B46}
+.pc-dch{position:relative}
+.pc-rule{margin:-2px 4px 0;font-size:12.5px;color:#F2E4CC;text-shadow:0 1px 3px rgba(0,0,0,.8);text-align:center}
+.pc-eta{margin:0;font-size:12.5px;color:var(--muted)}
+.pc-day input{font-size:16px}
 </style>
 
 <div id="app"></div>
@@ -2925,7 +2990,7 @@ IC.cam=ICO('<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1
 function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progress.done[ik(i,'book')])b++;if(S.progress.done[ik(i,'m1')])f++;if(S.progress.done[ik(i,'m2')])f++});return{b,f}}
 function shellHTML(){
   const v=S.view;
-  const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','친구']];if(isAdmin())tabs.push(['admin','관리']);
+  const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','라운지']];if(isAdmin())tabs.push(['admin','관리']);
   return `<div class="wrap${v==='course'||v==='me'||v==='vision'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
@@ -4359,27 +4424,27 @@ async function doWithdraw(fd){
 /* ---------- 친구 ---------- */
 const CHEERS=['오늘도 같이 읽어 보자!','논술 쓰느라 수고했어. 끝까지 해 보자!','이번 달 책 다 읽었어?','힘들어도 조금씩 하면 돼. 응원해!','내가 읽은 책 정말 좋았어. 너도 읽어 봐!'];
 const pairId=(a,b)=>[a,b].sort().join('__');
-const frNew=()=>({loaded:false,tab:'my',ms:null,docs:[],inc:[],thread:null,prof:null});
+const frNew=()=>({loaded:false,tab:'post',out:[],ms:null,docs:[],inc:[],thread:null,prof:null});
 const frDoc=id=>((S.fr&&S.fr.docs)||[]).find(d=>d.a===id||d.b===id);
 function frRel(id){const d=frDoc(id);if(!d)return 'none';if(d.status==='accepted')return 'friend';return d.from===S.id?'sent':'recv'}
 const frMem=id=>(S.fr&&S.fr.ms&&S.fr.ms[id])||{id,nick:(()=>{const d=frDoc(id);return d?((d.from===id?d.fromNick:d.toNick)||id):id})()};
 const frName=id=>frMem(id).nick||id;
 const frAv=id=>`<img class="fav" src="${avatarSrc(frMem(id))||LOGO_ICON}" alt="" width="40" height="40">`;
-function frUnread(id){const seen=(S.progress.friendSeen||{})[id]||0;return ((S.fr&&S.fr.inc)||[]).filter(m=>m.from===id&&m.at>seen).length}
+function frUnread(id){const seen=(S.progress.friendSeen||{})[id]||0;return ((S.fr&&S.fr.inc)||[]).filter(m=>m.kind!=='post'&&m.from===id&&m.at>seen).length}
 function frAlerts(){const F=S.fr;if(!F||!F.loaded)return {req:0,msg:0,fam:0,n:0};
   const req=F.docs.filter(d=>d.status==='pending'&&d.to===S.id).length;
   const fr=F.docs.filter(d=>d.status==='accepted').map(d=>d.a===S.id?d.b:d.a);
-  const msg=fr.reduce((a,id)=>a+frUnread(id),0);const fam=famRecv().length;return {req,msg,fam,n:req+msg+fam}}
+  const msg=fr.reduce((a,id)=>a+frUnread(id),0);const fam=famRecv().length;const post=pcIn().filter(x=>!x.openedAt).length;return {req,msg,fam,post,n:req+msg+fam+post}}
 function updateBadges(){const A=frAlerts();
   document.querySelectorAll('.fbd[data-tot]').forEach(el=>{el.textContent=A.n>99?'99+':String(A.n);el.hidden=!A.n});
   const b=document.querySelector('.bell');if(b){const d=b.querySelector('.dot');const on=unread()||A.n>0;if(on&&!d)b.insertAdjacentHTML('beforeend','<i class="dot"></i>');else if(!on&&d)d.remove()}}
 let frLast='';
 function frRefresh(force){
-  const A=frAlerts();const sig=famDocs().map(d=>d.parent+d.child+d.status).join(',')+'|'+A.req+'|'+A.msg+'|'+((S.fr&&S.fr.docs)||[]).map(d=>d.a+d.b+d.status).join(',');
+  const A=frAlerts();const sig=famDocs().map(d=>d.parent+d.child+d.status).join(',')+'|'+A.req+'|'+A.msg+'|'+A.post+'|'+((S.fr&&S.fr.docs)||[]).map(d=>d.a+d.b+d.status).join(',');
   const changed=sig!==frLast;frLast=sig;
   const ae=document.activeElement;const typing=ae&&/^(TEXTAREA|INPUT|SELECT)$/.test(ae.tagName);
   updateBadges();
-  if(S.sheet&&S.sheet.type==='chat')return;
+  if(S.sheet&&(S.sheet.type==='chat'||S.sheet.type==='post'))return;
   if(S.id&&S.view==='friends'&&(force||(changed&&!typing)))render();
 }
 async function loadFriends(full){
@@ -4389,6 +4454,7 @@ async function loadFriends(full){
     const seen={};F.docs=[...d1.docs,...d2.docs].map(x=>x.data()).filter(x=>x&&x.a&&x.b&&(x.from===S.id||x.to===S.id)&&!seen[x.a+x.b]&&(seen[x.a+x.b]=1));
     const mq=await S.db.collection('msgs').where('to','==',S.id).get();
     F.inc=mq.docs.map(x=>x.data()).filter(x=>x&&x.to===S.id&&x.at);
+    try{const oq=await S.db.collection('msgs').where('from','==',S.id).get();F.out=oq.docs.map(x=>x.data()).filter(x=>x&&x.kind==='post'&&x.from===S.id&&x.at)}catch(e){}
     try{const aq=await S.db.collection('alerts').where('to','==',S.id).get();S.alerts=aq.docs.map(x=>x.data()).filter(x=>x&&x.to===S.id&&x.at).sort((a,b)=>b.at-a.at).slice(0,60)}catch(e){}
   }catch(e){}
   if(full||!F.ms){
@@ -4400,15 +4466,17 @@ async function loadFriends(full){
 }
 function friendsHTML(){
   const F=S.fr;
-  if(!F||!F.loaded)return '<div class="lead"><div><h2>친구</h2><p>함께 읽고 서로 응원해요.</p></div></div><div class="sk"></div>';
-  const tab=F.tab||'my';
+  if(!F||!F.loaded)return '<div class="lead"><div><h2>라운지</h2><p>친구·부모님·선생님과 엽서로 응원을 주고받아요.</p></div></div><div class="sk"></div>';
+  const tab=F.tab||'post';
   const fr=F.docs.filter(d=>d.status==='accepted').map(d=>d.a===S.id?d.b:d.a);
   const recv=F.docs.filter(d=>d.status==='pending'&&d.to===S.id).map(d=>d.from);
   const sent=F.docs.filter(d=>d.status==='pending'&&d.from===S.id).map(d=>d.to);
-  const tabs=`<div class="stabs" style="margin-bottom:12px">${[['my','내 친구 '+fr.length],['req','받은 요청'+(recv.length?' '+recv.length:'')],['find','회원 찾기'],['fam','가족'+(famRecv().length?' '+famRecv().length:'')]].map(([k,t])=>`<button data-act="frtab" data-v="${k}" aria-pressed="${tab===k}">${t}</button>`).join('')}</div>`;
+  const pn=pcIn().filter(x=>!x.openedAt).length;
+  const tabs=`<div class="stabs" style="margin-bottom:12px">${[['post','엽서함'+(pn?' '+pn:'')],['my','내 친구 '+fr.length],['req','받은 요청'+(recv.length?' '+recv.length:'')],['find','회원 찾기'],['fam','가족'+(famRecv().length?' '+famRecv().length:'')]].map(([k,t])=>`<button data-act="frtab" data-v="${k}" aria-pressed="${tab===k}">${t}</button>`).join('')}</div>`;
   const sub=id=>{const m=frMem(id);return [m.grade,m.region].filter(Boolean).join(' · ')};
   let body='';
-  if(tab==='my'){
+  if(tab==='post')body=pcBoxHTML();
+  else if(tab==='my'){
     body=fr.length?fr.map(id=>{const u=frUnread(id);return `<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}${u?` <i class="fbd">${u}</i>`:''}</b><small>${esc(sub(id))}</small>${frMem(id).bio?`<small style="display:block;color:var(--ink)">${esc(frMem(id).bio)}</small>`:''}</div><div class="fa"><button class="btn small" data-act="frchat" data-id="${esc(id)}">대화</button><button class="btn ghost small" data-act="frprof" data-id="${esc(id)}">진도·논술</button></div></div>`}).join('')
       :'<div class="fr-empty"><b>라운지에 아직 친구가 없어요</b><p>회원 찾기에서 함께 읽을 친구를 초대해 보세요.</p><button class="btn" data-act="frtab" data-v="find">회원 찾기</button></div>';
     if(fr.length)body+=`<p class="hint" style="margin-top:10px">친구끼리는 서로의 진도와 논술을 볼 수 있고, 응원·추천·논술 결과를 메시지로 나눌 수 있어요.</p>`;
@@ -4423,7 +4491,7 @@ function friendsHTML(){
       const btn=rel==='friend'?'<span class="tagk">친구</span>':rel==='sent'?'<span class="hint">요청 보냄</span>':rel==='recv'?`<button class="btn small" data-act="fra" data-id="${esc(m.id)}">요청 수락</button>`:`<button class="btn small" data-act="frreq" data-id="${esc(m.id)}">친구 맺기</button>`;
       return `<div class="frr" data-k="${esc((m.nick+' '+m.id).toLowerCase())}">${frAv(m.id)}<div class="fi"><b>${esc(m.nick)}</b><small>${esc(sub(m.id))}</small>${m.bio?`<small style="display:block;color:var(--ink)">${esc(m.bio)}</small>`:''}</div><div class="fa">${btn}</div></div>`}).join(''):'<p class="hint">다른 회원이 아직 없어요.</p>'}`;
   }
-  return `<div class="lead"><div><h2>친구</h2><p>서점 라운지에서 함께 읽고 서로 응원해요.</p></div></div>${tabs}<div class="frb">${body}</div>`;
+  return `<div class="lead"><div><h2>라운지</h2><p>친구·부모님·선생님과 엽서로 응원을 주고받아요.</p></div></div>${tabs}<div class="frb">${body}</div>`;
 }
 async function frRequest(id){
   const rel=frRel(id);if(rel==='friend'||rel==='sent')return;if(rel==='recv')return frAccept(id);
@@ -4441,6 +4509,101 @@ async function frRemove(id,msg){
   try{await S.db.doc('friends/'+pairId(S.id,id)).delete();S.fr.docs=S.fr.docs.filter(x=>x!==d);if(msg)toast(msg)}catch(e){toast('처리하지 못했어요.')}
   frRefresh(true);
 }
+/* ---------- 라운지 엽서(2026-11-26 사용자 지시, Figma 15) ----------
+   msgs 컬렉션에 kind:'post'로 저장(보낸 사람·받는 사람만 읽음). 보낸 엽서·받은 엽서 모두 남고,
+   받는 사람이 열기 전(openedAt 없음)에만 보낸 사람이 발신 취소(삭제)할 수 있다 — 서버 규칙(rules.ts)도 같은 조건 */
+const PCD=[['forest','숲 클래식'],['kraft','크라프트'],['gold','금박 레터'],['air','에어메일'],['rose','장미']];
+/* 엽서는 보내고 24시간 뒤 배달(서버가 deliverAt을 정하고, 배달 전에는 받는 사람에게 보이지 않음).
+   나에게 보내는 엽서는 받을 날짜를 고르고, 보낸 엽서함에 남지 않으며 발신 취소도 없다 */
+const pcIn=()=>((S.fr&&S.fr.inc)||[]).filter(m=>m.kind==='post'&&Date.now()>=(m.deliverAt||0)).sort((a,b)=>(b.deliverAt||b.at)-(a.deliverAt||a.at));
+const pcOut=()=>((S.fr&&S.fr.out)||[]).filter(m=>m.to!==S.id).sort((a,b)=>b.at-a.at);
+const pcWhen=t=>{const d=new Date(t);return (d.getMonth()+1)+'월 '+d.getDate()+'일 '+d.toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit'})};
+const pcDay=(n)=>{const d=new Date(Date.now()+n*86400000);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const pcById=id=>pcIn().concat(pcOut()).find(x=>x.id===id);
+const pcDate=t=>{const d=new Date(t);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')};
+const pcRole=id=>{const g=frMem(id).grade;return g==='선생님'?'선생님':(g==='아빠'||g==='엄마')?'부모님':'부모님·선생님'};
+/* 받는 사람 후보: 가족(부모님·선생님, 내 자녀·학생)과 친구 */
+function pcTargets(){const out=[[S.id,'나에게 · 받을 날짜 고르기']],seen=new Set([S.id]);const add=(id,rel)=>{if(!id||seen.has(id))return;seen.add(id);out.push([id,rel])};
+  famParents().forEach(id=>add(id,pcRole(id)));famKids().forEach(id=>add(id,'자녀·학생'));
+  ((S.fr&&S.fr.docs)||[]).filter(d=>d.status==='accepted').forEach(d=>add(d.a===S.id?d.b:d.a,'친구'));return out}
+const pcStamp=()=>`<span class="pc-stamp" aria-hidden="true"><span>${logoSVG(40,'pc-lg','#1F4637')}<b>영원이북</b><i>KOREA · 1024</i></span></span>`;
+/* 영원이북 우체국 날인: 이중 원 + 둥근 글씨 + 날짜, 왼쪽으로 물결 소인선 */
+const pcMark=t=>`<span class="pc-mark" aria-label="영원이북 우체국 ${pcDate(t)} 소인"><svg viewBox="0 0 160 100" aria-hidden="true"><g fill="none" stroke="currentColor"><circle cx="110" cy="50" r="38" stroke-width="2.6"/><circle cx="110" cy="50" r="30" stroke-width="1.2"/>
+  <path d="M4 30q9-6 18 0t18 0t18 0t18 0M4 44q9-6 18 0t18 0t18 0t18 0M4 58q9-6 18 0t18 0t18 0t18 0M4 72q9-6 18 0t18 0t18 0t18 0" stroke-width="2.2"/></g>
+  <defs><path id="pcArc" d="M80 50a30 30 0 0 1 60 0"/><path id="pcArc2" d="M77 52a33 33 0 0 0 66 0"/></defs>
+  <text font-size="10" font-weight="700" fill="currentColor" letter-spacing="1"><textPath href="#pcArc" startOffset="50%" text-anchor="middle">영원이북 우체국</textPath></text>
+  <text font-size="8" font-weight="700" fill="currentColor" letter-spacing="1.4"><textPath href="#pcArc2" startOffset="50%" text-anchor="middle">YEONGWON POST</textPath></text>
+  <text x="110" y="55" font-size="11" font-weight="700" fill="currentColor" text-anchor="middle">${pcDate(t)}</text></svg></span>`;
+function pcHTML(p,o){o=o||{};const d=PCD.some(x=>x[0]===p.design)?p.design:'forest';
+  return `<div class="pc pc-${d}${o.seal?' seal':''}"><h5 class="pc-h">POST CARD</h5><span class="pc-v" aria-hidden="true">영원이북 · 책과 영화로 꿈을 그리는 우편</span>
+    <div class="pc-l"><p class="pc-msg">${esc(p.text||'')}</p></div>
+    <div class="pc-r">${pcStamp()}${o.mark?pcMark(p.at||Date.now()):''}
+      <div class="pc-ad"><span class="pc-pill">보내는 사람</span><small>FROM</small><b>${esc(p.fromNick||'')}</b></div>
+      <div class="pc-ad"><span class="pc-pill">받는 사람</span><small>TO</small><b>${esc(p.toNick||'')}</b></div>
+      <div class="pc-zip" aria-hidden="true"><i></i><i></i><i></i><u></u><i></i><i></i></div></div>
+    ${o.seal?'<span class="pc-new">새 엽서 · 눌러서 읽기</span>':''}</div>`}
+function pcBoxHTML(){
+  const inn=pcIn(),out=pcOut();
+  const rin=inn.length?inn.map(x=>`<button type="button" class="pc-row" data-act="pcopen" data-id="${esc(x.id)}" aria-label="${esc(x.fromNick)}님이 보낸 엽서${x.openedAt?'':', 아직 안 읽음'}">
+      <span class="pc-th">${pcHTML(x,{mark:true,seal:!x.openedAt})}</span><span class="pc-mt"><b>${x.from===S.id?'나에게 보낸 엽서':esc(x.fromNick)}</b><small>${pcDate(x.deliverAt||x.at)} 도착 · ${x.openedAt?'읽음':'<em>새 엽서</em>'}</small></span></button>`).join('')
+    :'<p class="pc-none">아직 받은 엽서가 없어요.</p>';
+  const rout=out.length?out.map(x=>`<div class="pc-row"><button type="button" class="pc-th" data-act="pcopen" data-id="${esc(x.id)}" aria-label="${esc(x.toNick)}님에게 보낸 엽서 보기">${pcHTML(x,{mark:true})}</button>
+      <span class="pc-mt"><b>${esc(x.toNick)}에게</b><small>${pcDate(x.at)} 보냄 · ${x.openedAt?'상대가 읽었어요':Date.now()<(x.deliverAt||0)?'배달 중 · '+pcWhen(x.deliverAt)+' 도착':'도착했어요 · 아직 안 읽었어요'}</small>${x.openedAt?'':`<button class="btn ghost small" data-act="pccancel" data-id="${esc(x.id)}">발신 취소</button>`}</span></div>`).join('')
+    :'<p class="pc-none">아직 보낸 엽서가 없어요.</p>';
+  return `<button class="btn pc-write" data-act="pcnew">✉ 엽서 쓰기</button><p class="pc-rule">엽서는 보내고 24시간 뒤에 도착해요. 나에게 보내는 엽서는 받을 날짜를 고를 수 있어요.</p>
+    <div class="pc-box"><h3>받은 엽서 <small>${inn.length}</small></h3>${rin}</div>
+    <div class="pc-box"><h3>보낸 엽서 <small>${out.length}</small></h3>${rout}</div>`}
+function pcComposeHTML(){
+  const sh=S.sheet;const T=pcTargets();if(!sh.to)sh.to=(T[1]||T[0])[0];
+  const head=`<div class="ph"><h2>엽서 쓰기<small>보내는 사람: ${esc(S.me.nick||S.id)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
+  if(!T.length)return `<div class="panel pcp">${head}<div class="fr-empty"><b>엽서를 받을 사람이 아직 없어요</b><p>친구를 맺거나 부모님·선생님과 가족을 맺으면 엽서를 보낼 수 있어요.</p><button class="btn" data-act="pcfind">회원 찾기</button></div></div>`;
+  const toNick=sh.to===S.id?(S.me.nick||S.id):(frName(sh.to)||famName(sh.to));const self=sh.to===S.id;if(!sh.day)sh.day=pcDay(30);
+  return `<div class="panel pcp">${head}
+    <div class="pc-prev" id="pc-prev">${pcHTML({design:PCD[sh.d][0],text:sh.text||'',fromNick:S.me.nick||S.id,toNick},{})}</div>
+    <div class="pc-des" role="radiogroup" aria-label="엽서 디자인">${PCD.map(([k,t],n)=>`<button type="button" class="pc-dch pc-${k}${n===sh.d?' on':''}" data-act="pcdes" data-k="${n}" role="radio" aria-checked="${n===sh.d}"><i></i>${t}</button>`).join('')}</div>
+    <form data-form="pcsend" class="pc-form">
+      <label for="pc-to">받는 사람<select id="pc-to" name="to">${T.map(([id,rel])=>`<option value="${esc(id)}"${id===sh.to?' selected':''}>${id===S.id?'나':esc(frName(id)||famName(id))} · ${rel}</option>`).join('')}</select></label>
+      <label for="pc-day" class="pc-day"${self?'':' hidden'}>받을 날짜 <small class="hint">그날 아침 8시에 나에게 도착해요 · 보낸 뒤에는 취소할 수 없어요</small><input id="pc-day" name="day" type="date" min="${pcDay(1)}" max="${pcDay(365*5)}" value="${esc(sh.day)}"></label>
+      <p class="pc-eta" id="pc-eta"${self?' hidden':''}>보내면 24시간 뒤 ${pcWhen(Date.now()+86400000)}에 도착해요. 상대가 읽기 전에는 취소할 수 있어요.</p>
+      <label for="pc-in">응원 한마디 <small class="hint" id="pc-cnt">${(sh.text||'').length}/120</small><textarea id="pc-in" name="text" maxlength="120" rows="4" required placeholder="오늘도 한 페이지, 같이 읽자! 이번 달 책 다 읽으면 라운지에서 이야기 나눠.">${esc(sh.text||'')}</textarea></label>
+      <button class="btn pc-go">우표 붙여 보내기</button></form></div>`}
+function pcViewHTML(){
+  const p=pcById(S.sheet.id);const head=`<div class="ph"><h2>${p&&p.from===S.id?'보낸 엽서':'받은 엽서'}</h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
+  if(!p)return `<div class="panel pcp">${head}<p class="hint">엽서를 찾지 못했어요. 발신이 취소됐을 수 있어요.</p></div>`;
+  const mine=p.from===S.id;
+  return `<div class="panel pcp">${head}<div class="pc-big">${pcHTML(p,{mark:true})}</div>
+    <p class="pc-info">${p.to===S.id&&mine?`${pcDate(p.at)}에 나에게 보낸 엽서가 ${pcDate(p.deliverAt||p.at)}에 도착했어요`:mine?`${esc(p.toNick)}님에게 ${pcDate(p.at)}에 보냈어요 · ${p.openedAt?pcDate(p.openedAt)+'에 읽었어요':Date.now()<(p.deliverAt||0)?pcWhen(p.deliverAt)+' 도착 예정':'도착했어요'}`:`${esc(p.fromNick)}님이 ${pcDate(p.at)}에 보낸 엽서가 ${pcDate(p.deliverAt||p.at)}에 도착했어요`}</p>
+    ${mine&&p.to!==S.id&&!p.openedAt?`<button class="btn ghost" data-act="pccancel" data-id="${esc(p.id)}">발신 취소</button>`:''}${!mine&&pcTargets().some(x=>x[0]===p.from&&x[0]!==S.id)?`<button class="btn" data-act="pcreply" data-id="${esc(p.from)}">답장 엽서 쓰기</button>`:''}</div>`}
+function pcDraw(){const sh=S.sheet;if(!sh||sh.type!=='post')return;const el=$('#pc-prev');if(!el)return;
+  const ta=$('#pc-in'),to=$('#pc-to'),dy=$('#pc-day');if(ta)sh.text=ta.value;if(to)sh.to=to.value;if(dy&&dy.value)sh.day=dy.value;
+  const self=sh.to===S.id;const lb=document.querySelector('.pc-day');if(lb)lb.hidden=!self;const et=$('#pc-eta');if(et)et.hidden=self;
+  el.innerHTML=pcHTML({design:PCD[sh.d][0],text:sh.text||'',fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(sh.to)||famName(sh.to))},{});
+  const c=$('#pc-cnt');if(c)c.textContent=(sh.text||'').length+'/120'}
+document.addEventListener('input',e=>{const t=e.target;if(t&&(t.id==='pc-in'||t.id==='pc-to'||t.id==='pc-day'))pcDraw()});
+document.addEventListener('change',e=>{const t=e.target;if(t&&(t.id==='pc-to'||t.id==='pc-day'))pcDraw()});
+async function pcSend(fd){
+  const sh=S.sheet;if(!sh||sh.type!=='post'||sh.busy)return;
+  const to=String(fd.get('to')||'');const text=String(fd.get('text')||'').trim().slice(0,120);
+  if(!text){toast('응원 한마디를 적어 주세요.');return}
+  if(!pcTargets().some(x=>x[0]===to)){toast('친구나 가족에게만 보낼 수 있어요.');return}
+  const self=to===S.id;const at=Date.now();const id='post_'+S.id+'_'+at+'_'+Math.random().toString(36).slice(2,6);
+  let deliverAt=at+86400000;
+  if(self){const day=String(fd.get('day')||sh.day||'');const t=new Date(day+'T08:00:00').getTime();if(!day||!(t>at)){toast('받을 날짜를 내일 이후로 골라 주세요.');return}deliverAt=t}
+  const doc={id,kind:'post',pair:pairId(S.id,to),from:S.id,to,fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(to)||famName(to)),design:PCD[sh.d][0],text,at,deliverAt,openedAt:0};
+  sh.busy=true;
+  try{await S.db.doc('msgs/'+id).set(doc);if(!self)S.fr.out=(S.fr.out||[]).concat([doc]);S.sheet=null;S.fr.tab='post';
+    toast(self?pcWhen(deliverAt)+'에 나에게 도착해요. 영원이북 우체국이 그날까지 잘 보관할게요.':doc.toNick+'님에게 24시간 뒤 '+pcWhen(deliverAt)+'에 도착해요.');render();loadFriends(false)}
+  catch(e){sh.busy=false;toast('엽서를 보내지 못했어요. 다시 해 주세요.')}
+}
+async function pcOpen(id){
+  const p=pcById(id);if(!p)return;S.sheet={type:'postv',id};renderLayers();
+  if(p.to===S.id&&!p.openedAt){const t=Date.now();p.openedAt=t;try{await S.db.doc('msgs/'+id).update({openedAt:t})}catch(e){}updateBadges();if(S.view==='friends')render()}
+}
+async function pcCancel(id){
+  const p=pcOut().find(x=>x.id===id);if(!p||p.openedAt||p.to===S.id)return;
+  try{await S.db.doc('msgs/'+id).delete();S.fr.out=S.fr.out.filter(x=>x.id!==id);if(S.sheet&&S.sheet.type==='postv')S.sheet=null;toast('발신을 취소했어요.');render()}
+  catch(e){toast('이미 읽은 엽서는 취소할 수 없어요.');loadFriends(false)}
+}
 function frBub(m){
   const me=m.from===S.id;const t=new Date(m.at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'});
   let body;
@@ -4454,7 +4617,7 @@ function frMsgsHTML(){
 function frMsgsDraw(scroll){const el=$('#fr-msgs');if(!el)return;el.innerHTML=frMsgsHTML();if(scroll)el.scrollTop=el.scrollHeight}
 async function frLoadThread(id){
   const pid=pairId(S.id,id);
-  try{const q=await S.db.collection('msgs').where('pair','==',pid).get();S.fr.thread={id,msgs:q.docs.map(x=>x.data()).filter(x=>x&&x.at).sort((a,b)=>a.at-b.at).slice(-120)}}
+  try{const q=await S.db.collection('msgs').where('pair','==',pid).get();S.fr.thread={id,msgs:q.docs.map(x=>x.data()).filter(x=>x&&x.at&&x.kind!=='post').sort((a,b)=>a.at-b.at).slice(-120)}}
   catch(e){S.fr.thread={id,msgs:[]}}
   const last=S.fr.thread.msgs.filter(m=>m.from===id).reduce((a,m)=>Math.max(a,m.at),0);
   if(last>((S.progress.friendSeen||{})[id]||0)){S.progress.friendSeen=Object.assign({},S.progress.friendSeen,{[id]:last});saveProgress()}
@@ -4562,7 +4725,7 @@ function renderLayers(){
   const sh=S.sheet;
   if(!S.id||!sh){l1.hidden=true;l1.innerHTML=''}
   else{l1.hidden=false;const keep=l1.querySelector('.panel');const top=keep?keep.scrollTop:0;
-    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
+    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='post'?pcComposeHTML():sh.type==='postv'?pcViewHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
     const p=l1.querySelector('.panel');if(p&&keep)p.scrollTop=top}
   if(S.id&&S.survey){l2.hidden=false;l2.innerHTML=surveyHTML();return}
   if(S.id&&S.esConf){l2.hidden=false;l2.innerHTML=esConfHTML();return}
@@ -6452,6 +6615,7 @@ document.addEventListener('submit',e=>{
   else if(k==='signup'||k==='gsignup')doSignup(fd);
   else if(k==='withdraw')doWithdraw(fd);
   else if(k==='frmsg')frSendText(fd);
+  else if(k==='pcsend')pcSend(fd);
   else if(k==='frrec')frSendRec(fd);
 });
 document.addEventListener('change',e=>{
@@ -6562,6 +6726,12 @@ document.addEventListener('click',async e=>{
     case 'fra':frAccept(d.id);break;
     case 'frd':frRemove(d.id,'처리했어요.');break;
     case 'frchat':openChat(d.id,'chat');break;
+    case 'pcnew':S.sheet={type:'post',d:0,to:'',text:''};renderLayers();break;
+    case 'pcreply':S.sheet={type:'post',d:0,to:d.id,text:''};renderLayers();break;
+    case 'pcdes':{const sh=S.sheet;if(!sh||sh.type!=='post')break;const ta=$('#pc-in'),to=$('#pc-to');if(ta)sh.text=ta.value;if(to)sh.to=to.value;sh.d=+d.k||0;renderLayers();break}
+    case 'pcopen':pcOpen(d.id);break;
+    case 'pccancel':pcCancel(d.id);break;
+    case 'pcfind':S.sheet=null;S.view='friends';S.fr.tab='find';render();break;
     case 'frprof':openChat(d.id,'prof');break;
     case 'frsub':S.sheet.tab=d.v;S.fr.thread=null;renderLayers();if(d.v==='chat')frLoadThread(S.sheet.id);else frLoadProf(S.sheet.id);break;
     case 'frpane':S.sheet.pane=S.sheet.pane===d.v?'':d.v;renderLayers();frMsgsDraw(true);break;

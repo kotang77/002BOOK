@@ -79,6 +79,8 @@ export async function canRead(ctx: Ctx, path: string, row: Row | null): Promise<
     case 'diaries': case 'dykeys':
       return id === me || mineByPrefix(id, me);
     case 'msgs': case 'alerts':
+      // 라운지 엽서: 받는 사람(나에게 보낸 엽서 포함)은 배달 시각(deliverAt)이 지나야 읽는다. 보낸 사람은 남에게 보낸 엽서만 본다
+      if (t === 'msgs' && d.kind === 'post') return d.to === me ? Date.now() >= Number(d.deliverAt ?? 0) : d.from === me;
       return d.from === me || d.to === me;
     case 'family':
       return d.parent === me || d.child === me;
@@ -155,6 +157,13 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
     case 'workimgs':                                     // 책만들기 종료: 지우기만
       return kind === 'delete' && (String(od.uid ?? existing?.owner) === me || ctx.admin);
     case 'alerts': case 'msgs':
+      if (t === 'msgs' && (od.kind === 'post' || nd.kind === 'post')) {   // 라운지 엽서
+        // 발신 취소: 남에게 보낸 엽서를, 받는 사람이 열기 전에만(배달 중 포함). 나에게 보낸 엽서·받은 엽서는 지우지 않고 남긴다
+        if (kind === 'delete') return (od.from === me && od.to !== me && !od.openedAt) || ctx.admin;
+        if (!existing) return nd.from === me && typeof nd.to === 'string' && !!nd.to && !nd.openedAt && Number(nd.deliverAt) > Date.now();
+        // 받는 사람만, 배달된 뒤에 '열어 봄'을 표시할 수 있고, 내용·보낸 사람·받는 사람·디자인·보낸 시각·배달 시각은 못 바꾼다
+        return od.to === me && Date.now() >= Number(od.deliverAt ?? 0) && ['from', 'to', 'text', 'design', 'at', 'deliverAt', 'fromNick', 'kind'].every(k => nd[k] === od[k]);
+      }
       if (kind === 'delete') return od.to === me || od.from === me || ctx.admin;
       if (!existing) return nd.from === me;
       return od.to === me || od.from === me;
@@ -175,7 +184,17 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
 }
 
 /** 쓰기 전에 잠긴 필드를 걸러 낸다 */
+/** 라운지 엽서 배달 시간: 보내고 24시간 뒤(시험 서버는 POST_DELAY_SEC로 줄임) */
+const POST_DELAY = Number(Deno.env.get('POST_DELAY_SEC') ?? 86400) * 1000;
+const POST_MAX = 5 * 366 * 86400 * 1000;
 export function sanitize(ctx: Ctx, path: string, data: Record<string, unknown>): Record<string, unknown> {
+  if (top(path) === 'msgs' && data.kind === 'post') {     // 보낸 시각·배달 시각은 서버 시계로 정한다
+    const d = { ...data }, now = Date.now();
+    d.at = now; d.openedAt = 0;
+    if (d.to === ctx.uid) d.deliverAt = Math.min(now + POST_MAX, Math.max(now + 1000, Number(d.deliverAt) || 0)); // 나에게: 고른 날
+    else d.deliverAt = now + POST_DELAY;                                                                            // 남에게: 24시간 뒤
+    return d;
+  }
   if (top(path) === 'members') {
     const d = { ...data };
     for (const k of MEMBER_LOCKED) delete d[k];
