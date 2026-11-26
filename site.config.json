@@ -20,7 +20,10 @@
   },
   "android": {
     "packageId": "com.book002.app",
-    "sha256Fingerprints": []
+    "sha256Fingerprints": [
+      "5A:73:A0:18:CD:C3:12:67:05:F0:44:EC:48:40:48:E9:99:B1:4A:7E:55:FF:C3:02:38:67:BD:FE:66:21:DD:26",
+      "28:61:3E:1C:F3:9B:CF:D7:5E:CD:02:AB:6F:2A:BA:CB:2A:49:5F:7A:D6:DB:EF:5F:4B:34:7B:D2:A4:0A:21:CF"
+    ]
   },
   "policyVersion": "2026-12-01",
   "googleClientId": "488409954624-fuj0m176ats569vvv8b9mav11mmmhas3.apps.googleusercontent.com"
