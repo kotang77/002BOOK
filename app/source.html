@@ -2293,6 +2293,13 @@ div.pc-row{cursor:default}
 .shopin .grid .cvinfo .ckw{font:800 min(15px,calc((100cqw - 2px) / var(--n,2)))/1.15 var(--f-display);color:#3B2611;letter-spacing:0}
 .shopin .grid .cvinfo .ckw::before{content:none}
 .shopin .grid>.cv>.cvw{margin-top:auto}
+/* 카드가 주머니 뒷판보다 앞에 보이게: 뒷판은 카드 가장자리까지만(26px, 겹침 없음), 카드가 뒷판에 드리운 그림자로 입체감 */
+.auth:has(form.loan) .lpocket::after{
+  -webkit-mask:linear-gradient(90deg,#000 0 26px,transparent 26px calc(100% - 26px),#000 calc(100% - 26px))!important;mask:linear-gradient(90deg,#000 0 26px,transparent 26px calc(100% - 26px),#000 calc(100% - 26px))!important;
+  background:linear-gradient(90deg,transparent 0 13px,rgba(35,20,8,.18) 20px,rgba(35,20,8,.5) 26px,transparent 26px,transparent calc(100% - 26px),rgba(35,20,8,.5) calc(100% - 26px),rgba(35,20,8,.18) calc(100% - 20px),transparent calc(100% - 13px)),
+    radial-gradient(rgba(60,38,15,.16) .6px,transparent 1px) 0 0/3px 3px,radial-gradient(rgba(255,240,210,.12) .6px,transparent 1px) 1px 2px/4px 4px,
+    repeating-linear-gradient(88deg,rgba(70,45,20,.04) 0 1px,transparent 1px 6px),linear-gradient(rgba(60,38,15,.12),rgba(60,38,15,.04)),#B08A5E!important}
+.auth:has(form.loan) .authcard{box-shadow:-3px 0 6px -3px rgba(20,12,6,.5),3px 0 6px -3px rgba(20,12,6,.5),0 -2px 8px -4px rgba(26,18,10,.35)!important}
 </style>
 
 <div id="app"></div>
