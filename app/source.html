@@ -7061,6 +7061,7 @@ function lgEvalSumHTML(){const sum=a=>a.reduce((n,x)=>n+(Number(x.w)||0),0);
 function lgHTML(){
   const {ids,i,it}=lgCur();if(!it)return '<p class="hint">코스를 불러오지 못했어요.</p>';
   const L=items();const key=lgKey(it);const G=gdGet(key);const pos=ids.indexOf(i);
+  if(!GD_SNAP)gdSnap().then(()=>{if(S.view==='guide')renderLayers()});
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(lgKey(it));if(!g||(!g.data&&!g.busy&&!g.err))lgLoad(false)},0);
   const plan=!G||G.busy?'<div class="lgload"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
     :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
@@ -7090,8 +7091,12 @@ async function lgPdf(){const {it}=lgCur();const G=gdGet(lgKey(it));if(!G||!G.dat
 /* ---------- 부모 교육자료 ---------- */
 const gdH=s=>hid(s)+hid([...String(s)].reverse().join(''));
 const gdGet=k=>(S.gd||{})[k];
+/* 학습지도 묶음(배포 때 만든 data/guides.json): 서버·AI를 기다리지 않고 바로 보여 준다. 없는 달만 서버에서 읽거나 새로 만든다 */
+let GD_SNAP=null;
+function gdSnap(){if(!GD_SNAP)GD_SNAP=fetch('data/guides.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{const g=(j&&j.guides)||{};S.gd=S.gd||{};for(const k in g)if(!S.gd[k]||(!S.gd[k].data&&!S.gd[k].busy))S.gd[k]={data:g[k]};return g}).catch(()=>({}));return GD_SNAP}
 async function gdLoad(key,make,force){
   S.gd=S.gd||{};const cur=S.gd[key];if(cur&&cur.busy)return;if(cur&&cur.data&&!force)return;
+  if(!force){const g=await gdSnap();if(g[key]){S.gd[key]={data:g[key]};renderLayers();return}}
   S.gd[key]={busy:true};renderLayers();
   try{
     const sn=force?null:await S.db.doc('guides/'+key).get().catch(()=>null);

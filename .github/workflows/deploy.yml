@@ -79,6 +79,11 @@ jobs:
           ANDROID_SHA256: ${{ vars.ANDROID_SHA256 }}
           GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID || '488409954624-fuj0m176ats569vvv8b9mav11mmmhas3.apps.googleusercontent.com' }}  # 공개 값(구글 클라우드 프로젝트 002BOOK, 002book.korea@gmail.com)
         run: node scripts/build.mjs
+      - name: 학습지도 자료 묶음 (가입 즉시 보기용)
+        env:
+          REF: ${{ vars.SUPABASE_PROJECT_REF }}
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: python3 scripts/ops/export_guides.py
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
 
