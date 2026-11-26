@@ -11,7 +11,7 @@
   "navigationColorDark": "#1B362A",
   "navigationDividerColor": "#1B362A",
   "navigationDividerColorDark": "#1B362A",
-  "backgroundColor": "#1B362A",
+  "backgroundColor": "#FFFFFF",
   "enableNotifications": true,
   "startUrl": "/?source=twa",
   "iconUrl": "https://002book.com/icons/icon-512.png",

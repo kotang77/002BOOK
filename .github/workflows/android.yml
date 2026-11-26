@@ -46,6 +46,8 @@ jobs:
             rm -f ks.bin
           else
             if [ -z "$KS_PASS" ]; then echo "::error::Secrets에 ANDROID_KEYSTORE_PASSWORD(8자 이상)를 먼저 넣어 주세요"; exit 1; fi
+            # 업데이트(버전 번호 2 이상)를 새 키로 서명하면 구글 플레이가 받지 않는다 → 처음 만든 키를 Secret에 넣으라고 멈춘다
+            if [ "${{ inputs.versionCode }}" -gt 1 ]; then echo "::error::업데이트는 처음 만든 서명 키로 서명해야 해요. ANDROID_KEYSTORE_B64 Secret에 처음 받은 키(android-keystore-ENCRYPTED-KEEP-SAFE의 글자)를 넣어 주세요"; exit 1; fi
             keytool -genkeypair -v -keystore android.keystore -alias 002book -keyalg RSA -keysize 2048 -validity 10000 \
               -storepass "$KS_PASS" -keypass "$KS_PASS" -dname "CN=002BOOK, O=002BOOK, C=KR"
             echo "NEW_KEY=1" >> $GITHUB_ENV
@@ -73,6 +75,7 @@ jobs:
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
         run: |
           yes | bubblewrap update --skipVersionUpgrade --manifest=./twa-manifest.json
+          pip install --quiet pillow && python3 ../scripts/android/splash.py   # 시작 화면: 흰 바탕 + 아이콘 97% + 002BOOK
           bubblewrap build --skipPwaValidation --manifest=./twa-manifest.json
 
       - uses: actions/upload-artifact@v4
