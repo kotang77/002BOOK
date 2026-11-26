@@ -2383,6 +2383,9 @@ main .vpage .vphw{cursor:zoom-in}
 .pc-ic:first-child{background:#1F4637}
 .pc-ic.on{background:#FBF8EE;color:#1F4637}
 .pc-ic i{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;border-radius:8px;background:#C8393B;color:#fff;font:700 10px/16px var(--f-body);font-style:normal;text-align:center;padding:0 3px}
+/* 홈 비전보드 띠: 넓은 화면은 가로 긴 콜라주, 휴대폰은 큰 사진 4장 띠(1280×320) */
+.vpw.vcol.vstrip{display:none;aspect-ratio:1280/320}.vpo.vcol.vstrip{width:1280px}
+@media (max-width:719px){div.vban2 .vpw.vcol.vwide{display:none!important}div.vban2 .vpw.vcol.vstrip{display:block!important}}
 </style>
 
 <div id="app"></div>
@@ -2765,7 +2768,7 @@ function vbPosterHTML(v){
 const VBSEED=(Math.random()*4294967296)>>>0;
 function vbCollageHTML(v,W){
   /* W: 보드 폭. 기본값은 휴대폰·앱용 보드. 웹(넓은 화면)은 폭을 두 배로 그려 같은 높이(320)에 가로로 길게 → 화면에서 높이가 절반이 돼요 */
-  W=W||960;const wide=W>960;
+  W=W||960;const wide=W>960&&W!==1280;const strip=W===1280;
   let sd=VBSEED||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};const rr=(a,b)=>a+(b-a)*R();
   const AL=v?vbRich(v):[],P=AL.filter(x=>x.img),F=AL.filter(x=>!x.img);
   for(let k=P.length-1;k>0;k--){const j=Math.floor(R()*(k+1));[P[k],P[j]]=[P[j],P[k]]}
@@ -2779,7 +2782,9 @@ function vbCollageHTML(v,W){
     const pin=R()<.55?`<i class="vpin2 ${['','red','blue','gold'][Math.floor(R()*4)]}" style="left:${Math.round(wf/2+rr(-wf/5,wf/5))}px;top:5px"></i>`:`<em class="vctape" style="transform:translateX(-50%) rotate(${rr(-9,9).toFixed(1)}deg)"></em>`;
     return `<div class="vcc${hero?' hero':''}" style="left:${Math.round(x)}px;top:${y}px;width:${Math.round(wf)}px;transform:rotate(${rot.toFixed(1)}deg);z-index:${z}">${pin}<div class="vcci" style="aspect-ratio:${ar.toFixed(3)}">${it.img?`<img src="${it.img}" alt="${esc(it.head)}">`:vbPic(it)}</div><b>${esc(it.head)}</b>${it.when?`<em>${it.when}</em>`:''}</div>`};
   let out='';
-  if(n===1)out=card(ph[0],(W-376)/2+rr(-30,30),376,true);
+  /* 휴대폰 홈 띠(2026-11-26 사용자 지시): 사진을 크게 4장만, 모두 같은 크기의 가로형(4:3)으로 나란히 */
+  if(strip){const q=ph.slice(0,4);const wf=300,gap=(W-8-wf*q.length)/Math.max(1,q.length-1);out=q.map((it,i)=>card(Object.assign({},it,{ar:4/3}),4+i*(wf+gap)+rr(-6,6),wf,true)).join('')}
+  else if(n===1)out=card(ph[0],(W-376)/2+rr(-30,30),376,true);
   else if(n===2){const wf=340;out=card(ph[0],W/2-wf+24+rr(-20,10),wf,true)+card(ph[1],W/2-24+rr(-10,20),wf,true)}
   else{
     const hf=wide?368:n<=3?346:316;const hx=(W-hf)/2+rr(-24,24);
@@ -2789,7 +2794,7 @@ function vbCollageHTML(v,W){
       return arr.map((it,i)=>card(it,(c>1?x0+i*step:x0+(side-wf)/2)+rr(-8,8),wf,false)).join('')};
     out=lay(L,4)+lay(Rt,W-4-side)+card(ph[0],hx,hf,true);
   }
-  return `<div class="vpw vcol${wide?' vwide':''}" data-w="${W}"><div class="vpo vcol vcork${wide?' vwide':''}">${out}</div></div>`;
+  return `<div class="vpw vcol${wide?' vwide':''}${strip?' vstrip':''}" data-w="${W}"><div class="vpo vcol vcork${wide?' vwide':''}${strip?' vstrip':''}">${out}</div></div>`;
 }
 function cvFit(){document.querySelectorAll('.cvrow[data-fit]').forEach(r=>{const s=r.querySelector('.cvside'),c=r.querySelector('.cvimg');if(!s||!c)return;c.style.flex='none';c.style.aspectRatio='auto';
   const im=c.querySelector('img');const rt=im&&im.naturalWidth&&im.naturalHeight?im.naturalWidth/im.naturalHeight:0;
@@ -2846,8 +2851,8 @@ function vbPhoneHTML(v){
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
 function visionBanner(){
   const v=vbOf(),b=v&&v.board;
-  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,2133)}<div class="vbcap"><div class="vbct">${b.statement?`<p><span>${esc(b.statement)}</span></p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
-  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,2133)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
+  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,2133)}${vbCollageHTML(v,1280)}<div class="vbcap"><div class="vbct">${b.statement?`<p><span>${esc(b.statement)}</span></p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
+  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,2133)}${vbCollageHTML(null,1280)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
 }
 function vbBoardHTML(v){
   const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';const L=vbRich(v);
