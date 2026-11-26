@@ -40,7 +40,7 @@ with sync_playwright() as p:
     ok('육각형 그림', pg.locator('svg.lghex text').count() == 6)
     act('[data-act=lgrefs]'); time.sleep(.3)
     links = pg.eval_on_selector_all('.lgref a', 'a=>a.map(x=>x.href)')
-    ok('근거 문헌 링크(DOI)', len(links) >= 4 and all('doi.org' in x for x in links), links)
+    ok('근거 연구: 국내 교수 논문 먼저·요약 카드·원문 링크', pg.locator('.lgref.kr').count() >= 4 and 'kci.go.kr' in links[0] and len(links) >= 5 and pg.locator('.lgref p').count() == pg.locator('.lgref').count(), links)
     act('[data-act=lgevopen]'); time.sleep(.3)
     m0 = pg.inner_text('.lgmon b'); act('[data-act=lgmstep][data-d="1"]'); time.sleep(.5)
     ok('달 넘기기', pg.inner_text('.lgmon b') != m0, m0)

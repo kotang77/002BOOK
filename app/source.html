@@ -2563,8 +2563,9 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgrefbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid #E6DCCB;background:#fff;border-radius:14px;padding:14px;cursor:pointer;color:#1F4637;font-family:var(--f-body)}
 .lgrefbtn span{flex:1;display:flex;flex-direction:column}.lgrefbtn b{color:#2B2622;font-size:14px}.lgrefbtn small{color:#8A7C6E;font-size:12px}.lgrefbtn em{font-style:normal;color:#A57A35;font-size:22px;line-height:1}
 .lgrefl{display:grid;gap:10px;margin-bottom:10px}
-.lgref{display:flex;align-items:center;gap:10px;background:#F7F1E4;border-radius:14px;padding:12px 12px 12px 14px}
-.lgref>div{flex:1;min-width:0}.lgref b{font-size:13.5px;margin-right:6px}.lgtag{display:inline-block;background:#fff;border-radius:99px;padding:0 6px;font-weight:700;font-size:10.5px;color:#A57A35;vertical-align:1px}.lgref small{display:block;font-size:12px;color:#6B6157;line-height:1.35;margin-top:2px}
+.lgref{display:flex;flex-direction:column;gap:3px;background:#F7F1E4;border-radius:14px;padding:12px 14px}.lgsh .lgevfull .lgref{background:#fff}
+.lgrh{display:flex;gap:6px;margin-bottom:2px}.lgtag{display:inline-block;background:#fff;border-radius:99px;padding:0 7px;font-weight:700;font-size:10.5px;color:#A57A35;border:1px solid #EFE3CC}.lgkr{display:inline-block;background:#1F4637;color:#FFF6E8;border-radius:99px;padding:0 7px;font-weight:700;font-size:10.5px}
+.lgref b{font-size:13.5px;line-height:1.4;color:#2B2622}.lgref small{font-size:12px;color:#6B6157;line-height:1.35}.lgref p{font-size:12.5px;color:#3B332C;line-height:1.5;margin-top:4px!important}.lgref .lgdoi{align-self:flex-start;margin-top:6px}
 .lgdoi{flex:none;display:inline-flex;align-items:center;gap:3px;background:#1F4637;color:#FFF6E8!important;border-radius:99px;padding:6px 10px;font-weight:700;font-size:12px;text-decoration:none}.lgdoi .lgi{margin:0}
 .lgsh a.lgdoi{text-decoration:none!important}
 .lgadm .btn{background:rgba(255,246,232,.92)!important;color:#2E2A26!important;border-color:transparent!important}
@@ -7008,13 +7009,21 @@ function lgSheetHTML(it,g){const T=x=>esc(String(x||''));const A=x=>Array.isArra
     <footer>2 / 2 · 002BOOK · 생성형 AI(Claude)가 쓴 자료예요. 작품 세부 내용은 직접 읽고 본 것과 다를 수 있어요.</footer></div></div>`}
 
 /* 학습지도: 평가 방식 설명(논술·구술·육각형 독서)과 근거 문헌. 배점은 관리자가 고친 지금 기준(RBC)을 그대로 보여 줌 */
+/* 근거 연구 (11-27 사용자 지시 '나 방식'): 한국인 교수 논문을 앞에, 앱 안에는 직접 쓴 요약 카드, 원문은 KCI·발행처 링크.
+   국어교육 학술지 다수는 공개 이용허락(CC)이 없어 PDF를 앱에 올리지 않는다(새국어교육·국어교육학연구 KCI 저작권 정책 'CCL 없음' 확인) */
 const LG_REFS=[
- ['채점 기준표(루브릭)의 신뢰도·타당도','Jonsson, A. & Svingby, G. (2007). The use of scoring rubrics: Reliability, validity and educational consequences. Educational Research Review, 2(2), 130–144.','https://doi.org/10.1016/j.edurev.2007.05.002','논술·구술','Jonsson & Svingby (2007) · Educational Research Review'],
- ['좋은 평가 기준의 조건','Brookhart, S. M. (2018). Appropriate criteria: Key to effective rubrics. Frontiers in Education, 3, 22.','https://doi.org/10.3389/feduc.2018.00022','논술·구술','Brookhart (2018) · Frontiers in Education'],
- ['피드백과 다시 쓰기·다시 말하기','Hattie, J. & Timperley, H. (2007). The power of feedback. Review of Educational Research, 77(1), 81–112.','https://doi.org/10.3102/003465430298487','2차·재답변','Hattie & Timperley (2007) · Review of Educational Research'],
- ['다양한 분야 읽기와 읽기 능력','OECD (2021). 21st-Century Readers: Developing Literacy Skills in a Digital World. PISA, OECD Publishing.','https://doi.org/10.1787/a83d84cb-en','육각형','OECD (2021) · 21st-Century Readers (PISA)'],
- ['도서 분야 분류','한국도서관협회 (2013). 한국십진분류법(KDC) 제6판.','','육각형','한국도서관협회 (2013) · KDC 제6판'],
- ['국어과 쓰기·말하기 성취기준','교육부 (2022). 2022 개정 국어과 교육과정(교육부 고시 제2022-33호 별책 5).','','논술·구술','교육부 (2022) · 2022 개정 국어과 교육과정']];
+ {t:'말하기 평가 채점기준표(rubric)의 상세화 및 적용 사례 연구 — 설득 목적의 과제를 중심으로',a:'최영인·박성석·정민주·백정이·장성민·김예원·허모아·음소현·민병곤',org:'서울대·서울교대·춘천교대 등',j:'새국어교육 134호, 2023',tag:'구술',kr:1,
+  sum:'중학교 2학년의 설득하는 말하기를 3개 큰 범주·7개 하위 범주로 나눈 상세한 채점기준표로 두 차례 채점했더니, 채점자 사이의 점수 일치도가 대부분 좋게 나왔어요. 영원이북 구술 평가가 영역별 기준표로 점수를 매기는 근거예요.',u:'https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART002948015'},
+ {t:'중학생 동료 피드백의 수신과 발신이 글 수정에 미치는 영향 — 쓰기 효능감의 조절 효과를 중심으로',a:'윤경훈·김혜연',org:'동국대학교',j:'국어교육학연구 59권 2호, 2024',tag:'논술 다시 쓰기',kr:1,
+  sum:'중학생 123명이 서평 초고에 서로 피드백을 주고받은 뒤 글을 고쳤어요. 피드백을 받는 것보다 남의 글에 피드백을 써 주는 쪽에서 몇몇 유형이 고친 글에 의미 있는 영향을 주었어요. 첨삭을 읽고 스스로 고칠 점을 찾아 다시 쓰는 과정의 근거예요.',u:'https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART003094679'},
+ {t:'평가 예시문을 활용한 쓰기 평가 개선 방안',a:'박영민',org:'',j:'청람어문교육 39호, 2009',tag:'논술 채점',kr:1,
+  sum:'수준별 예시 글(평가 예시문)을 채점 기준과 함께 쓰면 쓰기 평가를 더 일관되게 할 수 있다는 방안을 다뤄요. 영원이북이 점수와 함께 모범 답안을 보여 주는 이유예요.',u:'https://www.kci.go.kr/kciportal/landing/article.kci?arti_id=ART001350058'},
+ {t:'21세기의 독서와 독서 교육',a:'이순영',org:'고려대학교 국어교육과 교수',j:'새국어생활 22권 4호(국립국어원), 2012',tag:'육각형 독서',kr:1,
+  sum:'21세기 독서 교육은 여러 형태의 글을 읽는 힘과 각 교과의 지식을 읽어 내는 학습 독서를 함께 길러야 한다고 강조해요. 문학만이 아니라 여러 분야를 고르게 읽게 하는 육각형 독서의 근거예요.',u:'https://www.korean.go.kr/nkview/nklife/2012_4/22_0403.pdf'},
+ {t:'한국십진분류법(KDC) 제6판',a:'한국도서관협회',org:'',j:'2013',tag:'육각형 분야',kr:1,sum:'우리나라 도서관의 책 분류 기준이에요. 육각형의 여섯 분야를 이 분류로 나눠요.',u:''},
+ {t:'2022 개정 국어과 교육과정',a:'교육부',org:'',j:'교육부 고시 제2022-33호 별책 5',tag:'논술·구술',kr:1,sum:'중학교 쓰기·말하기 성취기준이에요. 학년별 분량과 평가 영역을 맞출 때 참고했어요.',u:''},
+ {t:'The use of scoring rubrics: Reliability, validity and educational consequences',a:'Jonsson & Svingby',org:'',j:'Educational Research Review 2(2), 2007',tag:'해외 · 루브릭',kr:0,sum:'채점 기준표를 쓰면 채점이 더 일관되고, 학생에게 기준을 알려 주면 배움에도 도움이 된다는 연구들을 정리했어요.',u:'https://doi.org/10.1016/j.edurev.2007.05.002'},
+ {t:'The power of feedback',a:'Hattie & Timperley',org:'',j:'Review of Educational Research 77(1), 2007',tag:'해외 · 피드백',kr:0,sum:'목표·지금 수준·다음 할 일을 알려 주는 피드백이 학습에 큰 효과를 낸다는 연구예요.',u:'https://doi.org/10.3102/003465430298487'}];
 /* 학습지도 v3 (2026-11-26, Figma 16 학습지도·재디자인): 탭 두 개(이달 지도안·평가 방식), 히어로·작품 넘기기·카드 목록.
    A4 두 장(lgSheetHTML)은 화면에서 숨기고 PDF·인쇄에만 쓴다 */
 const lgT=x=>esc(String(x||''));const lgArr=x=>Array.isArray(x)?x:[];
@@ -7059,9 +7068,10 @@ function lgEvalHTML(){const v=['essay','oral','hex'].includes(S.lg.ev)?S.lg.ev:'
    :`<p class="lgp1">읽은 책의 분야와 깊이를 여섯 칸으로 그려요. 능력이나 인성 점수가 아니에요.</p>${lgHexSVG()}
      <section>${lgSec('한 권을 읽으면')}<div class="lgpt3">${[['1','읽기만 해도'],['1.5','인상 깊은 문장까지'],['2','논술·구술까지']].map(([n,t])=>`<div><b>${n}<small>점</small></b><span>${t}</span></div>`).join('')}</div><p class="lgsm2">분야는 국립중앙도서관 분류(KDC)를 먼저 쓰고, 찾지 못한 책만 AI가 정해요. 만화·학습지·잡지는 세지 않아요.</p></section>
      <section>${lgSec('여섯 분야')}<div class="lgax">${AX.map(a=>`<div><b>${lgT(a[1])}</b><small>${lgT(a[2])}</small></div>`).join('')}</div></section>`;
-  const refs=S.lg.refs?`<div class="lgrefl">${LG_REFS.map(r=>`<div class="lgref" title="${lgT(r[1])}"><div><b>${lgT(r[0])}</b><span class="lgtag">${lgT(r[3])}</span><small>${lgT(r[4])}</small></div>${r[2]?`<a class="lgdoi" href="${r[2]}" target="_blank" rel="noopener noreferrer" aria-label="${lgT(r[0])} 원문 보기">원문 ${lgI('ext',12)}</a>`:''}</div>`).join('')}</div>
-     <p class="lgdisc">평가 영역과 배점은 위 연구가 말하는 원칙(분명한 기준, 수준별 설명, 고칠 점을 알려 주는 피드백)에 맞춰 영원이북이 정했어요. 연구가 이 점수표 자체를 검증한 것은 아니에요.</p><button class="lgmore" data-act="lgrefs" aria-expanded="true">접기</button>`
-   :`<button class="lgrefbtn" data-act="lgrefs" aria-expanded="false">${lgI('book',20)}<span><b>근거 문헌 ${LG_REFS.length}편 보기</b><small>루브릭 신뢰도 · 피드백 효과 · 교육과정</small></span><em aria-hidden="true">›</em></button>`;
+  const card=r=>`<article class="lgref${r.kr?' kr':''}"><div class="lgrh"><span class="lgtag">${lgT(r.tag)}</span>${r.kr?'<span class="lgkr">국내</span>':''}</div><b>${lgT(r.t)}</b><small>${lgT(r.a)}${r.org?' · '+lgT(r.org):''}</small><small>${lgT(r.j)}</small><p>${lgT(r.sum)}</p>${r.u?`<a class="lgdoi" href="${r.u}" target="_blank" rel="noopener noreferrer" aria-label="${lgT(r.t)} 원문 보기">원문 보기 ${lgI('ext',12)}</a>`:''}</article>`;
+  const refs=S.lg.refs?`<div class="lgrefl">${LG_REFS.map(card).join('')}</div>
+     <p class="lgdisc">요약은 영원이북이 직접 정리했어요. 논문 원문은 저작권이 학회·발행처에 있어 앱에 싣지 않고 KCI·발행처에서 열어요. 평가 영역과 배점은 이 연구들의 원칙(분명한 기준, 수준별 예시, 고칠 점을 알려 주는 피드백)에 맞춰 영원이북이 정했고, 연구가 이 점수표 자체를 검증한 것은 아니에요.</p><button class="lgmore" data-act="lgrefs" aria-expanded="true">접기</button>`
+   :`<button class="lgrefbtn" data-act="lgrefs" aria-expanded="false">${lgI('book',20)}<span><b>근거 연구 ${LG_REFS.length}편 보기</b><small>국내 교수 연구 ${LG_REFS.filter(r=>r.kr&&r.u).length}편 · 해외 연구 ${LG_REFS.filter(r=>!r.kr).length}편 · 요약 카드</small></span><em aria-hidden="true">›</em></button>`;
   return `<div class="lgtiles" role="group" aria-label="평가 종류">${tiles.map(([k,l,n,u])=>`<button class="lgtile" data-act="lgev" data-v="${k}" aria-pressed="${k===v}"><small>${l}</small><b>${n}</b><span>${u}</span></button>`).join('')}</div>
    <div class="lgpanel">${body}</div>
    <section class="lgrefs">${lgSec('근거가 된 연구·자료',LG_REFS.length)}${refs}</section>`}
