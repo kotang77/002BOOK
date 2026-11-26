@@ -2384,7 +2384,7 @@ main .vpage .vphw{cursor:zoom-in}
 .pc-ic.on{background:#FBF8EE;color:#1F4637}
 .pc-ic i{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;border-radius:8px;background:#C8393B;color:#fff;font:700 10px/16px var(--f-body);font-style:normal;text-align:center;padding:0 3px}
 /* 홈 비전보드 띠: 넓은 화면은 가로 긴 콜라주, 휴대폰은 큰 사진 4장 띠(1280×320) */
-.vpw.vcol.vstrip{display:none;aspect-ratio:1280/320}.vpo.vcol.vstrip{width:1280px}
+.vpw.vcol.vstrip{display:none;aspect-ratio:1000/320}.vpo.vcol.vstrip{width:1000px}
 @media (max-width:719px){div.vban2 .vpw.vcol.vwide{display:none!important}div.vban2 .vpw.vcol.vstrip{display:block!important}}
 /* 스크랩북 사진 종류: 일반(흰 테두리)·흑백·폴라로이드·네 컷(검은 띠에 네 장) */
 .sb-ph.photo .sb-pp,.sb-ph.bw .sb-pp{padding:6px}
@@ -2423,6 +2423,26 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}
 .lgpdf .lgs h3{font-size:28px}.lgpdf .lgs h4{font-size:16px}.lgpdf .lgw{grid-template-columns:1fr 1fr 1fr}.lgpdf .lgw2{grid-template-columns:1.2fr 1fr}
 @media (min-width:640px){.lgw{grid-template-columns:1fr 1fr 1fr}.lgw2{grid-template-columns:1.2fr 1fr}}
 @media print{body *{visibility:hidden!important}#lgsheet,#lgsheet *{visibility:visible!important}#lgsheet{position:absolute;left:0;top:0;width:100%;box-shadow:none;padding:0}@page{size:A4;margin:14mm}}
+/* 2026-11-26 사용자 지시
+   ① 위·아래 바를 진열장 뒷판과 같은 무늬 초록으로 통일(한 가지 초록)
+   ② '지금 할 일' 카드를 최대한 작게: 제목 한 줄, 작은 버튼, 여백 줄임
+   ③ 학년 제목과 진열장 사이 여백 없앰 */
+:root{--grn:linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,0) 8%,rgba(0,0,0,0) 92%,rgba(0,0,0,.18)),radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,linear-gradient(#1D3A2C,#173126)}
+.shopin .top{background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A!important;box-shadow:0 0 0 100vmax #1B362A,0 3px 10px rgba(0,0,0,.35)!important}
+.shopin .top::before{content:"";position:absolute;top:0;bottom:0;left:-100vmax;right:-100vmax;z-index:-1;pointer-events:none;background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A}
+body:has(.wrap.shopin) .nav{background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A!important}
+.shopin .todo-b,.shopin .btn:not(.ghost):not(.small).todo-b{background:#1B362A!important;border-color:#1B362A!important}
+.avb img.avlogo{background:#fff}
+.shopin .todo{padding:8px 10px!important;gap:6px!important;margin-top:10px!important}
+.shopin .todo-m{gap:9px!important;align-items:center}
+.shopin .todo-th{width:34px!important;height:46px!important}
+.shopin .todo-x{gap:1px!important}
+.shopin .todo-t{display:block!important;-webkit-line-clamp:unset!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px!important;line-height:1.3!important}
+.shopin .todo-b{min-height:30px!important;padding:0 11px!important;font-size:12.5px!important;width:auto!important}
+.shopin .todo-s{padding:4px 2px 3px!important;margin-top:0!important}
+.shopin .todo-s .ts-c>b{font-size:14px!important}.shopin .todo-s .ts-c>small{font-size:10.5px!important}
+.shopin .ghead{margin-bottom:4px!important;padding-bottom:4px!important}
+.shopin .cab{margin-top:12px!important}
 </style>
 
 <div id="app"></div>
@@ -2805,7 +2825,7 @@ function vbPosterHTML(v){
 const VBSEED=(Math.random()*4294967296)>>>0;
 function vbCollageHTML(v,W){
   /* W: 보드 폭. 기본값은 휴대폰·앱용 보드. 웹(넓은 화면)은 폭을 두 배로 그려 같은 높이(320)에 가로로 길게 → 화면에서 높이가 절반이 돼요 */
-  W=W||960;const wide=W>960&&W!==1280;const strip=W===1280;
+  W=W||960;const wide=W>960&&W!==1000;const strip=W===1000;
   let sd=VBSEED||7;const R=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296};const rr=(a,b)=>a+(b-a)*R();
   const AL=v?vbRich(v):[],P=AL.filter(x=>x.img),F=AL.filter(x=>!x.img);
   for(let k=P.length-1;k>0;k--){const j=Math.floor(R()*(k+1));[P[k],P[j]]=[P[j],P[k]]}
@@ -2820,7 +2840,7 @@ function vbCollageHTML(v,W){
     return `<div class="vcc${hero?' hero':''}" style="left:${Math.round(x)}px;top:${y}px;width:${Math.round(wf)}px;transform:rotate(${rot.toFixed(1)}deg);z-index:${z}">${pin}<div class="vcci" style="aspect-ratio:${ar.toFixed(3)}">${it.img?`<img src="${it.img}" alt="${esc(it.head)}">`:vbPic(it)}</div><b>${esc(it.head)}</b>${it.when?`<em>${it.when}</em>`:''}</div>`};
   let out='';
   /* 휴대폰 홈 띠(2026-11-26 사용자 지시): 사진을 크게 4장만, 모두 같은 크기의 가로형(4:3)으로 나란히 */
-  if(strip){const q=ph.slice(0,4);const wf=300,gap=(W-8-wf*q.length)/Math.max(1,q.length-1);out=q.map((it,i)=>card(Object.assign({},it,{ar:4/3}),4+i*(wf+gap)+rr(-6,6),wf,true)).join('')}
+  if(strip){const q=ph.slice(0,3);const wf=322,gap=(W-8-wf*q.length)/Math.max(1,q.length-1);out=q.map((it,i)=>card(Object.assign({},it,{ar:4/3}),4+i*(wf+gap)+rr(-6,6),wf,true)).join('')}
   else if(n===1)out=card(ph[0],(W-376)/2+rr(-30,30),376,true);
   else if(n===2){const wf=340;out=card(ph[0],W/2-wf+24+rr(-20,10),wf,true)+card(ph[1],W/2-24+rr(-10,20),wf,true)}
   else{
@@ -2893,8 +2913,8 @@ function vbPhoneHTML(v){
 (()=>{let q=0;const f=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;vbFit()})};try{new MutationObserver(f).observe(document.body,{childList:true,subtree:true})}catch(e){}addEventListener('resize',f)})();
 function visionBanner(){
   const v=vbOf(),b=v&&v.board;
-  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,2133)}${vbCollageHTML(v,1280)}<div class="vbcap"><div class="vbct">${b.statement?`<p><span>${esc(b.statement)}</span></p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
-  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,2133)}${vbCollageHTML(null,1280)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
+  if(b){const n=vbList(v).length;return `<div class="vban2" data-act="vbopen" role="button" tabindex="0" aria-label="나의 비전보드 열기">${vbCollageHTML(v)}${vbCollageHTML(v,2133)}${vbCollageHTML(v,1000)}<div class="vbcap"><div class="vbct">${b.statement?`<p><span>${esc(b.statement)}</span></p>`:''}</div>${v.dday?`<em>${vbDday(v)}</em>`:''}<span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`}
+  return `<div class="vban2 empty" data-act="vbopen" role="button" tabindex="0">${vbCollageHTML(null)}${vbCollageHTML(null,2133)}${vbCollageHTML(null,1000)}<div class="vbcap"><div class="vbct"><small>MY VISION BOARD</small><b>나의 비전보드 만들기</b><p>꿈을 이룬 미래의 나를 상상해 적으면, 코르크 보드에 꿈을 꽂아 드려요.</p></div><span class="mbtn" aria-hidden="true">더보기<svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></span></div></div>`;
 }
 function vbBoardHTML(v){
   const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';const L=vbRich(v);
@@ -3224,7 +3244,7 @@ function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progre
 function shellHTML(){
   const v=S.view;
   const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','라운지']];if(isAdmin())tabs.push(['admin','관리']);if(canGuide())tabs.push(['guide','학습지도']);
-  return `<div class="wrap${v==='course'||v==='me'||v==='vision'||v==='guide'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
+  return `<div class="wrap${v==='course'||v==='me'||v==='vision'||v==='guide'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:'<img class="avlogo" src="brand/app-icon.png" width="36" height="36" alt="">'}</button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
