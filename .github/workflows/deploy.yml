@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # 매시간: 관리자가 바꾼 계획표의 학습지도·표지·포스터를 묶음으로 새로 올린다(바뀐 것이 없으면 건너뜀). 서버는 다시 배포하지 않음
+  schedule:
+    - cron: '23 * * * *'
 
 permissions:
   contents: read
@@ -18,7 +21,7 @@ jobs:
   server:
     name: 서버(Supabase) 배포
     runs-on: ubuntu-latest
-    if: ${{ vars.SUPABASE_PROJECT_REF != '' }}
+    if: ${{ vars.SUPABASE_PROJECT_REF != '' && github.event_name != 'schedule' }}
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -67,6 +70,8 @@ jobs:
   web:
     name: 웹사이트 빌드
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.bundle.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -80,16 +85,20 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID || '488409954624-fuj0m176ats569vvv8b9mav11mmmhas3.apps.googleusercontent.com' }}  # 공개 값(구글 클라우드 프로젝트 002BOOK, 002book.korea@gmail.com)
         run: node scripts/build.mjs
       - name: 학습지도·표지·포스터 묶음 (가입 즉시 보기용)
+        id: bundle
         env:
           REF: ${{ vars.SUPABASE_PROJECT_REF }}
           TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          LIVE: ${{ github.event_name == 'schedule' && 'https://002book.com' || '' }}
         run: python3 scripts/ops/export_bundle.py
       - uses: actions/upload-pages-artifact@v3
+        if: ${{ steps.bundle.outputs.changed != 'false' }}
         with: { path: dist }
 
   pages:
     name: GitHub Pages 공개
     needs: [web]
+    if: ${{ needs.web.outputs.changed != 'false' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -4779,7 +4779,7 @@ async function admCourseSave(form){const i=+form.dataset.i;const fd=new FormData
   if(nx.m1===nx.m2)return er('영화 두 편이 같아요.');
   if(nx.m1!==it.m1)delete nx.m1Info;if(nx.m2!==it.m2)delete nx.m2Info;if(nx.book!==it.book)delete nx.ax;
   const items=clone(S.course);items[i]=nx;
-  try{await S.db.doc('config/course').set({items,updatedAt:Date.now(),by:S.id,via:'edit'});S.course=items;S.source='관리자가 고친 계획표 ('+new Date().toLocaleDateString('ko-KR')+')';S.adm.ced=-1;toast(it.g+' '+it.m+' 코스를 바꿨어요. 학습지도 자료도 새로 만들어요.');render();lgBatch([i],true)}
+  try{await S.db.doc('config/course').set({items,updatedAt:Date.now(),by:S.id,via:'edit'});S.course=items;S.source='관리자가 고친 계획표 ('+new Date().toLocaleDateString('ko-KR')+')';S.adm.ced=-1;toast(it.g+' '+it.m+' 코스를 바꿨어요. 학습지도 자료도 새로 만들어요.');render();lgArtPrefetch([i]);lgBatch([i],true)}
   catch(e){er('저장하지 못했어요. 잠시 뒤 다시 해 주세요.')}}
 /* ---------- 관리자 ---------- */
 function admAdminsHTML(){const A=S.adm;const L=A.admins;
@@ -6965,6 +6965,8 @@ const lgPrompt=it=>`너는 대한민국에서 20년 넘게 중학생 독서와 �
 points는 정확히 5개, talk는 정확히 5개, words는 정확히 4개, acts는 정확히 2개.`;
 function lgLoad(force){const {it}=lgCur();if(!it)return;gdLoad(lgKey(it),()=>lgPrompt(it),force)}
 /* 관리자: 학습지도 자료를 중1 3월부터 차례로 미리 만들어 둔다. 계획표가 바뀌면 바뀐 달만 다시(키에 책·영화 제목이 들어 있어 새 키가 됨) */
+/* 계획표가 바뀌면 바뀐 달의 책 표지·영화 포스터를 바로 찾아 둔다(서버 캐시 → 모든 회원이 같은 그림을 바로 받음) */
+function lgArtPrefetch(only){const L=S.course||[];(only||L.map((_,i)=>i)).forEach(i=>{const it=L[i];if(!it)return;artOf(it.book,'book');artOf(it.m1,'movie',yearOf(it,it.m1));artOf(it.m2,'movie',yearOf(it,it.m2))})}
 async function lgBatch(only,quiet){
   if(!isAdmin()||!S.sample||S.lgBusy)return;const L=S.course||[];
   const order=GR.flatMap(g=>idxOf(g)).filter(i=>L[i]&&(!only||only.includes(i)));
@@ -6978,7 +6980,7 @@ async function lgBatch(only,quiet){
       if(r){await S.db.doc('guides/'+key).set({data:clone(r),by:S.id,at:Date.now()});S.gd=S.gd||{};S.gd[key]={data:r};S.lgBusy.made++}
     }catch(e){}
   }
-  const b=S.lgBusy;S.lgBusy=null;if(!quiet||b.made)toast(b.stop||`학습지도 자료 ${b.made}개를 새로 만들었어요.`);if(S.view==='guide')render();
+  const b=S.lgBusy;S.lgBusy=null;gdPersist();if(!quiet||b.made)toast(b.stop||`학습지도 자료 ${b.made}개를 새로 만들었어요.`);if(S.view==='guide')render();
 }
 function lgSheetHTML(it,g){const T=x=>esc(String(x||''));const A=x=>Array.isArray(x)?x:[];
   const nm={book:'책',m1:'영화 ①',m2:'영화 ②'};const ti={book:it.book,m1:it.m1,m2:it.m2};
@@ -7100,8 +7102,12 @@ async function lgPdf(){const {it}=lgCur();const G=gdGet(lgKey(it));if(!G||!G.dat
 const gdH=s=>hid(s)+hid([...String(s)].reverse().join(''));
 const gdGet=k=>(S.gd||{})[k];
 /* 학습지도 묶음(배포 때 만든 data/guides.json): 서버·AI를 기다리지 않고 바로 보여 준다. 없는 달만 서버에서 읽거나 새로 만든다 */
-let GD_SNAP=null;
-function gdSnap(){if(!GD_SNAP)GD_SNAP=fetch('data/guides.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{const g=(j&&j.guides)||{};S.gd=S.gd||{};for(const k in g)if(!S.gd[k]||(!S.gd[k].data&&!S.gd[k].busy))S.gd[k]={data:g[k]};return g}).catch(()=>({}));return GD_SNAP}
+/* 기기 저장본(localStorage yw.gd): 한 번 본 자료는 다음부터 네트워크 없이 바로. 지금 계획표에 있는 달 것만 남긴다 */
+let GD_SNAP=null,gdSaveT=null;
+function gdLocal(){try{const o=JSON.parse(localStorage.getItem('yw.gd')||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
+function gdPersist(){clearTimeout(gdSaveT);gdSaveT=setTimeout(()=>{try{const keep=new Set((S.course||[]).map(it=>lgKey(it)));const o={};for(const k in (S.gd||{}))if(keep.has(k)&&S.gd[k]&&S.gd[k].data)o[k]=S.gd[k].data;localStorage.setItem('yw.gd',JSON.stringify(o))}catch(e){}},800)}
+function gdSnap(){if(!GD_SNAP){S.gd=S.gd||{};const loc=gdLocal();for(const k in loc)if(!S.gd[k])S.gd[k]={data:loc[k]};
+  GD_SNAP=fetch('data/guides.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{const g=Object.assign({},loc,(j&&j.guides)||{});for(const k in g)if(!S.gd[k]||(!S.gd[k].data&&!S.gd[k].busy)||((j&&j.guides)||{})[k])S.gd[k]={data:g[k]};gdPersist();return g}).catch(()=>loc)}return GD_SNAP}
 async function gdLoad(key,make,force){
   S.gd=S.gd||{};const cur=S.gd[key];if(cur&&cur.busy)return;if(cur&&cur.data&&!force)return;
   if(!force){const g=await gdSnap();if(g[key]){S.gd[key]={data:g[key]};renderLayers();return}}
@@ -7117,7 +7123,7 @@ async function gdLoad(key,make,force){
       S.db.doc('guides/'+key).set({data:clone(r),by:S.id,at:Date.now()}).catch(()=>{});
     }
   }catch(e){const c=e&&e.code;S.gd[key]={err:c==='rate_limited'?'요청이 많아요. 조금 뒤에 다시 눌러 주세요.':c==='no_sample'?'Claude 연결이 없어 안내서를 만들 수 없어요.':'안내서를 만들지 못했어요. 다시 눌러 주세요.'}}
-  renderLayers();
+  gdPersist();renderLayers();
 }
 const eduKey=it=>'edu_'+gdH([it.book,it.m1,it.m2,it.topic].join('|'));
 function eduLoad(i,force){const it=items()[i];if(!it)return;
@@ -7523,7 +7529,7 @@ document.addEventListener('click',async e=>{
     case 'adminapply':{
       if(!S.admin||S.admin.err)break;
       try{await S.db.doc('config/course').set({items:clone(S.admin.items),updatedAt:Date.now(),by:S.id});
-        S.course=S.admin.items;S.source='관리자가 올린 엑셀 ('+new Date().toLocaleDateString('ko-KR')+')';S.admin=null;toast('새 계획표를 적용했어요. 바뀐 달의 학습지도 자료를 새로 만들어요.');render();lgBatch(null,true)}
+        S.course=S.admin.items;S.source='관리자가 올린 엑셀 ('+new Date().toLocaleDateString('ko-KR')+')';S.admin=null;toast('새 계획표를 적용했어요. 바뀐 달의 학습지도 자료를 새로 만들어요.');render();lgArtPrefetch(null);lgBatch(null,true)}
       catch(err){toast('적용하지 못했어요. 이 계정에 편집 권한이 있는지 확인해 주세요.')}
       break}
     case 'ytopen':e.stopPropagation();break;

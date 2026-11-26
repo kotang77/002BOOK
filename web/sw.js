@@ -25,6 +25,12 @@ self.addEventListener('fetch', (e) => {
       .catch(async () => (await caches.match('/index.html')) || caches.match('/offline.html')));
     return;
   }
+  // 배포 묶음(학습지도·표지 목록 data/*.json): 네트워크 우선 → 실패하면 캐시. 묶음만 새로 고친 배포(빌드 번호 같음)도 바로 받는다
+  if (url.origin === location.origin && url.pathname.startsWith('/data/') && url.pathname.endsWith('.json')) {
+    e.respondWith(fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then((r) => { if (r.ok) { const c = r.clone(); caches.open(CACHE).then((x) => x.put(req, c)); } return r; })
+      .catch(() => caches.match(req).then((hit) => hit || new Response('{}', { headers: { 'content-type': 'application/json' } }))));
+    return;
+  }
   // 글꼴·CDN 라이브러리·아이콘: 캐시 우선
   if (url.origin === location.origin || /fonts\.(googleapis|gstatic)\.com|cdnjs\.cloudflare\.com/.test(url.hostname)) {
     e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((r) => {
