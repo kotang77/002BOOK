@@ -2369,6 +2369,20 @@ main .vpage .vphw{cursor:zoom-in}
 #vbfull .vbf-dl{right:16px;bottom:max(18px,env(safe-area-inset-bottom));background:#1F4637;color:#FFF8EA}
 #vbfull .vbf-dl svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #vbfull .vbf-dl:disabled{opacity:.5}
+/* 추가 질문 카드(대출 카드 모양) */
+.vbask2{margin:14px 0 4px}.vbask2 .vbz-c{flex:none;max-width:none;box-shadow:0 8px 20px -8px rgba(0,0,0,.35)}
+.vbask2 .vbz-c .vbz-q{min-height:0;font-size:16.5px}
+.vba-r{display:flex;gap:8px;align-items:center;border-top:1px solid var(--lb);padding-top:8px}
+.vba-r select{flex:1;min-width:0;height:40px;border-radius:8px;font-size:14px}
+.vba-go{flex:none;min-height:40px;border-radius:8px!important;background:#1F4637!important;border-color:#1F4637!important;color:#FFF8EA!important;font-weight:700;padding:0 16px}
+.vba-l{display:flex;gap:16px;justify-content:center}.vba-l .lnk{font-size:12.5px;color:#7A6B5C}
+/* 라운지 엽서 아이콘 한 줄: 엽서 쓰기 · 받은 엽서 · 보낸 엽서 */
+.pc-bar{display:flex;justify-content:center;gap:18px;margin-top:4px}
+.pc-ic{position:relative;width:40px;height:40px;border:0;border-radius:50%;padding:0;display:grid;place-items:center;cursor:pointer;background:rgba(24,15,8,.55);color:#FFF6E8;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,246,232,.22),0 4px 10px -4px rgba(0,0,0,.6)}
+.pc-ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pc-ic:first-child{background:#1F4637}
+.pc-ic.on{background:#FBF8EE;color:#1F4637}
+.pc-ic i{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;border-radius:8px;background:#C8393B;color:#fff;font:700 10px/16px var(--f-body);font-style:normal;text-align:center;padding:0 3px}
 </style>
 
 <div id="app"></div>
@@ -2940,11 +2954,13 @@ function vbPickQ(v,ex){if(!v||!v.board)return null;const a=v.a||{},no=v.none||{}
   const P=[...VBQ.filter(([k])=>!String(a[k]||'').trim()&&!no[k]).map(([k,sec,e,,q,ph])=>({id:k,base:1,sec,e,q,ph})),...(cu.length<12?VBX.filter(([k])=>!has.has(k)).map(([k,sec,e,q,ph])=>({id:k,sec,e,q,ph})):[])];
   const Q=P.length>1?P.filter(x=>x.id!==ex):P;return Q.length?Q[Math.floor(Math.random()*Q.length)]:null}
 function vbAskHTML(v){const A=S.vbAsk;if(!A||!v||!v.board)return '';
-  if(S.vbAskBusy)return `<div class="vbask"><small>💭 TODAY'S DREAM QUESTION</small><p class="hint" role="status">답을 오려 코르크 보드에 꽂고 있어요…</p></div>`;
-  return `<div class="vbask"><small>💭 TODAY'S DREAM QUESTION</small><h3>${A.e} ${esc(A.q)}</h3>
-    <input id="vbask-in" maxlength="60" placeholder="${esc(A.ph||'')}" autocomplete="off" aria-label="꿈 답하기">
-    <div class="vbqo"><select id="vbask-when" aria-label="이루는 때">${vbWhenOpts('')}</select><span class="vbqi" id="vbth-${A.id}">${vbThumb(A.id,(S.vbImgs||{})[A.id])}</span></div>
-    <div class="brow"><button class="btn small" data-act="vbaskgo">📌 보드에 꽂기</button><button class="btn ghost small" data-act="vbasknext">다른 질문</button><button class="btn ghost small" data-act="vbaskx">나중에</button></div></div>`}
+  /* 추가 질문도 꿈 인터뷰와 같은 도서 대출 카드 모양(2026-11-26 사용자 지시) */
+  const head=`<div class="lchead" aria-hidden="true"><span>002. JM. 꿈 +</span><span>No. 1024</span></div><h4 class="vbz-tt"><i class="tw">오늘의 꿈 질문</i></h4>`;
+  if(S.vbAskBusy)return `<div class="vbz vbask2"><section class="vbz-c on">${head}<p class="hint" role="status">답을 오려 코르크 보드에 꽂고 있어요…</p></section></div>`;
+  return `<div class="vbz vbask2"><section class="vbz-c on">${head}<h3 class="vbz-q">${A.e} ${esc(A.q)}</h3>
+    <div class="vbz-ab"><textarea id="vbask-in" class="vbz-in cam" maxlength="60" rows="2" placeholder="${esc(A.ph||'')}" aria-label="꿈 답하기"></textarea><div class="vbz-cm" id="vbth-${A.id}" data-small="cam">${vbCam(A.id,(S.vbImgs||{})[A.id])}</div></div>
+    <div class="vba-r"><select id="vbask-when" aria-label="이루는 때">${vbWhenOpts('')}</select><button class="btn vba-go" data-act="vbaskgo">보드에 꽂기</button></div>
+    <div class="vba-l"><button class="lnk" data-act="vbasknext">다른 질문</button><button class="lnk" data-act="vbaskx">나중에</button></div></section></div>`}
 async function vbAnswer(){
   const v=vbOf(),A=S.vbAsk;if(!v||!v.board||!A||S.vbAskBusy)return;
   const t=String(($('#vbask-in')||{}).value||'').trim().slice(0,60);if(!t){toast('꿈을 적어 주세요.');return}
@@ -4660,7 +4676,7 @@ function friendsHTML(){
       const btn=rel==='friend'?'<span class="tagk">친구</span>':rel==='sent'?'<span class="hint">요청 보냄</span>':rel==='recv'?`<button class="btn small" data-act="fra" data-id="${esc(m.id)}">요청 수락</button>`:`<button class="btn small" data-act="frreq" data-id="${esc(m.id)}">친구 맺기</button>`;
       return `<div class="frr" data-k="${esc((m.nick+' '+m.id).toLowerCase())}">${frAv(m.id)}<div class="fi"><b>${esc(m.nick)}</b><small>${esc(sub(m.id))}</small>${m.bio?`<small style="display:block;color:var(--ink)">${esc(m.bio)}</small>`:''}</div><div class="fa">${btn}</div></div>`}).join(''):'<p class="hint">다른 회원이 아직 없어요.</p>'}`;
   }
-  return `<div class="lead"><div><h2>라운지</h2><p>친구·부모님·선생님과 엽서로 응원을 주고받아요.</p></div></div>${tabs}<div class="frb">${body}</div>`;
+  return `<div class="lead"><div><h2>라운지</h2><p>엽서로 응원을 주고받아요.</p></div></div>${tabs}<div class="frb">${body}</div>`;
 }
 async function frRequest(id){
   const rel=frRel(id);if(rel==='friend'||rel==='sent')return;if(rel==='recv')return frAccept(id);
@@ -4725,9 +4741,10 @@ function pcBoxHTML(){
   const rout=out.length?out.map(x=>`<div class="pc-row"><button type="button" class="pc-th" data-act="pcopen" data-id="${esc(x.id)}" aria-label="${esc(x.toNick)}님에게 보낸 엽서 보기">${pcHTML(x,{mark:true})}</button>
       <span class="pc-mt"><b>${esc(x.toNick)}에게</b><small>${pcDate(x.at)} 보냄 · ${x.openedAt?'상대가 읽었어요':Date.now()<(x.deliverAt||0)?'배달 중 · '+pcWhen(x.deliverAt)+' 도착':'도착했어요 · 아직 안 읽었어요'}</small>${x.openedAt?'':`<button class="btn ghost small" data-act="pccancel" data-id="${esc(x.id)}">발신 취소</button>`}</span></div>`).join('')
     :'<p class="pc-none">아직 보낸 엽서가 없어요.</p>';
-  return `<button class="btn pc-write" data-act="pcnew">✉ 엽서 쓰기</button><p class="pc-rule">엽서는 보내고 24시간 뒤에 도착해요. 나에게 보내는 엽서는 받을 날짜를 고를 수 있어요.</p>
-    <div class="pc-box"><h3>받은 엽서 <small>${inn.length}</small></h3>${rin}</div>
-    <div class="pc-box"><h3>보낸 엽서 <small>${out.length}</small></h3>${rout}</div>`}
+  const F=S.fr;const un=inn.filter(x=>!x.openedAt).length;if(F.pbox===undefined)F.pbox=un?'in':'';
+  const ic=(act,v,on,svg,label,n)=>`<button type="button" class="pc-ic${on?' on':''}" data-act="${act}"${v?` data-v="${v}"`:''} aria-label="${label}"${v?` aria-pressed="${on}"`:''}><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg>${n?`<i>${n}</i>`:''}</button>`;
+  return `${F.pbox==='in'?`<div class="pc-box"><h3>받은 엽서 <small>${inn.length}</small></h3>${rin}</div>`:F.pbox==='out'?`<div class="pc-box"><h3>보낸 엽서 <small>${out.length}</small></h3>${rout}</div>`:''}
+    <div class="pc-bar" role="group" aria-label="엽서">${ic('pcnew','',false,'<path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/>','엽서 쓰기')}${ic('pcbox','in',F.pbox==='in','<rect x="3.5" y="6" width="17" height="12" rx="1.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/>','받은 엽서',un)}${ic('pcbox','out',F.pbox==='out','<path d="M20.5 3.5L3.5 10.5l6.5 3 3 6.5z"/><path d="M20.5 3.5L10 13.5"/>','보낸 엽서')}</div>`}
 function pcComposeHTML(){
   const sh=S.sheet;const T=pcTargets();if(!sh.to)sh.to=(T[1]||T[0])[0];
   const head=`<div class="ph"><h2>엽서 쓰기<small>보내는 사람: ${esc(S.me.nick||S.id)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
@@ -4767,7 +4784,7 @@ async function pcSend(fd){
   if(self){const day=String(fd.get('day')||sh.day||'');const t=new Date(day+'T08:00:00').getTime();if(!day||!(t>at)){toast('받을 날짜를 내일 이후로 골라 주세요.');return}deliverAt=t}
   const doc={id,kind:'post',pair:pairId(S.id,to),from:S.id,to,fromNick:S.me.nick||S.id,toNick:self?(S.me.nick||S.id):(frName(to)||famName(to)),design:PCD[sh.d][0],stamp:PCS[sh.st||0][0],text,at,deliverAt,openedAt:0};
   sh.busy=true;
-  try{await S.db.doc('msgs/'+id).set(doc);if(!self)S.fr.out=(S.fr.out||[]).concat([doc]);S.sheet=null;S.fr.tab='post';
+  try{await S.db.doc('msgs/'+id).set(doc);if(!self){S.fr.out=(S.fr.out||[]).concat([doc]);S.fr.pbox='out'}S.sheet=null;S.fr.tab='post';
     toast(self?pcWhen(deliverAt)+'에 나에게 도착해요. 영원이북 우체국이 그날까지 잘 보관할게요.':doc.toNick+'님에게 24시간 뒤 '+pcWhen(deliverAt)+'에 도착해요.');render();loadFriends(false)}
   catch(e){sh.busy=false;toast('엽서를 보내지 못했어요. 다시 해 주세요.')}
 }
@@ -6901,7 +6918,7 @@ document.addEventListener('click',async e=>{
     case 'avset':{const id=(AVIMG[d.id]||(d.id==='custom'&&S.me.avatarImg))?d.id:'';const old=S.me.avatar;S.me.avatar=id;render();
       try{await S.db.doc('members/'+S.id).update({avatar:id});toast(id?'캐릭터를 바꿨어요.':'기본 로고로 바꿨어요.')}catch(err){S.me.avatar=old;render();toast('저장하지 못했어요.')}break}
     case 'mbdel':S.progress.myBooks=(S.progress.myBooks||[]).filter(b=>b.id!==d.id);saveProgress();render();break;
-    case 'view':if(d.v==='admin'&&!isAdmin())break;S.view=d.v;S.sheet=null;S.info=null;render();if(d.v==='admin')loadAdmin();
+    case 'view':if(d.v==='vision'&&vbOf()&&vbOf().board){S.vbAskBusy=false;S.vbAsk=vbPickQ(vbOf())}if(d.v==='admin'&&!isAdmin())break;S.view=d.v;S.sheet=null;S.info=null;render();if(d.v==='admin')loadAdmin();
       if(d.v==='friends'){if(!S.fr)S.fr=frNew();loadFriends(true)}
       window.scrollTo(0,0);break;
     case 'frtab':S.fr.tab=d.v;render();break;
@@ -6913,6 +6930,7 @@ document.addEventListener('click',async e=>{
     case 'pcreply':S.sheet={type:'post',d:0,st:2,to:d.id,text:''};renderLayers();break;
     case 'pcdes':{const sh=S.sheet;if(!sh||sh.type!=='post')break;const ta=$('#pc-in'),to=$('#pc-to');if(ta)sh.text=ta.value;if(to)sh.to=to.value;sh.d=+d.k||0;renderLayers();break}
     case 'pcst':{const sh=S.sheet;if(!sh||sh.type!=='post')break;const ta=$('#pc-in'),to=$('#pc-to');if(ta)sh.text=ta.value;if(to)sh.to=to.value;sh.st=+d.k||0;renderLayers();break}
+    case 'pcbox':S.fr.pbox=S.fr.pbox===d.v?'':d.v;render();break;
     case 'pcopen':pcOpen(d.id);break;
     case 'pccancel':pcCancel(d.id);break;
     case 'pcfind':S.sheet=null;S.view='friends';S.fr.tab='find';render();break;

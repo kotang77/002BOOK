@@ -80,6 +80,8 @@ with sync_playwright() as p:
     ok('열면 영원이북 우체국 소인과 내용', qb.evaluate("(()=>{const v=document.querySelector('#layer1 .pc-big');return !!v&&!!v.querySelector('.pc-mark')&&v.textContent.includes('이번 달 책 같이 끝내자')})()"))
     qa.reload(); qa.wait_for_selector('.who', timeout=15000); time.sleep(1.5)
     qa.evaluate("document.querySelector('nav.nav [data-v=friends]').click()"); time.sleep(2)
+    ok('엽서 아이콘 한 줄(쓰기·받은·보낸)', qa.evaluate("document.querySelectorAll('.pc-bar .pc-ic').length") == 3)
+    qa.click('[data-act=pcbox][data-v=out]'); time.sleep(.5)
     ok('보낸 사람 화면: 읽음, 취소 버튼 없음', qa.evaluate("document.body.innerText.includes('상대가 읽었어요')&&!document.querySelector('[data-act=pccancel]')"))
     b.close()
 print(f'{sum(res)}/{len(res)}')
