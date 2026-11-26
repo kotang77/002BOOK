@@ -2399,6 +2399,30 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}
 .shopin main>.hint:last-child,.shopin main{padding-bottom:0!important;margin-bottom:0!important}
 .sb-ph.four.grid .sb-pp{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr auto}
 .sb-ph.four.grid b{grid-column:1/-1}
+
+/* 학습지도 화면: 서점 배경 위에 A4 종이 한 장 */
+.lgh h2{margin:4px 0 2px;color:#FFF6E8;font-family:var(--f-display);font-size:24px;text-shadow:0 2px 6px rgba(0,0,0,.7)}.lgh p{margin:0 0 12px;color:#F2E4CC;font-size:13.5px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.lgsel{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.lgg,.lgm{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.lgg::-webkit-scrollbar,.lgm::-webkit-scrollbar{display:none}
+.lgg button,.lgm button{flex:none;border:0;border-radius:99px;padding:6px 12px;font-size:13px;background:rgba(24,15,8,.55);color:#E8DCC8;box-shadow:inset 0 0 0 1px rgba(255,246,232,.18);cursor:pointer}
+.lgg button.on,.lgm button.on{background:#FBF8EE;color:#1F4637;font-weight:700}
+.lgs{background:#FFFDF8;color:#2B2622;border-radius:4px;padding:22px 20px 16px;box-shadow:0 14px 30px -10px rgba(0,0,0,.7);font-size:13.5px;line-height:1.65}
+.lgs header{border-bottom:2px solid #1F4637;padding-bottom:8px;margin-bottom:10px}
+.lgs header small{font:700 11px var(--f-body);color:#A57A35;letter-spacing:.04em}
+.lgs h3{margin:2px 0 4px;font:800 21px/1.3 var(--f-display);color:#1F4637}.lgs .lgt{margin:0;font-family:var(--f-display);font-weight:700;color:#3B2611}
+.lgs section{margin:0 0 10px}.lgs h4{margin:0 0 3px;font:800 13.5px var(--f-display);color:#1F4637}.lgs p{margin:0}
+.lgw{display:grid;gap:8px}.lgw>div{background:#F7F1E4;border-radius:4px;padding:8px 10px}
+.lgp{margin:0;padding-left:20px}.lgp li{margin-bottom:4px}.lgp b{display:block;color:#3B2611}
+.lgw2{display:grid;gap:10px}.lgw2 ul{margin:0;padding-left:18px}
+.lgs footer{margin-top:8px;padding-top:6px;border-top:1px solid #E6DCCB;font-size:10.5px;color:#8A7C6E}
+.lgact{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}.lgact .btn:first-child{background:#1F4637;border-color:#1F4637;color:#FFF8EA}
+.lgact .btn.ghost{background:rgba(255,246,232,.92);color:#2E2A26;border-color:transparent}
+/* PDF(A4 794×1123) */
+.lgpdf{width:794px;height:1123px;box-sizing:border-box;padding:44px 52px;background:#fff;font-family:'Noto Sans KR',sans-serif}
+.lgpdf .lgs{box-shadow:none;border-radius:0;padding:0;font-size:16px;line-height:1.75;background:#fff}
+.lgpdf .lgs h3{font-size:28px}.lgpdf .lgs h4{font-size:16px}.lgpdf .lgw{grid-template-columns:1fr 1fr 1fr}.lgpdf .lgw2{grid-template-columns:1.2fr 1fr}
+@media (min-width:640px){.lgw{grid-template-columns:1fr 1fr 1fr}.lgw2{grid-template-columns:1.2fr 1fr}}
+@media print{body *{visibility:hidden!important}#lgsheet,#lgsheet *{visibility:visible!important}#lgsheet{position:absolute;left:0;top:0;width:100%;box-shadow:none;padding:0}@page{size:A4;margin:14mm}}
 </style>
 
 <div id="app"></div>
@@ -3187,6 +3211,7 @@ const IC={course:ICO('<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V
   write:ICO('<path d="M5 19.5V6A1.5 1.5 0 0 1 6.5 4.5H13"/><path d="M5 19.5A1.5 1.5 0 0 1 6.5 18H17v2.5H6.5A1.5 1.5 0 0 1 5 19.5z"/><path d="M11 14l1-3.5 6-6 2.5 2.5-6 6z"/>'),
   diary:ICO('<rect x="5.5" y="3.5" width="13" height="17" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h3"/>'),
   friends:ICO('<circle cx="9" cy="9" r="3"/><path d="M3.5 19c.5-3 3-4.8 5.5-4.8s5 1.8 5.5 4.8"/><circle cx="17" cy="9.5" r="2.4"/><path d="M16 14.4c2.6-.2 4.5 1.4 5 4.1"/>'),
+  guide:ICO('<path d="M3 8.5L12 4l9 4.5-9 4.5z"/><path d="M7 10.5v4.2c1.4 1.4 3 2.1 5 2.1s3.6-.7 5-2.1v-4.2"/><path d="M21 8.5v5"/>'),
   vision:ICO('<path d="M12 3.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/>'),
   me:ICO('<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 3.5v2.5M12 3.5v2.5"/>'),
   admin:ICO('<path d="M12 3.5l7 2.5v5c0 4.2-2.8 7.6-7 9.5-4.2-1.9-7-5.3-7-9.5V6z"/><path d="M9 12l2.2 2.2L15 10.2"/>'),
@@ -3198,14 +3223,14 @@ IC.cam=ICO('<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1
 function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progress.done[ik(i,'book')])b++;if(S.progress.done[ik(i,'m1')])f++;if(S.progress.done[ik(i,'m2')])f++});return{b,f}}
 function shellHTML(){
   const v=S.view;
-  const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','라운지']];if(isAdmin())tabs.push(['admin','관리']);
-  return `<div class="wrap${v==='course'||v==='me'||v==='vision'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
+  const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','라운지']];if(isAdmin())tabs.push(['admin','관리']);if(canGuide())tabs.push(['guide','학습지도']);
+  return `<div class="wrap${v==='course'||v==='me'||v==='vision'||v==='guide'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
     <div class="seg" role="group" aria-label="코스 선택"><button data-act="basemode" aria-pressed="${S.mode==='base'}">기본</button><button data-act="custommode" aria-pressed="${S.mode==='custom'}">${isPaid()?'':IC.lock}맞춤</button></div></header>
     <div class="dtabs">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${n}${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</div>
-    <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='vision'?`<div class="vpage">${visionHTML(true)}</div>`:v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
+    <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='vision'?`<div class="vpage">${visionHTML(true)}</div>`:v==='guide'&&canGuide()?`<div class="lgpage">${lgHTML()}</div>`:v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
     <nav class="nav" aria-label="메뉴">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${IC[k]}<span>${n}</span>${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</nav>`;
 }
 const BOOKG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>';
@@ -3730,7 +3755,7 @@ function monthHTML(i){
   const wn=stepNext(i);const cw=wn&&wn.k==='work'?wkNext(i):null;
   const work=`${it.parent?'<p class="note">이달의 작품 중에는 부모님과 함께 보면 좋은 소재가 있어요.</p>':''}
     <div class="wks">${WKS.map(k=>wkRowHTML(i,k,cw&&cw.k===k)).join('')}</div>
-    <p class="mtip">${IC.next}<span>제목을 누르면 작품 정보와 볼 수 있는 곳이 나와요. 시작과 끝을 누르면 친구와 부모님께 알림이 가요.${canGuide()?' 부모님은 제목을 누른 뒤 "논술 첨삭자료"에서 지도 안내서를 볼 수 있어요.':''}</span></p>`;
+    <p class="mtip">${IC.next}<span>제목을 누르면 작품 정보와 볼 수 있는 곳이 나와요. 시작과 끝을 누르면 친구와 부모님께 알림이 가요.</span></p>`;
   const essay=svReady(i)?essayHTML(i):svLockHTML(i);
   const wDone=stepsOf(i)[0].done;const nDone=stepsOf(i)[1].done;
   const note=`${wDone&&!nDone?'<p class="mok">'+IC.check+'<span>1단계 끝! 이제 기록하기 차례예요</span></p>':''}<div class="note2"><h3>책에서 마음에 남은 문장</h3>
@@ -3821,7 +3846,7 @@ function infoHTML(){
     ${it.ai?'<p class="hint">Claude가 추천한 작품이에요. 정보는 아래 링크에서 한 번 더 확인해 주세요.</p>':''}
     ${moved?'':`<div class="chips">${links.map(([n,u])=>`<a class="btn ghost small" style="text-decoration:none" href="${esc(u)}" target="_blank" rel="noopener">${n}</a>`).join('')}</div>`}</div>
   ${isBook?youthHTML(title):''}
-  ${canGuide()?`<div style="margin:4px 0 18px"><button class="btn" data-act="gdopen">논술 첨삭자료</button><p class="hint" style="margin:8px 0 0">${isBook?'이 책을 자녀에게 어떻게 지도할지, 논술 문제별 모범 답안과 지도 순서를 볼 수 있어요.':'자녀와 함께 영화를 보고 나눌 질문과 대화 예시를 볼 수 있어요.'}</p></div>`:''}
+
   <div class="sec"><h3>별점과 후기 ${avg?`<small style="font-family:var(--f-body);font-size:14px;color:var(--gold-ink)">평균 ★ ${avg} (${rv.length}명)</small>`:''}</h3>
     ${done?`<div class="stars" role="group" aria-label="별점">${[1,2,3,4,5].map(v=>`<button data-act="star" data-v="${v}" class="${mine.stars>=v?'on':''}" aria-label="${v}점">★</button>`).join('')}</div>
       <label for="rv-text">한마디<textarea id="rv-text" placeholder="이 ${isBook?'책':'영화'}은 어땠나요?">${esc(mine.text||'')}</textarea></label>
@@ -4938,6 +4963,7 @@ function render(){
 }
 function renderLayers(){
   queueMicrotask(gsiMount);
+  if(S.id&&S.view==='guide'){const pg=document.querySelector('main .lgpage');if(pg)pg.innerHTML=lgHTML()}
   if(S.id&&S.view==='vision'){const pg=document.querySelector('main .vpage');if(pg){const n=S.vbW?S.vbW.n:0;pg.innerHTML=visionHTML(true);vbzGo(n,false)}}
   const l1=$('#layer1'),l2=$('#layer2');
   const sh=S.sheet;
@@ -6665,9 +6691,57 @@ function kidHTML(){
     <div class="sec"><h3>자녀가 쓴 논술</h3>${K.es.length?K.es.map(x=>`<details><summary>${esc(x.g||'')} ${esc(x.m||'')} 「${esc(x.book)}」 · ${fmtD(x.at)}</summary><p class="hint">${esc(x.question||'')}</p><p style="white-space:pre-wrap">${esc(x.text||'')}</p></details>`).join(''):'<p class="hint">아직 제출한 논술이 없어요.</p>'}</div>
     <div class="sec"><h3>구술 테스트</h3>${orLogMini(K.p.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(id)}" style="align-self:flex-start">구술 테스트 전체 기록과 리포트 보기</button></div>
     ${pushHTML('자녀가 구술 테스트 2차까지 마치면 최종 리포트를 이메일로 보내고, 알림을 켠 기기로 휴대폰 알림도 보내 드려요.')}
-    <p class="note">독서 화면에서 책이나 영화를 누른 뒤 "논술 첨삭자료"를 누르면 문제별 모범 답안과 지도 순서를 볼 수 있어요.</p></div>`;
+    <p class="note">아래 메뉴의 '학습지도'에서 달마다 책·영화 지도 자료(PDF)와 논술 문제별 모범 답안을 볼 수 있어요.</p></div>`;
 }
 
+/* ---------- 학습지도(부모·선생님·관리자, 2026-11-26) ----------
+   메뉴 끝 '학습지도': 학년·달을 고르면 그달 책 1권·영화 2편의 요약, 세 작품을 묶은 이유, 주제, 자녀에게 가르칠 포인트를 A4 한 장으로.
+   한 번 만든 자료는 guides/lg_… 에 저장해 모두가 함께 씀(관리자는 새로 만들기). PDF 저장·인쇄 */
+const lgKey=it=>'lg_'+gdH([it.book,it.m1,it.m2,it.topic].join('|'));
+function lgCur(){S.lg=S.lg||{};const L=items();
+  if(!GR.includes(S.lg.g)){const kid=(guideKids()||[]).map(id=>frMem(id).grade).find(g=>GR.includes(g));S.lg.g=GR.includes(S.grade)?S.grade:kid||'중1'}
+  const ids=idxOf(S.lg.g);if(!ids.includes(S.lg.i)){const m=(new Date().getMonth()+1)+'월';S.lg.i=ids.find(i=>L[i].m===m);if(S.lg.i===undefined)S.lg.i=ids[0]}
+  return {ids,i:S.lg.i,it:L[S.lg.i]}}
+function lgLoad(force){const {it}=lgCur();if(!it)return;
+  gdLoad(lgKey(it),()=>`너는 대한민국 대치동에서 20년 넘게 중학생 독서와 논술을 지도해 온 최고의 강사다. 부모와 선생님이 이달의 책 1권과 영화 2편으로 중학생 자녀를 지도할 수 있게 'A4 한 장 학습지도 자료'를 쓴다. 존댓말, 쉬운 말, 짧은 문장. 작품 내용은 확실히 아는 사실만 쓰고 지어내지 않는다. 결말을 크게 누설하지 않는다.
+[이달의 작품] ${it.g} ${it.m}
+- 주제: ${it.topic||''}
+- 책: ${it.book}
+- 영화 ①: ${it.m1}
+- 영화 ②: ${it.m2}
+A4 한 장에 들어가야 하므로 글자 수를 꼭 지킨다. JSON 객체 하나만 출력한다. 형식:
+{"theme":"이달의 주제를 한 문장으로(40자 이내)","why":"세 작품을 한 달에 묶은 이유(150자 이내)","book":"책 요약(120자 이내)","m1":"영화 ① 요약(100자 이내)","m2":"영화 ② 요약(100자 이내)","points":[{"t":"가르칠 포인트 제목(15자 이내)","d":"구체적으로 어떻게 지도할지(70자 이내)"}],"talk":["자녀와 나눌 질문(40자 이내)"],"act":"이번 달 집에서 할 활동 하나(70자 이내)"}
+points는 정확히 4개, talk는 정확히 3개.`,force)}
+function lgSheetHTML(it,g){const T=x=>esc(String(x||''));const pts=(Array.isArray(g.points)?g.points:[]).filter(x=>x&&(x.t||x.d)).slice(0,4);const tk=(Array.isArray(g.talk)?g.talk:[]).filter(Boolean).slice(0,3);
+  return `<div class="lgs" id="lgsheet"><header><small>영원이북 학습지도 · ${T(it.g)} ${T(it.m)}</small><h3>${T(String(it.topic||'').split(':')[0]||'이달의 주제')}</h3>${g.theme?`<p class="lgt">${T(g.theme)}</p>`:''}</header>
+    <section><h4>세 작품을 묶은 이유</h4><p>${T(g.why)}</p></section>
+    <section class="lgw"><div><h4>책 · 「${T(bTitle(it.book))}」</h4><p>${T(g.book)}</p></div><div><h4>영화 ① · 「${T(bTitle(it.m1))}」</h4><p>${T(g.m1)}</p></div><div><h4>영화 ② · 「${T(bTitle(it.m2))}」</h4><p>${T(g.m2)}</p></div></section>
+    <section><h4>자녀에게 가르쳐야 할 포인트</h4><ol class="lgp">${pts.map(x=>`<li><b>${T(x.t)}</b>${T(x.d)}</li>`).join('')}</ol></section>
+    <section class="lgw2"><div><h4>함께 나눌 질문</h4><ul>${tk.map(q=>`<li>${T(q)}</li>`).join('')}</ul></div>${g.act?`<div><h4>이번 달 활동</h4><p>${T(g.act)}</p></div>`:''}</section>
+    <footer>002BOOK · 생성형 AI(Claude)가 쓴 자료예요. 작품 세부 내용은 직접 읽고 본 것과 다를 수 있어요.</footer></div>`}
+function lgHTML(){
+  const {ids,i,it}=lgCur();if(!it)return '<p class="hint">코스를 불러오지 못했어요.</p>';
+  const L=items();const G=gdGet(lgKey(it));
+  setTimeout(()=>{const o=document.querySelector('.lgm .on');if(o&&o.parentElement)o.parentElement.scrollLeft=o.offsetLeft-o.parentElement.clientWidth/2+o.clientWidth/2},0);
+  if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(lgKey(it));if(!g||(!g.data&&!g.busy&&!g.err))lgLoad(false)},0);
+  const body=!G||G.busy?'<div class="lgs"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 포인트를 정리하고 있어요. 30초쯤 걸려요.</p></div>'
+    :G.err?`<div class="lgs"><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgSheetHTML(it,G.data||{});
+  return `<div class="lgh"><h2>학습지도</h2><p>달마다 책·영화 지도 자료를 A4 한 장으로 드려요.</p></div>
+    <div class="lgsel"><div class="lgg">${GR.map(g=>`<button class="${g===S.lg.g?'on':''}" data-act="lgg" data-g="${g}" aria-pressed="${g===S.lg.g}">${g}</button>`).join('')}</div>
+      <div class="lgm">${ids.map(n=>`<button class="${n===i?'on':''}" data-act="lgm" data-i="${n}" aria-pressed="${n===i}">${esc(L[n].m)}</button>`).join('')}</div></div>
+    ${body}
+    ${G&&G.data?`<div class="lgact"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">논술 문제별 모범 답안</button>${isAdmin()?'<button class="chip" data-act="lggo" data-f="1">새로 만들기</button>':''}</div>`:''}`}
+async function lgPdf(){const {it}=lgCur();const G=gdGet(lgKey(it));if(!G||!G.data)return;
+  if(!S.downloads){toast('이 화면에서는 PDF 저장을 쓸 수 없어요.');return}
+  if(!pdfReady()){toast('PDF 도구를 불러오지 못했어요. 새로고침 후 다시 해 주세요.');return}
+  toast('PDF를 만드는 중이에요…');const host=document.createElement('div');document.body.appendChild(host);
+  try{await pdfFonts();const pdf=new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+    host.style.cssText=PDF_HOST;host.innerHTML=`<div class="lgpdf">${lgSheetHTML(it,G.data)}</div>`;await new Promise(r=>setTimeout(r,60));
+    await pdfShot(pdf,host,true);const fname=pdfName(['학습지도',it.g,it.m,String(it.topic||'').split(':')[0].trim()]);
+    pdf.setProperties({title:fname,subject:'생성형 AI(Anthropic Claude)가 작성한 학습지도 자료',creator:'002BOOK · AI 생성'});
+    await S.downloads.save({filename:fname+'.pdf',data:pdf.output('blob')});toast('PDF를 저장했어요.')}
+  catch(e){if(!e||e.code!=='declined')toast('PDF를 저장하지 못했어요. 다시 눌러 주세요.')}
+  host.remove()}
 /* ---------- 부모 교육자료 ---------- */
 const gdH=s=>hid(s)+hid([...String(s)].reverse().join(''));
 const gdGet=k=>(S.gd||{})[k];
@@ -6705,7 +6779,6 @@ function eduHTML(i){
       ${links.length?`<ul class="lk">${links.map(x=>`<li><b>${T(x.pair)}</b>${T(x.text)}</li>`).join('')}</ul>`:''}
       ${g.order?`<p class="hint" style="margin-top:10px">추천 순서 · ${T(g.order)}</p>`:''}</div>
     ${qs.length?`<div class="sec"><h3>함께 생각해 볼 질문</h3><ol style="margin:0;padding-left:20px;line-height:1.7">${qs.map(q=>`<li>${T(q)}</li>`).join('')}</ol></div>`:''}
-    ${canGuide()?'<p class="note">부모님은 작품 탭에서 제목을 누른 뒤 "논술 첨삭자료"를 누르면 작품별 지도 안내서와 논술 모범 답안도 볼 수 있어요.</p>':''}
     <p class="hint">Claude가 쓴 요약이에요. 세부 내용은 직접 읽고 본 것과 다를 수 있어요.${isAdmin()?' <button class="chip" data-act="edugo" data-i="'+i+'" data-f="1">새로 만들기</button>':''}</p></div>`;
 }
 const gdBase=it=>`너는 대한민국 대치동에서 20년 넘게 중학생의 독서와 논술을 지도해 온 최고의 논술 강사다. 중학생 자녀를 둔 부모가 집에서 직접 논술 선생님이 되어 자녀를 지도할 수 있도록 '부모용 지도 안내서'를 쓴다. 부모는 바빠서 긴 글을 읽지 않는다. 짧고 간결하게, 항목마다 한두 문장으로, 설명보다 아이가 아는 친숙한 예시 위주로 쓴다. 작품 내용은 확실히 아는 사실만 쓰고 지어내지 않는다. 작품을 잘 모르면 이달의 주제를 중심으로 쓴다. 존댓말로 쓴다.\n\n- 자녀 학년: ${it.g}\n- 이달의 주제: ${it.topic}\n- 이달의 작품: 책 「${it.book}」, 영화 「${it.m1}」, 영화 「${it.m2}」\n`;
@@ -7116,9 +7189,15 @@ document.addEventListener('click',async e=>{
     case 'famok':famAccept(d.id);break;
     case 'famno':{if(famRel(d.id)==='family'&&S._fam!==d.id){S._fam=d.id;toast('한 번 더 누르면 가족 연결이 끊어져요.');setTimeout(()=>{if(S._fam===d.id)S._fam=null},3500);break}S._fam=null;famRemove(d.id);break}
     case 'famkid':S.sheet={type:'kid',id:d.id};renderLayers();famLoadKid(d.id);break;
+    case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;render();break;
+    case 'lgm':S.lg=S.lg||{};S.lg.i=+d.i;render();break;
+    case 'lggo':lgLoad(d.f==='1');break;
+    case 'lgpdf':lgPdf();break;
+    case 'lgprint':window.print();break;
+    case 'lgq':S.info={i:+d.i,k:'book',lg:1};
     case 'gdopen':{if(!canGuide()||!S.info)break;const kids=guideKids();S.info.guide=true;S.info.gsrc=S.mode==='base'&&kids.length?kids[0]:'';renderLayers();gdWork(false);
       kids.forEach(async id=>{try{const p=await S.db.doc('progress/'+id).get();S.fam.kp[id]=p.exists?clone(p.data()):{}}catch(err){S.fam.kp[id]=S.fam.kp[id]||{}}if(S.info&&S.info.guide)renderLayers()});break}
-    case 'gdclose':if(S.info){S.info.guide=false;renderLayers()}break;
+    case 'gdclose':if(S.info){if(S.info.lg)S.info=null;else S.info.guide=false;renderLayers()}break;
     case 'gdwork':gdWork(true);break;
     case 'gdsrc':if(S.info){S.info.gsrc=d.id||'';renderLayers()}break;
     case 'gdq':gdQ(+d.n,false);break;
