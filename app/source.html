@@ -1920,6 +1920,60 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .sb-star.b{color:#4A6FD8;text-shadow:0 1px 1px rgba(0,0,0,.2)}
 .sb-star.g{background:radial-gradient(circle at 30% 30%,#FFF4C2,#D9B44A 45%,#A8812A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
 .sb-dd{position:absolute;left:50%;top:330px;transform:translateX(-50%) rotate(-2deg);background:#1A1A1A;color:#F6B8C8;font:800 11px 'Noto Sans KR',sans-serif;padding:4px 10px;z-index:37;white-space:nowrap}
+
+/* 비전보드 탭(2026-11-26): 내 서재처럼 전체 화면. 꿈 인터뷰는 좌우로 밀어 넘기는 대출 카드 */
+.vpage{margin:0 -16px;min-height:calc(100svh - 140px)}
+.vpg{padding:14px 16px 24px}
+.vpg .ph{position:static;background:none;border:0;padding:0 0 10px}
+.vpg.vbzp{background:linear-gradient(rgba(30,20,12,.55),rgba(30,20,12,.35) 40%,rgba(30,20,12,.7)),url(shelf/interview.webp) center/cover no-repeat #2A1D14;color:#F5E9D6;min-height:calc(100svh - 140px);box-sizing:border-box}
+.vpg.vbzp .ph h2{color:#FFF6E8;font-family:var(--f-display)}.vpg.vbzp .ph h2 small{color:rgba(255,246,232,.8)}
+.vpg.vbzp .vbz-h small{color:#F6D58E}.vpg.vbzp .vbz-bar li{background:rgba(255,246,232,.3)}.vpg.vbzp .vbz-bar li.on{background:#F6D58E}
+.vpg.vbzp .vbz-nav .btn.ghost{background:rgba(255,246,232,.9);color:#3A2F28;border-color:transparent}.vpg.vbzp .vbz-skip{color:rgba(255,246,232,.85)}
+.vpg:not(.vbzp){background:#FBF1EA}
+.vbz-tr{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:10px 32px 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.vbz-tr::-webkit-scrollbar{display:none}
+.vbz-c{flex:0 0 calc(100% - 4px);max-width:420px;scroll-snap-align:center;position:relative;background:#FBF8EE;border-radius:6px;padding:12px 14px 12px;display:flex;flex-direction:column;gap:10px;
+  box-shadow:0 14px 30px -8px rgba(0,0,0,.55);--lb:#466C9E;--ll:rgba(120,156,200,.55);--tw:'Special Elite','Nanum Gothic Coding','Courier Prime',monospace;opacity:.72;transform:scale(.96);transition:opacity .2s,transform .2s}
+.vbz-c.on{opacity:1;transform:none}
+.vbz-c .lchead{display:flex;justify-content:space-between;font-family:var(--tw);font-size:11px;letter-spacing:.06em;color:#2B2926}
+.vbz-tt{margin:0;padding-bottom:7px;border-bottom:1px solid var(--lb);font:400 14.5px var(--tw);color:#262421;letter-spacing:.04em}
+.vbz-c i.tw{font-style:normal;display:inline-block;filter:url(#typeInk)}
+.vbz-c .vbz-q{margin:0;font-family:var(--f-display);font-size:18px;line-height:1.5;color:#2E2A26;word-break:keep-all;min-height:3em}
+.vbz .vbz-in{width:100%;box-sizing:border-box;border:0;border-radius:0;resize:none;padding:2px 4px;font:400 17px/36px var(--tw);color:#24221F;letter-spacing:.04em;
+  background:repeating-linear-gradient(transparent 0 35px,var(--ll) 35px 36px);min-height:144px;outline:0}
+.vbz .vbz-in:focus{box-shadow:none;background:repeating-linear-gradient(transparent 0 35px,var(--lb) 35px 36px)}
+.vbz-pr{display:grid;grid-template-columns:56px 1fr;align-items:center;border-top:1px solid var(--lb);padding-top:8px;gap:8px}
+.vbz-pr>span{font:400 12.5px var(--tw);color:var(--lb);letter-spacing:.06em;border-right:1px solid var(--ll);line-height:30px}
+.vbz-pr small{font-size:12px;color:#7A6B5C}
+.vbz-pic{display:flex}
+.vbz-sw{margin:-6px 0 6px;text-align:center;font-size:12px;color:rgba(255,246,232,.75)}
+
+/* 진열장 선반 이어붙이기(2026-11-26 사용자 지시): 칸마다 끊겨 보이던 월넛 판을 한 장처럼(나뭇결 위치를 진열장 기준으로 맞춤),
+   줄 처음·끝 판은 초록 뒷판 끝(원목 기둥)까지 늘림. --ax = 칸 위치만큼 결을 당기는 값, --edge = 뒷판 좌우 여백 */
+.shopin .grid{--edge:10px}
+.shopin .grid .shelf{--L:calc(var(--edge) * max(0, 1 - var(--k)));--R:calc(var(--edge) * max(0, var(--k) - var(--n) + 2));
+  margin-left:calc(var(--gap)/-2 - var(--L))!important;margin-right:calc(var(--gap)/-2 - var(--R))!important;border-radius:0!important;
+  background:linear-gradient(rgba(255,226,186,.18),rgba(0,0,0,0) 30%,rgba(0,0,0,.05) 70%,rgba(0,0,0,.38)),var(--wh) calc(var(--ax) + var(--L)) 0/840px auto repeat-x,#5A381F!important;
+  box-shadow:0 7px 9px -3px rgba(0,0,0,.65)!important}
+
+/* 대출 카드 칸 글씨를 타자기 이전으로 되돌림(2026-11-26 사용자 지시): 제목 명조, 칸·입력은 본문 고딕, 청구기호 줄만 처음처럼 Courier Prime */
+.authcard{--tw:'Courier Prime','Nanum Gothic Coding','Courier New',ui-monospace,monospace}
+.authcard .lchead,.authcard .ahead h2,.authcard .tabs button,.authcard .lrow>span,.authcard .lrow.lpw>label>span,.authcard .lrow input,.authcard .lrow.lpw>.lnk,.authcard .sus-t,.authcard i.tw{filter:none!important;text-shadow:none!important}
+.authcard .lchead{font-family:var(--tw)!important;font-weight:700!important;font-size:10px;letter-spacing:0;color:#2E2A26}
+.authcard .ahead h2{font-family:var(--f-display)!important;font-weight:700!important;font-size:14.5px;letter-spacing:0;color:#2E2A26}
+.authcard .tabs button,.authcard .lrow>span,.authcard .lrow.lpw>label>span,.authcard .lrow input,.authcard .lrow.lpw>.lnk,.authcard .sus-t,.authcard label{font-family:var(--f-body)!important;letter-spacing:0!important}
+.authcard .tabs button{font-size:12px;font-weight:400!important;color:#789CC8}
+.authcard .tabs button[aria-pressed=true]{color:var(--lb);font-weight:700!important}
+.authcard .lrow>span,.authcard .lrow.lpw>label>span{font-size:12px;font-weight:500!important;color:var(--lb)}
+.authcard .lrow input{font-weight:400!important;color:#2E2A26}
+.authcard .lrow.lpw>.lnk{font-size:11.5px;font-weight:400!important;color:#789CC8}
+/* 꿈 인터뷰 카드도 대출 카드와 같은 글씨로 */
+.vbz-c{--tw:'Courier Prime','Nanum Gothic Coding','Courier New',monospace}
+.vbz-c .lchead{font-weight:700;font-size:10.5px;letter-spacing:0;color:#2E2A26}
+.vbz-c i.tw{filter:none}
+.vbz-tt{font:700 14.5px var(--f-display);letter-spacing:0;color:#2E2A26}
+.vbz .vbz-in{font:400 16px/36px var(--f-body);letter-spacing:0;color:#2E2A26}
+.vbz-pr>span{font:500 12px var(--f-body);letter-spacing:0;line-height:30px}
 </style>
 
 <div id="app"></div>
@@ -2443,22 +2497,38 @@ const VBW=[
  ['obst','장애물',A=>`그 꿈으로 가는 길에 ‘내 안에서’ 나를 가장 자주 멈추게 하는 것은 무엇인가요?`,'예: 휴대폰 보느라 미루는 습관','정신적 대조 WOOP · Oettingen(2014)'],
  ['plan','실행 계획',A=>`‘만약 ${A.obst||'그 일'}이(가) 생기면, 나는 ___ 할 거예요.’ 빈칸을 채워 봐요.`,'예: 휴대폰을 거실에 두고 10분만 먼저 그릴 거예요','실행 의도 · Gollwitzer(1999)']];
 const vbWQ=(n,A)=>{const q=VBW[n][2];return typeof q==='function'?q(A):q};
-function vbWizHTML(){const W=S.vbW;const n=W.n,[k,stage,,ex,ref]=VBW[n];const A=W.a,I=S.vbImgs||{};const last=n===VBW.length-1;const pic=n<8;
-  return `<div class="vbz"><div class="vbz-h"><small>꿈 인터뷰 ${n+1} / ${VBW.length} · ${stage}</small><ol class="vbz-bar" aria-hidden="true">${VBW.map((_,i)=>`<li class="${i<=n?'on':''}"></li>`).join('')}</ol></div>
-    <div class="vbz-c"><span class="vbz-clip" aria-hidden="true"></span><h3 class="vbz-q">${esc(vbWQ(n,A))}</h3>
-      <textarea id="vbz-in" maxlength="60" rows="3" placeholder="${esc(ex)}" aria-label="답 적기">${esc(A[k]||'')}</textarea>
-      ${pic?`<div class="vbz-pic" id="vbth-${k}" data-small="1">${vbMini(k,I[k])}</div>`:''}</div>
-    <div class="vbz-nav"><button class="btn ghost" data-act="vbwprev" ${n?'':'disabled'}>이전</button><button class="btn" data-act="vbwnext">${last?'✨ 비전보드 만들기':'다음'}</button></div>
-    <button class="lnk vbz-skip" data-act="vbwskip">${last?'건너뛰고 만들기':'이 질문 건너뛰기'}</button></div>`}
-function vbWizSave(){const W=S.vbW;if(!W)return;const el=document.getElementById('vbz-in');if(el)W.a[VBW[W.n][0]]=String(el.value||'').trim().slice(0,60)}
+function vbzCard(n){const W=S.vbW,[k,stage,,ex]=VBW[n];const A=W.a,I=S.vbImgs||{};const pic=n<8;
+  return `<section class="vbz-c" data-n="${n}" aria-label="꿈 인터뷰 ${n+1}번 카드"><div class="lchead" aria-hidden="true"><span>002. JM. 꿈 ${String(n+1).padStart(2,'0')}</span><span>No. 1024</span></div>
+    <h4 class="vbz-tt"><i class="tw">꿈 인터뷰 카드 · ${esc(stage)}</i></h4>
+    <h3 class="vbz-q">${esc(vbWQ(n,A))}</h3>
+    <textarea id="vbz-in-${n}" class="vbz-in" maxlength="60" rows="4" placeholder="${esc(ex)}" aria-label="답 적기">${esc(A[k]||'')}</textarea>
+    ${pic?`<div class="vbz-pr"><span><i class="tw">사진</i></span><div class="vbz-pic" id="vbth-${k}" data-small="1">${vbMini(k,I[k])}</div></div>`:'<div class="vbz-pr"><span><i class="tw">다짐</i></span><small>다짐 카드에 들어가요</small></div>'}</section>`}
+function vbWizHTML(){const n=S.vbW.n;
+  return `<div class="vbz"><div class="vbz-h"><small id="vbz-st">꿈 인터뷰 ${n+1} / ${VBW.length} · ${esc(VBW[n][1])}</small><ol class="vbz-bar" aria-hidden="true">${VBW.map((_,i)=>`<li class="${i<=n?'on':''}"></li>`).join('')}</ol></div>
+    <div class="vbz-tr" id="vbz-tr">${VBW.map((_,i)=>vbzCard(i)).join('')}</div>
+    <p class="vbz-sw" aria-hidden="true">← 밀어서 넘기기 →</p>
+    <div class="vbz-nav"><button class="btn ghost" data-act="vbwprev" ${n?'':'disabled'}>이전</button><button class="btn" data-act="vbwnext" id="vbz-nx">${n===VBW.length-1?'✨ 비전보드 만들기':'다음'}</button></div>
+    <button class="lnk vbz-skip" data-act="vbwskip">${n===VBW.length-1?'건너뛰고 만들기':'이 질문 건너뛰기'}</button></div>`}
+/* 카드 n으로 이동(좌우 밀기와 버튼 모두). 이동할 때 답을 저장하고, 앞 답을 이어 쓴 질문 문장을 새로 고친다 */
+function vbzGo(n,smooth){const tr=document.getElementById('vbz-tr');if(!tr||!S.vbW)return;n=Math.max(0,Math.min(VBW.length-1,n));
+  const c=tr.children[n];if(c)tr.scrollTo({left:c.offsetLeft-tr.offsetLeft-(tr.clientWidth-c.clientWidth)/2,behavior:smooth?'smooth':'auto'});vbzSet(n)}
+function vbzSet(n){const W=S.vbW;if(!W)return;vbWizSave();W.n=n;const last=n===VBW.length-1;
+  const st=document.getElementById('vbz-st');if(st)st.textContent=`꿈 인터뷰 ${n+1} / ${VBW.length} · ${VBW[n][1]}`;
+  document.querySelectorAll('.vbz-bar li').forEach((li,i)=>li.classList.toggle('on',i<=n));
+  const nx=document.getElementById('vbz-nx');if(nx)nx.textContent=last?'✨ 비전보드 만들기':'다음';
+  const pv=document.querySelector('[data-act=vbwprev]');if(pv)pv.disabled=!n;
+  const sk=document.querySelector('.vbz-skip');if(sk)sk.textContent=last?'건너뛰고 만들기':'이 질문 건너뛰기';
+  document.querySelectorAll('.vbz-c').forEach(c=>{const i=+c.dataset.n,q=c.querySelector('.vbz-q');if(q)q.textContent=vbWQ(i,W.a);c.classList.toggle('on',i===n)})}
+document.addEventListener('scroll',e=>{const tr=e.target;if(!tr||tr.id!=='vbz-tr'||!S.vbW)return;clearTimeout(tr._t);tr._t=setTimeout(()=>{const C=[...tr.children];const mid=tr.scrollLeft+tr.clientWidth/2;let best=0,bd=1e9;C.forEach((c,i)=>{const d=Math.abs(c.offsetLeft-tr.offsetLeft+c.clientWidth/2-mid);if(d<bd){bd=d;best=i}});if(best!==S.vbW.n)vbzSet(best)},90)},true);
+function vbWizSave(){const W=S.vbW;if(!W)return;VBW.forEach(([k],i)=>{const el=document.getElementById('vbz-in-'+i);if(el){const t=String(el.value||'').trim().slice(0,60);if(t)W.a[k]=t;else delete W.a[k]}})}
 async function vbWizDone(){const W=S.vbW;const a={};VBW.forEach(([k])=>{if(W.a[k])a[k]=W.a[k]});
   if(!VBW.slice(0,8).some(([k])=>a[k])){toast('꿈 질문에 하나 이상 답해 주세요.');return}
   const img={},ir={};Object.entries(S.vbImgs||{}).forEach(([k,d])=>{if(a[k]&&d){img[k]=d;const r=(S.vbIr||{})[k];if(r)ir[k]=r}});
   S.progress.vision={a,none:{},when:{},cus:[],dday:'',img,ir,pub:{},board:null,at:Date.now(),wiz:1};S.vbW=null;S.vbImgs=null;S.vbIr=null;saveProgress();await vbMake();}
-function visionHTML(){
-  const v=vbOf();const head=`<div class="ph"><h2>나의 비전보드<small>미래의 나를 코르크 보드에 꽂아요</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
+function visionHTML(page){if(page)return visionHTML().replace(/<button class="x" data-act="close1"[^>]*>[\s\S]*?<\/button>/,'').replace(/^<div class="panel/,'<div class="vpg');
+  const v=vbOf();const head=`<div class="ph"><h2>나의 비전보드<small>${!v||!v.board?'꿈 인터뷰 카드를 넘기며 답해요':'미래의 나를 모아 붙인 스크랩북'}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
   if(S.vbBusy)return `<div class="panel">${head}<div class="sk"></div><div class="sk"></div><p class="hint" role="status">꿈을 오려 코르크 보드에 꽂고 있어요. 20초쯤 걸려요.</p></div>`;
-  if((!v||!v.board)&&!S.vbEdit){if(!S.vbW)S.vbW={n:0,a:{}};if(!S.vbImgs){S.vbImgs={};S.vbIr={}}return `<div class="panel vbzp">${head}${vbWizHTML()}</div>`}
+  if((!v||!v.board)&&!S.vbEdit){if(!S.vbW)S.vbW={n:0,a:{}};if(!S.vbImgs){S.vbImgs={};S.vbIr={}}setTimeout(()=>vbzGo(S.vbW.n,false),0);return `<div class="panel vbzp">${head}${vbWizHTML()}</div>`}
   if(!v||!v.board||S.vbEdit){if(!S.vbImgs){S.vbImgs=Object.assign({},(v&&v.img)||{});S.vbIr=Object.assign({},(v&&v.ir)||{})}if(!S.vbCus)S.vbCus=clone((v&&v.cus)||[]);return `<div class="panel">${head}${vbFormHTML(v)}</div>`}
   return `<div class="panel">${head}${vbBoardHTML(v)}
     <div class="brow" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="vbsaveall" ${S.downloads?'':'disabled'}>📱 바탕화면용 저장</button><button class="btn ghost" data-act="vbsave" ${S.downloads?'':'disabled'}>가로 보드 저장</button><button class="btn ghost" data-act="vbedit">꿈 고치기·추가</button>${S.sample?'<button class="btn ghost" data-act="vbremake">문구 다시 꾸미기</button>':''}</div>${S.vbAsk?`<div style="margin-top:18px">${vbAskHTML(v)}</div>`:''}</div>`;
@@ -2649,7 +2719,7 @@ function authHTML(){
   else body=suFormHTML(false);
   return `<div class="wrap auth"><section class="hero" aria-label="영원이북 서점 입구"><div class="scene"><img class="sbg" src="login/lane.webp" width="1024" height="1024" alt=""><img class="sdim" src="login/lane-dim.webp" alt=""><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div></div>
     <p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p></section>
-    <svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><section class="authcard"><div class="lchead" aria-hidden="true"><span>002. JM. 고486</span><span>No. 1024</span></div><div class="ahead"><h2>영원이북 대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}"><i class="tw">로그인</i></button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}"><i class="tw">회원가입</i></button></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
+    <svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><section class="authcard"><div class="lchead" aria-hidden="true"><span>002. JM. 고486</span><span>No. 1024</span></div><div class="ahead"><h2>도서 대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}"><i class="tw">로그인</i></button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}"><i class="tw">회원가입</i></button></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
     <div class="tai" role="img" aria-label="TAi Edutech · Think &amp; Action by Ai"><span class="t1"><b>TAi</b><i>Edutech</i></span><span class="t2"><b>T</b>hink &amp; <b>A</b>ction by <b>Ai</b></span></div></div>`;
 }
 
@@ -2660,6 +2730,7 @@ const IC={course:ICO('<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V
   write:ICO('<path d="M5 19.5V6A1.5 1.5 0 0 1 6.5 4.5H13"/><path d="M5 19.5A1.5 1.5 0 0 1 6.5 18H17v2.5H6.5A1.5 1.5 0 0 1 5 19.5z"/><path d="M11 14l1-3.5 6-6 2.5 2.5-6 6z"/>'),
   diary:ICO('<rect x="5.5" y="3.5" width="13" height="17" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h3"/>'),
   friends:ICO('<circle cx="9" cy="9" r="3"/><path d="M3.5 19c.5-3 3-4.8 5.5-4.8s5 1.8 5.5 4.8"/><circle cx="17" cy="9.5" r="2.4"/><path d="M16 14.4c2.6-.2 4.5 1.4 5 4.1"/>'),
+  vision:ICO('<path d="M12 3.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/>'),
   me:ICO('<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 3.5v2.5M12 3.5v2.5"/>'),
   admin:ICO('<path d="M12 3.5l7 2.5v5c0 4.2-2.8 7.6-7 9.5-4.2-1.9-7-5.3-7-9.5V6z"/><path d="M9 12l2.2 2.2L15 10.2"/>'),
   bell:ICO('<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 1.5H5z"/><path d="M10 20.5h4"/>',17),lock:ICO('<rect x="6" y="11" width="12" height="8.5" rx="1.5"/><path d="M8.5 11V8.5a3.5 3.5 0 0 1 7 0V11"/>',13),
@@ -2670,14 +2741,14 @@ IC.cam=ICO('<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1
 function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progress.done[ik(i,'book')])b++;if(S.progress.done[ik(i,'m1')])f++;if(S.progress.done[ik(i,'m2')])f++});return{b,f}}
 function shellHTML(){
   const v=S.view;
-  const tabs=[['course','독서'],['me','내 서재'],['friends','친구']];if(isAdmin())tabs.push(['admin','관리']);
-  return `<div class="wrap${v==='course'||v==='me'?' shopin':''}"><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
+  const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','친구']];if(isAdmin())tabs.push(['admin','관리']);
+  return `<div class="wrap${v==='course'||v==='me'||v==='vision'?' shopin':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
     <div class="seg" role="group" aria-label="코스 선택"><button data-act="basemode" aria-pressed="${S.mode==='base'}">기본</button><button data-act="custommode" aria-pressed="${S.mode==='custom'}">${isPaid()?'':IC.lock}맞춤</button></div></header>
     <div class="dtabs">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${n}${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</div>
-    <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
+    <main>${v==='course'?courseHTML():v==='friends'?friendsHTML():v==='vision'?`<div class="vpage">${visionHTML(true)}</div>`:v==='admin'&&isAdmin()?adminViewHTML():meHTML()}</main></div>
     <nav class="nav" aria-label="메뉴">${tabs.map(([k,n])=>`<button data-act="view" data-v="${k}" aria-pressed="${v===k}">${IC[k]}<span>${n}</span>${k==='friends'?'<i class="fbd" data-tot hidden></i>':''}</button>`).join('')}</nav>`;
 }
 const BOOKG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg>';
@@ -2967,7 +3038,7 @@ function courseHTML(){
   <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
   <div class="cab"><span class="cabp">${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
-  <p class="hint" style="margin-top:14px">${S.mode==='custom'?'AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.':'계획표 출처: '+esc(S.source)}</p>`;
+  ${S.mode==='custom'?'<p class="hint" style="margin-top:14px">AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.</p>':''}`;
 }
 function homeCardHTML(){
   const i=homeIdx();
@@ -4278,6 +4349,7 @@ function render(){
 }
 function renderLayers(){
   queueMicrotask(gsiMount);
+  if(S.id&&S.view==='vision'){const pg=document.querySelector('main .vpage');if(pg){const n=S.vbW?S.vbW.n:0;pg.innerHTML=visionHTML(true);vbzGo(n,false)}}
   const l1=$('#layer1'),l2=$('#layer2');
   const sh=S.sheet;
   if(!S.id||!sh){l1.hidden=true;l1.innerHTML=''}
@@ -6258,7 +6330,7 @@ document.addEventListener('click',async e=>{
     case 'avatar':S.sheet={type:'avatar'};renderLayers();break;
     case 'scopen':S.sheet={type:'score'};S.scr=null;scLoad();break;
     case 'scview':{const R=S.scr;if(!R)break;const k=d.k,i=+d.i;const e=R.list.find(x=>x._id===k),e2=R.list.find(x=>x._id===k+'_r2');if(!e)break;S.evals[k]=e;if(e2)S.evals2[k]=e2;S.evalView={key:k,i};renderLayers();break}
-    case 'vbopen':S.vbEdit=false;S.vbImgs=null;S.vbIr=null;S.vbCus=null;S.vbAskBusy=false;S.vbAsk=vbPickQ(vbOf());S.sheet={type:'vision'};renderLayers();break;
+    case 'vbopen':S.vbEdit=false;S.vbImgs=null;S.vbIr=null;S.vbCus=null;S.vbAskBusy=false;S.vbAsk=vbPickQ(vbOf());S.sheet=null;S.view='vision';render();scrollTo(0,0);break;
     case 'vbedit':S.vbEdit=true;S.vbImgs=null;S.vbIr=null;S.vbCus=null;renderLayers();break;
     case 'vbcancel':S.vbEdit=false;S.vbImgs=null;S.vbIr=null;S.vbCus=null;renderLayers();break;
     case 'vbaskgo':vbAnswer();break;
@@ -6298,9 +6370,9 @@ document.addEventListener('click',async e=>{
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
     case 'wropen':if(!svReady(+d.i)){toast('책과 영화 한 편을 끝내고 별점을 먼저 남겨 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
-    case 'vbwnext':{vbWizSave();const W=S.vbW;if(!W)break;if(W.n<VBW.length-1){W.n++;renderLayers()}else await vbWizDone();break}
-    case 'vbwprev':{vbWizSave();if(S.vbW&&S.vbW.n>0){S.vbW.n--;renderLayers()}break}
-    case 'vbwskip':{const W=S.vbW;if(!W)break;delete W.a[VBW[W.n][0]];if(W.n<VBW.length-1){W.n++;renderLayers()}else await vbWizDone();break}
+    case 'vbwnext':{vbWizSave();const W=S.vbW;if(!W)break;if(W.n<VBW.length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
+    case 'vbwprev':{vbWizSave();if(S.vbW&&S.vbW.n>0)vbzGo(S.vbW.n-1,true);break}
+    case 'vbwskip':{const W=S.vbW;if(!W)break;const el=document.getElementById('vbz-in-'+W.n);if(el)el.value='';delete W.a[VBW[W.n][0]];if(W.n<VBW.length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
     case 'svset':if(S.survey){S.survey.v[d.q]=d.q==='diff'?5.5-(+d.v):+d.v;renderLayers()}break;
     case 'mbrate':{const o=rateObj(d.sc,d.id);if(!o)break;o[d.q]=+d.v;
       const box=document.querySelector(`[data-rbox="${d.sc}:${CSS.escape(d.id)}"]`);if(box)box.outerHTML=rateBox(d.sc,d.id,o);  // 입력 중인 글이 지워지지 않게 별점 칸만 다시 그린다
