@@ -2095,6 +2095,19 @@ body:has(.wrap.frl) #legal{color:rgba(245,233,214,.75)!important}
 .shopin .grid .cvinfo .ctag{font-size:9.5px!important;line-height:14px}
 .shopin .grid .cvinfo .ct{font-size:12px!important;line-height:16px}
 .shopin .grid .cvinfo .dots i{width:3.5px;height:3.5px}
+
+/* 로그인 봉투 2배(2026-11-26 사용자 지시): 버튼 줄은 그대로 두고 봉투를 아래로 길게, 아래쪽에 봉투 접힘(좌우·아래 덮개) 그림자. 회사 로고 글씨 80% */
+.auth:has(form.loan) .lpocket{align-items:flex-start;padding:14px 18px 0;min-height:136px;box-sizing:border-box;overflow:hidden}
+.auth:has(form.loan) .lpocket::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64%;pointer-events:none;
+  background:linear-gradient(rgba(70,45,20,.0),rgba(70,45,20,.12)),linear-gradient(#B48858,#A97E50);
+  clip-path:polygon(0 0,50% 78%,100% 0,100% 100%,0 100%);filter:drop-shadow(0 -1px 0 rgba(255,236,205,.35))}
+.auth:has(form.loan) .lpocket::before{z-index:1}
+.auth:has(form.loan) .lpocket>*{z-index:2}
+.auth:has(form.loan) .hero{height:min(calc(100svh - 312px),479px)}
+.auth .tai .t1 b{font-size:17px}
+.auth .tai .t1 i{font-size:7.6px}
+.auth .tai .t2{font-size:6.6px;padding-top:3px}
+.auth .tai{margin-top:28px}
 </style>
 
 <div id="app"></div>
@@ -6692,6 +6705,7 @@ document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(S.wr)wrClo
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(S.wr)wrSave();clearTimeout(pT);flush()}});
 
 /* ---------- 부팅 ---------- */
+const bootAt=Date.now();
 render();
 try{
   const c=window.claude;
@@ -6715,7 +6729,8 @@ if(S.db){
     (async()=>{try{const r=await S.db.doc('config/rubric').get();if(r.exists)rbApply(r.data())}catch(e){}})()
   ]);
   const saved=(window.__002.auth.session()||{}).uid||null;
-  if(saved){try{await enter(saved);return}catch(e){}}
+  /* 자동 로그인(저장된 세션·구글)이어도 서점 입구(로그인 화면)를 2초 보여 준 뒤 메인으로(2026-11-26 사용자 지시) */
+  if(saved){const w=2000-(Date.now()-bootAt);if(w>0)await new Promise(r=>setTimeout(r,w));try{await enter(saved);return}catch(e){}}
 }
 render();
 })();
