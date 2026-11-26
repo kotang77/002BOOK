@@ -2108,6 +2108,29 @@ body:has(.wrap.frl) #legal{color:rgba(245,233,214,.75)!important}
 .auth .tai .t1 i{font-size:7.6px}
 .auth .tai .t2{font-size:6.6px;padding-top:3px}
 .auth .tai{margin-top:28px}
+
+/* 봉투 = 옛 도서관 카드 주머니(개방형, 2026-11-26 사용자 참고 사진): 편지봉투 덮개 없이 위가 열린 크라프트 주머니,
+   카드보다 양옆이 넓어 카드가 주머니 안에 꽂힌 모양, 오른쪽 위 '대출일 ____' 줄, 점선 상자 안에 버튼, 아래 'Yeongwon Bookshop' */
+.auth:has(form.loan) .lpocket{margin:12px -34px -12px;padding:30px 30px 0;min-height:136px;flex-wrap:wrap;align-content:flex-start;border-radius:2px 2px 3px 3px;
+  background:radial-gradient(rgba(255,240,215,.14) 1px,transparent 1.5px) 0 0/5px 5px,repeating-linear-gradient(92deg,rgba(90,60,30,.035) 0 1px,transparent 1px 5px),linear-gradient(#C29A6B,#B68C5C);
+  box-shadow:0 -1px 0 rgba(90,60,30,.35),0 -6px 8px -4px rgba(40,25,10,.35),0 14px 26px -8px rgba(20,12,6,.55),inset 0 1px 0 rgba(255,240,215,.45)}
+.auth:has(form.loan) .lpocket::after{display:none}
+.auth:has(form.loan) .lpocket::before{inset:24px 12px 10px;border:1.2px dashed rgba(70,46,24,.7)}
+.lpk-dt{position:absolute!important;top:7px;right:16px;min-width:110px;font:500 10.5px var(--f-display);color:#3E2C1C;border-bottom:1px solid rgba(62,44,28,.6);padding:0 2px 1px;text-align:left}
+.lpk-ft{flex:1 0 100%;order:9;margin-top:9px;text-align:center;font:700 10px var(--f-display);color:#3E2C1C;letter-spacing:.04em}
+.auth:not(:has(form.loan)) .lpk-dt,.auth:not(:has(form.loan)) .lpk-ft{display:none}
+/* 주머니 재질 = 사진 같은 무광 크라프트지(점무늬 대신 잔 섬유·얼룩), '책에 낙서하지 맙시다' 인쇄 문구 */
+.auth:has(form.loan) .lpocket{background:
+    radial-gradient(60% 50% at 20% 30%,rgba(255,235,200,.08),transparent 70%),radial-gradient(50% 60% at 80% 70%,rgba(80,50,20,.08),transparent 70%),
+    radial-gradient(rgba(60,38,15,.16) .6px,transparent 1px) 0 0/3px 3px,radial-gradient(rgba(255,240,210,.12) .6px,transparent 1px) 1px 2px/4px 4px,
+    repeating-linear-gradient(88deg,rgba(70,45,20,.04) 0 1px,transparent 1px 6px),#B08A5E!important;
+  box-shadow:0 -1px 0 rgba(80,52,25,.4),0 -6px 8px -4px rgba(40,25,10,.35),0 14px 26px -8px rgba(20,12,6,.55)!important}
+.lpk-nt{flex:1 0 100%;order:8;margin-top:10px;text-align:center;font:500 11.5px var(--f-display);color:#2E2014;letter-spacing:.06em}
+.auth:has(form.loan) .lpk-ft{margin-top:4px}
+.auth:not(:has(form.loan)) .lpk-nt{display:none}
+.lpk-nt{margin-top:7px}
+.auth:has(form.loan) .lpk-ft{margin-top:2px;padding-bottom:16px}
+.auth:has(form.loan) .lpocket{min-height:0}
 </style>
 
 <div id="app"></div>
@@ -2849,7 +2872,7 @@ function authHTML(){
   else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span><i class="tw">아이디</i></span><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}</div></form>`;
+    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일</span><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">Yeongwon Bookshop</span></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
