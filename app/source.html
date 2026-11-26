@@ -3,7 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&family=Gaegu:wght@400;700&family=Hi+Melody&family=Gowun+Dodum&family=Permanent+Marker&family=Abril+Fatface&family=Courier+Prime:wght@400;700&family=Nanum+Gothic+Coding:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
 <meta name="description" content="중학생을 위한 책·영화 인생교육과 논술 첨삭, 002BOOK">
-<meta name="theme-color" content="#3E2F26">
+<meta name="theme-color" content="#1B362A">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" type="image/png" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -2517,7 +2517,7 @@ const logoSVG=(sz,cls,col)=>`<svg class="${cls||''}" width="${sz}" height="${sz}
 /* 앱 색 2가지(2026-11-25): 크림(기본)·숲(저장 값 'sky'). 성별과 무관하게 본인이 고른다 */
 const THEMES=[['cream','크림','크림 바탕 · 주황 강조 · 갈색 버튼','#F3ECDF','#F19601','#5A4536'],['sky','숲','아이보리 바탕 · 연두 버튼','#F1EEE2','#C3DE85','#A4CC4A']];
 const themeNow=()=>{try{return localStorage.getItem('002theme')==='sky'?'sky':'cream'}catch(e){return 'cream'}};
-function applyTheme(t){const v=t==='sky'?'sky':'cream';document.documentElement.dataset.theme=v;try{localStorage.setItem('002theme',v)}catch(e){}const m=document.querySelector('meta[name=theme-color]');if(m)m.content=v==='sky'?'#A4CC4A':'#3E2F26'}
+function applyTheme(t){const v=t==='sky'?'sky':'cream';document.documentElement.dataset.theme=v;try{localStorage.setItem('002theme',v)}catch(e){}const m=document.querySelector('meta[name=theme-color]');if(m)m.content=v==='sky'?'#A4CC4A':'#1B362A'}
 const themePick=(cur,p)=>`<div class="themes" role="radiogroup" aria-label="앱 색">${THEMES.map(([v,n,d,bg,ac,pr])=>`<label class="themec" for="${p}-th-${v}"><input type="radio" id="${p}-th-${v}" name="theme" value="${v}"${v===cur?' checked':''}><span class="thv" style="background:${bg}">${logoSVG(30,'',pr)}<i style="background:${ac}"></i><i style="background:${pr}"></i></span><span class="tht"><b>${n}</b><small>${d}</small></span></label>`).join('')}</div>`;
 try{applyTheme(themeNow())}catch(e){}
 const GR=['중1','중2','중3'];
@@ -4016,7 +4016,7 @@ function courseAdminHTML(){
     <label for="ad-bulk">이미지 파일들<input id="ad-bulk" type="file" accept="image/*" multiple></label>
     ${S.bulk?`<p role="status">${S.bulk.busy?'올리는 중이에요… ':''}올린 작품 ${S.bulk.ok.length}개${S.bulk.miss.length?` · 제목을 찾지 못한 파일 ${S.bulk.miss.length}개: <span class="err">${esc(S.bulk.miss.join(', '))}</span>`:''}</p>`:''}</div>`;
 }
-function admXlsxHTML(){const a=S.admin;return `<div><p class="hint">전달받은 양식(002BOOK_업로드양식.xlsx)을 고쳐서 올려 주세요. 올린 뒤 내용을 확인하고 적용해요.</p>
+function admXlsxHTML(){const a=S.admin;return `<div><p class="hint">① 지금 계획표를 엑셀로 내려받아 ② 책·영화 칸을 고친 뒤 ③ 다시 올리면 내용을 확인하고 적용해요. 첫 줄 제목은 그대로 두세요.</p><p><button class="btn ghost small" type="button" data-act="admxdl">지금 계획표 엑셀로 내려받기</button></p>
     <label for="ad-file">엑셀 파일<input id="ad-file" type="file" accept=".xlsx,.xls"></label>
     ${a?`<p role="status">${a.err?`<span class="err">${esc(a.err)}</span>`:`${a.items.length}개월을 읽었어요. 첫 달은 ${esc(a.items[0].g)} ${esc(a.items[0].m)}「${esc(a.items[0].book)}」, 마지막 달은 ${esc(a.items[a.items.length-1].g)} ${esc(a.items[a.items.length-1].m)}「${esc(a.items[a.items.length-1].book)}」예요.${a.warn?'<br><span class="err">'+esc(a.warn)+'</span>':''}`}</p>`:''}
     <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" data-act="adminapply" ${a&&!a.err?'':'disabled'}>이 계획표로 적용</button><button class="btn ghost" data-act="adminreset">처음 계획표로 되돌리기</button></div></div>`}
@@ -5016,6 +5016,17 @@ async function frShare(k){
   if(ok){sh.pane='';renderLayers();frMsgsDraw(true);toast('논술 결과를 보냈어요.')}}
 setInterval(()=>{if(S.id&&!document.hidden){loadFriends(false);if(S.sheet&&S.sheet.type==='chat'&&S.sheet.tab==='chat'&&frRel(S.sheet.id)==='friend')frLoadThread(S.sheet.id)}},40000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.id)loadFriends(false)});
+/* 관리자: 지금 계획표를 업로드 양식과 같은 제목의 엑셀로 내려받기(고쳐서 다시 올리기용) */
+function admXlsxDownload(){
+  if(!window.XLSX){toast('엑셀 도구를 불러오지 못했어요. 새로고침 후 다시 해 주세요.');return}
+  const rows=S.course.map(it=>{const b=it.bookInfo||{},a=it.m1Info||{},c=it.m2Info||{};const j=x=>Array.isArray(x)?x.join(', '):(x||'');
+    return {'학년':it.g,'월':it.m,'시기':it.season||'','장르':it.genre||'','핵심주제':it.topic||'','도서':it.book,'영화1':it.m1,'영화2':it.m2,'난이도':it.level||2,'부모확인':it.parent?'예':'','메모':it.memo||'',
+      '도서_저자':b.author||'','도서_출판사':b.publisher||'','도서_가격':b.price||'','도서_출판일':b.pubdate||'','도서_소개':b.intro||'',
+      '영화1_감독':a.director||'','영화1_개봉':a.year||'','영화1_러닝타임':a.runtime||'','영화1_관람등급':a.rating||'','영화1_OTT':j(a.ott),'영화1_소개':a.intro||'',
+      '영화2_감독':c.director||'','영화2_개봉':c.year||'','영화2_러닝타임':c.runtime||'','영화2_관람등급':c.rating||'','영화2_OTT':j(c.ott),'영화2_소개':c.intro||''}});
+  const wb=XLSX.utils.book_new();const ws=XLSX.utils.json_to_sheet(rows);ws['!cols']=Object.keys(rows[0]||{}).map(k=>({wch:/소개|주제|메모/.test(k)?28:/도서$|영화\d$/.test(k)?20:10}));
+  XLSX.utils.book_append_sheet(wb,ws,'계획표');XLSX.writeFile(wb,'002BOOK_업로드양식_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
 const H=(r,names)=>{for(const n of names){if(r[n]!==undefined&&String(r[n]).trim()!=='')return String(r[n]).trim()}return ''};
 async function readXlsx(file){
   try{
@@ -7127,6 +7138,7 @@ document.addEventListener('click',async e=>{
     case 'frcheer':{if(S.sheet&&S.sheet.type==='chat')frSend(S.sheet.id,{kind:'cheer',text:CHEERS[+d.k]||''});break}
     case 'frshare':frShare(+d.k);break;
     case 'grade':S.grade=d.g;render();break;
+    case 'admxdl':admXlsxDownload();break;
     case 'basemode':case 'basemode2':
       S.mode='base';S.me.mode='base';S.sheet=null;render();
       try{await S.db.doc('members/'+S.id).update({mode:'base'})}catch(err){}

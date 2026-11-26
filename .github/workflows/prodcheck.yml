@@ -1,0 +1,19 @@
+name: 운영 점검 (가입 시험)
+
+# Actions 탭 → 이 작업 → Run workflow. 실서버에서 새 시험 계정으로 가입·로그인·저장·탈퇴까지 해 보고 지운다.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 점검
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SITE: https://002book.com
+        run: python3 scripts/ops/prodcheck.py

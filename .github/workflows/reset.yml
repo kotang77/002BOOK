@@ -1,0 +1,39 @@
+name: 운영 데이터 초기화 (그랜드 오픈)
+
+# Actions 탭 → 이 작업 → Run workflow.
+#  - mode=check  : 지울 개수만 보여 줌 (아무것도 지우지 않음)
+#  - mode=delete : confirm 칸에 '전체삭제'를 적어야 실제로 지움. 되돌릴 수 없음.
+# 지우는 것·남기는 것은 scripts/ops/reset.py 맨 위 설명 참고.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = 개수만 확인, delete = 실제로 삭제'
+        required: true
+        default: check
+        type: choice
+        options: [check, delete]
+      confirm:
+        description: "delete일 때만: '전체삭제'라고 적기"
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 초기화
+        env:
+          REF: ${{ vars.SUPABASE_PROJECT_REF }}
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          MODE: ${{ inputs.mode }}
+          CONFIRM: ${{ inputs.confirm }}
+        run: python3 scripts/ops/reset.py

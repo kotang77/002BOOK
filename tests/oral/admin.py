@@ -179,6 +179,22 @@ with sync_playwright() as p:
         it0 = g('config/course')['data']['items'][0]
         ok('바뀐 영화의 예전 정보는 지움, 나머지 유지', 'm1Info' not in it0 and 'm2Info' in it0 and it0['book'] == '순례주택' and len(g('config/course')['data']['items']) == 36 and g('config/course')['data'].get('via') == 'edit')
         api('db.delete', T, path='config/course')
+        # 엑셀: 지금 계획표 내려받기 → 고쳐서 올리기 → 적용 (xlsx 라이브러리는 CDN 대신 로컬 파일, XLSXJS)
+        xl = os.environ.get('XLSXJS', '/tmp/xl/node_modules/xlsx/dist/xlsx.full.min.js')
+        if os.path.exists(xl):
+            pg.add_script_tag(path=xl); time.sleep(.3)
+            act(pg, '[data-act=admsub][data-v=xlsx]')
+            with pg.expect_download() as dl: act(pg, '[data-act=admxdl]')
+            fp = '/tmp/adm_course.xlsx'; dl.value.save_as(fp)
+            import openpyxl
+            wb = openpyxl.load_workbook(fp); ws = wb['계획표']; hdr = [c.value for c in ws[1]]
+            ok('엑셀 내려받기: 36행·업로드 양식 제목', ws.max_row == 37 and all(h in hdr for h in ['학년', '월', '도서', '영화1', '영화2', '핵심주제']), (ws.max_row, hdr[:8]))
+            ws.cell(row=2, column=hdr.index('도서') + 1, value='시험용 새 책'); wb.save(fp)
+            pg.set_input_files('#ad-file', fp)
+            ok('고친 엑셀 올리기 → 36개월 읽음', wait(lambda: '36개월을 읽었어요' in pg.inner_text('body')))
+            act(pg, '[data-act=adminapply]')
+            ok('적용 → 계획표 반영', wait(lambda: ((g('config/course') or {}).get('data', {}).get('items') or [{}])[0].get('book') == '시험용 새 책' and len(g('config/course')['data']['items']) == 36))
+            api('db.delete', T, path='config/course')
         # 관리자
         act(pg, '[data-act=admsec][data-v=admins]')
         ok('관리자 목록', wait(lambda: '엄마쌤' in pg.inner_text('#ads-admins') and '최고 관리자' in pg.inner_text('#ads-admins')))

@@ -40,12 +40,17 @@ jobs:
         working-directory: android
         run: |
           if [ -n "${{ secrets.ANDROID_KEYSTORE_B64 }}" ]; then
-            echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android.keystore
+            echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > ks.bin
+            # 암호화해 둔 키(openssl, 'Salted__'로 시작)면 비밀번호로 풀고, 아니면 그대로 쓴다
+            if head -c 8 ks.bin | grep -q 'Salted__'; then openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:KS_PASS -in ks.bin -out android.keystore; else mv ks.bin android.keystore; fi
+            rm -f ks.bin
           else
             if [ -z "$KS_PASS" ]; then echo "::error::Secrets에 ANDROID_KEYSTORE_PASSWORD(8자 이상)를 먼저 넣어 주세요"; exit 1; fi
             keytool -genkeypair -v -keystore android.keystore -alias 002book -keyalg RSA -keysize 2048 -validity 10000 \
               -storepass "$KS_PASS" -keypass "$KS_PASS" -dname "CN=002BOOK, O=002BOOK, C=KR"
             echo "NEW_KEY=1" >> $GITHUB_ENV
+            # 공개 저장소라 결과물은 누구나 받을 수 있어서, 키는 비밀번호로 암호화한 글자로만 내보낸다
+            openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -pass env:KS_PASS -in android.keystore | base64 -w0 > ANDROID_KEYSTORE_B64.txt
           fi
           echo "### 서명 키 SHA-256 (ANDROID_SHA256 변수에 넣기)" >> $GITHUB_STEP_SUMMARY
           keytool -list -v -keystore android.keystore -alias 002book -storepass "$KS_PASS" | grep 'SHA256:' | sed 's/.*SHA256: //' | tee -a $GITHUB_STEP_SUMMARY
@@ -77,10 +82,10 @@ jobs:
             android/app-release-bundle.aab
             android/app-release-signed.apk
 
-      - name: 새로 만든 서명 키 내려받기 (처음 한 번만)
+      - name: 새로 만든 서명 키 내려받기 (처음 한 번만, 암호화됨)
         if: env.NEW_KEY == '1'
         uses: actions/upload-artifact@v4
         with:
-          name: android-keystore-KEEP-SAFE
-          path: android/android.keystore
+          name: android-keystore-ENCRYPTED-KEEP-SAFE
+          path: android/ANDROID_KEYSTORE_B64.txt
           retention-days: 3
