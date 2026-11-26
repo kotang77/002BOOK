@@ -1875,8 +1875,8 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .top.tnav .bell .dot{position:absolute;top:7px;right:auto;left:calc(50% + 4px)}
 @media (min-width:721px){.wrap .top.tnav .ti{width:52px;font-size:11px}}
 /* 표지·포스터: 불러온 그림의 실제 비율로 틀을 맞춤 — 잘리지도, 빈 여백도 없게 (2026-11-26) */
-:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv).fitd{aspect-ratio:var(--ar)!important;height:auto!important}
-:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv).fitd>img{object-fit:fill!important;object-position:center!important;width:100%!important;height:100%!important}
+:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd{aspect-ratio:var(--ar)!important;height:auto!important}
+:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd>img{object-fit:fill!important;object-position:center!important;width:100%!important;height:100%!important}
 img.pth.fitd{height:auto!important;aspect-ratio:var(--ar);object-fit:fill!important}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
@@ -2479,6 +2479,95 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgd>p{margin:6px 0}.lgev th small{display:block;font:600 11px var(--f-body);color:#A57A35}.lgref ol{margin:6px 0;padding-left:20px;font-size:12.5px}.lgref li{margin-bottom:6px}.lgref a{color:#1F4637;text-decoration:underline;word-break:break-word}.lgref i{color:#8A7C6E;font-style:normal}
 .lgact{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}.lgact .btn:first-child{background:#1F4637;border-color:#1F4637;color:#FFF8EA}
 .lgact .btn.ghost{background:rgba(255,246,232,.92);color:#2E2A26;border-color:transparent}
+/* 학습지도 v3 (Figma 16 학습지도·재디자인) */
+.lgprint{display:none}@media print{.lgprint{display:block!important}.lgbar,.lgsh{display:none!important}}
+.lgm button i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#6DBB8A;margin-left:5px;vertical-align:2px}
+.lgsh{background:#FFFDF8;color:#2B2622;border-radius:22px;padding:14px 16px 20px;box-shadow:0 14px 30px -10px rgba(0,0,0,.7);font-size:14px;line-height:1.6;display:flex;flex-direction:column;gap:22px;max-width:860px}
+.lgsh p{margin:0}.lgsh section{margin:0}
+.lgtabs{display:flex;gap:4px;padding:4px;background:#F1EADB;border-radius:14px}
+.lgtabs button{flex:1;border:0;background:none;border-radius:11px;padding:10px 0;font:700 14px var(--f-body);color:#8A7C6E;cursor:pointer}
+.lgtabs button[aria-selected=true]{background:#fff;color:#1F4637;box-shadow:0 2px 6px rgba(51,38,26,.12)}
+.lgst{display:flex;align-items:center;gap:8px;margin:0 0 10px;font:700 17px var(--f-display);color:#1F4637}
+.lgst span{font:700 11.5px var(--f-body);color:#A57A35;background:#F3E7CF;border-radius:99px;padding:1px 7px}
+.lghero{background:#1F4637;color:#FFF6E8;border-radius:18px;padding:18px}
+.lghero small{font:700 12px var(--f-body);color:#D9A441}
+.lghero h3{margin:2px 0 4px;font:700 32px/1.2 var(--f-display);color:#FFF6E8}
+.lghero>p{color:#E9DFC9;font-weight:500}
+.lgcvs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;align-items:end;max-width:420px}
+.lgcv{margin:0}
+.lgcvi{aspect-ratio:96/138;border-radius:6px;overflow:hidden;background:#C9B48F;box-shadow:0 6px 12px -4px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:6px;text-align:center}
+.lgcvi:has(>img){padding:0;background:none}.lgcvi img{width:100%;height:100%;object-fit:contain}
+.lgcvi span{font:700 12px/1.35 var(--f-display);color:#3B2611}
+.lgcv:nth-child(2) .lgcvi:not(:has(>img)){background:#8FA8B8}.lgcv:nth-child(3) .lgcvi:not(:has(>img)){background:#B98A7A}
+.lgcv figcaption{margin-top:6px;font:700 13px/1.3 var(--f-body);color:#FFF6E8}.lgcv figcaption small{display:block;font-size:11px;color:#D9A441}
+.lgnote{display:flex;gap:10px;background:#EEF3EC;border-radius:14px;padding:12px 14px;color:#1F4637}
+.lgnote b{font-size:12.5px}.lgnote p{color:#2B2622;font-size:13.5px;line-height:1.55}
+.lgwarn{background:#FBF1EC;color:#C0533F}
+.lgi{flex:none;margin-top:2px}
+.lgp1{color:#3B332C}
+.lgcar{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.lgcar::-webkit-scrollbar{display:none}
+.lgwc{flex:0 0 82%;scroll-snap-align:start;background:#F7F1E4;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.lgk{align-self:flex-start;background:#fff;border-radius:99px;padding:2px 8px;font:700 11px var(--f-body);color:#A57A35}
+.lgwc h4{margin:0;font:700 18px var(--f-display);color:#1F4637}.lgwc>p{font-size:13.5px;line-height:1.55}
+.lgwc dl{display:flex;gap:8px;margin:0;font-size:13px;line-height:1.45}.lgwc dt{flex:none;font-weight:700;color:#A57A35;font-size:12px;padding-top:1px}.lgwc dd{margin:0;color:#3B332C}
+.lgwc .lglink{border-left:3px solid #D9A441;padding:4px 0 4px 10px;color:#1F4637;font-weight:500;font-size:12.5px;margin-top:auto}
+.lgdots{display:flex;justify-content:center;gap:5px;margin-top:10px}.lgdots i{width:6px;height:6px;border-radius:3px;background:#D8CDB8;transition:width .2s}.lgdots i.on{width:16px;background:#1F4637}
+@media(min-width:720px){.lgcar{display:grid;grid-template-columns:repeat(3,1fr);margin:0;padding:0;overflow:visible}.lgdots{display:none}}
+.lgpts{list-style:none;margin:0;padding:0}
+.lgpts li{display:flex;gap:12px;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #EDE4D3}
+.lgnum{font:700 22px/1.15 var(--f-display);color:#D9A441;min-width:28px}
+.lgpts li div>b{font-size:14.5px}.lgpts li p{color:#5B5149;font-size:13.5px;line-height:1.5}
+.lgmore,.lgqb{border:0;background:none;padding:2px 0;font:700 13px var(--f-body);color:#A57A35;cursor:pointer;display:inline-flex;align-items:center;gap:4px;align-self:flex-start}
+.lgqb .lgi{margin:0}
+.lgqs{display:grid;gap:10px}
+.lgqc{background:#F7F1E4;border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.lgqq{display:flex;gap:10px;font-weight:700;font-size:14.5px;line-height:1.45}
+.lgqq span{flex:none;background:#1F4637;color:#FFF6E8;border-radius:99px;padding:1px 7px;font-size:11px;height:fit-content;margin-top:2px}
+.lgqh{background:#fff;border-radius:10px;padding:10px 12px}.lgqh small{font-weight:700;color:#A57A35;font-size:11.5px}.lgqh p{font-size:13px;color:#3B332C;line-height:1.5}
+.lgwds{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(min-width:720px){.lgwds{grid-template-columns:repeat(4,1fr)}}
+.lgwds div{background:#F7F1E4;border-radius:12px;padding:10px 12px}.lgwds b{font:700 15px var(--f-display);color:#1F4637}.lgwds p{font-size:12.5px;color:#5B5149;line-height:1.4}
+.lgacts{display:grid;gap:8px}
+.lgac{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid #E6DCCB;background:#fff;border-radius:12px;padding:10px 12px;font:400 13.5px/1.45 var(--f-body);color:#2B2622;cursor:pointer;width:100%}
+.lgbx{flex:none;width:18px;height:18px;border:1.6px solid #A57A35;border-radius:5px;display:flex;align-items:center;justify-content:center;color:transparent;margin-top:1px;box-sizing:border-box}.lgbx .lgi{margin:0}
+.lgac.on .lgbx{background:#1F4637;border-color:#1F4637;color:#fff}.lgac.on{color:#8A7C6E;text-decoration:line-through}
+.lgai{font-size:11px;color:#8A7C6E;line-height:1.5}
+.lgload{display:grid;gap:10px}
+.lgbar{position:sticky;bottom:12px;z-index:5;display:flex;gap:8px;background:rgba(255,253,248,.96);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid #E6DCCB;border-radius:16px;padding:8px;box-shadow:0 8px 20px -10px rgba(0,0,0,.35);margin-top:-8px}
+@media(max-width:720px){.lgbar{bottom:calc(66px + env(safe-area-inset-bottom,0px))}}
+.lgsh .lgbar .btn{flex:1;min-height:44px;border-radius:12px;background:#F1EADB;color:#2E2A26;border-color:transparent;font-weight:700;padding:0 8px}
+.lgsh .lgbar .btn:first-child{flex:1.3;background:#1F4637;border-color:#1F4637;color:#FFF8EA}
+.lgadm{display:flex;flex-wrap:wrap;gap:8px}
+.lgtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lgtile{border:0;text-align:left;background:#F7F1E4;border-radius:16px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:1px;font-family:var(--f-body)}
+.lgtile small{font-weight:700;font-size:12.5px;color:#A57A35}.lgtile b{font:700 30px/1.15 var(--f-display);color:#1F4637}.lgtile span{font-size:11px;color:#8A7C6E}
+.lgtile[aria-pressed=true]{background:#1F4637}.lgtile[aria-pressed=true] small{color:#D9A441}.lgtile[aria-pressed=true] b{color:#FFF6E8}.lgtile[aria-pressed=true] span{color:#E9DFC9}
+.lgpanel{display:flex;flex-direction:column;gap:22px}
+.lgsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:6px}
+.lgsteps li{background:#F7F1E4;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:3px}
+.lgsteps span{width:22px;height:22px;border-radius:50%;background:#1F4637;color:#FFF6E8;font:700 12px/22px var(--f-body);text-align:center}
+.lgsteps b{font-size:13px;line-height:1.35}.lgsteps small{font-size:11.5px;color:#6B6157;line-height:1.35}
+.lglen{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.lglen div{border:1px solid #E6DCCB;border-radius:10px;padding:8px 4px;text-align:center}.lglen div.on{background:#F3E7CF}.lglen small{display:block;font-weight:700;color:#A57A35;font-size:12px}.lglen b{font-size:13.5px}
+.lgrbs{display:flex;flex-direction:column;gap:12px}
+.lgbh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.lgbh b{font-size:14px}.lgbh span{font:700 15px var(--f-display);color:#1F4637;flex:none}
+.lgbt{height:8px;border-radius:4px;background:#EFE6D4;margin:5px 0}.lgbt i{display:block;height:100%;border-radius:4px;background:#8DAA98}.lgbt i.mid{background:#3F6B57}.lgbt i.hi{background:#1F4637}
+.lgrb p{font-size:12.5px;color:#6B6157;line-height:1.45}
+.lglv{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.lglv span{border-radius:10px;padding:8px 0;text-align:center;font-weight:700;font-size:13px;color:#1F4637;background:rgba(31,70,55,.12)}
+.lglv span:nth-child(2){background:rgba(31,70,55,.3)}.lglv span:nth-child(3){background:rgba(31,70,55,.5)}.lglv span:nth-child(4){background:rgba(31,70,55,.75);color:#FFF6E8}.lglv span:nth-child(5){background:#1F4637;color:#FFF6E8}
+.lgsm2{font-size:12px;color:#8A7C6E;margin-top:8px!important;line-height:1.5}
+.lghex{width:100%;max-width:400px;display:block;margin:0 auto}.lghex .g{fill:none;stroke:#E6DCCB}.lghex .t{fill:rgba(31,70,55,.18);stroke:#1F4637;stroke-width:2}.lghex circle{fill:#1F4637}.lghex text{font:700 12px var(--f-body);fill:#3B332C}
+.lgpt3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.lgpt3 div{background:#F7F1E4;border-radius:14px;padding:12px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}.lgpt3 b{font:700 26px/1.1 var(--f-display);color:#1F4637}.lgpt3 b small{font:700 12px var(--f-body);margin-left:1px}.lgpt3 span{font-size:11.5px;color:#6B6157}
+.lgax{display:grid;grid-template-columns:1fr 1fr;gap:6px}.lgax div{border:1px solid #EDE4D3;border-radius:10px;padding:8px 10px;display:flex;flex-direction:column}.lgax b{font-size:13px;color:#1F4637}.lgax small{font-size:11.5px;color:#6B6157;line-height:1.4}
+.lgrefbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid #E6DCCB;background:#fff;border-radius:14px;padding:14px;cursor:pointer;color:#1F4637;font-family:var(--f-body)}
+.lgrefbtn span{flex:1;display:flex;flex-direction:column}.lgrefbtn b{color:#2B2622;font-size:14px}.lgrefbtn small{color:#8A7C6E;font-size:12px}.lgrefbtn em{font-style:normal;color:#A57A35;font-size:22px;line-height:1}
+.lgrefl{display:grid;gap:10px;margin-bottom:10px}
+.lgref{display:flex;align-items:center;gap:10px;background:#F7F1E4;border-radius:14px;padding:12px 12px 12px 14px}
+.lgref>div{flex:1;min-width:0}.lgref b{font-size:13.5px;margin-right:6px}.lgtag{display:inline-block;background:#fff;border-radius:99px;padding:0 6px;font-weight:700;font-size:10.5px;color:#A57A35;vertical-align:1px}.lgref small{display:block;font-size:12px;color:#6B6157;line-height:1.35;margin-top:2px}
+.lgdoi{flex:none;display:inline-flex;align-items:center;gap:3px;background:#1F4637;color:#FFF6E8!important;border-radius:99px;padding:6px 10px;font-weight:700;font-size:12px;text-decoration:none}.lgdoi .lgi{margin:0}
+.lgsh a.lgdoi{text-decoration:none!important}
+.lgadm .btn{background:rgba(255,246,232,.92)!important;color:#2E2A26!important;border-color:transparent!important}
+@media(min-width:720px){.lghero{display:grid;grid-template-columns:1fr minmax(300px,380px);column-gap:28px;align-items:center}.lghero{grid-template-rows:1fr auto auto auto 1fr}.lghero>:not(.lgcvs){grid-column:1}.lghero>small{grid-row:2}.lghero>h3{grid-row:3}.lghero>p{grid-row:4}.lghero .lgcvs{grid-column:2;grid-row:1/-1;margin-top:0}}
+.lgdisc{background:#F1EADB;border-radius:12px;padding:10px 12px;font-size:12px;color:#5B5149;line-height:1.5;margin-bottom:6px!important}
 /* PDF(A4 794×1123) */
 .lgpdf{width:794px;height:1123px;box-sizing:border-box;padding:44px 52px;background:#fff;font-family:'Noto Sans KR',sans-serif}
 .lgpdf .lgs{box-shadow:none;border-radius:0;padding:0;font-size:16px;line-height:1.75;background:#fff}
@@ -5665,8 +5754,9 @@ function mnPage(ev,lines,marks,p,total,geo){
 }
 function fitMn(){document.querySelectorAll('.mnw').forEach(w=>{const p=w.firstElementChild;if(p)p.style.zoom=Math.max(w.clientWidth/794,innerWidth<720?.4:.72)})}
 window.addEventListener('resize',fitMn);
+document.addEventListener('scroll',e=>{const c=e.target;if(!c||!c.classList||!c.classList.contains('lgcar'))return;const f=c.firstElementChild;if(!f)return;const n=Math.round(c.scrollLeft/(f.offsetWidth+10));const d=c.nextElementSibling;if(d)d.querySelectorAll('i').forEach((x,k)=>x.classList.toggle('on',k===n))},true);
 /* 표지·포스터 자동 맞춤: 그림이 다 불러와지면 틀의 비율을 그림 비율로 바꾼다 */
-(()=>{const FR='.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv';
+(()=>{const FR='.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi';
   const fit=im=>{if(!im||!im.naturalWidth||!im.naturalHeight)return;const r=im.naturalWidth/im.naturalHeight;if(r<.4||r>2.5)return;
     const t=im.classList.contains('pth')?im:(im.parentElement&&im.parentElement.matches(FR)?im.parentElement:null);if(!t)return;
     t.style.setProperty('--ar',r.toFixed(4));t.classList.add('fitd')};
@@ -6888,36 +6978,80 @@ function lgSheetHTML(it,g){const T=x=>esc(String(x||''));const A=x=>Array.isArra
 
 /* 학습지도: 평가 방식 설명(논술·구술·육각형 독서)과 근거 문헌. 배점은 관리자가 고친 지금 기준(RBC)을 그대로 보여 줌 */
 const LG_REFS=[
- ['채점 기준표(루브릭)의 신뢰도·타당도','Jonsson, A. & Svingby, G. (2007). The use of scoring rubrics: Reliability, validity and educational consequences. Educational Research Review, 2(2), 130–144.','https://doi.org/10.1016/j.edurev.2007.05.002','논술·구술'],
- ['좋은 평가 기준의 조건','Brookhart, S. M. (2018). Appropriate criteria: Key to effective rubrics. Frontiers in Education, 3, 22.','https://doi.org/10.3389/feduc.2018.00022','논술·구술'],
- ['피드백과 다시 쓰기·다시 말하기','Hattie, J. & Timperley, H. (2007). The power of feedback. Review of Educational Research, 77(1), 81–112.','https://doi.org/10.3102/003465430298487','논술 2차·구술 재답변'],
- ['다양한 분야 읽기와 읽기 능력','OECD (2021). 21st-Century Readers: Developing Literacy Skills in a Digital World. PISA, OECD Publishing.','https://doi.org/10.1787/a83d84cb-en','육각형 독서'],
- ['도서 분야 분류','한국도서관협회 (2013). 한국십진분류법(KDC) 제6판.','','육각형 독서'],
- ['국어과 쓰기·말하기 성취기준','교육부 (2022). 2022 개정 국어과 교육과정(교육부 고시 제2022-33호 별책 5).','','논술·구술']];
-function lgEvalHTML(){const T=x=>esc(String(x||''));
-  const tbl=(items)=>`<table class="lgtb lgev">${items.map(x=>`<tr><th>${T(x.k)}<small>${Number(x.w)||0}점</small></th><td>${T(String(x.c||'').split(/[.。]/)[0])}</td></tr>`).join('')}</table>`;
-  return `<div class="lgs lgevs"><h3>평가는 이렇게 해요</h3><p class="lgsm">모든 점수는 AI가 아래 기준표로 매기는 참고 점수예요. 기준표는 관리자 화면에서 공개적으로 관리해요.</p>
-   <details class="lgd"><summary>논술 · 100점</summary><p>책과 영화로 낸 질문에 손글씨로 답을 쓰면, 여섯 영역을 각각 5수준(40·55·70·85·100%)으로 매겨 더해요. 분량은 중1 500~700자, 중2 700~900자, 중3 900~1,100자예요. 첨삭을 보고 다시 쓰면 1차와 비교해 나아진 점을 따로 알려 줘요.</p>${tbl(RBC.essay)}</details>
-   <details class="lgd"><summary>구술 · 100점</summary><p>AI가 읽어 주는 질문을 듣고 말로 답해요. 1차 평가 뒤 모범 답안을 따라 읽고, 생각할 시간을 가진 다음 다시 대답하면 두 답을 비교해 '성장 점수'를 줘요. 외워서 그대로 말한 답은 성장으로 치지 않아요.</p>${tbl(RBC.oral)}</details>
-   <details class="lgd"><summary>육각형 독서</summary><p>읽은 책의 분야와 깊이를 여섯 칸으로 그려요. 능력이나 인성 점수가 아니에요.</p>
-     <table class="lgtb lgev">${AX.map((a,i)=>`<tr><th>${T(a[1])}<small>목표 ${HXT[i]}</small></th><td>${T(a[2])}</td></tr>`).join('')}</table>
-     <p class="lgsm">책 한 권은 그 분야에 1점, 인상 깊은 문장을 남기면 1.5점, 논술이나 구술까지 하면 2점이에요. 분야는 국립중앙도서관 분류(KDC)를 먼저 쓰고, 찾지 못한 책만 AI가 정해요. 학년 목표는 30점이에요.</p></details>
-   <details class="lgd lgref"><summary>근거가 된 연구·자료 보기</summary><ol>${LG_REFS.map(r=>`<li><b>${T(r[0])}</b> <i>(${T(r[3])})</i><br>${r[2]?`<a href="${r[2]}" target="_blank" rel="noopener noreferrer">${T(r[1])}</a>`:T(r[1])}</li>`).join('')}</ol>
-     <p class="lgsm">평가 영역·배점은 위 연구가 말하는 '분명한 기준, 수준별 설명, 고칠 점을 알려 주는 피드백' 원칙에 맞춰 영원이북이 정했어요. 연구가 이 점수표 자체를 검증한 것은 아니에요.</p></details></div>`}
+ ['채점 기준표(루브릭)의 신뢰도·타당도','Jonsson, A. & Svingby, G. (2007). The use of scoring rubrics: Reliability, validity and educational consequences. Educational Research Review, 2(2), 130–144.','https://doi.org/10.1016/j.edurev.2007.05.002','논술·구술','Jonsson & Svingby (2007) · Educational Research Review'],
+ ['좋은 평가 기준의 조건','Brookhart, S. M. (2018). Appropriate criteria: Key to effective rubrics. Frontiers in Education, 3, 22.','https://doi.org/10.3389/feduc.2018.00022','논술·구술','Brookhart (2018) · Frontiers in Education'],
+ ['피드백과 다시 쓰기·다시 말하기','Hattie, J. & Timperley, H. (2007). The power of feedback. Review of Educational Research, 77(1), 81–112.','https://doi.org/10.3102/003465430298487','2차·재답변','Hattie & Timperley (2007) · Review of Educational Research'],
+ ['다양한 분야 읽기와 읽기 능력','OECD (2021). 21st-Century Readers: Developing Literacy Skills in a Digital World. PISA, OECD Publishing.','https://doi.org/10.1787/a83d84cb-en','육각형','OECD (2021) · 21st-Century Readers (PISA)'],
+ ['도서 분야 분류','한국도서관협회 (2013). 한국십진분류법(KDC) 제6판.','','육각형','한국도서관협회 (2013) · KDC 제6판'],
+ ['국어과 쓰기·말하기 성취기준','교육부 (2022). 2022 개정 국어과 교육과정(교육부 고시 제2022-33호 별책 5).','','논술·구술','교육부 (2022) · 2022 개정 국어과 교육과정']];
+/* 학습지도 v3 (2026-11-26, Figma 16 학습지도·재디자인): 탭 두 개(이달 지도안·평가 방식), 히어로·작품 넘기기·카드 목록.
+   A4 두 장(lgSheetHTML)은 화면에서 숨기고 PDF·인쇄에만 쓴다 */
+const lgT=x=>esc(String(x||''));const lgArr=x=>Array.isArray(x)?x:[];
+const LG_IC={msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',warn:'<path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/>',ext:'<path d="M7 17 17 7M8 7h9v9"/>',book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM8 7h8M8 11h6"/>',chev:'<path d="m6 9 6 6 6-6"/>',check:'<path d="m5 12 5 5 9-10"/>'};
+const lgI=(k,s=18)=>`<svg class="lgi" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${LG_IC[k]}</svg>`;
+const lgSec=(t,n)=>`<h3 class="lgst">${t}${n?`<span>${n}</span>`:''}</h3>`;
+function lgChk(key){try{const a=JSON.parse(localStorage.getItem('lgchk:'+key)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+function lgViewHTML(it,g,key){
+  const nm={book:'책',m1:'영화 ①',m2:'영화 ②'};const ti={book:it.book,m1:it.m1,m2:it.m2};
+  const works=lgArr(g.works).filter(x=>x&&nm[x.k]);const link={};lgArr(g.link).forEach(x=>{if(x&&nm[x.k])link[x.k]=x.how});
+  const pts=lgArr(g.points).filter(x=>x&&(x.t||x.d)).slice(0,5);const tk=lgArr(g.talk).filter(x=>x&&(x.q||typeof x==='string')).slice(0,5);
+  const wd=lgArr(g.words).filter(x=>x&&x.w).slice(0,4);const ac=lgArr(g.acts).filter(Boolean).slice(0,2);const done=lgChk(key);
+  const topic=String(it.topic||'').split(':')[0].trim()||'이달의 주제';const qo=S.lg.q==null?0:S.lg.q;
+  const cover=k=>{const u=ti[k]?artOf(ti[k],k==='book'?'book':'movie'):'';return `<figure class="lgcv"><div class="lgcvi">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>${lgT(bTitle(ti[k]))}</span>`}</div><figcaption><small>${nm[k]}</small>${lgT(bTitle(ti[k]))}</figcaption></figure>`};
+  const P=S.lg.more?pts:pts.slice(0,3);
+  return `<section class="lghero"><small>${lgT(it.g)} · ${lgT(it.m)} · 이달의 주제</small><h3>${lgT(topic)}</h3>${g.theme?`<p>${lgT(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].map(cover).join('')}</div></section>
+  ${g.intro?`<div class="lgnote">${lgI('msg')}<div><b>부모님께</b><p>${lgT(g.intro)}</p></div></div>`:''}
+  ${g.why?`<section>${lgSec('세 작품, 왜 함께 볼까?')}<p class="lgp1">${lgT(g.why)}</p></section>`:''}
+  ${works.length?`<section>${lgSec('작품 안내',works.length)}<div class="lgcar" tabindex="0" aria-label="작품 안내. 옆으로 넘겨 보세요">${works.map(w=>`<article class="lgwc"><span class="lgk">${nm[w.k]}</span><h4>${lgT(bTitle(ti[w.k]))}</h4><p>${lgT(w.sum)}</p>${w.who?`<dl><dt>인물</dt><dd>${lgT(w.who)}</dd></dl>`:''}${w.look?`<dl><dt>눈여겨볼 점</dt><dd>${lgT(w.look)}</dd></dl>`:''}${link[w.k]?`<p class="lglink">주제와 연결 · ${lgT(link[w.k])}</p>`:''}</article>`).join('')}</div><div class="lgdots" aria-hidden="true">${works.map((_,n)=>`<i class="${n?'':'on'}"></i>`).join('')}</div></section>`:''}
+  ${pts.length?`<section>${lgSec('가르칠 포인트',pts.length)}<ol class="lgpts">${P.map((x,n)=>`<li><b class="lgnum">${String(n+1).padStart(2,'0')}</b><div><b>${lgT(x.t)}</b><p>${lgT(x.d)}</p></div></li>`).join('')}</ol>${pts.length>3?`<button class="lgmore" data-act="lgmore" aria-expanded="${!!S.lg.more}">${S.lg.more?'접기':`+ ${pts.length-3}개 더 보기`}</button>`:''}</section>`:''}
+  ${tk.length?`<section>${lgSec('함께 나눌 질문',tk.length)}<div class="lgqs">${tk.map((x,n)=>{const q=typeof x==='string'?x:x.q,h=typeof x==='string'?'':x.hint;return `<div class="lgqc"><p class="lgqq"><span>Q${n+1}</span>${lgT(q)}</p>${h?(qo===n?`<div class="lgqh"><small>생각의 방향</small><p>${lgT(h)}</p></div>`:`<button class="lgqb" data-act="lgqo" data-i="${n}" aria-expanded="false">생각의 방향 보기 ${lgI('chev',14)}</button>`):''}</div>`}).join('')}</div></section>`:''}
+  ${wd.length?`<section>${lgSec('알아 둘 낱말',wd.length)}<div class="lgwds">${wd.map(x=>`<div><b>${lgT(x.w)}</b><p>${lgT(x.m)}</p></div>`).join('')}</div></section>`:''}
+  ${ac.length?`<section>${lgSec('이번 달 집에서 할 활동',ac.length)}<div class="lgacts">${ac.map((a,n)=>`<button class="lgac${done.includes(n)?' on':''}" data-act="lgchk" data-i="${n}" aria-pressed="${done.includes(n)}"><span class="lgbx">${lgI('check',14)}</span><span>${lgT(a)}</span></button>`).join('')}</div></section>`:''}
+  ${g.care?`<div class="lgnote lgwarn">${lgI('warn')}<div><b>지도할 때 주의할 점</b><p>${lgT(g.care)}</p></div></div>`:''}
+  <p class="lgai">생성형 AI(Claude)가 쓴 자료예요. 작품 세부 내용은 직접 읽고 본 것과 다를 수 있어요.</p>`}
+/* 평가 방식: 배점은 관리자가 고친 지금 기준(RBC)과 육각형 목표(HXT)를 그대로 그린다 */
+function lgBars(items){const mx=Math.max(1,...items.map(x=>Number(x.w)||0));
+  return `<div class="lgrbs">${items.map(x=>{const w=Number(x.w)||0;return `<div class="lgrb"><div class="lgbh"><b>${lgT(x.k)}</b><span>${w}점</span></div><div class="lgbt" role="img" aria-label="${lgT(x.k)} ${w}점"><i class="${w>=mx?'hi':w>=mx*0.6?'mid':''}" style="width:${(w/mx*100).toFixed(1)}%"></i></div><p>${lgT(String(x.c||'').split(/[.。]/)[0])}</p></div>`}).join('')}</div>`}
+const lgSteps=a=>`<ol class="lgsteps">${a.map(([t,d],n)=>`<li><span>${n+1}</span><b>${t}</b><small>${d}</small></li>`).join('')}</ol>`;
+function lgHexSVG(){const cx=170,cy=118,R=84,mx=Math.max(...HXT);const P=(r,i)=>{const a=-Math.PI/2+i*Math.PI/3;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+  const f=p=>p.map(v=>v.toFixed(1)).join(',');const poly=r=>AX.map((_,i)=>f(P(r,i))).join(' ');const tg=HXT.map((v,i)=>P(R*v/mx,i));
+  const lab=AX.map((a,i)=>{const [x,y]=P(R+16,i);const an=Math.abs(x-cx)<5?'middle':x<cx?'end':'start';return `<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="${an}">${esc(a[1])} ${HXT[i]}</text>`}).join('');
+  return `<svg class="lghex" viewBox="0 0 340 236" role="img" aria-label="학년 목표 ${AX.map((a,i)=>a[1]+' '+HXT[i]+'점').join(', ')}">${[1,.66,.33].map(k=>`<polygon class="g" points="${poly(R*k)}"/>`).join('')}${AX.map((_,i)=>{const [x,y]=P(R,i);return `<line class="g" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`}).join('')}<polygon class="t" points="${tg.map(f).join(' ')}"/>${tg.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.5"/>`).join('')}${lab}</svg>`}
+function lgEvalHTML(){const v=['essay','oral','hex'].includes(S.lg.ev)?S.lg.ev:'essay';const sum=a=>a.reduce((n,x)=>n+(Number(x.w)||0),0);
+  const tiles=[['essay','논술',sum(RBC.essay),'점 만점'],['oral','구술',sum(RBC.oral),'점 만점'],['hex','육각형 독서',HXT.reduce((a,b)=>a+b,0),'점 학년 목표']];
+  const body=v==='essay'?`<section>${lgSec('이렇게 진행돼요')}${lgSteps([['질문 받기','책·영화 논술 질문 2개'],['손글씨 제출','사진으로 올리기'],['첨삭·다시 쓰기','1차와 비교해 나아진 점 확인']])}</section>
+     <section>${lgSec('학년별 분량')}<div class="lglen">${[['중1','500~700자'],['중2','700~900자'],['중3','900~1,100자']].map(([g,t])=>`<div class="${g===S.lg.g?'on':''}"><small>${g}</small><b>${t}</b></div>`).join('')}</div></section>
+     <section>${lgSec('영역별 배점',sum(RBC.essay))}${lgBars(RBC.essay)}</section>
+     <section>${lgSec('영역마다 다섯 수준')}<div class="lglv">${['40','55','70','85','100'].map(x=>`<span>${x}%</span>`).join('')}</div><p class="lgsm2">예: 30점 영역에서 85% 수준이면 30 × 0.85 = 25.5점이에요.</p></section>`
+   :v==='oral'?`<section>${lgSec('이렇게 진행돼요')}${lgSteps([['질문 듣기','AI가 읽어 줘요'],['1차 답하기','말로 대답해요'],['모범 답안 따라 읽기','생각할 시간을 가져요'],['다시 답하기','두 답을 비교해 성장 점수']])}<p class="lgsm2">외워서 그대로 말한 답은 성장으로 치지 않아요.</p></section>
+     <section>${lgSec('영역별 배점',sum(RBC.oral))}${lgBars(RBC.oral)}</section>`
+   :`<p class="lgp1">읽은 책의 분야와 깊이를 여섯 칸으로 그려요. 능력이나 인성 점수가 아니에요.</p>${lgHexSVG()}
+     <section>${lgSec('한 권을 읽으면')}<div class="lgpt3">${[['1','읽기만 해도'],['1.5','인상 깊은 문장까지'],['2','논술·구술까지']].map(([n,t])=>`<div><b>${n}<small>점</small></b><span>${t}</span></div>`).join('')}</div><p class="lgsm2">분야는 국립중앙도서관 분류(KDC)를 먼저 쓰고, 찾지 못한 책만 AI가 정해요. 만화·학습지·잡지는 세지 않아요.</p></section>
+     <section>${lgSec('여섯 분야')}<div class="lgax">${AX.map(a=>`<div><b>${lgT(a[1])}</b><small>${lgT(a[2])}</small></div>`).join('')}</div></section>`;
+  const refs=S.lg.refs?`<div class="lgrefl">${LG_REFS.map(r=>`<div class="lgref" title="${lgT(r[1])}"><div><b>${lgT(r[0])}</b><span class="lgtag">${lgT(r[3])}</span><small>${lgT(r[4])}</small></div>${r[2]?`<a class="lgdoi" href="${r[2]}" target="_blank" rel="noopener noreferrer" aria-label="${lgT(r[0])} 원문 보기">원문 ${lgI('ext',12)}</a>`:''}</div>`).join('')}</div>
+     <p class="lgdisc">평가 영역과 배점은 위 연구가 말하는 원칙(분명한 기준, 수준별 설명, 고칠 점을 알려 주는 피드백)에 맞춰 영원이북이 정했어요. 연구가 이 점수표 자체를 검증한 것은 아니에요.</p><button class="lgmore" data-act="lgrefs" aria-expanded="true">접기</button>`
+   :`<button class="lgrefbtn" data-act="lgrefs" aria-expanded="false">${lgI('book',20)}<span><b>근거 문헌 ${LG_REFS.length}편 보기</b><small>루브릭 신뢰도 · 피드백 효과 · 교육과정</small></span><em aria-hidden="true">›</em></button>`;
+  return `<div class="lgnote">${lgI('info')}<p>모든 점수는 AI가 공개된 기준표로 매기는 참고 점수예요. 관리자가 기준표를 고치면 여기에도 바로 반영돼요.</p></div>
+   <div class="lgtiles" role="group" aria-label="평가 종류">${tiles.map(([k,l,n,u])=>`<button class="lgtile" data-act="lgev" data-v="${k}" aria-pressed="${k===v}"><small>${l}</small><b>${n}</b><span>${u}</span></button>`).join('')}</div>
+   <div class="lgpanel">${body}</div>
+   <section class="lgrefs">${lgSec('근거가 된 연구·자료',LG_REFS.length)}${refs}</section>`}
 function lgHTML(){
   const {ids,i,it}=lgCur();if(!it)return '<p class="hint">코스를 불러오지 못했어요.</p>';
-  const L=items();const G=gdGet(lgKey(it));
+  const L=items();const key=lgKey(it);const G=gdGet(key);const tab=S.lg.tab==='ev'?'ev':'plan';
   setTimeout(()=>{const o=document.querySelector('.lgm .on');if(o&&o.parentElement)o.parentElement.scrollLeft=o.offsetLeft-o.parentElement.clientWidth/2+o.clientWidth/2},0);
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(lgKey(it));if(!g||(!g.data&&!g.busy&&!g.err))lgLoad(false)},0);
-  const body=!G||G.busy?'<div class="lgs"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
-    :G.err?`<div class="lgs"><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgSheetHTML(it,G.data||{});
-  return `<div class="lgh"><h2>학습지도</h2><p>달마다 책·영화 지도 자료를 A4 두 장으로 쉽게 정리해 드려요.</p></div>
+  const plan=!G||G.busy?'<div class="lgload"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
+    :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
+  const ready=n=>{const g=L[n]&&gdGet(lgKey(L[n]));return !!(g&&g.data)};
+  return `<div class="lgh"><h2>학습지도</h2><p>부모님·선생님이 이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
     <div class="lgsel"><div class="lgg">${GR.map(g=>`<button class="${g===S.lg.g?'on':''}" data-act="lgg" data-g="${g}" aria-pressed="${g===S.lg.g}">${g}</button>`).join('')}</div>
-      <div class="lgm">${ids.map(n=>`<button class="${n===i?'on':''}" data-act="lgm" data-i="${n}" aria-pressed="${n===i}">${esc(L[n].m)}</button>`).join('')}</div></div>
-    ${body}
-    ${G&&G.data?`<div class="lgact"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">논술 문제별 모범 답안</button>${isAdmin()?'<button class="chip" data-act="lggo" data-f="1">새로 만들기</button>':''}</div>`:''}
-    ${lgEvalHTML()}
-    ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습지도 자료를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')})</p>`:'<button class="btn ghost small" data-act="lgall">중1 3월부터 전체 자료 만들기 (없는 달만)</button>'}</div>`:''}`}
+      <div class="lgm">${ids.map(n=>`<button class="${n===i?'on':''}" data-act="lgm" data-i="${n}" aria-pressed="${n===i}">${esc(L[n].m)}${ready(n)?'<i aria-label="자료 있음"></i>':''}</button>`).join('')}</div></div>
+    <div class="lgsh"><div class="lgtabs" role="tablist"><button role="tab" aria-selected="${tab==='plan'}" data-act="lgtab" data-v="plan">이달 지도안</button><button role="tab" aria-selected="${tab==='ev'}" data-act="lgtab" data-v="ev">평가 방식</button></div>
+      ${tab==='ev'?lgEvalHTML():plan}
+      ${tab==='plan'&&G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">모범 답안</button></div>`:''}
+    </div>
+    ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습지도 자료를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')})</p>`:`<button class="btn ghost small" data-act="lgall">중1 3월부터 전체 자료 만들기 (없는 달만)</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
+    ${G&&G.data?`<div class="lgprint" aria-hidden="true">${lgSheetHTML(it,G.data)}</div>`:''}`}
 async function lgPdf(){const {it}=lgCur();const G=gdGet(lgKey(it));if(!G||!G.data)return;
   if(!S.downloads){toast('이 화면에서는 PDF 저장을 쓸 수 없어요.');return}
   if(!pdfReady()){toast('PDF 도구를 불러오지 못했어요. 새로고침 후 다시 해 주세요.');return}
@@ -7380,8 +7514,14 @@ document.addEventListener('click',async e=>{
     case 'famok':famAccept(d.id);break;
     case 'famno':{if(famRel(d.id)==='family'&&S._fam!==d.id){S._fam=d.id;toast('한 번 더 누르면 가족 연결이 끊어져요.');setTimeout(()=>{if(S._fam===d.id)S._fam=null},3500);break}S._fam=null;famRemove(d.id);break}
     case 'famkid':S.sheet={type:'kid',id:d.id};renderLayers();famLoadKid(d.id);break;
-    case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;render();break;
-    case 'lgm':S.lg=S.lg||{};S.lg.i=+d.i;render();break;
+    case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;S.lg.q=null;S.lg.more=false;render();break;
+    case 'lgm':S.lg=S.lg||{};S.lg.i=+d.i;S.lg.q=null;S.lg.more=false;render();break;
+    case 'lgtab':S.lg=S.lg||{};S.lg.tab=d.v;renderLayers();break;
+    case 'lgev':S.lg=S.lg||{};S.lg.ev=d.v;renderLayers();break;
+    case 'lgmore':S.lg.more=!S.lg.more;renderLayers();break;
+    case 'lgqo':S.lg.q=+d.i;renderLayers();break;
+    case 'lgrefs':S.lg.refs=!S.lg.refs;renderLayers();break;
+    case 'lgchk':{const {it}=lgCur();const k=lgKey(it),n=+d.i;let a=lgChk(k);a=a.includes(n)?a.filter(x=>x!==n):a.concat(n);try{localStorage.setItem('lgchk:'+k,JSON.stringify(a))}catch(err){}renderLayers();break}
     case 'lggo':lgLoad(d.f==='1');break;
     case 'lgall':lgBatch(null,false);break;
     case 'lgpdf':lgPdf();break;
