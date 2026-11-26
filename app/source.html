@@ -2347,6 +2347,12 @@ div.pc-row{cursor:default}
 .auth:has(form.loan):not(.played) .lpocket{animation:pocketHold3 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
 .auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
 @media (prefers-reduced-motion:reduce){.auth:has(form.loan) .authcard,.auth:has(form.loan) .lpocket,.auth:has(form.loan) .lpk-bk::before{animation:none!important}}
+/* 표지·포스터는 평면(2026-11-26 사용자 지시): 책등 줄·안쪽 선·빛 덧칠을 모두 빼고, 그림은 틀을 여백 없이 가득 채움 */
+.cvmain .cvimg:has(>img)::after,.cvmain .cvimg:has(>img)::before{content:none!important}
+.cvmain .cvimg:has(>img){border-radius:2px!important;background:none!important}
+.cvmain .cvimg>img,.cvmain .cvimg.xr>img{object-fit:cover!important;object-position:center!important}
+.cvmain .cvimg:not(:has(>img)),.cvimg.big:not(:has(>img)){box-shadow:3px 3px 6px -1px rgba(40,25,15,.35)!important;border-radius:2px!important}
+.cvimg.big{box-shadow:0 8px 14px -10px var(--shadow)}
 </style>
 
 <div id="app"></div>
@@ -3090,7 +3096,7 @@ function authHTML(){
   else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span><i class="tw">아이디</i></span><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><span class="lpk-bk" aria-hidden="true"></span><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 분당구 운중동 어느 예쁜 마을</span></div></form>`;
+    <div class="lpocket"><span class="lpk-bk" aria-hidden="true"></span><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 구름 속에 아이들이 뛰어다니는 마을</span></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
@@ -4855,6 +4861,8 @@ async function readXlsx(file){
 function render(){
   const app=$('#app');
   app.innerHTML=S.id?shellHTML():authHTML();
+  /* 사이트 정보(약관·개인정보처리방침·AI 고지·자료 출처·운영자)는 첫 화면인 독서(메인)에만 둔다 */
+  {const lg=document.getElementById('legal');if(lg)lg.hidden=!(S.id&&S.view==='course')}
   renderLayers();updateBadges();seasonFx();if(S.id){loadBq();loadBud()}
 }
 function renderLayers(){
