@@ -2226,6 +2226,18 @@ div.pc-row{cursor:default}
   -webkit-mask:linear-gradient(90deg,#000 0 23px,transparent 23px calc(100% - 23px),#000 calc(100% - 23px));mask:linear-gradient(90deg,#000 0 23px,transparent 23px calc(100% - 23px),#000 calc(100% - 23px));
   box-shadow:none;filter:drop-shadow(0 -2px 3px rgba(20,12,6,.25))}
 .auth:has(form.loan) .authcard{box-shadow:0 -2px 8px -4px rgba(26,18,10,.35)!important}
+/* 과정 안내판 = '영원이북' 명판과 같은 황동판(2026-11-26 사용자 지시): 폭은 책보다 좁게(책 가운데), 글씨는 음각처럼 짙은 갈색. 책 옆 탭 글씨 축소 */
+.shopin .grid>.cv>.cvinfo{align-self:flex-start;width:calc(100% - 25px);margin:-4px 0 9px 6px!important;padding:7px 6px 4px!important;border-radius:0 0 3px 3px;
+  background:linear-gradient(180deg,#F3DC9A,#D3AD5B 38%,#B08636 62%,#E1C277)!important;
+  box-shadow:0 3px 5px -1px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,250,225,.7),inset 0 -1px 0 rgba(90,60,15,.5),inset 1px 0 0 rgba(255,245,210,.35),inset -1px 0 0 rgba(90,60,15,.35)!important}
+.shopin .grid .cvinfo .ctag{color:#5A3A12!important;text-shadow:0 1px 0 rgba(255,240,200,.55)!important;font-size:9px!important}
+.shopin .grid .cvinfo .ct{color:#3B2611!important;text-shadow:0 1px 0 rgba(255,240,200,.55)!important;font-size:11.5px!important}
+.shopin .grid .cvinfo .dots i{background:rgba(90,58,18,.3)}.shopin .grid .cvinfo .dots i.on{background:#3B2611}
+.shopin .ctab{font-size:8px!important}
+@media (max-width:560px){.shopin .ctab{font-size:8px!important}}
+.lpk-ft{font-weight:600!important;letter-spacing:.02em!important;font-size:10.5px!important}
+.shopin .grid .cvinfo .dots{display:none!important}
+.shopin .grid .cvinfo .ctag{grid-column:1/-1!important}
 </style>
 
 <div id="app"></div>
@@ -2967,7 +2979,7 @@ function authHTML(){
   else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span><i class="tw">아이디</i></span><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">Yeongwon Bookshop</span></div></form>`;
+    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${(gOn()&&S.dbState!=='loading'&&S.dbState!=='none')?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 분당구 운중동 어느 예쁜 마을</span></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
