@@ -2386,6 +2386,19 @@ main .vpage .vphw{cursor:zoom-in}
 /* 홈 비전보드 띠: 넓은 화면은 가로 긴 콜라주, 휴대폰은 큰 사진 4장 띠(1280×320) */
 .vpw.vcol.vstrip{display:none;aspect-ratio:1280/320}.vpo.vcol.vstrip{width:1280px}
 @media (max-width:719px){div.vban2 .vpw.vcol.vwide{display:none!important}div.vban2 .vpw.vcol.vstrip{display:block!important}}
+/* 스크랩북 사진 종류: 일반(흰 테두리)·흑백·폴라로이드·네 컷(검은 띠에 네 장) */
+.sb-ph.photo .sb-pp,.sb-ph.bw .sb-pp{padding:6px}
+.sb-ph.bw .sb-im{filter:grayscale(1) contrast(1.08)}
+.sb-ph.bw .sb-pp{background:#F4F1EA}
+.sb-ph.four .sb-pp{background:#1F1C1A;padding:5px 5px 0;gap:4px}
+.sb-ph.four .sb-im img{object-position:var(--op,50% 50%)}
+.sb-ph.four .sb-im i{font-size:20px}
+.sb-ph.four b{flex:none;padding:3px 0 5px;text-align:center;font:400 12px/1.1 'Nanum Pen Script',cursive;color:#F4EDE2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 사이트 정보를 진열장 바로 아래로 */
+body:has(.wrap.shopin) #legal{padding-top:2px!important}
+.shopin main>.hint:last-child,.shopin main{padding-bottom:0!important;margin-bottom:0!important}
+.sb-ph.four.grid .sb-pp{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr auto}
+.sb-ph.four.grid b{grid-column:1/-1}
 </style>
 
 <div id="app"></div>
@@ -2821,16 +2834,21 @@ function vbScatter(root){(root||document).querySelectorAll('.vphg').forEach(g=>{
    가운데 잡지에서 오린 'vision board' 글자, 분홍 말풍선 종이(키워드), 연도 카드, 파란 명조 다짐 카드, 금박·파란 별, 마스킹 테이프.
    학생 답은 사진(올린 사진 → 공개 사진 → 파스텔 그림 칸) 또는 파스텔 글 카드로 들어간다. 390×844 고정(저장하면 1170×2532) */
 const VCNOTE=['me','give','want','skill','health'];
-const VBSLOT=[[-14,18,205,172,-6],[196,30,208,166,6],[116,168,152,178,-3,'pol'],[272,208,136,162,-5],[-22,452,124,176,7],[290,466,122,154,-5],[-16,648,184,206,-3],[252,598,154,154,5],[118,6,110,96,4],[140,612,108,92,-6]];
+/* 사진 종류(2026-11-26 사용자 지시): 테두리는 모두 반듯하게, 일반 사진·폴라로이드·네 컷 사진·흑백 사진을 섞어 붙임 */
+const VBSLOT=[[-14,18,205,172,-6,'photo'],[196,30,208,166,6,'photo'],[116,168,152,178,-3,'pol'],[290,186,96,256,-5,'four'],[-22,452,124,176,7,'bw'],[290,466,122,154,-5,'pol'],[-16,648,184,206,-3,'photo'],[252,598,154,154,5,'bw'],[118,6,110,96,4,'pol'],[140,612,108,92,-6,'photo']];
 function vbPhoneHTML(v){
   const b=v.board||{};const nick=(S.me&&S.me.nick)||S.id||'';
   const ORD=['dream','job','univ','want','place','give','skill','me','health','house','car','high','place2','place3'];
   const L=vbRich(v).sort((x,y)=>{const a=ORD.indexOf(x.k),c=ORD.indexOf(y.k);return (a<0?99:a)-(c<0?99:c)});
   const PAS=['#F6B8C8','#C8CFA0','#B7A4D6','#F2C5A8','#B9D3D6','#E8C9A8'];
-  const tiles=VBSLOT.slice(0,L.length).map(([x,y,w,h,rot,kind],k)=>{const it=L[k];const card=!it.img&&VCNOTE.includes(it.k);const torn=vbTorn(k*7+3,2.6);
+  const KS=['photo','pol','bw','four'];let pk=0;
+  const tiles=VBSLOT.slice(0,L.length).map(([x,y,w,h,rot],k)=>{const it=L[k];let kind='';const card=!it.img&&VCNOTE.includes(it.k);const torn=vbTorn(k*7+3,2.6);
     if(card)return `<div class="sb-cd" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform:rotate(${rot}deg);z-index:${3+k}"><div class="sb-cdi" style="background:${PAS[k%PAS.length]};clip-path:${torn}"><p>${esc(it.head)}</p></div></div>`;
     const pic=it.img?`<img src="${it.img}" alt="" crossorigin="anonymous">`:`<span style="background:linear-gradient(150deg,${PAS[k%PAS.length]},${PAS[(k+2)%PAS.length]})"><i>${esc(it.emoji||it.e)}</i></span>`;
-    return `<div class="sb-ph${kind==='pol'?' pol':''}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform:rotate(${rot}deg);z-index:${3+k}"><div class="sb-pp" style="${kind==='pol'?'':'clip-path:'+torn}"><div class="sb-im">${pic}</div>${kind==='pol'?`<b>${esc(it.head)}</b>`:`<em>${esc(it.head)}</em>`}</div></div>`}).join('');
+    kind=KS[pk++%KS.length];
+    const box=`left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform:rotate(${rot}deg);z-index:${3+k}`;
+    if(kind==='four')return `<div class="sb-ph four${w/h>.6?' grid':''}" style="${box}"><div class="sb-pp">${[0,34,67,100].map(p=>`<div class="sb-im" style="--op:50% ${p}%">${pic}</div>`).join('')}<b>${esc(it.head)}</b></div></div>`;
+    return `<div class="sb-ph ${kind||'photo'}" style="${box}"><div class="sb-pp"><div class="sb-im">${pic}</div>${kind==='pol'?`<b>${esc(it.head)}</b>`:`<em>${esc(it.head)}</em>`}</div></div>`}).join('');
   const words=(Array.isArray(b.words)?b.words:[]).slice(0,3);
   const LET=[['v',"'Abril Fatface',serif",'#F6B8C8','#5B3A4A',-4],['i',"'Noto Sans KR',sans-serif",'#1A1A1A','#FFF',3],['s',"'Nanum Myeongjo',serif",'#B7A4D6','#FFF',-2],['i',"'Permanent Marker',cursive",'#C8CFA0','#3A3A2A',4],['o',"'Abril Fatface',serif",'#F2C5A8','#6A3A2A',-3],['n',"'Noto Sans KR',sans-serif",'#FFFDF8','#111',2]];
   const LET2=[['b',"'Abril Fatface',serif",'#C8CFA0','#5A4A2A',4],['o',"'Noto Sans KR',sans-serif",'#1A1A1A','#FFF',-3],['a',"'Nanum Myeongjo',serif",'#F6B8C8','#FFF',3],['r',"'Permanent Marker',cursive",'#1E5E5A','#F6B8C8',-4],['d',"'Abril Fatface',serif",'#FFFDF8','#111',2]];
