@@ -2429,7 +2429,6 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}
    ③ 학년 제목과 진열장 사이 여백 없앰 */
 :root{--grn:linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,0) 8%,rgba(0,0,0,0) 92%,rgba(0,0,0,.18)),radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,linear-gradient(#1D3A2C,#173126)}
 .shopin .top{background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A!important;box-shadow:0 0 0 100vmax #1B362A,0 3px 10px rgba(0,0,0,.35)!important}
-.shopin .top::before{content:"";position:absolute;top:0;bottom:0;left:-100vmax;right:-100vmax;z-index:-1;pointer-events:none;background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A}
 body:has(.wrap.shopin) .nav{background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A!important}
 .shopin .todo-b,.shopin .btn:not(.ghost):not(.small).todo-b{background:#1B362A!important;border-color:#1B362A!important}
 .avb img.avlogo{background:#fff}
@@ -2443,6 +2442,21 @@ body:has(.wrap.shopin) .nav{background:radial-gradient(rgba(255,255,255,.035) 1p
 .shopin .todo-s .ts-c>b{font-size:14px!important}.shopin .todo-s .ts-c>small{font-size:10.5px!important}
 .shopin .ghead{margin-bottom:4px!important;padding-bottom:4px!important}
 .shopin .cab{margin-top:12px!important}
+/* 라운지: '라운지' 제목을 화면 높이의 절반 자리에 고정, 그 아래(탭·엽서·친구 목록)만 움직임(2026-11-26 사용자 지시). 버튼 최소화 */
+body:has(.wrap.frl){overflow:hidden;height:100svh}
+.frl main{position:fixed;left:0;right:0;top:50svh;bottom:var(--navh,64px);display:flex;flex-direction:column;padding:0 16px;max-width:720px;margin:0 auto;min-height:0!important;box-sizing:border-box}
+.frl .lead{flex:none;margin:0!important;padding:0 0 8px!important;transform:translateY(-100%);position:absolute;left:16px;right:16px;top:0}
+.frl .lead h2{font-size:28px;line-height:1.1}
+.frl .lead p{font-size:12.5px;margin-top:2px}
+.frl .stabs{flex:none;margin:0 0 8px!important;padding:3px}
+.frl .stabs button{padding:5px 10px;font-size:12.5px}
+.frl .frb{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:10px;scrollbar-width:none}
+.frl .frb::-webkit-scrollbar{display:none}
+.frl .frb>.frr .btn{min-height:30px;padding:0 10px;font-size:12px}
+.frl .pc-bar{position:sticky;bottom:0;padding:6px 0 2px}
+.frl .pc-ic{width:34px;height:34px}.frl .pc-ic svg{width:17px;height:17px}
+body:has(.wrap.frl) #legal{display:none}
+@media (min-width:721px){.frl main{bottom:16px}}
 </style>
 
 <div id="app"></div>
