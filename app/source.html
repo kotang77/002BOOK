@@ -3445,9 +3445,16 @@ const BOOKG='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke=
    결과는 기기에 7일(못 찾음은 1일) 기억하고, 서버도 같은 기간 캐시한다 */
 const ART=(()=>{try{return JSON.parse(localStorage.getItem('yw.art')||'{}')||{}}catch(e){return {}}})();
 const ARTP={};let artQ=[],artRun=0,artT=null,artSaveT=null;
+/* 표지·포스터 묶음(배포 때 만든 data/art.json, 11-27): 회원이 올린 표지(covers/)는 이미지 파일로, 자동으로 찾은 표지·포스터(서버 캐시)는 주소로.
+   앱은 이 묶음을 먼저 써서 가입하자마자 그림이 보이고, 묶음에 없는 작품만 서버에 찾아 달라고 한다 */
+const ARTB={};const artN=s=>String(s??'').replace(/<[^>]*>|!H[SE]/g,'').replace(/\(.*?\)|\[.*?\]/g,'').replace(/[^0-9A-Za-z가-힣]/g,'').toLowerCase();
+let ARTB_COV={};
+fetch('data/art.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{Object.assign(ARTB,(j&&j.art)||{});ARTB_COV=(j&&j.covers)||{};
+  if(Object.keys(ARTB_COV).length)S.covers=Object.assign({},ARTB_COV,S.covers||{});if(S.id&&(Object.keys(ARTB).length||Object.keys(ARTB_COV).length))artDirty()}).catch(()=>{});
 function artOf(title,kind,yr){
   if(!title)return '';const h=hid(title);if(S.covers&&S.covers[h])return S.covers[h];
   const k=(kind==='movie'?'m':'b')+h;const v=ART[k];
+  const bu=ARTB[(kind==='movie'?'m':'b')+'|'+artN(bTitle(title))];if(bu&&!(v&&v.bad&&Date.now()-v.t<864e5))return bigCover(bu);
   if(!(v&&Date.now()-v.t<(v.u?7:1)*864e5))artWant(k,{kind:kind==='movie'?'movie':'book',title:bTitle(title),author:kind==='movie'?'':bAuthor(title),year:yr?String(yr):''});
   return bigCover((v&&v.u)||'');
 }
@@ -3464,6 +3471,7 @@ function artDirty(){artSave();clearTimeout(artT);artT=setTimeout(()=>{const a=do
 const coverOf=title=>artOf(title,'book');
 /* 자동으로 찾은 그림 주소가 열리지 않으면(지워졌거나 막힘) 그 그림은 하루 동안 쓰지 않고 도형 그림으로 바꾼다 */
 document.addEventListener('error',e=>{const im=e.target;if(!im||im.tagName!=='IMG')return;const src=im.getAttribute('src')||'';
+  {const bk=Object.keys(ARTB).find(x=>ARTB[x]&&(ARTB[x]===src||bigCover(ARTB[x])===src));if(bk){const t=bk.slice(2);for(const it of (S.course||[]))for(const [f,kd] of [['book','b'],['m1','m'],['m2','m']])if(it[f]&&kd===bk[0]&&artN(bTitle(it[f]))===t){const kk=kd+hid(it[f]);ART[kk]={u:'',t:Date.now(),bad:1}}artDirty();}}
   const k=Object.keys(ART).find(x=>ART[x]&&ART[x].u&&(ART[x].u===src||bigCover(ART[x].u)===src));if(!k)return;if(src!==ART[k].u&&!im.dataset.small){im.dataset.small=1;im.src=ART[k].u;return}/* 원본이 안 열리면 작은 썸네일로 한 번 */ART[k]={u:'',t:Date.now(),bad:1};im.style.visibility='hidden';artDirty()},true);
 const yearOf=(it,t)=>{const x=it&&(it.m1===t?it.m1Info:it.m2===t?it.m2Info:null);return x&&x.year||''};
 const coverInner=it=>{const img=coverOf(it.book);return img?`<img src="${img}" alt="${esc(it.book)} 표지">`:`<span class="phd">${BOOKG}<span>${esc(it.genre)}</span></span>`};
@@ -5220,7 +5228,7 @@ async function enter(id,member){
 }
 async function loadCovers(){
   try{const cs=await S.db.collection('covers').get();const o={};cs.docs.forEach(d=>{const v=d.data();if(v&&v.img)o[d.id]=v.img});
-    if(!S.id)return;S.covers=o;
+    if(!S.id)return;S.covers=Object.assign({},ARTB_COV,o);
     if(!Object.keys(o).length)return;
     $('#app').innerHTML=shellHTML();
     const f=document.activeElement;if(!(f&&/^(TEXTAREA|INPUT|SELECT)$/.test(f.tagName)))renderLayers();
