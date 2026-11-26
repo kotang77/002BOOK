@@ -126,7 +126,7 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO)
 export async function picsOp(uid: string, b: Record<string, unknown>, io: BookIO) {
   const q = clean(b.q, 60).replace(/[^A-Za-z0-9 \-]/g, '').trim().toLowerCase();
   if (q.length < 2) fail('bad_request', '검색어가 필요해요.');
-  const p = `sys/pic_${(await sha256hex('v1|' + q)).slice(0, 24)}`;
+  const p = `sys/pic_${(await sha256hex('v2|' + q)).slice(0, 24)}`;
   const row = await io.read(p);
   if (row && Date.now() - (Number(row.data.at) || 0) < 30 * DAY) return { pics: row.data.pics || [], cached: true };
   const qp = `sys/picuse_${uid}`; const qr = await io.read(qp);
@@ -138,11 +138,22 @@ export async function picsOp(uid: string, b: Record<string, unknown>, io: BookIO
   const fake = env('FAKE_PICS');
   if (fake) { const m = JSON.parse(fake) as Record<string, string>; const u = m[q] || m['*']; if (u) pics = [{ u, by: 'test', lic: 'CC0', src: '' }]; }
   else {
-    const j = await getJSON(`https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&license=cc0,pdm,by,by-sa&mature=false&page_size=6&aspect_ratio=square,wide`);
+    // 1) Openverse (User-Agent가 없으면 거절되는 일이 있어 이름을 밝힌다)  2) 결과가 없거나 실패하면 위키미디어 공용(자유 라이선스만 실림)
+    const UA = { 'User-Agent': '002BOOK/1.0 (https://002book.com; help@002book.com)', 'Accept': 'application/json' };
+    const j = await getJSON(`https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&license=cc0,pdm,by,by-sa&mature=false&page_size=6&aspect_ratio=square,wide`, UA);
     const rs = Array.isArray(j?.results) ? j.results : [];
     pics = rs.map((r: Record<string, unknown>) => ({ u: https(r.thumbnail) || https(r.url), by: clean(r.creator, 40) || '알 수 없음', lic: (clean(r.license, 10).toUpperCase() + ' ' + clean(r.license_version, 6)).trim(), src: https(r.foreign_landing_url) }))
       .filter((x: { u: string }) => x.u).slice(0, 3);
+    if (!pics.length) {
+      const w = await getJSON(`https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=8&gsrsearch=${encodeURIComponent('filetype:bitmap ' + q)}&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=640`, UA);
+      const pg = Object.values((w?.query?.pages ?? {}) as Record<string, Record<string, unknown>>);
+      const strip = (h: unknown) => clean(String(h ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' '), 40);
+      pics = pg.map(x => { const ii = (Array.isArray(x.imageinfo) ? x.imageinfo[0] : {}) as Record<string, unknown>; const em = (ii.extmetadata ?? {}) as Record<string, { value?: unknown }>;
+        return { u: https(ii.thumburl), by: strip(em.Artist?.value) || '알 수 없음', lic: strip(em.LicenseShortName?.value), src: https(ii.descriptionurl) }; })
+        .filter(x => x.u && /\.(jpe?g|png|webp)$/i.test(x.u.split('?')[0]) && /^(cc0|cc[ -]by|public domain|pd)/i.test(x.lic)).slice(0, 3);
+    }
   }
+  if (!pics.length) return { pics, cached: false };   // 못 찾은 결과는 기억하지 않는다(다음에 다시 찾음)
   await io.write(p, { q, pics, at: Date.now() }, null, row);
   return { pics, cached: false };
 }
