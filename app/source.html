@@ -2050,6 +2050,32 @@ details.hxdef{padding:0}
 .hxme .hxb{max-width:100%}.hxme .hxb svg{max-width:100%;height:auto}
 .hxme>div{min-width:0;max-width:340px}
 .shopin .hxdef>summary b{color:#A57A35}
+
+/* 친구 = 서점 안 독서 라운지(2026-11-26 사용자 지시, Figma 14): 가죽 안락의자·둥근 탁자·찻잔이 있는 라운지 사진(web/shelf/lounge.webp, Figma AI 생성) 위에
+   제목은 흰 명조, 탭은 유리 알약, 친구는 크림 종이 손님 카드, 빈 화면은 '회원 찾기' 버튼이 있는 카드 */
+body:has(.wrap.frl){background:#1E140C url(shelf/lounge.webp) center top/cover no-repeat fixed}
+body:has(.wrap.frl)::before{background:linear-gradient(rgba(20,12,6,.35),rgba(20,12,6,0) 22%,rgba(20,12,6,0) 38%,rgba(20,12,6,.55) 62%,rgba(16,10,5,.82))}
+.frl main{display:flex;flex-direction:column;min-height:calc(100svh - 140px)}
+.frl .lead{margin-top:auto;padding-top:24vh;border:0;margin-bottom:12px}
+.frl .lead h2{color:#FFF6E8;font-family:var(--f-display);font-size:26px;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.frl .lead p{color:#F2E4CC;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.frl .stabs{gap:4px;border:0;padding:4px;border-radius:99px;background:rgba(24,15,8,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,246,232,.16);overflow-x:auto;scrollbar-width:none}
+.frl .stabs::-webkit-scrollbar{display:none}
+.frl .stabs button{flex:1 0 auto;border:0;margin:0;padding:8px 12px;border-radius:99px;color:#E8DCC8;font-size:13.5px;white-space:nowrap}
+.frl .stabs button[aria-pressed=true]{background:#FBF8EE;color:#1F4637;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.frl .frb{display:flex;flex-direction:column;gap:8px}
+.frl .frb>.frr{background:#FBF8EE;border:0;border-radius:12px;padding:10px 12px;box-shadow:0 8px 18px -8px rgba(0,0,0,.7)}
+.frl .frr .fi b{font-family:var(--f-display);color:#2E2A26}
+.frl .frr .fi small{color:#7A6B5C}
+.frl .frr .btn:not(.ghost){background:#1F4637;border-color:#1F4637;color:#FFF8EA}
+.frl .frb>.hint{color:#F2E4CC!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.frl .frb>label{color:#F2E4CC;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.frl .frb>label input{background:#FBF8EE;border-color:transparent;border-radius:12px}
+.fr-empty{background:#FBF8EE;border-radius:14px;padding:18px 16px;text-align:center;box-shadow:0 10px 24px -10px rgba(0,0,0,.75)}
+.fr-empty b{display:block;font-family:var(--f-display);font-size:17px;color:#2E2A26}
+.fr-empty p{margin:6px 0 12px;font-size:13.5px;color:#7A6B5C}
+.fr-empty .btn{background:#1F4637;border-color:#1F4637;color:#FFF8EA;min-width:140px;border-radius:99px}
+body:has(.wrap.frl) #legal{color:rgba(245,233,214,.75)!important}
 </style>
 
 <div id="app"></div>
@@ -2824,7 +2850,7 @@ function counts(){const all=items();let b=0,f=0;all.forEach((it,i)=>{if(S.progre
 function shellHTML(){
   const v=S.view;
   const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','친구']];if(isAdmin())tabs.push(['admin','관리']);
-  return `<div class="wrap${v==='course'||v==='me'||v==='vision'?' shopin':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
+  return `<div class="wrap${v==='course'||v==='me'||v==='vision'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:logoSVG(36,'avlogo')}</button>
     <button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button>
     <button class="who" data-act="profile" aria-label="내 정보 바꾸기">${esc((S.me&&S.me.nick)||S.id)}</button><span class="bdg ${(isPaid()&&!(window.__002CFG&&window.__002CFG.free))?'paid':''}" style="flex:none">${isAdmin()?'관리자':(window.__002CFG&&window.__002CFG.free)?'회원':isPaid()?'유료회원':'무료회원'}</span><button class="lo" data-act="logout" aria-label="로그아웃" title="로그아웃">${IC.out}</button>
     <button class="x bell" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
@@ -4308,7 +4334,7 @@ function friendsHTML(){
   let body='';
   if(tab==='my'){
     body=fr.length?fr.map(id=>{const u=frUnread(id);return `<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}${u?` <i class="fbd">${u}</i>`:''}</b><small>${esc(sub(id))}</small>${frMem(id).bio?`<small style="display:block;color:var(--ink)">${esc(frMem(id).bio)}</small>`:''}</div><div class="fa"><button class="btn small" data-act="frchat" data-id="${esc(id)}">대화</button><button class="btn ghost small" data-act="frprof" data-id="${esc(id)}">진도·논술</button></div></div>`}).join('')
-      :'<p class="hint">아직 친구가 없어요. "회원 찾기"에서 친구 맺기를 눌러 보세요.</p>';
+      :'<div class="fr-empty"><b>라운지에 아직 친구가 없어요</b><p>회원 찾기에서 함께 읽을 친구를 초대해 보세요.</p><button class="btn" data-act="frtab" data-v="find">회원 찾기</button></div>';
     if(fr.length)body+=`<p class="hint" style="margin-top:10px">친구끼리는 서로의 진도와 논술을 볼 수 있고, 응원·추천·논술 결과를 메시지로 나눌 수 있어요.</p>`;
   }else if(tab==='req'){
     body=`<div class="sec"><h3>받은 친구 요청 ${recv.length}건</h3>${recv.length?recv.map(id=>`<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}</b><small>${esc(sub(id))}</small></div><div class="fa"><button class="btn small" data-act="fra" data-id="${esc(id)}">수락</button><button class="btn ghost small" data-act="frd" data-id="${esc(id)}">거절</button></div></div>`).join(''):'<p class="hint">받은 요청이 없어요.</p>'}</div>
@@ -4321,7 +4347,7 @@ function friendsHTML(){
       const btn=rel==='friend'?'<span class="tagk">친구</span>':rel==='sent'?'<span class="hint">요청 보냄</span>':rel==='recv'?`<button class="btn small" data-act="fra" data-id="${esc(m.id)}">요청 수락</button>`:`<button class="btn small" data-act="frreq" data-id="${esc(m.id)}">친구 맺기</button>`;
       return `<div class="frr" data-k="${esc((m.nick+' '+m.id).toLowerCase())}">${frAv(m.id)}<div class="fi"><b>${esc(m.nick)}</b><small>${esc(sub(m.id))}</small>${m.bio?`<small style="display:block;color:var(--ink)">${esc(m.bio)}</small>`:''}</div><div class="fa">${btn}</div></div>`}).join(''):'<p class="hint">다른 회원이 아직 없어요.</p>'}`;
   }
-  return `<div class="lead"><div><h2>친구</h2><p>함께 읽고 서로 응원해요.</p></div></div>${tabs}${body}`;
+  return `<div class="lead"><div><h2>친구</h2><p>서점 라운지에서 함께 읽고 서로 응원해요.</p></div></div>${tabs}<div class="frb">${body}</div>`;
 }
 async function frRequest(id){
   const rel=frRel(id);if(rel==='friend'||rel==='sent')return;if(rel==='recv')return frAccept(id);
