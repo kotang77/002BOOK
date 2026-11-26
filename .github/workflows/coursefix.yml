@@ -1,0 +1,31 @@
+name: 코스 작품 바꾸기 (운영 계획표)
+
+# scripts/ops/course_fixes.json 에 적은 대로 운영 서버의 config/course 작품 제목·정보를 바꾼다.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = 바꿀 곳만 보기, apply = 실제로 바꾸기'
+        required: true
+        default: check
+        type: choice
+        options: [check, apply]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 바꾸기
+        env:
+          REF: ${{ vars.SUPABASE_PROJECT_REF }}
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          MODE: ${{ inputs.mode }}
+        run: python3 scripts/ops/course_fix.py
