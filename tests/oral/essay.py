@@ -1,3 +1,4 @@
+import re
 # 논술 첨삭(누적 오류 프로파일)·논술 질문 생성(공통 주제) 시험. 가짜 서버 위에서 화면의 AI 호출만 가짜 응답으로 바꿔 흐름 전체를 돌린다
 import json, os, sys, time, urllib.request
 from playwright.sync_api import sync_playwright
@@ -131,9 +132,9 @@ with sync_playwright() as p:
     ok('육각형: 서가에서 고른 서점 분류로 미정 책 분야 결정', J("hexScores('중1').p[3]") == 1.7, J("hexScores('중1').p"))
     ok('육각형: 3년 누적 목표 90점', J("hexScores('all').t.reduce((a,b)=>a+b,0)") == 90)
     svg = J("radarSVG([0,0,0,0,0,0],300,true)")
-    ok('육각형: 0은 중심점, 숫자 병기', 'NaN' not in svg and '0 / 9' in svg, svg[:120])
+    ok('육각형: 0은 중심점, 숫자 병기', 'NaN' not in svg and '0 / 9' in re.sub(r'<[^>]+>','',svg), svg[:120])
     J("()=>{S.view='me';S.sheet=null;render()}"); time.sleep(.5)
-    body = pg.inner_text('body')
+    body = pg.text_content('body')  # 정의는 접힌 펼침 상자 안에 있음
     ok('육각형 화면 문구: 능력 점수가 아님·고른 읽기', '능력이나 인성 점수가 아니에요' in body and '고른 읽기' in body and '절대 실행력' not in body, body[:200])
     ok('구술 군말 규칙: 뜻 있는 낱말은 세지 않음', J("orFill('그 장면은 약간 다르다 음 저는 막 시작했을 때 어 그러니까')") == 2 and J("orSpeed(250)") == '알맞아요' and J("orSpeed(300)") == '알맞아요' and J("orSpeed(150)") == '많이 느려요')
     # ── ISBN·서명 서지 조회(가짜 국립중앙도서관 응답)
