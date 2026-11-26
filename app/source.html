@@ -2449,10 +2449,13 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 
 /* 학습지도 화면: 서점 배경 위에 A4 종이 한 장 */
 .lgh h2{margin:4px 0 2px;color:#FFF6E8;font-family:var(--f-display);font-size:24px;text-shadow:0 2px 6px rgba(0,0,0,.7)}.lgh p{margin:0 0 12px;color:#F2E4CC;font-size:13.5px;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-.lgsel{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.lgg,.lgm{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.lgg::-webkit-scrollbar,.lgm::-webkit-scrollbar{display:none}
-.lgg button,.lgm button{flex:none;border:0;border-radius:99px;padding:6px 12px;font-size:13px;background:rgba(24,15,8,.55);color:#E8DCC8;box-shadow:inset 0 0 0 1px rgba(255,246,232,.18);cursor:pointer}
-.lgg button.on,.lgm button.on{background:#FBF8EE;color:#1F4637;font-weight:700}
+.lgsel{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 14px;background:#F1EADB;border-radius:14px}
+.lgsch{font:700 17px var(--f-display);color:#1F4637;white-space:nowrap}.lgsp{flex:1}
+.lgstep{display:inline-flex;align-items:center;gap:2px;padding:4px;border-radius:99px;background:#1F4637;color:#FFF6E8}
+.lgstep b{font:700 14px var(--f-body);padding:3px 6px;min-width:3.4em;text-align:center;white-space:nowrap}
+.lgstep button{border:0;background:none;color:inherit;font:700 16px/1 var(--f-body);padding:4px 8px;border-radius:99px;cursor:pointer;min-width:30px;min-height:28px}
+.lgstep button:hover:not(:disabled){background:rgba(255,246,232,.14)}.lgstep button:disabled{opacity:.3;cursor:default}
+@media (max-width:360px){.lgsel{padding-left:10px;gap:6px}.lgsch{font-size:15px}.lgstep button{padding:4px 6px;min-width:26px}}
 .lgs{background:#FFFDF8;color:#2B2622;border-radius:4px;padding:22px 20px 16px;box-shadow:0 14px 30px -10px rgba(0,0,0,.7);font-size:13.5px;line-height:1.65}
 .lgs header{border-bottom:2px solid #1F4637;padding-bottom:8px;margin-bottom:10px}
 .lgs header small{font:700 11px var(--f-body);color:#A57A35;letter-spacing:.04em}
@@ -2481,7 +2484,6 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgact .btn.ghost{background:rgba(255,246,232,.92);color:#2E2A26;border-color:transparent}
 /* 학습지도 v3 (Figma 16 학습지도·재디자인) */
 .lgprint{display:none}@media print{.lgprint{display:block!important}.lgbar,.lgsh{display:none!important}}
-.lgm button i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#6DBB8A;margin-left:5px;vertical-align:2px}
 .lgsh{background:#FFFDF8;color:#2B2622;border-radius:22px;padding:14px 16px 20px;box-shadow:0 14px 30px -10px rgba(0,0,0,.7);font-size:14px;line-height:1.6;display:flex;flex-direction:column;gap:22px;max-width:860px}
 .lgsh p{margin:0}.lgsh section{margin:0}
 .lgtabs{display:flex;gap:4px;padding:4px;background:#F1EADB;border-radius:14px}
@@ -7035,18 +7037,19 @@ function lgEvalHTML(){const v=['essay','oral','hex'].includes(S.lg.ev)?S.lg.ev:'
    <div class="lgtiles" role="group" aria-label="평가 종류">${tiles.map(([k,l,n,u])=>`<button class="lgtile" data-act="lgev" data-v="${k}" aria-pressed="${k===v}"><small>${l}</small><b>${n}</b><span>${u}</span></button>`).join('')}</div>
    <div class="lgpanel">${body}</div>
    <section class="lgrefs">${lgSec('근거가 된 연구·자료',LG_REFS.length)}${refs}</section>`}
+/* 학교는 '중학교' 고정, 학년·달은 같은 좌우 화살표 버튼으로 하나씩 넘긴다 (2026-11-27, Figma 16 학습지도/Stepper) */
+function lgStep(lab,val,prev,next){const b=(a,t,lb)=>a?`<button type="button" ${a} aria-label="${lb}">${t}</button>`:`<button type="button" disabled aria-label="${lb}">${t}</button>`;
+  return `<div class="lgstep" role="group" aria-label="${lab} 고르기">${b(prev,'‹','이전 '+lab)}<b aria-live="polite">${esc(val)}</b>${b(next,'›','다음 '+lab)}</div>`}
+function lgSelHTML(ids,i,L){const gi=GR.indexOf(S.lg.g),mi=ids.indexOf(i);const gA=k=>GR[k]?`data-act="lgg" data-g="${GR[k]}"`:'',mA=k=>ids[k]!==undefined?`data-act="lgm" data-i="${ids[k]}"`:'';
+  return `<div class="lgsel"><b class="lgsch">중학교</b>${lgStep('학년',String(S.lg.g).replace(/^중(\d)$/,'$1학년'),gA(gi-1),gA(gi+1))}<span class="lgsp"></span>${lgStep('달',L[i]?L[i].m:'',mA(mi-1),mA(mi+1))}</div>`}
 function lgHTML(){
   const {ids,i,it}=lgCur();if(!it)return '<p class="hint">코스를 불러오지 못했어요.</p>';
   const L=items();const key=lgKey(it);const G=gdGet(key);const tab=S.lg.tab==='ev'?'ev':'plan';
-  setTimeout(()=>{const o=document.querySelector('.lgm .on');if(o&&o.parentElement)o.parentElement.scrollLeft=o.offsetLeft-o.parentElement.clientWidth/2+o.clientWidth/2},0);
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(lgKey(it));if(!g||(!g.data&&!g.busy&&!g.err))lgLoad(false)},0);
   const plan=!G||G.busy?'<div class="lgload"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
     :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
-  const ready=n=>{const g=L[n]&&gdGet(lgKey(L[n]));return !!(g&&g.data)};
   return `<div class="lgh"><h2>학습지도</h2><p>부모님·선생님이 이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
-    <div class="lgsel"><div class="lgg">${GR.map(g=>`<button class="${g===S.lg.g?'on':''}" data-act="lgg" data-g="${g}" aria-pressed="${g===S.lg.g}">${g}</button>`).join('')}</div>
-      <div class="lgm">${ids.map(n=>`<button class="${n===i?'on':''}" data-act="lgm" data-i="${n}" aria-pressed="${n===i}">${esc(L[n].m)}${ready(n)?'<i aria-label="자료 있음"></i>':''}</button>`).join('')}</div></div>
-    <div class="lgsh"><div class="lgtabs" role="tablist"><button role="tab" aria-selected="${tab==='plan'}" data-act="lgtab" data-v="plan">이달 지도안</button><button role="tab" aria-selected="${tab==='ev'}" data-act="lgtab" data-v="ev">평가 방식</button></div>
+    <div class="lgsh">${lgSelHTML(ids,i,L)}<div class="lgtabs" role="tablist"><button role="tab" aria-selected="${tab==='plan'}" data-act="lgtab" data-v="plan">이달 지도안</button><button role="tab" aria-selected="${tab==='ev'}" data-act="lgtab" data-v="ev">평가 방식</button></div>
       ${tab==='ev'?lgEvalHTML():plan}
       ${tab==='plan'&&G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">모범 답안</button></div>`:''}
     </div>
@@ -7514,7 +7517,7 @@ document.addEventListener('click',async e=>{
     case 'famok':famAccept(d.id);break;
     case 'famno':{if(famRel(d.id)==='family'&&S._fam!==d.id){S._fam=d.id;toast('한 번 더 누르면 가족 연결이 끊어져요.');setTimeout(()=>{if(S._fam===d.id)S._fam=null},3500);break}S._fam=null;famRemove(d.id);break}
     case 'famkid':S.sheet={type:'kid',id:d.id};renderLayers();famLoadKid(d.id);break;
-    case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;S.lg.q=null;S.lg.more=false;render();break;
+    case 'lgg':{S.lg=S.lg||{};const L=items(),m=L[S.lg.i]&&L[S.lg.i].m,j=idxOf(d.g).find(k=>L[k].m===m);S.lg.g=d.g;S.lg.i=j===undefined?-1:j;}S.lg.q=null;S.lg.more=false;render();break;
     case 'lgm':S.lg=S.lg||{};S.lg.i=+d.i;S.lg.q=null;S.lg.more=false;render();break;
     case 'lgtab':S.lg=S.lg||{};S.lg.tab=d.v;renderLayers();break;
     case 'lgev':S.lg=S.lg||{};S.lg.ev=d.v;renderLayers();break;

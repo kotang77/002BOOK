@@ -27,6 +27,16 @@ with sync_playwright() as p:
     ok('세 작품 요약·포인트·질문·낱말·주의', all(x in t for x in ['순례주택에 사는 사람들', '가족의 뜻', '우리 가족의 좋은 점', '순례', '전쟁 장면']), t[:300])
     ok('A4 두 장은 화면에서 숨김(인쇄·PDF용)', pg.locator('.lgprint').count() == 1 and not pg.locator('.lgprint').is_visible())
     act = lambda sel: pg.evaluate("s=>{const e=document.querySelector(s);if(!e)throw new Error('없음 '+s);e.click()}", sel)
+    st = lambda: pg.inner_text('.lgsel').replace('\n', ' ')
+    s0 = st(); dis0 = pg.evaluate("[...document.querySelectorAll('.lgstep button')].map(b=>b.disabled)")
+    ok('학교 고정·학년/달 좌우 버튼', s0.startswith('중학교') and '1학년' in s0 and pg.locator('.lgstep').count() == 2 and dis0[0] and not dis0[1], s0 + str(dis0))
+    m0 = pg.inner_text('.lgstep >> nth=1').replace('\n', ' ')
+    pg.evaluate("document.querySelectorAll('.lgstep')[0].querySelectorAll('button')[1].click()"); time.sleep(.4)
+    ok('학년 넘겨도 같은 달 유지', '2학년' in st() and pg.inner_text('.lgstep >> nth=1').replace('\n', ' ') == m0, st())
+    pg.evaluate("document.querySelectorAll('.lgstep')[0].querySelectorAll('button')[0].click()"); time.sleep(.6)
+    for _ in range(40):
+        if pg.locator('#lgsheet .lgpage').count() == 2: break
+        time.sleep(.5)
     act('[data-act=lgqo][data-i="1"]'); time.sleep(.3)
     ok('질문 힌트 펼치기', pg.locator('.lgqh').count() == 1 and '구체적' in pg.inner_text('.lgqh'))
     act('[data-act=lgchk][data-i="0"]'); time.sleep(.3)
