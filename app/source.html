@@ -2131,6 +2131,15 @@ body:has(.wrap.frl) #legal{color:rgba(245,233,214,.75)!important}
 .lpk-nt{margin-top:7px}
 .auth:has(form.loan) .lpk-ft{margin-top:2px;padding-bottom:16px}
 .auth:has(form.loan) .lpocket{min-height:0}
+
+/* 안내 표지판을 책 위로(2026-11-26 사용자 스케치): 각 책의 월·과정 표지판은 그 책 바로 위, 위 선반(첫 줄은 진열장 윗 레일) 아래에 꽂아 매닮.
+   그래서 3월 표지판이 첫 줄 맨 위에서 시작하고, 표지판-책-선반 순서가 한 묶음 */
+.shopin .grid{position:relative;row-gap:0!important;padding-top:12px!important}
+.shopin .grid::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;z-index:5;pointer-events:none;
+  background:linear-gradient(rgba(255,226,186,.16),rgba(0,0,0,0) 35%,rgba(0,0,0,.4)),var(--wh) 0 0/840px auto repeat-x,#4A2D18;box-shadow:0 5px 7px -3px rgba(0,0,0,.6)}
+.shopin .grid>.cv>.cvinfo{order:-1;margin:-4px -3px 9px!important;padding:8px 6px 5px!important;border-radius:0 0 2px 2px}
+.shopin .grid .shelf{margin-bottom:0!important}
+.shopin .grid>.cv{padding-bottom:0}
 </style>
 
 <div id="app"></div>
