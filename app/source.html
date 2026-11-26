@@ -2342,6 +2342,11 @@ div.pc-row{cursor:default}
 @keyframes backUp{from{transform:translateY(-38px)}to{transform:translateY(-153px)}}
 .auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 2s cubic-bezier(.4,0,.3,1) 1.1s both}
 @media (prefers-reduced-motion:reduce){.auth:has(form.loan) .lpk-bk::before{animation:none!important}}
+/* 카드가 올라오는 것이 느껴지게: 3초 동안 거의 일정한 속도로(처음·끝만 살짝 부드럽게), 프레임이 끊기지 않게 합성 레이어로 */
+.auth:has(form.loan):not(.played) .authcard{animation:pocketIn .5s ease .5s both,cardPull3 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform,clip-path}
+.auth:has(form.loan):not(.played) .lpocket{animation:pocketHold3 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
+.auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
+@media (prefers-reduced-motion:reduce){.auth:has(form.loan) .authcard,.auth:has(form.loan) .lpocket,.auth:has(form.loan) .lpk-bk::before{animation:none!important}}
 </style>
 
 <div id="app"></div>
@@ -4931,7 +4936,7 @@ window.__002gcb=gCred;
 /* 부팅(서버 연결·계획표·설정)이 끝났는지. 로그인 화면은 먼저 보이므로 로그인 처리는 이것을 기다린다 */
 let bootDone;const bootReady=new Promise(r=>{bootDone=r});
 /* 로그인 화면 등장(0.5초 뒤 봉투 → 1.1초부터 2초 동안 카드)이 끝나는 시각까지 기다림 */
-const INTRO_MS=3200;const introWait=()=>new Promise(r=>setTimeout(r,Math.max(0,(S.introAt||Date.now())+INTRO_MS-Date.now())));
+const INTRO_MS=4300;const introWait=()=>new Promise(r=>setTimeout(r,Math.max(0,(S.introAt||Date.now())+INTRO_MS-Date.now())));
 async function doLogin(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
   if(!id||!pw){S.authErr='아이디와 비밀번호를 넣어 주세요.';return render()}
