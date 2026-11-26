@@ -147,21 +147,11 @@ with sync_playwright() as p:
             ok(f'{mode}: 표지 비율 유지 ({w}x{h})', .7 < w / h < .9)
             yel = sum(1 for x in range(w) for y in range(h // 2 - 3, h // 2 + 3) if (lambda c_: c_[0] > 180 and c_[1] > 150 and c_[2] < 120)(cut.getpixel((x, y))))
             ok(f'{mode}: 안쪽 노란 테두리까지 보존 (가운데 줄 노란 점 {yel})', yel >= 6)
-        if mode == 'mobile':  # 코스 카드의 '표지 올리기'도 같은 방식으로 잘라 저장
+        if mode == 'mobile':  # 표지가 이미 있으면 '바꾸기' 버튼은 없음(2026-11-26 사용자 지시)
             pg.keyboard.press('Escape'); pg.evaluate("()=>{const c=document.querySelector('[data-act=close1]');if(c)c.click()}"); time.sleep(.4)
             pg.goto(WEB + '/'); pg.wait_for_selector('[data-act=month]', timeout=20000); time.sleep(1)
-            pg.evaluate("document.querySelector('[data-act=month][data-i=\"0\"]').click()"); pg.wait_for_selector('input[data-cover]', state='attached', timeout=15000)
-            pg.set_input_files('input[data-cover] >> nth=0', photo)
-            for _ in range(40):
-                cs = api('db.query', s['token'], collection='covers').get('result', [])
-                if cs: break
-                time.sleep(.5)
-            ok('코스 표지 올리기 저장', bool(cs), len(cs))
-            if cs:
-                cut = Image.open(io.BytesIO(base64.b64decode(cs[0]['data']['img'].split(',', 1)[1]))).convert('RGB'); cut.save(OUT + 'course_cut.png'); w, h = cut.size
-                ring = [cut.getpixel((x, y)) for x in range(w) for y in range(h) if x < 4 or y < 4 or x >= w - 4 or y >= h - 4]
-                navy = sum(1 for r_, g, b_ in ring if abs(r_ - 28) + abs(g - 58) + abs(b_ - 122) < 70) / len(ring)
-                ok(f'코스 표지도 배경 없이 (표지색 {navy:.0%}, {w}x{h})', navy > .9 and .7 < w / h < .9)
+            pg.evaluate("document.querySelector('[data-act=month][data-i=\"0\"]').click()"); time.sleep(1.5)
+            ok('표지·포스터 바꾸기 버튼 없음', '바꾸기' not in pg.inner_text('#layer1'))
         ctx.close()
     b.close()
 ok('페이지 오류 없음', not errs, errs[:3])

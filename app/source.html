@@ -1834,9 +1834,9 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .authcard .tabs button:not([aria-pressed=true]){opacity:.75}
 .panel.cso{background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,#1B362A}
 .cso .ph h2{color:#F5E9D6}.cso .ph .x{background:rgba(255,246,232,.12);color:#F5E9D6;border-color:rgba(255,246,232,.22)}
-.cso-glass{position:relative;border:7px solid #10231B;border-radius:8px;padding:26px 12px 18px;box-shadow:0 0 0 1px rgba(217,174,98,.5),inset 0 0 0 1px rgba(255,255,255,.2),inset 0 0 46px rgba(0,0,0,.4);background:linear-gradient(115deg,rgba(255,255,255,.17) 0 9%,transparent 9% 27%,rgba(255,255,255,.08) 27% 32%,transparent 32%),linear-gradient(165deg,#6C8C90,#35545A 55%,#1F363B)}
+.cso-glass{position:relative;border:7px solid #10231B;border-radius:8px;padding:28px 12px 30px;box-shadow:0 0 0 1px rgba(217,174,98,.5),inset 0 0 0 1px rgba(255,255,255,.2),inset 0 0 46px rgba(0,0,0,.4);background:linear-gradient(115deg,rgba(255,255,255,.17) 0 9%,transparent 9% 27%,rgba(255,255,255,.08) 27% 32%,transparent 32%),linear-gradient(165deg,#6C8C90,#35545A 55%,#1F363B)}
 .cso-note,.cso-sv{position:relative;background:#FBF6EA;color:#2A2118;box-shadow:0 8px 18px rgba(0,0,0,.4)}
-.cso-note{padding:26px 18px 16px;margin:0 6px 30px;transform:rotate(-1.1deg)}
+.cso-note{padding:26px 18px 22px;margin:0 6px;transform:rotate(-1.1deg)}.cso-note>.cso-tp{position:absolute;bottom:-10px;width:66px;height:21px;background:rgba(236,220,160,.78);box-shadow:0 1px 2px rgba(0,0,0,.18)}.cso-tp.l{left:16px;transform:rotate(6deg)}.cso-tp.r{right:16px;transform:rotate(-7deg)}
 .cso-sv{padding:22px 16px 16px}
 .cso-note::before,.cso-note::after,.cso-sv::before,.cso-sv::after{content:"";position:absolute;top:-10px;width:66px;height:21px;background:rgba(236,220,160,.78);box-shadow:0 1px 2px rgba(0,0,0,.18)}
 .cso-note::before,.cso-sv::before{left:16px;transform:rotate(-7deg)}.cso-note::after,.cso-sv::after{right:16px;transform:rotate(6deg)}
@@ -2438,7 +2438,7 @@ main .vpage .vphw{cursor:zoom-in}
 .sb-ph.four .sb-im i{font-size:20px}
 .sb-ph.four b{flex:none;padding:3px 0 5px;text-align:center;font:400 12px/1.1 'Nanum Pen Script',cursive;color:#F4EDE2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 사이트 정보를 진열장 바로 아래로 */
-body:has(.wrap.shopin) #legal{padding-top:2px!important}
+body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px){body #legal{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))!important}}
 .shopin main>.hint:last-child,.shopin main{padding-bottom:0!important;margin-bottom:0!important}
 .sb-ph.four.grid .sb-pp{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr auto}
 .sb-ph.four.grid b{grid-column:1/-1}
@@ -3346,7 +3346,7 @@ function coverBlock(it){
   const h=hid(it.book);const has=!!S.covers[h];const auto=!has&&!!coverOf(it.book);const p=GP[(items().indexOf(it)+GP.length)%GP.length];
   return `<div class="cvrow"><span class="cvimg big" style="--a:${p[0]};--b:${p[1]}">${coverInner(it)}</span>
     <div class="cvside"><p class="hint">${has?'올려 둔 표지예요. 더 잘 나온 사진이 있으면 바꿀 수 있어요.':auto?'자동으로 찾은 표지예요. 다른 판본 표지를 올리면 그것으로 바뀌어요.':'아직 표지가 없어요. 책 표지를 찍거나 서점 화면을 캡처해서 올리면 모두에게 보여요.'}</p>
-    <label class="btn ghost small up">${has?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label></div></div>`;
+    ${has?'':`<label class="btn ghost small up">표지 올리기<input type="file" accept="image/*" data-cover="${h}"></label>`}</div></div>`;
 }
 /* 사진 속 표지의 네 모서리를 찾아 반듯한 직사각형으로 펴는 보정 */
 /* AI가 짚은 네 꼭짓점을 사진 속 실제 테두리(밝기가 가장 뚜렷하게 바뀌는 선)에 맞춘다.
@@ -3458,7 +3458,7 @@ function posterBlock(title,i){
   const h=hid(title);const up=!!S.covers[h];const img=artOf(title,'movie',yearOf(items()[i],title));const has=!!img;const p=GP[(i+3)%GP.length];
   return `<div class="cvrow"><span class="cvimg big" style="--a:${p[0]};--b:${p[1]}">${has?`<img src="${img}" alt="${esc(title)} 포스터">`:`<span class="phd">${FILMG}<span>${esc(title)}</span></span>`}</span>
     <div class="cvside"><p class="hint">${has&&!up?'자동으로 찾은 포스터예요. 다른 이미지를 올리면 그것으로 바뀌어요.':has?'올려 둔 포스터예요. 더 잘 나온 이미지가 있으면 바꿀 수 있어요.':'아직 포스터가 없어요. 포스터 이미지를 저장하거나 화면을 캡처해서 올리면 모두에게 보여요.'}</p>
-    <label class="btn ghost small up">${has?'포스터 바꾸기':'포스터 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label></div></div>`;
+    ${has?'':`<label class="btn ghost small up">포스터 올리기<input type="file" accept="image/*" data-cover="${h}"></label>`}</div></div>`;
 }
 function bulkMap(){
   const nrm=t=>String(t).replace(/\([^)]*\)/g,'').replace(/[\s\-_.·:!?'"“”‘’,&「」]/g,'').toLowerCase();
@@ -3598,7 +3598,7 @@ function courseHTML(){
   return `${S.canWrite===false?'<p class="warn" style="margin-bottom:14px">지금 계정은 기록을 저장할 수 없어요. 서재 주인에게 기여자 권한으로 초대해 달라고 해 주세요.</p>':''}
   ${visionBanner()}
   ${todoHTML(pct,ct)}
-  <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>12개월 · ${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
+  <div class="ghead"><div><h2>${String(S.grade).replace(/^중(\d)$/,'중학교 $1학년')}<small>${cur.pct}% 완료</small></h2><div class="bar"><i style="width:${cur.pct}%"></i></div></div>
     <div class="gsw">${GR.filter(g=>g!==S.grade).map(g=>`<button class="btn ghost small" style="padding:3px 10px;min-width:0" data-act="grade" data-g="${g}" aria-label="${g} 과정 보기">${g}</button>`).join('')}</div></div>
   <div class="cab"><span class="cabp">영원이북</span><div class="grid">${idxOf(S.grade).map(coverHTML).join('')}</div></div>
   ${S.mode==='custom'?'<p class="hint" style="margin-top:14px">AI가 고른 추천이에요. 책 정보는 서점에서 한 번 더 확인해 주세요.</p>':''}`;
@@ -3836,7 +3836,7 @@ function monthHTML(i){
   const wn=stepNext(i);const cw=wn&&wn.k==='work'?wkNext(i):null;
   const work=`${it.parent?'<p class="note">이달의 작품 중에는 부모님과 함께 보면 좋은 소재가 있어요.</p>':''}
     <div class="wks">${WKS.map(k=>wkRowHTML(i,k,cw&&cw.k===k)).join('')}</div>
-    <p class="mtip">${IC.next}<span>제목을 누르면 작품 정보와 볼 수 있는 곳이 나와요. 시작과 끝을 누르면 친구와 부모님께 알림이 가요.</span></p>`;
+`;
   const essay=svReady(i)?essayHTML(i):svLockHTML(i);
   const wDone=stepsOf(i)[0].done;const nDone=stepsOf(i)[1].done;
   const note=`${wDone&&!nDone?'<p class="mok">'+IC.check+'<span>1단계 끝! 이제 기록하기 차례예요</span></p>':''}<div class="note2"><h3>책에서 마음에 남은 문장</h3>
@@ -3853,7 +3853,7 @@ function monthHTML(i){
   const guide=!nx?(tab==='work'?mdoneHTML(i):'<div class="mguide all"><span><b>이번 달 과정을 모두 마쳤어요.</b> 다음 달로 넘어가요.</span></div>')
     :tab===nx.k?`<h3 class="mhead">${esc(STEP_H[nx.k])}</h3>`
     :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>${yeyo(nx.t)}.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
-  const cov=!S.covers[hid(it.book)]&&tab==='work'?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
+  const cov=!S.covers[hid(it.book)]&&!coverOf(it.book)&&tab==='work'?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
   const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
   return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
@@ -3967,28 +3967,10 @@ function customHTML(){
       <p class="cso-r"><i>무엇</i><span>내 취향과 목표에 맞춘 <b>유료 버전</b> 코스</span></p>
       <p class="cso-r"><i>누구</i><span>개인 · 독서모임 · 학교</span></p>
       <p class="cso-r"><i>방법 1</i><span><b>직접 입력</b> — 읽을 책과 볼 영화를 직접 넣어 코스를 짭니다</span></p>
-      <p class="cso-r"><i>방법 2</i><span><b>AI 추천</b> — 아래 기호조사에 맞춰 AI가 책과 영화를 골라 줍니다</span></p>
+      <p class="cso-r"><i>방법 2</i><span><b>AI 추천</b> — 취향을 알려 주면 AI가 책과 영화를 골라 줍니다</span></p>
       <p class="cso-r"><i>언제</i><span>오픈 일정은 공지로 알려 드릴게요</span></p>
     </div>
-    <p class="cso-s">그때까지는 기본 코스로 만나요 · 영원이북 드림</p>
-  </section>
-  <section class="cso-sv" aria-label="기호조사 미리 보기">
-    <p class="cso-k">기호조사 미리 보기</p>
-    <p class="hint" style="margin:4px 0 0;text-align:center">오픈하면 이 답으로 책과 영화를 추천해요</p>
-    <div class="sec"><h3>책을 읽는 이유</h3>${multi('why',PWHY)}</div>
-    <div class="sec"><h3>요즘 끌리는 주제</h3>${multi('topics',PTOP)}</div>
-    <div class="sec"><h3>좋아하는 장르</h3><div class="chips">${GENRES.map(v=>`<button class="chip" data-act="prefg" data-v="${v}" aria-pressed="${g.has(v)}">${v}</button>`).join('')}</div></div>
-    <div class="sec"><h3>읽기 난이도</h3><div class="chips">${LV.map(v=>`<button class="chip" data-act="pref1" data-f="level" data-v="${v}" aria-pressed="${(p.level||'보통')===v}">${v}</button>`).join('')}</div></div>
-    <div class="sec"><h3>책 분량</h3><div class="chips">${LEN.map(v=>`<button class="chip" data-act="pref1" data-f="length" data-v="${v}" aria-pressed="${(p.length||'보통')===v}">${v}</button>`).join('')}</div></div>
-    <div class="sec"><h3>이야기의 결</h3><div class="chips">${PPACE.map(v=>`<button class="chip" data-act="pref1" data-f="pace" data-v="${v}" aria-pressed="${p.pace===v}">${v}</button>`).join('')}</div></div>
-    <div class="sec"><h3>책을 고르는 기준</h3>${multi('pick',PPICK)}</div>
-    <div class="sec"><h3>좋아하는 것</h3>
-      <label for="p-books">좋아하는 책<input id="p-books" data-pref="books" value="${esc(p.books||'')}" placeholder="예: 어린 왕자, 아몬드"></label>
-      <label for="p-authors">좋아하는 작가<input id="p-authors" data-pref="authors" value="${esc(p.authors||'')}" placeholder="예: 김영하"></label>
-      <label for="p-movies">좋아하는 영화<input id="p-movies" data-pref="movies" value="${esc(p.movies||'')}" placeholder="예: 인사이드 아웃"></label>
-      <label for="p-career">관심 있는 진로<input id="p-career" data-pref="career" value="${esc(p.career||'')}" placeholder="예: 영화감독, 의사"></label>
-      <label for="p-avoid">피하고 싶은 소재<input id="p-avoid" data-pref="avoid" value="${esc(p.avoid||'')}" placeholder="예: 무서운 이야기"></label></div>
-    <p class="cso-src">항목은 청소년의 책 선택 연구에서 꼽는 요인(흥미·주제, 읽는 동기, 책의 두께·문체·수상 이력, 추천 경로, 진로)을 바탕으로 짰어요.</p>
+    <p class="cso-s">그때까지는 기본 코스로 만나요 · 영원이북 드림</p><i class="cso-tp l" aria-hidden="true"></i><i class="cso-tp r" aria-hidden="true"></i>
   </section>
   </div></div>`;
 }
@@ -4263,7 +4245,7 @@ function shelfHTML(inSheet){
       <div class="cvside"><b>${esc(bTitle(sel.title))}</b>${(sel.author||bAuthor(sel.title))?`<span class="hint"> ${esc(sel.author||bAuthor(sel.title))}</span>`:''}
       ${sel.why?`<p class="hint">${esc(sel.why)}</p>`:''}
       <label class="sdl">서점 분류<select data-bcat="${h}">${KY.map(k=>`<option${k===sel.c2?' selected':''}>${k}</option>`).join('')}</select></label>
-      <div class="sdb"><label class="btn ghost small up">${has?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${h}"></label>${sel.src==='mine'?`<button class="chip" data-act="mbdel" data-id="${esc(sel.id)}">서가에서 빼기</button>`:''}</div>
+      <div class="sdb">${has?'':`<label class="btn ghost small up">표지 올리기<input type="file" accept="image/*" data-cover="${h}"></label>`}${sel.src==='mine'?`<button class="chip" data-act="mbdel" data-id="${esc(sel.id)}">서가에서 빼기</button>`:''}</div>
       <p class="hint">${has?'올려 둔 표지예요. 더 잘 나온 사진으로 바꿀 수 있어요.':'책 표지를 찍거나 서점 화면을 캡처해서 올리면 서가에 표지가 보여요.'}</p></div></div>
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
