@@ -3,7 +3,8 @@
 import json, os, secrets, sys, time, urllib.request, urllib.error
 
 SITE = os.environ.get('SITE', 'https://002book.com').rstrip('/')
-API = os.environ.get('API') or (os.environ['SUPABASE_URL'].rstrip('/') + '/functions/v1/api')
+SUPA = os.environ.get('SUPABASE_URL') or json.load(open('site.config.json'))['supabaseUrl']
+API = os.environ.get('API') or (SUPA.rstrip('/') + '/functions/v1/api')
 SUM = os.environ.get('GITHUB_STEP_SUMMARY'); res = []
 
 def out(s):
