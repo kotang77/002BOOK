@@ -76,7 +76,8 @@ async function tmdb(title: string, year: string): Promise<Art | null> {
 async function kmdb(title: string, year: string): Promise<Art | null> {
   const key = env('KMDB_KEY'); if (!key) return null;
   /* 11-27: 같은 이름 속편이 많은 영화(터미네이터 등)는 원작이 앞 10개에 안 들어 못 찾았다 → 30개까지 받고, 연도를 알면 제작연도 ±1로 좁힌다.
-     정확히 같은 제목이 없으면 한쪽 제목이 다른 쪽을 포함하는 것(루디 ↔ 루디 이야기)도 연도가 맞으면 받는다. 포스터가 없는 항목은 건너뛴다 */
+     정확히 같은 제목이 없으면 한쪽 제목이 다른 쪽을 포함하는 것(루디 ↔ 루디 이야기)도 연도가 맞으면 받는다. 포스터가 없는 항목은 건너뛴다.
+     시리즈 영화는 1편 기준(사용자 지시): 연도를 모르면 같은 제목·포함 제목 가운데 가장 먼저 나온 것 */
   const q = new URLSearchParams({ collection: 'kmdb_new2', detail: 'Y', ServiceKey: key, title, listCount: '30' });
   if (year) { q.set('createDts', String(+year - 1)); q.set('createDte', String(+year + 1)); }
   const j = await getJSON('http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?' + q) as { Data?: { Result?: Record<string, unknown>[] }[] } | null;
@@ -84,7 +85,7 @@ async function kmdb(title: string, year: string): Promise<Art | null> {
   const rows = (j?.Data?.[0]?.Result ?? []).map((m) => ({ m, n: normT(m.title), y: Number(m.prodYear) || 0, p: String(m.posters ?? '').split('|').map(https).find(Boolean) || '' }))
     .filter((r) => r.p && !(year && r.y && Math.abs(r.y - Number(year)) > 1));
   const pick = rows.filter((r) => r.n === t).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0]
-    ?? (t.length >= 2 ? rows.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
+    ?? (t.length >= 2 ? rows.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => (a.y || 9999) - (b.y || 9999) || Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
   return pick ? { url: pick.p, src: 'kmdb', title: clean(String(pick.m.title).replace(/!H[SE]/g, ''), 120) } : null;
 }
 export async function movieArt(title: string, year: string): Promise<Art | null> {
