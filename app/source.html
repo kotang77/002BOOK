@@ -2414,6 +2414,8 @@ html .auth:has(form.loan) .lpocket::after{display:none!important}
 .auth .lpk-back.on{visibility:visible}
 /* 11-27: 봉투 모서리 r = 카드 r(6px) — 뒷판 위 두 모서리, 앞판 아래 두 모서리 */
 html .auth .lpk-back{border-radius:6px 6px 0 0!important}
+/* 11-27: '문 열고 들어가기' 버튼 = 메인 진열장 녹색 패턴(4px 점무늬 + #1D3A2C→#173126) */
+html .auth .lpocket .btn[type=submit]{background:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px) 0 0/4px 4px,linear-gradient(#1D3A2C,#173126)!important;border-color:#173126!important}
 /* 11-27: 뒷판 윗선은 끝선이라 어두운 계열만(진갈색 #7E5A33 2px + 바깥 살짝 그림자, 밝은 선 없음) */
 /* 11-27 끝선 재디자인(자연스럽게): 진한 단색 선 대신 종이 단면처럼 얇은 반투명 갈색 1px + 안쪽으로 번지는 아주 옅은 그늘 + 바깥 부드러운 그림자 */
 /* 11-27 수정: 끝선 굵기·그늘을 절반으로 */
