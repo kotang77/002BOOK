@@ -34,10 +34,12 @@ if REF and TOKEN:
             covers[x['id']] = f"data/cv/{x['id']}.{ext}?v={hashlib.sha256(raw).hexdigest()[:8]}"
     except Exception as e: print('올린 표지를 가져오지 못했어요:', e)
     try:
-        for x in sql("select data->>'kind' as k, data->>'title' as t, data->>'url' as u from docs where path like 'sys/art\\_%' and coalesce(data->>'url','') <> ''"):
+        # 연도를 정해 찾은 것(11-28~)은 '종류|제목|연도' 키로 따로 둔다(같은 제목의 다른 작품과 섞이지 않게). 앱의 ART_Q가 이 키를 읽음
+        for x in sql("select data->>'kind' as k, data->>'title' as t, data->>'year' as y, data->>'url' as u from docs where path like 'sys/art\\_%' and coalesce(data->>'url','') <> ''"):
             u = x.get('u') or ''
             if not u.startswith('https://'): continue
-            art[('m' if x.get('k') == 'movie' else 'b') + '|' + norm(x.get('t'))] = u
+            y = x.get('y') or ''
+            art[('m' if x.get('k') == 'movie' else 'b') + '|' + norm(x.get('t')) + ('|' + y if y else '')] = u
     except Exception as e: print('표지·포스터 주소를 가져오지 못했어요:', e)
 with open('dist/data/guides.json', 'w') as f: json.dump({'at': time.time(), 'guides': guides}, f, ensure_ascii=False, separators=(',', ':'))
 with open('dist/data/art.json', 'w') as f: json.dump({'at': time.time(), 'covers': covers, 'art': art}, f, ensure_ascii=False, separators=(',', ':'))

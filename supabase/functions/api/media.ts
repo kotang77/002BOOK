@@ -117,7 +117,7 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO)
     const m = JSON.parse(fake) as Record<string, string>; const u = m[kind + ':' + title];
     art = u ? { url: u, src: 'fake' } : null;
   } else art = kind === 'book' ? await bookArt(title, au) : await movieArt(title, year);
-  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', kind, title, at: Date.now() }, null, row);
+  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', kind, title, year, at: Date.now() }, null, row);
   return { url: art?.url ?? '', src: art?.src ?? '', cached: false };
 }
 
