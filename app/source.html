@@ -1719,7 +1719,7 @@ html .authcard .lrow.lid>.lsave{display:flex!important;flex-direction:row!import
 html .authcard .lrow.lid>.lsave>input{appearance:none;-webkit-appearance:none;flex:none;width:14px!important;height:14px!important;min-width:0;margin:0;padding:0!important;border:1.5px solid #789CC8!important;border-radius:3px;background:#FFFDF6!important;box-shadow:none!important;display:grid;place-items:center;cursor:pointer}
 html .authcard .lrow.lid>.lsave>input:checked{background:#1F4637 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 5.2l2 2 4-4.4' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/10px no-repeat!important;border-color:#1F4637!important}
 html .authcard .lrow.lid>.lsave>input:focus-visible{outline:2px solid #789CC8;outline-offset:1px}
-html .authcard .lrow.lid>.lsave>i{font-style:normal;font-family:var(--tw);letter-spacing:.02em}
+html .authcard .lrow.lid>.lsave>i{font-style:normal;font-family:var(--tw);letter-spacing:.02em;position:relative;top:.27em}/* 타자기 글씨는 글자가 줄 위쪽에 붙어 있어 박스와 글자 가운데선이 3px 어긋남 → 글자를 내려 맞춤 */
 /* 대출 카드 정리(2026-11-26, Figma 08 v5): '잊었어요?'는 비밀번호 칸 오른쪽 끝으로, 구글 로그인은 초록 버튼 옆 네모 아이콘 버튼(구글 공식 아이콘 버튼)으로 → 주머니가 한 줄 */
 .authcard .lrow.lpw{grid-template-columns:64px 1fr auto}
 .authcard .lrow.lpw>label{display:block;font-size:12px;gap:0;border-right:1px solid var(--ll)}
@@ -3425,7 +3425,7 @@ function authHTML(){
   else if(t==='login')body=`<form data-form="login" class="loan"><div class="lrow lpw lid"><label for="li-id"><span><i class="tw">아이디</i></span></label><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required value="${esc(savedId())}"><label class="lsave" for="li-save"><input type="checkbox" id="li-save" name="saveid"${S.liSave??!!savedId()?' checked':''}><i class="tw">아이디 저장</i></label></div>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 구름 속에 아이들이 뛰어다니는 마을</span></div></form>`;
+    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">주소. 구름 속에서 아이들이 뛰어 노는 마을</span></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
