@@ -2725,7 +2725,7 @@ const buddyOf=m=>String((m||S.me||{}).buddy||'').trim()||BUDDY0;
 function buddySrc(m){m=m||S.me||{};if(m.buddyAv==='custom'&&m.buddyImg)return m.buddyImg;return (typeof AVIMG!=='undefined'&&AVIMG[m.buddyAv])||''}
 const bdFace=m=>{const s=buddySrc(m);return s?`<img class="bdf" src="${s}" alt="" width="30" height="30">`:''};
 const kwOf=it=>String((it&&it.topic)||'').split(':')[0].replace(/\s*\(.*?\)\s*/g,'').trim();
-const kwDisp=it=>String((it&&it.genre)||kwOf(it)).trim();
+const kwDisp=it=>String(kwOf(it)||(it&&it.genre)||'').trim(); // 11-27 사용자 지시: 대주제(장르) 대신 소주제(핵심주제 앞말: 가족·비전·시…)
 const fmtD=t=>t?new Date(t).toLocaleDateString('ko-KR'):'-';
 const items=()=>S.mode==='custom'&&S.custom?S.custom.items:S.course;
 const idxOf=g=>items().map((it,i)=>it.g===g?i:-1).filter(i=>i>=0);
