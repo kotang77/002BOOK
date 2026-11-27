@@ -2688,7 +2688,11 @@ html .panel .ph.phx{align-items:center;gap:12px;padding-bottom:14px;margin-botto
 .phd-ic{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;color:#0D2E05;border:1px solid #21660A;background:radial-gradient(55% 55% at 50% 45%,#E6FF94 0%,#AAF24D 45%,#40A114 100%);box-shadow:0 0 12px 1px rgba(140,235,64,.55),inset 0 2px 2px rgba(255,255,255,.55)}
 .ph.phx h2{display:flex;flex-direction:column;gap:2px}
 .phd-k{font-family:var(--f-body);font-size:11.5px;font-weight:700;letter-spacing:.12em;color:#A8650A}
-.phd-t{align-self:flex-start;font-family:var(--f-display);font-size:24px;font-weight:800;line-height:1.25;color:var(--ink);padding:0 3px;background:linear-gradient(90deg,rgba(255,213,74,.75),rgba(255,213,74,.15)) no-repeat 0 88%/100% 42%;border-radius:4px}
+.phd-t{align-self:flex-start;font-family:var(--f-display);font-size:24px;font-weight:800;line-height:1.25;color:var(--ink)}
+/* 11-27 밤(2): 학생·학부모 학습자료 제목 = 손으로 그은 형광펜(노랑 85% + 진한 덧칠 30%, 양 끝 거친 마커). 글자는 어두운 바탕에서도 잉크색.
+   책 읽기 전 생각하기·논술 첨삭·구술 평가·구술 기록·논술 성적·논술 첨삭자료·학습지도. Figma 03 '07b v3'(121:1217), 컴포넌트 '제목/형광펜'(121:1268) */
+html body .hl{display:inline;color:var(--ink);text-shadow:none;padding:.04em .3em;margin:0 -.1em;border-radius:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34' preserveAspectRatio='none'%3E%3Cpath d='M5 6C60 3 150 5 214 3L217 10L213 18L218 27C150 31 70 30 3 32L6 24L2 15Z' fill='%23FFE34D' fill-opacity='.85'/%3E%3Cpath d='M10 11C80 8 150 9 208 8L209 25C150 27 80 26 9 28Z' fill='%23FFD21F' fill-opacity='.3'/%3E%3C/svg%3E") no-repeat 0 62%/100% 90%;-webkit-box-decoration-break:clone;box-decoration-break:clone;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html body .phd-t.hl{display:block;margin:0}
 .edu.pre>.sec{margin-top:16px}.edu.pre>.mhead{margin-bottom:4px}.edu.pre>.hint{margin-top:16px}
 /* 11-27 밤: 웹(PC) 홈 — 비전보드 띠와 '지금 할 일' 대시보드 높이를 줄여 첫 화면에 진열장 1열 책이 모두 보이게(창 1536×704 기준). 휴대폰은 그대로. Figma 17 진열장 'PC 홈 컴팩트' */
 @media (min-width:821px){
@@ -4094,7 +4098,7 @@ function monthHTML(i){
   const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?preHTML(i):note;
   /* 11-27 밤: 책 읽기 전 생각하기 화면은 달 제목·단계 원을 빼고 창 제목을 '책 읽기 전 생각하기'로. Figma 03 07b(108:1286) */
   /* 11-27 밤: 제목 꾸밈(전구 배지·작은 머리말·형광펜 밑줄) + X 닫기 버튼 없앰(아래 '생각 끝내기'와 겹침). 휴대폰 뒤로 가기는 그대로 창을 닫음. Figma 03 07b v2(120:1203) */
-  if(tab==='edu')return `<div class="panel pk mpanel mpre"><div class="ph phx"><span class="phd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></span><h2><span class="phd-k">읽기 전 준비 노트</span><span class="phd-t">책 읽기 전 생각하기</span></h2></div>
+  if(tab==='edu')return `<div class="panel pk mpanel mpre"><div class="ph phx"><span class="phd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></span><h2><span class="phd-k">읽기 전 준비 노트</span><span class="phd-t hl">책 읽기 전 생각하기</span></h2></div>
   ${body}
   ${mactHTML(i)}</div>`;
   return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
@@ -5970,7 +5974,7 @@ function evalHTML(){
   const why=Object.keys(sc).map(k=>{const w=swList(ev,k);return w?`<div class="evw"><b>${esc(k)} <span>${scv(sc[k])}</span></b>${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}).join('');
   const D=(t,body,n,open)=>`<details class="ev-d"${open?' open':''}><summary>${t}${n||''}</summary><div class="ev-db">${body}</div></details>`;
   const df=r2?Number(ev.total)-Number(ev.firstTotal):0;
-  return `<div class="panel ev pk"><div class="ph"><h2>${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭<br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
+  return `<div class="panel ev pk"><div class="ph"><h2><span class="hl">${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭</span><br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
   <div class="ev-sum"><div class="ev-s1">
       ${ev.rb?`<p class="ev-lv"><b>${rbReach(sc)}</b>/${Object.keys(sc).length}개 영역이 학년 기대 수준(도달)에 닿았어요${ev.process?` · 쓰기 과정: 계획 ${esc(ev.process.plan)}`:''}</p>`:''}<p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
       ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
@@ -6631,7 +6635,7 @@ const orScoreRows=(ev,prevSc)=>{const sc=ev.scores||{};return '<div class="orsc"
 const orWhy=ev=>{const sc=ev.scores||{};const h=Object.keys(sc).map(k=>{const w=swList(ev,k);return w?`<div class="evw"><b>${esc(k)} <span>${scv(sc[k])}</span></b>${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}).join('');
   return h?`<details class="orswd"><summary>왜 이 점수예요?</summary>${h}</details>`:''};
 function oralEvalHTML(){
-  const v=S.oralView;const head=t=>`<div class="ph"><h2>${t}</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
+  const v=S.oralView;const head=t=>{const k=t.indexOf('<small>'),a=k<0?t:t.slice(0,k),b=k<0?'':t.slice(k);return `<div class="ph"><h2><span class="hl">${a}</span>${b}</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`};
   if(v.loading)return `<div class="panel">${head('구술 평가')}<div class="sk"></div><div class="sk"></div></div>`;
   const ev=v.ev1,ev2=v.ev2;const uid=v.uid||S.id;
   if(!ev||(v.r===2&&!ev2))return `<div class="panel">${head('구술 평가')}<p>평가를 찾지 못했어요.</p></div>`;
@@ -6786,7 +6790,7 @@ function orChart(log){
   return `<figure class="orchart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="구술 테스트 점수 변화">${grid}${line(x=>x.t1??x.total,'#B9A58B',true)}${line(x=>x.t2,'#1F5C4A')}${lab}</svg><figcaption><span class="k1"></span>1차 <span class="k2"></span>2차${L.length<2?' · 기록이 쌓이면 선으로 이어져요':''}</figcaption></figure>`}
 function oralHistHTML(){
   const H=S.oralHist;const own=H.id===S.id;const name=own?'나':esc((typeof famName==='function'?famName(H.id):'')||H.id);
-  const head=`<div class="ph"><h2>${own?'나의':name+'의'} 구술 테스트 기록<small>모든 구술 테스트를 모아 성장 흐름을 보여 줘요</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
+  const head=`<div class="ph"><h2><span class="hl">${own?'나의':name+'의'} 구술 테스트 기록</span><small>모든 구술 테스트를 모아 성장 흐름을 보여 줘요</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>`;
   if(H.loading)return `<div class="panel pk">${head}<div class="sk"></div><div class="sk"></div></div>`;
   const log=(H.log||[]).slice().sort((a,b)=>a.at-b.at);
   if(!log.length)return `<div class="panel pk">${head}<p class="hint">아직 구술 테스트 기록이 없어요.</p></div>`;
@@ -6987,7 +6991,7 @@ function scChart(pts,labels){
   return `<svg class="scch" viewBox="0 0 ${W} ${H}" role="img" aria-label="총점 흐름 ${pts.join(', ')}"><line x1="${px}" x2="${W-px}" y1="${H-pb}" y2="${H-pb}" stroke="#DCCFBB"/>${area}<polyline points="${line}" fill="none" stroke="#3E2F26" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>${pts.map((v,k)=>`<circle cx="${X(k).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3.2" fill="#FFFDF8" stroke="#B06F3C" stroke-width="1.6"/><text x="${X(k).toFixed(1)}" y="${(Y(v)-8).toFixed(1)}" text-anchor="middle" font-size="11.5" fill="#2B241F" font-family="Nanum Myeongjo,serif" font-weight="700">${v}</text><text x="${X(k).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="9.5" fill="#6F6155">${esc(labels[k]||'')}</text>`).join('')}</svg>`;
 }
 function scoreHTML(){
-  const head=`<div class="ph"><h2>나의 논술 성적<small>${esc((S.me&&S.me.nick)||S.id)} · 첨삭 누적 분석</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
+  const head=`<div class="ph"><h2><span class="hl">나의 논술 성적</span><small>${esc((S.me&&S.me.nick)||S.id)} · 첨삭 누적 분석</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>`;
   const R=S.scr;
   if(!R||R.busy)return `<div class="panel scr">${head}<div class="sk"></div><div class="sk"></div><p class="hint" role="status">성적을 모으는 중이에요…</p></div>`;
   const all=R.list;const firsts=all.filter(x=>!String(x._id).endsWith('_r2')).sort((a,b)=>(a.at||0)-(b.at||0));
@@ -7149,7 +7153,7 @@ function lgSheetHTML(it,g){const T=x=>esc(String(x||''));const A=x=>Array.isArra
   const works=A(g.works).filter(x=>x&&nm[x.k]);const link=A(g.link).filter(x=>x&&nm[x.k]);
   const pts=A(g.points).filter(x=>x&&(x.t||x.d)).slice(0,5);const tk=A(g.talk).filter(x=>x&&(x.q||typeof x==='string')).slice(0,5);
   const wd=A(g.words).filter(x=>x&&x.w).slice(0,4);const ac=A(g.acts).filter(Boolean).slice(0,2);
-  const head=`<header><small>영원이북 학습지도 · ${T(it.g)} ${T(it.m)}</small><h3>${T(String(it.topic||'').split(':')[0]||'이달의 주제')}</h3>${g.theme?`<p class="lgt">${T(g.theme)}</p>`:''}</header>`;
+  const head=`<header><small>영원이북 학습지도 · ${T(it.g)} ${T(it.m)}</small><h3><span class="hl">${T(String(it.topic||'').split(':')[0]||'이달의 주제')}</span></h3>${g.theme?`<p class="lgt">${T(g.theme)}</p>`:''}</header>`;
   return `<div class="lgs" id="lgsheet">
    <div class="lgpage" data-p="1">${head}
     ${g.intro?`<section class="lgintro"><p>${T(g.intro)}</p></section>`:''}
@@ -7195,7 +7199,7 @@ function lgViewHTML(it,g,key){
   const topic=String(it.topic||'').split(':')[0].trim()||'이달의 주제';const qo=S.lg.q==null?0:S.lg.q;
   const cover=k=>{const u=ti[k]?artOf(ti[k],k==='book'?'book':'movie'):'';return `<figure class="lgcv"><div class="lgcvi">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>${lgT(bTitle(ti[k]))}</span>`}</div><figcaption><small>${nm[k]}</small>${lgT(bTitle(ti[k]))}</figcaption></figure>`};
   const P=S.lg.more?pts:pts.slice(0,3);
-  return `<section class="lghero"><small>이달의 주제</small><h3>${lgT(topic)}</h3>${g.theme?`<p>${lgT(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].filter(k=>String(it[k]||'').trim()).map(cover).join('')}</div></section>
+  return `<section class="lghero"><small>이달의 주제</small><h3><span class="hl">${lgT(topic)}</span></h3>${g.theme?`<p>${lgT(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].filter(k=>String(it[k]||'').trim()).map(cover).join('')}</div></section>
   ${g.intro?`<div class="lgnote">${lgI('msg')}<div><b>부모님께</b><p>${lgT(g.intro)}</p></div></div>`:''}
   ${g.why?`<section>${lgSec('세 작품, 왜 함께 볼까?')}<p class="lgp1">${lgT(g.why)}</p></section>`:''}
   ${works.length?`<section>${lgSec('작품 안내',works.length)}<div class="lgcar" tabindex="0" aria-label="작품 안내. 옆으로 넘겨 보세요">${works.map(w=>`<article class="lgwc"><span class="lgk">${nm[w.k]}</span><h4>${lgT(bTitle(ti[w.k]))}</h4><p>${lgT(w.sum)}</p>${w.who?`<dl><dt>인물</dt><dd>${lgT(w.who)}</dd></dl>`:''}${w.look?`<dl><dt>눈여겨볼 점</dt><dd>${lgT(w.look)}</dd></dl>`:''}${link[w.k]?`<p class="lglink">주제와 연결 · ${lgT(link[w.k])}</p>`:''}</article>`).join('')}</div><div class="lgdots" aria-hidden="true">${works.map((_,n)=>`<i class="${n?'':'on'}"></i>`).join('')}</div></section>`:''}
@@ -7246,7 +7250,7 @@ function lgHTML(){
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(lgKey(it));if(!g||(!g.data&&!g.busy&&!g.err))lgLoad(false)},0);
   const plan=!G||G.busy?'<div class="lgload"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
     :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
-  return `<div class="lgh"><h2>학습지도</h2><p>이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
+  return `<div class="lgh"><h2><span class="hl">학습지도</span></h2><p>이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
     <div class="lgsh"><div class="lgpickw"><div class="lgpick">
         <div class="lgmon lggr" role="group" aria-label="학년 고르기"><button data-act="lggstep" data-d="-1" aria-label="이전 학년" ${GR.indexOf(S.lg.g)<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(String(S.lg.g).replace(/^중/,''))}학년</b><button data-act="lggstep" data-d="1" aria-label="다음 학년" ${GR.indexOf(S.lg.g)>=GR.length-1?'disabled':''}>›</button></div><span class="lgsp"></span>
         <div class="lgmon" role="group" aria-label="달 고르기"><button data-act="lgmstep" data-d="-1" aria-label="이전 달" ${pos<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(it.m)}</b><button data-act="lgmstep" data-d="1" aria-label="다음 달" ${pos>=ids.length-1?'disabled':''}>›</button></div></div>
@@ -7391,7 +7395,7 @@ function guideHTML(){
         +(g.praise?`<p class="hint">칭찬 한마디 · ${esc(g.praise)}</p>`:'')}
     else b=`<div><button class="btn ghost small" data-act="gdq" data-n="${x.n}">모범 답안과 지도 가이드 보기</button></div>`;
     return `<div class="note2"><div class="qtop"><b>문제 ${x.n+1}</b>${x.n===Q.pick?'<span class="tagk">자녀가 고른 문제</span>':''}</div>${x.from.length?`<div class="qtags">${x.from.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}<p>${esc(x.q)}</p>${b}</div>`}).join('');
-  return `<div class="panel gd"><div class="ph"><h2>논술 첨삭자료<br><small style="font-size:15px;font-weight:400;color:var(--muted)">${isBook?'책':'영화'} 「${esc(title)}」 · ${esc(it.g)} ${esc(it.m)}</small></h2><button class="x" data-act="gdclose" aria-label="뒤로">${IC.back}</button></div>
+  return `<div class="panel gd"><div class="ph"><h2><span class="hl">논술 첨삭자료</span><br><small style="font-size:15px;font-weight:400;color:var(--muted)">${isBook?'책':'영화'} 「${esc(title)}」 · ${esc(it.g)} ${esc(it.m)}</small></h2><button class="x" data-act="gdclose" aria-label="뒤로">${IC.back}</button></div>
   <div class="sec"><h3>${isBook?'이 책, 이렇게 지도해요':'함께 보고 이렇게 이야기해요'}</h3>${work}</div>
   <div class="sec"><h3>논술 문제별 지도 가이드</h3><p class="hint">문제마다 모범 답안과 지도 순서를 볼 수 있어요. 부모님이 논술 선생님이 되어 자녀의 글을 함께 봐 주세요.</p>
     ${kids.length&&S.mode==='base'?`<div class="chips">${kids.map(id=>`<button class="chip" data-act="gdsrc" data-id="${esc(id)}" aria-pressed="${src===id}">${esc(famName(id))}의 문제</button>`).join('')}<button class="chip" data-act="gdsrc" data-id="" aria-pressed="${!src}">기본 문제</button></div>`:''}
