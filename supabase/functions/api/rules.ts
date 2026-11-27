@@ -37,6 +37,15 @@ export async function related(uid: string): Promise<Set<string>> {
   return set;
 }
 export const FRIENDS = 'friends';
+/** 친구 맺기 학년 규칙(2026-11-27): 한쪽이라도 중학생(중1~중3)이면 두 사람 모두 같은 학년이어야 한다.
+ *  부모·선생님이 자녀·학생과 친구로 잘못 이어지는 일을 막는다(가족 연결은 family로). */
+export async function friendGradeOk(a: string, b: string): Promise<boolean> {
+  const { data } = await sb.from('docs').select('id,data').eq('parent', 'members').in('id', [a, b]);
+  const g = (id: string) => String(((data ?? []).find((r) => r.id === id)?.data as Record<string, unknown> | undefined)?.grade ?? '');
+  const mid = (x: string) => /^중[1-3]$/.test(x);
+  const ga = g(a), gb = g(b);
+  return !(mid(ga) || mid(gb)) || ga === gb;
+}
 /** 가족(부모·자녀)으로 연결된 회원만 */
 export async function familyOf(uid: string): Promise<Set<string>> {
   const set = new Set<string>();
@@ -173,8 +182,9 @@ export async function canWrite(ctx: Ctx, kind: WriteKind, path: string, existing
       return od.parent === me || od.child === me;
     case FRIENDS:
       if (kind === 'delete') return [od.a, od.b, od.from, od.to].includes(me) || ctx.admin;
-      if (!existing) return [nd.a, nd.b, nd.from, nd.to].includes(me);
-      return [od.a, od.b, od.from, od.to].includes(me);
+      if (!existing) return [nd.a, nd.b, nd.from, nd.to].includes(me) && (ctx.admin || await friendGradeOk(String(nd.a), String(nd.b)));
+      if (!([od.a, od.b, od.from, od.to].includes(me))) return false;
+      return ctx.admin || nd.status !== 'accepted' || od.status === 'accepted' || await friendGradeOk(String(od.a), String(od.b));
     case 'info': case 'covers': case 'guides':           // 모두가 함께 쓰는 정보 캐시
       if (kind === 'delete') return ctx.admin || existing?.owner === me;
       return true;

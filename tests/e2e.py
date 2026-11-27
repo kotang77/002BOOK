@@ -71,7 +71,7 @@ with sync_playwright() as p:
     page.fill('#su-pw2', 'abcd1234!'); nxt()
     ok('가입 2단계로 넘어감', page.get_attribute('form[data-form=signup]', 'data-step') == '2')
     nxt(); ok('성별 안 고르면 다음으로 못 감', page.get_attribute('form[data-form=signup]', 'data-step') == '2' and '성별' in page.inner_text('#autherr'))
-    ok('2단계 순서: 성별(남자·여자) → 중학생·성인', page.evaluate("(()=>{const f=document.querySelector('form[data-form=signup] [data-s=\"2\"]');const a=f.querySelector('.chipf'),b=f.querySelector('.gkind');return !!(a&&b&&(a.compareDocumentPosition(b)&4))&&f.querySelector('label[for=su-g0]').innerText.trim()==='남자'&&f.querySelector('.gkind').innerText.includes('중학생')})()"))
+    ok('2단계 순서: 성별(남자·여자) → 학생·성인', page.evaluate("(()=>{const f=document.querySelector('form[data-form=signup] [data-s=\"2\"]');const a=f.querySelector('.chipf'),b=f.querySelector('.gkind');return !!(a&&b&&(a.compareDocumentPosition(b)&4))&&f.querySelector('label[for=su-g0]').innerText.trim()==='남자'&&f.querySelector('.gkind').innerText.includes('학생')&&f.querySelector('.gkind').innerText.includes('성인')})()"))
     page.click('label[for=su-g0]')
     page.select_option('#su-grade', label='부모') if page.locator('#su-grade option', has_text='부모').count() else None
     page.fill('#su-birth', '1985-03'); nxt()

@@ -53,7 +53,29 @@
   function fire(name, v) { (listeners[name] || []).forEach(function (f) { try { f(v); } catch (e) {} }); }
 
   /* ---------- 공통: 파일/Blob → base64 ---------- */
-  function blobToB64(b) {
+  /* 사진은 보내기 전에 긴 변 1600px JPEG로 줄인다(폰 원본 사진은 너무 커서 서버가 버림, HEIC 등도 JPEG로 바꿈).
+     줄이지 못하면 원본을 그대로 보낸다 */
+  function shrinkImage(b) {
+    return new Promise(function (resolve) {
+      if (!b || !/^image\//.test(b.type || 'image/') || typeof document === 'undefined') return resolve(b);
+      var url; try { url = URL.createObjectURL(b); } catch (e) { return resolve(b); }
+      var im = new Image();
+      im.onload = function () {
+        try {
+          var W = im.naturalWidth, H = im.naturalHeight, sc = Math.min(1, 1600 / Math.max(W, H));
+          var small = /^image\/(jpe?g|png|webp)$/.test(b.type) && sc === 1 && b.size < 1500000;
+          if (small || !W || !H) { URL.revokeObjectURL(url); return resolve(b); }
+          var c = document.createElement('canvas'); c.width = Math.round(W * sc); c.height = Math.round(H * sc);
+          var cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, c.width, c.height); cx.drawImage(im, 0, 0, c.width, c.height);
+          c.toBlob(function (o) { URL.revokeObjectURL(url); resolve(o || b); }, 'image/jpeg', 0.88);
+        } catch (e) { URL.revokeObjectURL(url); resolve(b); }
+      };
+      im.onerror = function () { URL.revokeObjectURL(url); resolve(b); };
+      im.src = url;
+    });
+  }
+  async function blobToB64(b0) {
+    var b = await shrinkImage(b0);
     return new Promise(function (resolve, reject) {
       var r = new FileReader();
       r.onload = function () { var s = String(r.result); resolve({ media_type: b.type || 'image/jpeg', data: s.slice(s.indexOf(',') + 1) }); };
@@ -157,7 +179,9 @@
   async function sample(input, opts) {
     opts = opts || {};
     var images = [];
-    if (opts.images && opts.images.length) images = await Promise.all([].slice.call(opts.images, 0, 8).map(blobToB64));
+    var src = opts.images;                                  // 사진 한 장(Blob)을 그대로 넘겨도 받는다
+    if (src && typeof Blob !== 'undefined' && src instanceof Blob) src = [src];
+    if (src && src.length) images = await Promise.all([].slice.call(src, 0, 8).map(blobToB64));
     var messages = typeof input === 'string' ? [{ role: 'user', content: input }] : input;
     if (opts.onText) { try { opts.onText({ text: '생각하는 중…', delta: '' }); } catch (e) {} }
     var r = await call('ai.sample', { messages: messages, images: images, tier: opts.modelTier || 'default', json: !!opts.__json }, { signal: opts.signal });

@@ -4,6 +4,8 @@ let calls=[];
 global.S={progress:{evalLog:[],evalN:0},sample:{json:async(p,o)=>{calls.push(p);return S._reply?S._reply(p):[]}}};global.saveProgress=()=>{S._saved=(S._saved||0)+1};global.esc=s=>String(s);
 const store={};global.localStorage={getItem:k=>store[k]||null,setItem:(k,v)=>{store[k]=v}};
 const src=fs.readFileSync(require('path').join(__dirname,'../../app/source.html'),'utf8');
+// PX가 쓰는 공용 도우미(본 작품만 묻기, 11-27)를 원본에서 그대로 가져온다
+for(const nm of ['mvs','esIds','esLines','esCnt']){const m=src.match(new RegExp('const '+nm+'=([^\\n]*?);(?:const |\\n)'));if(m)global[nm]=eval('('+m[1]+')')}
 eval(src.slice(src.indexOf('/*PX-BEGIN'),src.indexOf('/*PX-END*/'))+';global.PX=PX');
 let n=0;const ok=(name,c,extra)=>{n++;if(!c){console.log('FAIL',name,extra||'');process.exitCode=1}else console.log('PASS',name)};
 (async()=>{

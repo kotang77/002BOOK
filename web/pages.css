@@ -28,3 +28,6 @@ input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-r
 .muted{color:var(--muted);font-size:13px}
 .log{white-space:pre-wrap;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px;min-height:60px;font-size:13px}
 footer{margin-top:40px;font-size:12px;color:var(--muted);text-align:center}
+/* 한 줄 제목(보호자 동의 등, 11-27): 휴대폰에서도 제목과 부제를 각각 한 줄로 */
+h1.one{font-size:clamp(15px,5vw,24px);white-space:nowrap}
+h1.one small{font-size:clamp(11px,3.4vw,14px);font-weight:500;line-height:1.5;margin-top:4px;white-space:nowrap;color:var(--muted)}

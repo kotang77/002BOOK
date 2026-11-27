@@ -177,7 +177,7 @@ with sync_playwright() as p:
         act(pg, 'form[data-form=admcourse] button[type=submit]')
         ok('영화 바꿔 저장 → 계획표 반영', wait(lambda: (g('config/course') or {}).get('data', {}).get('items', [{}])[0].get('m1') == '원더'))
         it0 = g('config/course')['data']['items'][0]
-        ok('바뀐 영화의 예전 정보는 지움, 나머지 유지', 'm1Info' not in it0 and 'm2Info' in it0 and it0['book'] == '순례주택' and len(g('config/course')['data']['items']) == 36 and g('config/course')['data'].get('via') == 'edit')
+        ok('바뀐 영화의 예전 정보는 지움, 나머지 유지', 'm1Info' not in it0 and it0['m2'] == '월터의 상상은 현실이 된다' and it0['book'] == '누가 내 치즈를 옮겼을까?' and len(g('config/course')['data']['items']) == 36 and g('config/course')['data'].get('via') == 'edit')
         api('db.delete', T, path='config/course')
         # 엑셀: 지금 계획표 내려받기 → 고쳐서 올리기 → 적용 (xlsx 라이브러리는 CDN 대신 로컬 파일, XLSXJS)
         xl = os.environ.get('XLSXJS', '/tmp/xl/node_modules/xlsx/dist/xlsx.full.min.js')

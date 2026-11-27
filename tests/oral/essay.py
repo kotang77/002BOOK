@@ -54,6 +54,8 @@ with sync_playwright() as p:
     pg.goto(WEB + '/'); pg.evaluate("s=>localStorage.setItem('002.session',JSON.stringify(s))", s); pg.goto(WEB + '/'); pg.wait_for_selector('.who', timeout=20000); time.sleep(1)
     J = lambda x, *a: pg.evaluate(x, *a)
     J(STUB); J("([a,b])=>{window.__t1=a;window.__t2=b}", [T1, T2])
+    # 시험 고정: 1번 달은 '가족' 주제(순례주택), 2번 달은 '비전'(누가 내 치즈를…) — 계획표 순서가 바뀌어도 같은 조건으로 시험
+    J("()=>{const c=S.course,a=c.findIndex(x=>/순례주택/.test(x.book)),b=c.findIndex(x=>/치즈/.test(x.book));const A=c[a],B=c[b];c.splice(0,0);const r=c.filter((x,i)=>i!==a&&i!==b);S.course=[Object.assign({},A,{g:'중1',m:'3월'}),Object.assign({},B,{g:'중1',m:'4월'})].concat(r);render()}")
     ok('계산부 탑재', J("typeof PX==='object'&&typeof PX.emb==='function'"))
     # ── 논술 질문 생성: 서술문·공통 주제·근거 점수·재생성
     J("document.querySelector('[data-act=month][data-i=\"0\"]').click()"); time.sleep(.8)
@@ -150,7 +152,7 @@ with sync_playwright() as p:
     ok('제목 조회: 부가기호 만화는 세지 않음', nb['main'] == 3 and nb.get('nc') == 1 and nb.get('ncw') == '그림책·만화', nb)
     ok('해설서 말고 같은 제목의 책을 고름', J("bkLookup({title:'시간을 파는 상점'})")['author'] == '김선영')
     ok('찾지 못한 책은 null', J("bkLookup({title:'세상에 없는 책 제목'})") is None)
-    J("()=>{S.progress.bkax={};S.progress.done=Object.assign({},S.progress.done,{'b10:book':1})}"); J("hxSync()"); time.sleep(1.5)
+    J("()=>{const i=S.course.findIndex(x=>/청소년 논어/.test(x.book));S.progress.bkax={};S.progress.done=Object.assign({},S.progress.done,{['b'+i+':book']:1})}"); J("hxSync()"); time.sleep(1.5)
     ok('코스 책을 도서관 분류로 확인해 저장', J("((S.progress.bkax||{})[hid('진짜 어른이 되기 위한 청소년 논어')]||{}).m") == 1, J("S.progress.bkax"))
     # ── 새 단계가 실패해도 예전처럼 동작
     J("()=>{window.__mode.nometa=true;S.qmeta={};localStorage.removeItem('002.px.qm');S.essayOff=null}")
