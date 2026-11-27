@@ -581,6 +581,8 @@ div.vban2 .vbct small,div.vban2.empty .vbct p{display:none}div.vban2 .vbct b{fon
 .qok{display:inline-flex;align-items:center;gap:3px;font-size:12.5px;font-weight:500;color:var(--mint-d)}
 .qtags{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0 2px}.qtags span{font-size:11.5px;font-weight:500;border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:0 9px}
 .qtx{margin:8px 0 0;font-size:15.5px;line-height:1.75;overflow-wrap:anywhere}
+.qtags span.qfm{border-color:var(--primary);background:var(--primary);color:var(--on-primary);font-weight:700}
+.qfs{margin:8px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted)}.qfs b{font-weight:700;color:var(--primary-ink,var(--primary));margin-right:6px}
 .qnav{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .qb{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:0}
 .qb:hover{border-color:var(--muted)}
@@ -2820,6 +2822,22 @@ const esLines=it=>`- 책: 「${it.book}」\n`+[['영화 ①',it.m1],['영화 ②
 const esCnt=it=>`책 1권과 영화 ${mvs(it).length}편`;
 const esCombos=it=>{const m=esIds(it).slice(1);return m.length>=2?[['책','영화 ①'],['책','영화 ②'],['책','영화 ①','영화 ②']]:m.length?[['책',m[0]],['책',m[0]],['책',m[0]]]:[['책'],['책'],['책']]};
 const esFrom=(it,f,n)=>{const ok=esIds(it);const x=(Array.isArray(f)?f.map(String):[]).filter(y=>ok.includes(y));return x.length>=2||(x.length&&ok.length<2)?x:esCombos(it)[n]||esCombos(it)[2]};
+/* 논술 문항 방식 세 가지(2026-11-28): 세 질문이 비슷하지 않게 자리마다 방식을 정한다. 1번 비교·평가, 2번 찬반·반론, 3번 적용·해결.
+   대학 인문논술·고교 서·논술형의 대표 유형(비교 분석, 논증과 반론, 사례 적용)을 중학생 수준으로 옮긴 것. 작품 조합·공통 주제(2차 특허)는 그대로 */
+const ES_FMT=[
+  {k:'cmp',n:'비교·평가형',s:'공통점·차이점 → 평가 기준 → 내 판단',
+    ask:'비교·평가형. 두 작품이 공통 주제를 다루는 방식(인물의 선택, 갈등의 해결, 결말)을 견주게 하고, 학생이 평가 기준을 스스로 세워 어느 쪽이 더 설득력 있는지 판단하게 한다. 질문에 "비교"와 "평가"라는 낱말을 쓴다. 찬반을 고르게 하거나 상황을 제시하지 않는다.',
+    need:'두 작품의 공통점과 차이점을 짚었는가, 평가 기준을 밝혔는가, 그 기준으로 분명한 판단을 내렸는가'},
+  {k:'arg',n:'찬반·반론형',s:'내 입장 → 근거 둘 → 예상 반론과 재반론',
+    ask:'찬반·반론형. 공통 주제와 이어진 논쟁적인 주장 한 문장을 큰따옴표로 먼저 제시하고, 찬성과 반대 중 한 입장을 정해 작품에서 근거를 두 가지 들게 한 뒤, 예상되는 반론 하나를 세우고 그에 답하게 한다. 질문에 "입장"과 "반론"이라는 낱말을 쓴다. 두 작품을 비교하라고 하지 않는다.',
+    need:'첫머리에 입장을 분명히 밝혔는가, 작품 근거가 둘 이상인가, 예상 반론을 공정하게 세우고 다시 반박했는가'},
+  {k:'app',n:'적용·해결형',s:'상황의 문제 → 작품에서 얻은 생각 → 해결책과 한계',
+    ask:'적용·해결형. 중학생이 학교·가정·동네에서 실제로 겪을 만한 구체적인 상황을 인물 이름과 함께 두세 문장으로 먼저 제시하고, 작품에서 얻은 생각을 그 상황에 적용해 해결 방법을 제안하고 그 방법의 한계까지 쓰게 한다. 질문에 "상황"과 "해결"이라는 낱말을 쓴다. 비교나 찬반을 요구하지 않는다.',
+    need:'상황 속 문제를 정확히 짚었는가, 작품에서 가져온 생각을 상황에 맞게 적용했는가, 해결책이 구체적이고 한계까지 살폈는가'}];
+const esFmt=n=>ES_FMT[n]||null;
+/* 글이 답한 질문의 방식: 지금 질문 목록에서 자리를 찾는다(옛 질문이면 없음) */
+const esFmtOf=(i,question)=>{const q=qState(i);const n=q&&q.fm&&Array.isArray(q.shown)?q.shown.indexOf(String(question||'')):-1;return n>=0?esFmt(n):null};
+const esFmtAsk=one=>ES_FMT.map((f,n)=>`${n+1}번 ${f.ask}`).join('\n')+(one?'':'\n작품 조합은 1번 책+영화 ①, 2번 책+영화 ②, 3번 책+영화 ①+영화 ② 모두다.');
 const seenNote=i=>'';
 function svStars(q,v){let h='';for(let n=1;n<=5;n++){const st=v>=n?'f':v>=n-.5?'h':'e';h+=`<span class="svs ${st}"><button type="button" class="l" data-act="svset" data-q="${q}" data-v="${n-.5}" aria-label="${n-.5}점"></button><button type="button" class="r" data-act="svset" data-q="${q}" data-v="${n}" aria-label="${n}점"></button></span>`}return h}
 function surveyHTML(){
@@ -3985,13 +4003,15 @@ function meHTML(){
 }
 
 /* ---------- 월 상세 ---------- */
-const TPL=(it)=>{const t=String(it.topic||'').split(':')[0];const mv=mvs(it);if(mv.length===1){const id=String(it.m1||'').trim()?'영화 ①':'영화 ②',m=mv[0];return [
-  {from:['책',id],q:`「${it.book}」와 영화 「${m}」는 '${t}'을(를) 서로 다른 방식으로 보여 줍니다. 두 작품 속 인물의 선택을 비교하고, 어느 쪽이 더 설득력 있는지 근거를 들어 논술하시오. (${esLenMid(it.g)}자 내외)`},
-  {from:['책',id],q:`「${it.book}」의 메시지는 오늘의 청소년에게도 유효한가? 영화 「${m}」의 장면 하나를 근거로 삼아 논하시오. (${esLenMid(it.g)}자 내외)`},
-  {from:['책',id],q:`책 「${it.book}」와 영화 「${m}」를 함께 관통하는 질문을 하나 세우고, 두 작품을 근거로 그 질문에 대한 자신의 답을 세 단락으로 서술하시오. (${esLenMid(it.g)}자 내외)`}]}return [
-  {from:['책','영화 ①'],q:`「${it.book}」와 영화 「${it.m1}」는 '${t}'을(를) 서로 다른 방식으로 보여 줍니다. 두 작품 속 인물의 선택을 비교하고, 어느 쪽이 더 설득력 있는지 근거를 들어 논술하시오. (${esLenMid(it.g)}자 내외)`},
-  {from:['책','영화 ②'],q:`「${it.book}」의 메시지는 오늘의 청소년에게도 유효한가? 영화 「${it.m2}」의 장면 하나를 근거로 삼아 논하시오. (${esLenMid(it.g)}자 내외)`},
-  {from:['책','영화 ①','영화 ②'],q:`책 「${it.book}」와 영화 「${it.m1}」, 「${it.m2}」를 관통하는 질문을 하나 세우고, 세 작품을 근거로 그 질문에 대한 자신의 답을 세 단락으로 서술하시오. (${esLenMid(it.g)}자 내외)`}].filter(x=>fromOK(it,x.from))};
+const TPL=(it)=>{const t=String(it.topic||'').split(':')[0].trim()||'이달의 주제';const mv=mvs(it);const L=`(${esLenMid(it.g)}자 내외)`;
+  const cmp=(m)=>`「${it.book}」와 영화 「${m}」는 '${t}'을(를) 서로 다른 방식으로 보여 줍니다. 두 작품에서 인물이 내린 선택의 공통점과 차이점을 비교하고, 스스로 세운 기준에 따라 어느 쪽이 더 설득력 있는지 평가하시오. ${L}`;
+  const arg=(m)=>`"'${t}'에서 가장 중요한 것은 결과가 아니라 그 과정에서 지킨 마음이다." 이 주장에 대해 찬성 또는 반대의 입장을 정하시오. 책 「${it.book}」와 영화 「${m}」에서 근거를 두 가지 들고, 예상되는 반론 하나에 답하며 논술하시오. ${L}`;
+  const app=(ms)=>`중학생 민서는 요즘 '${t}'과(와) 관련된 고민 때문에 친구, 가족과 자주 부딪힙니다. 책 「${it.book}」와 영화 ${ms.map(x=>`「${x}」`).join(', ')}에서 얻은 생각을 민서의 상황에 적용해 해결 방법을 제안하고, 그 방법의 한계도 함께 쓰시오. ${L}`;
+  if(mv.length===1){const id=String(it.m1||'').trim()?'영화 ①':'영화 ②',m=mv[0];return [
+  {from:['책',id],q:cmp(m)},{from:['책',id],q:arg(m)},{from:['책',id],q:app([m])}]}return [
+  {from:['책','영화 ①'],q:cmp(it.m1)},
+  {from:['책','영화 ②'],q:arg(it.m2)},
+  {from:['책','영화 ①','영화 ②'],q:app([it.m1,it.m2])}].filter(x=>fromOK(it,x.from))};
 function qFix(i){
   const key=nk(i);const q=qState(i);if(!q||!Array.isArray(q.shown)||!q.shown.length)return false;
   const ev=S.evals&&S.evals[key];const evq=ev&&ev.question?String(ev.question):'';
@@ -4010,7 +4030,7 @@ function qFix(i){
 function qState(i){return S.progress.qs[nk(i)]}
 /* 질문을 (다시) 만들어야 하나: 없음·옛 형식·AI 연결 뒤 / 끝낸 작품이 바뀌었는데 아직 질문을 고르지도 첨삭받지도 않음 */
 function qStale(i){const k=nk(i);const qq=qState(i);if(S.qBusy[k])return false;const pk=Number.isInteger((S.progress.picks||{})[k]);
-  if(!qq||(qq.v!==3&&!pk)||(!qq.ai&&S.sample))return true;return svReady(i)&&!pk&&!S.evals[k]&&(qq.sig||'책+영화 ①+영화 ②')!==esSig(i)}
+  if(!qq||(qq.v!==3&&!pk)||(!qq.ai&&S.sample)||(!qq.fm&&!pk&&!S.evals[k]))return true;return svReady(i)&&!pk&&!S.evals[k]&&(qq.sig||'책+영화 ①+영화 ②')!==esSig(i)}
 async function genQs(i){
   const it=seenIt(i);const key=nk(i);const sig=esSig(i);const one=mvs(it).length<2;
   S.qBusy[key]=true;renderLayers();
@@ -4018,7 +4038,7 @@ async function genQs(i){
   if(S.sample){
     try{
       try{meta=await PX.qmeta(it)}catch(e){meta=null}
-      const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n${esLines(it)}- 이달의 주제: ${it.topic}\n${PX.qAdd(meta)}조건:\n1. ${one?`정확히 3개를 출제한다. 학생은 위 두 작품만 감상했으므로 세 질문 모두 책과 ${esIds(it)[1]}를 함께 다루고, 위에 없는 다른 영화는 절대 넣지 않는다. 세 질문은 물음의 유형(비교, 가치 판단, 개념 적용 등)이 서로 달라야 한다.`:'정확히 3개를 출제하고, 세 작품의 주제를 섞는다. 각 질문은 서로 다른 작품 조합을 다룬다: 1번 책+영화 ①, 2번 책+영화 ②, 3번 책+영화 ①+영화 ② 모두를 관통하는 질문.'}\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 대학 인문논술과 고등학교 서·논술형 평가 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량). 3개는 유형이 서로 달라야 한다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책","영화 ①"]}, ...] (from은 그 질문이 다루는 작품: ${esIds(it).map(x=>'"'+x+'"').join(", ")})`;
+      const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n${esLines(it)}- 이달의 주제: ${it.topic}\n${PX.qAdd(meta)}조건:\n1. ${one?`정확히 3개를 출제한다. 학생은 위 두 작품만 감상했으므로 세 질문 모두 책과 ${esIds(it)[1]}를 함께 다루고, 위에 없는 다른 영화는 절대 넣지 않는다.`:'정확히 3개를 출제하고, 세 작품의 주제를 섞는다.'}\n2. 세 질문은 묻는 방식이 서로 완전히 달라야 한다. 학생이 세 질문을 보고 '같은 질문을 말만 바꿨다'고 느끼면 안 된다. 번호마다 아래 방식을 지킨다.\n${esFmtAsk(one)}\n3. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다. 중학생이 쓸 수 있는 난이도로 한다.\n4. 1·2번은 두세 문장, 3번은 상황 제시를 포함해 네 문장 이내로 쓰고, 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량).\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책","영화 ①"]}, ...] (from은 그 질문이 다루는 작품: ${esIds(it).map(x=>'"'+x+'"').join(", ")})`;
       const arr=await S.sample.json(prompt,{cache:false});
       if(Array.isArray(arr)){
         const ok=arr.map(x=>typeof x==='string'?{q:x,from:[]}:x).filter(x=>x&&String(x.q||'').length>12).slice(0,3);
@@ -4027,9 +4047,9 @@ async function genQs(i){
       if(pool&&meta){try{gr=await PX.reground(meta,pool,tags)}catch(e){gr=null}}
     }catch(e){if(e&&e.code==='rate_limited')toast('질문을 너무 자주 만들었어요. 잠시 뒤 다시 열어 주세요.')}
   }
-  const q={shown:[],tags:[],ai:false,v:3,sig};const old=qState(i);
+  const q={shown:[],tags:[],ai:false,v:3,sig,fm:1};const old=qState(i);
   if(pool){q.shown=pool;q.tags=tags;q.ai=true;q.hist=pool.slice();if(meta){q.theme=meta.theme;if(gr)q.gr=gr}}
-  else{if(old&&old.v===3&&old.shown.length>=3&&(old.sig||'책+영화 ①+영화 ②')===sig){q.shown=old.shown;q.tags=old.tags;q.ai=old.ai}
+  else{if(old&&old.v===3&&old.fm&&old.shown.length>=3&&(old.sig||'책+영화 ①+영화 ②')===sig){q.shown=old.shown;q.tags=old.tags;q.ai=old.ai}
     else{const t=TPL(it);q.shown=t.map(x=>x.q);q.tags=t.map(x=>x.from)}}
   if(!old||old.shown.join('|')!==q.shown.join('|')){if(S.progress.picks)delete S.progress.picks[key];if(S.essayDraft.i===i)S.essayDraft.q=-1;{const pp=(S.progress.prep||{})[key];if(pp){pp.qDone=false;pp.roadDone=false}}}
   S.progress.qs[key]=q;S.qBusy[key]=false;qFix(i);saveProgress();renderLayers();
@@ -4044,8 +4064,8 @@ async function genQ1(i,n){
   try{
     let meta=null;try{meta=await PX.qmeta(it)}catch(e){meta=null}
     const theme=String(q.theme||(meta&&meta.theme)||it.topic||''),target=PX.target(it);hist=[...new Set([...(q.hist||[]),...q.shown])];
-    const combo=esFrom(it,q.tags&&q.tags[n],n);
-    const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 쓸 논술 질문을 새로 출제하라. 위에 없는 작품은 넣지 않는다.\n${esLines(it)}- 이달의 주제: ${it.topic}\n[공통 주제] ${theme}\n[목표 난이도] ${['쉬움','보통','어려움'][target-1]} (${it.g} 수준)\n질문은 공통 주제의 낱말이 드러나게 쓰고 목표 난이도에 맞춘다.\n조건:\n1. 이미 낸 질문(${q.shown.map((x,k)=>(k+1)+'. '+x).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${n+1}번 자리에 들어갈 질문이므로 다루는 작품은 ${combo.join('+')}이다.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 대학 인문논술과 고등학교 서·논술형 평가 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량).\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":${JSON.stringify(combo)}}]`;
+    const combo=esFrom(it,q.tags&&q.tags[n],n);const fm=q.fm?esFmt(n):null;
+    const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 쓸 논술 질문을 새로 출제하라. 위에 없는 작품은 넣지 않는다.\n${esLines(it)}- 이달의 주제: ${it.topic}\n[공통 주제] ${theme}\n[목표 난이도] ${['쉬움','보통','어려움'][target-1]} (${it.g} 수준)\n질문은 공통 주제의 낱말이 드러나게 쓰고 목표 난이도에 맞춘다.\n조건:\n1. 이미 낸 질문(${q.shown.map((x,k)=>(k+1)+'. '+x).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${n+1}번 자리에 들어갈 질문이므로 다루는 작품은 ${combo.join('+')}이다.${fm?`\n2. ${n+1}번 자리의 묻는 방식은 ${fm.ask} 다른 두 자리의 방식(${ES_FMT.filter((_,k)=>k!==n).map(x=>x.n).join(', ')})과 섞지 않는다.`:''}\n${fm?3:2}. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다. 중학생이 쓸 수 있는 난이도로 한다.\n${fm?4:3}. 질문은 ${fm&&fm.k==='app'?'상황 제시를 포함해 네 문장 이내':'두세 문장'}이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량).\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":${JSON.stringify(combo)}}]`;
     /* 후보 문항이 교체 조건(이력 문항과의 유사도·공통 주제 유사도·난이도)에 맞는지 보고, 안 맞으면 사유를 넣어 한 번 더 만든다. 두 번째 후보는 이미 낸 질문과 겹치지만 않으면 쓴다 */
     for(let a=0,why='';a<2&&!nq;a++){
       const arr=await S.sample.json(prompt+(why?`\n(직전 후보는 조건에 맞지 않았다: ${why}. 이 점을 고쳐 새로 출제한다.)`:''),{cache:false});
@@ -4073,13 +4093,14 @@ function qHTML(i){
   const q=qState(i);if(!q||!q.shown.length)return '<div class="sk"></div>';
   S.qIdx=S.qIdx||{};const n=q.shown.length;const cur=(((S.qIdx[key]||0)%n)+n)%n;
   const sel=S.essayDraft.i===i?S.essayDraft.q:-1;
-  const tags=(q.tags&&q.tags[cur])||[];
+  const tags=(q.tags&&q.tags[cur])||[];const fm=q.fm?esFmt(cur):null;
   const dots=q.shown.map((_,s)=>`<button class="qd${s===cur?' on':''}${s===sel?' pk':''}" data-act="qgo" data-i="${i}" data-s="${s}" aria-label="질문 ${s+1}${s===sel?' (선택함)':''}" ${s===cur?'aria-current="true"':''}>${s+1}</button>`).join('');
   return `${seenNote(i)}<div class="qcar" data-i="${i}">
     <div class="qcard${cur===sel?' sel':''}" role="group" aria-label="질문 ${cur+1} / ${n}" aria-live="polite">
       <div class="qtop"><b>질문 ${cur+1} <small>/ ${n}</small></b>${cur===sel?`<span class="qok">${IC.check}선택한 질문</span>`:''}${S.evals[key]?'':`<button class="chip qref" data-act="qref" data-i="${i}" data-n="${cur}" ${S.qBusy1?'disabled':''} aria-label="질문 ${cur+1} 새 질문으로 바꾸기">${S.qBusy1===key+'_'+cur?'새 질문을 만드는 중…':'↻ 새로고침'}</button>`}</div>
-      ${tags.length?`<div class="qtags">${tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
+      ${tags.length||fm?`<div class="qtags">${fm?`<span class="qfm">${esc(fm.n)}</span>`:''}${tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
       <p class="qtx">${esc(q.shown[cur])}</p>
+      ${fm?`<p class="qfs"><b>글의 짜임</b>${esc(fm.s)}</p>`:''}
       ${(()=>{const t=qTime(q.shown[cur]);return `<div class="qtime">${IC.clock}권장 시간 <b>${t.total}분</b> <small>구상 ${t.plan} · 쓰기 ${t.write} · 고치기 ${t.check}</small></div>`})()}
     </div>
     <div class="qnav"><button class="qb" data-act="qnav" data-i="${i}" data-d="-1" aria-label="이전 질문">${IC.back}</button><div class="qdots">${dots}</div><button class="qb" data-act="qnav" data-i="${i}" data-d="1" aria-label="다음 질문">${IC.next}</button></div>
@@ -5859,8 +5880,10 @@ async function evaluate(i,round){
     let px={inj:[],r2:null},pxAdd='';
     try{if(!r2)px.inj=PX.persistent(S.progress.errs,(S.progress.evalN||(S.progress.evalLog||[]).length)+1);else{const L=PX.r2List(key);if(L.length)px.r2=PX.r2Ask(L,String(e1.transcript||''),d.text)}
       pxAdd=r2?(px.r2?px.r2.add:''):PX.p1Ask(px.inj)+PX.TYPEASK}catch(e){px={inj:[],r2:null};pxAdd=''}
+    const fmo=r2?(e1&&e1.fmt?ES_FMT.find(x=>x.k===e1.fmt)||null:null):esFmtOf(i,question);
+    const fmx=fmo?`\n- 문항 방식: ${fmo.n} (글의 짜임: ${fmo.s}). 이 방식이 요구하는 요소(${fmo.need})를 갖추었는지 '주장과 근거'와 '구성' 영역에서 확인하고, 빠진 요소는 고칠 점에 쓴다. 모범 답안도 이 짜임을 따른다.`:'';
     const r2x=r2&&e1?`\n\n[2차 평가 안내]\n이 글은 학생이 1차 첨삭과 모범 답안을 읽고 고쳐 쓴 2차 글이다. 1차 총점은 ${e1.total}점이다. 1차에서 지적한 고칠 점: ${(e1.improvements||[]).join(' / ')}. 1차 글:\n${String(e1.transcript||'').slice(0,2500)}\n2차 글에서 고친 점과 아직 부족한 점을 1차와 비교해 평가하고, 좋아진 부분은 구체적으로 크게 칭찬한다. 수준은 1차와 같은 기준(영역별 수준 1~5)으로 매기되 실제로 나아진 만큼만 올린다. progress에 1차 대비 변화를 2~3문장으로 쓴다. models는 빈 배열 []로 두고 모범 답안은 쓰지 않는다(9번은 무시).`:'';
-    const prompt=`너는 대한민국 대치동에서 20년 넘게 고등학교 서·논술형 평가와 대학 논술의 기초를 지도해 온 최고의 논술 강사다. 중학생 제자의 논술 과제를 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」\n- 영화: ${mvQ(it)}\n- 이달의 주제: ${it.topic}\n- 논술 질문: ${question}${r2x}\n\n[학생 글]\n${d.text.trim()?'직접 쓴 글:\n'+d.text.trim():'직접 쓴 글: 없음'}\n${images?'첨부한 사진은 학생이 손으로 쓴 노트다. 사진 속 글을 판독해 학생의 글 전체를 transcript로 옮겨 적는다(직접 쓴 글이 있으면 함께 이어 붙인다). 오탈자나 맞춤법 오류는 고치지 말고 원문 그대로 옮긴다. 판독이 불확실한 글자는 [?]로 표시하고 unreadable에 적는다.':'transcript에는 직접 쓴 글을 그대로 넣는다.'}\n\n[최근 첨삭 기록(최대 5회)]\n${prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 총점 ${x.total}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 첨삭)'}${prepText(i,r2)}\n\n[주제 일치 확인: 가장 먼저 한다]\n학생 글이 논술 질문이나 이달의 책·영화 주제와 전혀 상관없거나 질문과 동떨어진 동문서답이면(예: 질문과 무관한 일기, 낙서, 장난, 다른 주제의 글) 첨삭하지 말고 {"offTopic":true,"reason":"왜 주제와 맞지 않는지 학생에게 다정하게 1~2문장","transcript":""}만 출력한다. 질문에 부분적으로라도 답하거나 책·영화와 연결되는 글이면 offTopic이 아니다. 조금 부족해도 주제 안에 있으면 정상적으로 첨삭한다.\n\n[첨삭 기준]\n1. spelling: 오탈자, 맞춤법, 띄어쓰기. 최대 12개. 원문 그대로 orig, 올바른 표현 fix, 이유 why(짧게).\n2. sentences: 문장별 평가. 글의 앞부분부터 고르게 골라 최대 8개(잘 쓴 문장 2개 포함). 각각 orig(transcript에 있는 그대로의 한 문장), grade("잘함"|"보통"|"고침" 중 하나), why(왜 그렇게 평가했는지 한두 문장: 주어와 서술어 호응, 길이, 접속어, 근거의 분명함 등), fix(다시 쓴 문장. "잘함"이면 빈 문자열).\n3. paragraphs: 문단 구성(서론-본론-결론, 문단 나누기, 논리 흐름)을 3~5문장으로 평가. 그리고 paraReview: transcript의 문단마다 하나씩(최대 5개) {no(문단 번호), role(이 문단의 역할 한 구절), good(잘한 점 한 문장), problem(고칠 점 한 문장), rewrite(이 문단을 학생의 논지를 그대로 살려 더 논리적으로 다시 쓴 글. 원래 분량의 100~130%, 중학생이 쓸 수 있는 문체)}.\n4. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_LVTXT}\n${RB_ESD}\n학년 기대 수준: ${ES_GRADE[RB_GN(it.g)]} 분량이 학년 권장 분량보다 많이 모자라면 구성과 주장과 근거에서 그만큼 반영한다.\n4-0. process: 쓰기 과정 지표. 점수에 넣지 않는다. 글이 아니라 [과제 준비 과정]을 보고 {"plan":"충실"|"부분"|"없음", "note":"쓰기 전에 주장·근거·맺음말 계획을 세웠고 글이 계획을 따랐는지 한 문장"}으로 쓴다. 자료가 거의 없으면 plan은 "없음"이다.\n4-1. scoreWhy: 여섯 영역 각각 왜 그 수준인지 {plus:[잘한 점 1~2개], minus:[한 수준 위로 가려면 고칠 점 1~2개]}로 쓴다. 각 요인은 학생 글에 실제로 나온 표현이나 구조를 짚어 한 문장(45자 안팎)으로 쓰고 수준과 어긋나지 않게 한다. minus에는 고치는 방법을 덧붙인다. 5(탁월)이면 minus에 더 다듬을 점을 쓴다. 둘 다 비워 두지 않는다.\n5. comment: 총평 3~4문장.\n5-1. praise: 이 학생의 글에서 실제로 잘한 부분(글 속 표현이나 생각을 구체적으로 짚어서)을 칭찬하고 앞으로도 계속 쓰도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다. 빈 문자열 금지.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(구체적인 방법 포함). 배점이 큰 영역(${rbTop(RB_ES)})의 과제를 앞에 둔다.\n7. tags: 이번 글의 대표 약점 유형 키워드 최대 4개(예: "근거 부족", "띄어쓰기", "문단 나누기", "긴 문장").\n8. cumulative: 최근 기록과 이번 글을 합쳐 반복되는 실수와 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 첨삭이라고 밝히고 이번 글의 우선 과제를 쓴다.\n9. models: 같은 질문에 대한 모범 답안 2편. 서로 다른 입장이나 구성으로 쓴다. 각각 {title, text}이고 text는 ${esLen(it.g)[0]}~${esLen(it.g)[1]}자(${it.g} 권장 분량). 중학생이 이해할 수 있되 최상위권 학생의 글처럼 논리가 분명해야 한다.\n10. marks: 학생 글을 원고지에 옮긴 뒤 그 위에 직접 쓰는 첨삭 표시. 최대 16개. 각각 find(transcript에 있는 그대로의 짧은 구절 2~10자. 글 전체에서 한 번만 나오는 구절이 좋다. 문장 전체를 쓰지 않는다), kind, fix, note. kind는 "delete"(빼도 되는 군더더기), "replace"(오탈자·맞춤법·어색한 표현을 fix로 고침), "insert"(find 앞에 fix를 넣음), "space"(띄어쓰기. fix에 올바른 띄어쓰기), "circle"(눈여겨볼 단어나 문장부호), "wave"(어색하거나 논리가 약한 부분. fix 없음), "good"(잘 쓴 표현), "note"(문단·문장 단위 지도) 중 하나. note는 여백에 쓰는 선생님의 짧은 한 줄 지도(20자 안팎, 이유나 방법). 글의 앞부분부터 끝까지 고르게 나눠 표시한다.\n11. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n12. transcript는 문단이 바뀔 때 줄바꿈(\n)을 넣는다.\n\nJSON 객체 하나만 출력한다. 정상 첨삭 형식:\n{"offTopic":false,"praise":"","progress":"","transcript":"","unreadable":[],"scores":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,0])))},"process":{"plan":"부분","note":""},"scoreWhy":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,{plus:[""],minus:[""]}])))},"comment":"","spelling":[{"orig":"","fix":"","why":""}],"sentences":[{"orig":"","grade":"고침","why":"","fix":""}],"paragraphs":"","paraReview":[{"no":1,"role":"","good":"","problem":"","rewrite":""}],"strengths":[],"improvements":[],"tags":[],"cumulative":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"teacher":"","models":[{"title":"","text":""},{"title":"","text":""}]}`;
+    const prompt=`너는 대한민국 대치동에서 20년 넘게 고등학교 서·논술형 평가와 대학 논술의 기초를 지도해 온 최고의 논술 강사다. 중학생 제자의 논술 과제를 정성껏, 그러나 정확하게 첨삭하라. 칭찬은 구체적으로 하고, 지적은 숨기지 말고 이유와 고치는 방법까지 쓴다. 말투는 존댓말로 따뜻하되 단호하게 한다.\n\n[과제]\n- 학년: ${it.g}\n- 책: 「${it.book}」\n- 영화: ${mvQ(it)}\n- 이달의 주제: ${it.topic}\n- 논술 질문: ${question}${fmx}${r2x}\n\n[학생 글]\n${d.text.trim()?'직접 쓴 글:\n'+d.text.trim():'직접 쓴 글: 없음'}\n${images?'첨부한 사진은 학생이 손으로 쓴 노트다. 사진 속 글을 판독해 학생의 글 전체를 transcript로 옮겨 적는다(직접 쓴 글이 있으면 함께 이어 붙인다). 오탈자나 맞춤법 오류는 고치지 말고 원문 그대로 옮긴다. 판독이 불확실한 글자는 [?]로 표시하고 unreadable에 적는다.':'transcript에는 직접 쓴 글을 그대로 넣는다.'}\n\n[최근 첨삭 기록(최대 5회)]\n${prev.length?prev.map(x=>`- ${x.m} 「${x.title}」 총점 ${x.total}, 약점: ${(x.tags||[]).join(', ')}, 개선 과제: ${(x.improve||[]).join(' / ')}`).join('\n'):'없음 (첫 첨삭)'}${prepText(i,r2)}\n\n[주제 일치 확인: 가장 먼저 한다]\n학생 글이 논술 질문이나 이달의 책·영화 주제와 전혀 상관없거나 질문과 동떨어진 동문서답이면(예: 질문과 무관한 일기, 낙서, 장난, 다른 주제의 글) 첨삭하지 말고 {"offTopic":true,"reason":"왜 주제와 맞지 않는지 학생에게 다정하게 1~2문장","transcript":""}만 출력한다. 질문에 부분적으로라도 답하거나 책·영화와 연결되는 글이면 offTopic이 아니다. 조금 부족해도 주제 안에 있으면 정상적으로 첨삭한다.\n\n[첨삭 기준]\n1. spelling: 오탈자, 맞춤법, 띄어쓰기. 최대 12개. 원문 그대로 orig, 올바른 표현 fix, 이유 why(짧게).\n2. sentences: 문장별 평가. 글의 앞부분부터 고르게 골라 최대 8개(잘 쓴 문장 2개 포함). 각각 orig(transcript에 있는 그대로의 한 문장), grade("잘함"|"보통"|"고침" 중 하나), why(왜 그렇게 평가했는지 한두 문장: 주어와 서술어 호응, 길이, 접속어, 근거의 분명함 등), fix(다시 쓴 문장. "잘함"이면 빈 문자열).\n3. paragraphs: 문단 구성(서론-본론-결론, 문단 나누기, 논리 흐름)을 3~5문장으로 평가. 그리고 paraReview: transcript의 문단마다 하나씩(최대 5개) {no(문단 번호), role(이 문단의 역할 한 구절), good(잘한 점 한 문장), problem(고칠 점 한 문장), rewrite(이 문단을 학생의 논지를 그대로 살려 더 논리적으로 다시 쓴 글. 원래 분량의 100~130%, 중학생이 쓸 수 있는 문체)}.\n4. scores: 아래 여섯 영역마다 수준을 매긴다. ${RB_LVTXT}\n${RB_ESD}\n학년 기대 수준: ${ES_GRADE[RB_GN(it.g)]} 분량이 학년 권장 분량보다 많이 모자라면 구성과 주장과 근거에서 그만큼 반영한다.\n4-0. process: 쓰기 과정 지표. 점수에 넣지 않는다. 글이 아니라 [과제 준비 과정]을 보고 {"plan":"충실"|"부분"|"없음", "note":"쓰기 전에 주장·근거·맺음말 계획을 세웠고 글이 계획을 따랐는지 한 문장"}으로 쓴다. 자료가 거의 없으면 plan은 "없음"이다.\n4-1. scoreWhy: 여섯 영역 각각 왜 그 수준인지 {plus:[잘한 점 1~2개], minus:[한 수준 위로 가려면 고칠 점 1~2개]}로 쓴다. 각 요인은 학생 글에 실제로 나온 표현이나 구조를 짚어 한 문장(45자 안팎)으로 쓰고 수준과 어긋나지 않게 한다. minus에는 고치는 방법을 덧붙인다. 5(탁월)이면 minus에 더 다듬을 점을 쓴다. 둘 다 비워 두지 않는다.\n5. comment: 총평 3~4문장.\n5-1. praise: 이 학생의 글에서 실제로 잘한 부분(글 속 표현이나 생각을 구체적으로 짚어서)을 칭찬하고 앞으로도 계속 쓰도록 독려하는 따뜻한 멘트 3~4문장. 반드시 쓴다. 빈 문자열 금지.\n6. strengths: 잘한 점 3개. improvements: 고칠 점 3개(구체적인 방법 포함). 배점이 큰 영역(${rbTop(RB_ES)})의 과제를 앞에 둔다.\n7. tags: 이번 글의 대표 약점 유형 키워드 최대 4개(예: "근거 부족", "띄어쓰기", "문단 나누기", "긴 문장").\n8. cumulative: 최근 기록과 이번 글을 합쳐 반복되는 실수와 단점, 앞으로 개선할 사항을 4~6문장으로 쓴다. 기록이 없으면 첫 첨삭이라고 밝히고 이번 글의 우선 과제를 쓴다.\n9. models: 같은 질문에 대한 모범 답안 2편. 서로 다른 입장이나 구성으로 쓴다. 각각 {title, text}이고 text는 ${esLen(it.g)[0]}~${esLen(it.g)[1]}자(${it.g} 권장 분량). 중학생이 이해할 수 있되 최상위권 학생의 글처럼 논리가 분명해야 한다.\n10. marks: 학생 글을 원고지에 옮긴 뒤 그 위에 직접 쓰는 첨삭 표시. 최대 16개. 각각 find(transcript에 있는 그대로의 짧은 구절 2~10자. 글 전체에서 한 번만 나오는 구절이 좋다. 문장 전체를 쓰지 않는다), kind, fix, note. kind는 "delete"(빼도 되는 군더더기), "replace"(오탈자·맞춤법·어색한 표현을 fix로 고침), "insert"(find 앞에 fix를 넣음), "space"(띄어쓰기. fix에 올바른 띄어쓰기), "circle"(눈여겨볼 단어나 문장부호), "wave"(어색하거나 논리가 약한 부분. fix 없음), "good"(잘 쓴 표현), "note"(문단·문장 단위 지도) 중 하나. note는 여백에 쓰는 선생님의 짧은 한 줄 지도(20자 안팎, 이유나 방법). 글의 앞부분부터 끝까지 고르게 나눠 표시한다.\n11. teacher: 선생님 한마디. 구체적인 칭찬과 격려 한 문장과 가장 중요한 개선점 한두 문장, 총 3문장 이내.\n12. transcript는 문단이 바뀔 때 줄바꿈(\n)을 넣는다.\n\nJSON 객체 하나만 출력한다. 정상 첨삭 형식:\n{"offTopic":false,"praise":"","progress":"","transcript":"","unreadable":[],"scores":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,0])))},"process":{"plan":"부분","note":""},"scoreWhy":${JSON.stringify(Object.fromEntries(RB_ES.map(([k])=>[k,{plus:[""],minus:[""]}])))},"comment":"","spelling":[{"orig":"","fix":"","why":""}],"sentences":[{"orig":"","grade":"고침","why":"","fix":""}],"paragraphs":"","paraReview":[{"no":1,"role":"","good":"","problem":"","rewrite":""}],"strengths":[],"improvements":[],"tags":[],"cumulative":"","marks":[{"find":"","kind":"replace","fix":"","note":""}],"teacher":"","models":[{"title":"","text":""},{"title":"","text":""}]}`;
     const ev=await S.sample.json(prompt+pxAdd,{images,cache:false,onText:({text})=>{const el=$('#es-msg');if(el)el.textContent='첨삭 중이에요… ('+text.length+'자 작성됨)'}});
     if(ev&&ev.offTopic===true){S.essayBusy='';S.essayOff={i,reason:String(ev.reason||'').slice(0,300)};renderLayers();toast('질문과 주제가 맞지 않아요. 다시 써 주세요.');return}
     if(!ev||typeof ev!=='object'||!ev.scores||typeof ev.transcript!=='string')throw {code:'invalid_json'};
@@ -5878,7 +5901,7 @@ async function evaluate(i,round){
       toast('2차 첨삭이 끝났어요.');
       return;
     }
-    const P0=prepOf(i);const rec={...ev,total,question,at,firstAt:(e1&&(e1.firstAt||e1.at))||at,writeSec:(S.progress.wtime||{})[key]||0,asked:P0.asks.length,road:clone(P0.road),title:it.book,g:it.g,m:it.m};
+    const P0=prepOf(i);const rec={...ev,total,question,...(fmo?{fmt:fmo.k}:{}),at,firstAt:(e1&&(e1.firstAt||e1.at))||at,writeSec:(S.progress.wtime||{})[key]||0,asked:P0.asks.length,road:clone(P0.road),title:it.book,g:it.g,m:it.m};
     if(S.progress.wtime)delete S.progress.wtime[key];
     await S.db.doc('evals/'+S.id+'_'+key).set(clone(rec));
     await S.db.doc('essays/'+hid(it.book)+'_'+S.id).set({hid:hid(it.book),book:it.book,g:it.g,m:it.m,nick:S.me.nick,uid:S.id,question,text:String(ev.transcript).slice(0,6000),at});
@@ -7442,12 +7465,12 @@ function gdQs(i,src){
     if(!q||!Array.isArray(q.shown)||!q.shown.length){q=null;note=p?famName(src)+'님이 아직 이달의 논술 질문을 열어 보지 않아 기본 질문을 보여 드려요.':'자녀의 질문을 불러오는 중이에요…'}
     else{const pk=(p.picks||{})['b'+i];pick=Number.isInteger(pk)?pk:-1}}
   else{const m=qState(i);if(m&&m.shown&&m.shown.length)q=m}
-  if(q)return {list:q.shown.map((t,n)=>({q:String(t),from:(q.tags&&q.tags[n])||[]})),note,pick};
-  return {list:TPL(it).map(x=>({q:x.q,from:x.from})),note,pick};
+  if(q)return {list:q.shown.map((t,n)=>({q:String(t),from:(q.tags&&q.tags[n])||[],fm:q.fm?esFmt(n):null})),note,pick};
+  return {list:TPL(it).map((x,n)=>({q:x.q,from:x.from,fm:esFmt(n)})),note,pick};
 }
 function gdQ(n,force){
   if(!S.info||!canGuide())return;const {i,it}=gdInfo();const x=gdQs(i,S.info.gsrc||'').list[n];if(!x)return;
-  gdLoad('q2_'+gdH(x.q),()=>gdBase(it)+`- 논술 문제: ${x.q}\n\n부모가 바로 쓸 수 있게 아주 짧게 쓴다. 문제의 핵심을 아이가 아는 친숙한 예(예능·웹툰·게임·학교생활 등)로 풀어 주는 말을 꼭 넣는다. 모범 답안은 자녀가 스스로 쓴 뒤 비교하는 기준이다.\n\nJSON 객체 하나만 출력한다. 형식:\n{"intent":"이 문제가 묻는 것 한 문장","example":{"title":"친숙한 예시 이름","say":"부모가 아이에게 그대로 건넬 설명 1~2문장 (반말)"},"keys":["답안에 꼭 들어갈 것 3개, 각 15자 안팎"],"steps":[{"step":"생각 꺼내기","say":"건넬 질문 한 문장"},{"step":"근거 찾기","say":"한 문장"},{"step":"함께 고치기","say":"한 문장"}],"model":{"title":"모범 답안 제목","text":"중학교 최상위권 수준 모범 답안 500~600자. 문단이 바뀌면 \\n을 넣는다"},"praise":"칭찬 한마디 한 문장"}`,force);
+  gdLoad('q2_'+gdH(x.q),()=>gdBase(it)+`- 논술 문제: ${x.q}\n${x.fm?`- 문항 방식: ${x.fm.n} (글의 짜임: ${x.fm.s}). keys와 steps는 이 방식에 맞춘다.\n`:''}\n부모가 바로 쓸 수 있게 아주 짧게 쓴다. 문제의 핵심을 아이가 아는 친숙한 예(예능·웹툰·게임·학교생활 등)로 풀어 주는 말을 꼭 넣는다. 모범 답안은 자녀가 스스로 쓴 뒤 비교하는 기준이다.\n\nJSON 객체 하나만 출력한다. 형식:\n{"intent":"이 문제가 묻는 것 한 문장","example":{"title":"친숙한 예시 이름","say":"부모가 아이에게 그대로 건넬 설명 1~2문장 (반말)"},"keys":["답안에 꼭 들어갈 것 3개, 각 15자 안팎"],"steps":[{"step":"생각 꺼내기","say":"건넬 질문 한 문장"},{"step":"근거 찾기","say":"한 문장"},{"step":"함께 고치기","say":"한 문장"}],"model":{"title":"모범 답안 제목","text":"중학교 최상위권 수준 모범 답안 500~600자. 문단이 바뀌면 \\n을 넣는다"},"praise":"칭찬 한마디 한 문장"}`,force);
 }
 function guideHTML(){
   const {i,k,it,title,isBook,wk}=gdInfo();const W=gdGet(wk)||{};
@@ -7476,7 +7499,7 @@ function guideHTML(){
         +(g.model&&g.model.text?`<details><summary>모범 답안${g.model.title?' · '+esc(g.model.title):''}</summary><p style="white-space:pre-wrap">${esc(hkStrip(g.model.text))}</p><p class="hint">자녀가 먼저 스스로 쓴 뒤에 비교하는 기준으로 써 주세요.</p></details>`:'')
         +(g.praise?`<p class="hint">칭찬 한마디 · ${esc(hkStrip(g.praise))}</p>`:'')}
     else b=`<div><button class="btn ghost small" data-act="gdq" data-n="${x.n}">모범 답안과 지도 가이드 보기</button></div>`;
-    return `<div class="note2"><div class="qtop"><b>문제 ${x.n+1}</b>${x.n===Q.pick?'<span class="tagk">자녀가 고른 문제</span>':''}</div>${x.from.length?`<div class="qtags">${x.from.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}<p>${esc(x.q)}</p>${b}</div>`}).join('');
+    return `<div class="note2"><div class="qtop"><b>문제 ${x.n+1}</b>${x.n===Q.pick?'<span class="tagk">자녀가 고른 문제</span>':''}</div>${x.from.length||x.fm?`<div class="qtags">${x.fm?`<span class="qfm">${esc(x.fm.n)}</span>`:''}${x.from.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}<p>${esc(x.q)}</p>${b}</div>`}).join('');
   return `<div class="panel gd"><div class="ph"><h2><span class="hl">논술 첨삭자료</span><br><small style="font-size:15px;font-weight:400;color:var(--muted)">${isBook?'책':'영화'} 「${esc(title)}」 · ${esc(it.g)} ${esc(it.m)}</small></h2><button class="x" data-act="gdclose" aria-label="뒤로">${IC.back}</button></div>
   <div class="sec"><h3>${isBook?'이 책, 이렇게 지도해요':'함께 보고 이렇게 이야기해요'}</h3>${work}</div>
   <div class="sec"><h3>논술 문제별 지도 가이드</h3><p class="hint">문제마다 모범 답안과 지도 순서를 볼 수 있어요. 부모님이 논술 선생님이 되어 자녀의 글을 함께 봐 주세요.</p>
@@ -7900,7 +7923,7 @@ try{
   }
 }catch(e){}
 /* 회귀 시험용 손잡이: 시험 스크립트가 미리 window.__002TEST를 둔 때만 넘긴다 */
-if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,items,nk,prepOf,rwLeft,rbScore,hexScores,hexBooks,radarSVG,orFill,orSpeed,hid,render,bkLookup,bkApply,hxSync,addMyBook,isbnOK,catOfItem,bCat});
+if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,TPL,items,nk,prepOf,rwLeft,rbScore,hexScores,hexBooks,radarSVG,orFill,orSpeed,hid,render,bkLookup,bkApply,hxSync,addMyBook,isbnOK,catOfItem,bCat});
 S.dbState=S.db?'ok':'none';
 if(S.db){
   // 계획표와 설정(요금·공지·차단 목록)은 서로 기다릴 필요가 없어 함께 불러온다. 로그인(enter)은 둘 다 받은 뒤에

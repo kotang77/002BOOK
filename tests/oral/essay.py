@@ -68,13 +68,21 @@ with sync_playwright() as p:
     ok('생성 지시에 공통 주제·요약·엔티티', '[공통 주제] 가족의 의미' in gen and '가나다라' in gen and '요소:' in gen)
     ok('근거가 약한 2번만 다시 생성', sum('근거가 약하다' in c for c in calls) == 1 and '공동체' not in ' '.join(q['shown']), q['shown'][1][:60])
     ok('근거 점수 통과 표시', q.get('gr') == [True, True, True], q.get('gr'))
+    # ── 문항 방식 세 가지(11-28): 자리마다 비교·평가 / 찬반·반론 / 적용·해결
+    ok('생성 지시에 세 방식', '1번 비교·평가형' in gen and '2번 찬반·반론형' in gen and '3번 적용·해결형' in gen and '말만 바꿨다' in gen)
+    ok('질문에 방식 표시 저장', q.get('fm') == 1)
+    J("document.querySelector('[data-act=qgo][data-s=\"1\"]')&&document.querySelector('[data-act=qgo][data-s=\"1\"]').click()"); time.sleep(.3)
+    ok('질문 카드에 방식 칩과 글의 짜임', '찬반·반론형' in pg.inner_text('.qcard .qfm') and '예상 반론' in pg.inner_text('.qcard .qfs'), pg.inner_text('.qcard')[:120])
+    tp = J("TPL(items()[0]).map(x=>x.q)")
+    ok('기본 질문도 세 방식', '비교하고' in tp[0] and '평가하시오' in tp[0] and '입장을 정하시오' in tp[1] and '반론' in tp[1] and '상황에 적용' in tp[2] and '한계' in tp[2], tp)
+    J("document.querySelector('[data-act=qgo][data-s=\"0\"]')&&document.querySelector('[data-act=qgo][data-s=\"0\"]').click()"); time.sleep(.2)
     # ── 질문 교체: 공통 주제·난이도 조건, 이력 저장
     n0 = len(J("window.__calls")); old = prog()['qs']['b0']['shown'][0]
     J("S.sample.json=(f=>async(p,o)=>p.includes('자리에 들어갈 질문이므로')?(window.__calls.push(p),[{q:(window.__rep=(window.__rep||0)+1)===1?'주인공의 선택을 평가하시오. (700자 내외)':'주인공의 선택에 드러난 가족의 의미를 근거를 들어 논하시오. (700자 내외)',from:['책','영화 ①']}]):f(p,o))(S.sample.json);0")
     J("genQ1(0,0)")
     ok('교체: 조건에 안 맞는 후보는 사유를 넣어 다시 요청', wait(lambda: '가족의 의미를 근거를 들어' in prog()['qs']['b0']['shown'][0]), prog()['qs']['b0']['shown'][0][:60])
     rc = [c for c in J("window.__calls")[n0:] if '자리에 들어갈 질문이므로' in c]
-    ok('교체 지시에 공통 주제·목표 난이도', len(rc) == 2 and '[공통 주제] 가족의 의미' in rc[0] and '[목표 난이도]' in rc[0] and '직전 후보는 조건에 맞지 않았다' in rc[1], len(rc))
+    ok('교체 지시에 공통 주제·목표 난이도', len(rc) == 2 and '[공통 주제] 가족의 의미' in rc[0] and '[목표 난이도]' in rc[0] and '1번 자리의 묻는 방식은 비교·평가형' in rc[0] and '직전 후보는 조건에 맞지 않았다' in rc[1], len(rc))
     ok('제시 이력 저장', old in prog()['qs']['b0'].get('hist', []) and len(prog()['qs']['b0']['hist']) >= 4)
     # ── 1차 첨삭: 오류 레코드 저장
     J("(t)=>{const k=nk(0);const P=prepOf(0);P.qDone=true;P.roadDone=true;S.essayDraft={i:0,q:0,text:t,files:[]};S.progress.picks=Object.assign({},S.progress.picks,{[k]:0})}", T1)
