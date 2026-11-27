@@ -1,5 +1,5 @@
 """배포 때 서버에 쌓인 자료를 웹사이트 묶음으로 함께 올린다(가입 즉시 보기용, 11-27).
-- 학습지도(guides/lg2_*) → dist/data/guides.json
+- 학습 자료(guides/lg2_·pre_·edu_·w2b_·w2m_) → dist/data/guides.json
 - 회원이 올린 책 표지(covers/, data URL) → dist/data/cv/<id>.jpg 파일 + 목록
 - 자동으로 찾은 표지·포스터 주소(sys/art_* 서버 캐시) → 종류|제목 기준 주소표
   표지 목록과 주소표는 dist/data/art.json 하나로 묶는다.
@@ -17,9 +17,12 @@ os.makedirs('dist/data/cv', exist_ok=True)
 guides, covers, art = {}, {}, {}
 if REF and TOKEN:
     try:
-        for x in sql("select id, data->'data' as d from docs where parent = 'guides' and id like 'lg2\\_%' and data ? 'data'"):
+        # 학습지도(lg2_)·책 읽기 전 생각하기(pre_)·작품 깊이 읽기(edu_)·작품별 부모 안내서(w2b_·w2m_) — 11-28 일체로 넓힘
+        for x in sql("select id, data->'data' as d from docs where parent = 'guides' and (id like 'lg2\\_%' or id like 'pre\\_%' or id like 'edu\\_%' or id like 'w2b\\_%' or id like 'w2m\\_%') and data ? 'data'"):
             d = x.get('d'); d = json.loads(d) if isinstance(d, str) else d
-            if isinstance(d, dict) and isinstance(d.get('works'), list): guides[x['id']] = d
+            if not isinstance(d, dict) or not d: continue
+            if x['id'].startswith('lg2_') and not isinstance(d.get('works'), list): continue
+            guides[x['id']] = d
     except Exception as e: print('학습지도를 가져오지 못했어요:', e)
     try:
         for x in sql("select id, data->>'img' as img from docs where parent = 'covers' and data ? 'img'"):

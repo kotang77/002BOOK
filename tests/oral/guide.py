@@ -1,3 +1,4 @@
+import os
 # 학습지도 시험 (가짜 서버): A4 두 장 자료, 평가 방식·근거 문헌, 관리자 전체 만들기, 계획표 변경 시 다시 만들기
 import json, time, urllib.request, sys
 from playwright.sync_api import sync_playwright
@@ -13,6 +14,8 @@ r = api('auth.login', id='kotang77', pw=PW)
 if 'result' not in r: api('auth.signup', id='kotang77', pw=PW, email='kotang77@ex.com', agreeTerms=True, agreePrivacy=True, birth='1980-01', grade='아빠', nick='관리자', gender='남자'); r = api('auth.login', id='kotang77', pw=PW)
 T = r['result']['session']['token']
 for d in api('db.query', T, collection='guides').get('result', []): api('db.delete', T, path='guides/' + d['id'])
+_src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../app/source.html'), encoding='utf-8').read()
+DEF = json.loads(next(l for l in _src.split('\n') if l.startswith('const DEFAULT='))[len('const DEFAULT='):].rstrip().rstrip(';'))
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path='/usr/bin/google-chrome'); pg = b.new_page(viewport={'width': 390, 'height': 800}); errs = []
     pg.on('pageerror', lambda e: errs.append(str(e)))
@@ -52,21 +55,26 @@ with sync_playwright() as p:
     act('[data-act=lggstep][data-d="-1"]'); time.sleep(.6); act('[data-act=lggstep][data-d="-1"]'); time.sleep(.6)
     ok('학년·달 알약 테두리만·같은 줄', pg.evaluate("(()=>{const m=[...document.querySelectorAll('.lgmon')];const c=e=>{const r=e.getBoundingClientRect();return r.top+r.height/2};return m.length==2&&Math.abs(c(m[0])-c(m[1]))<2&&getComputedStyle(m[0]).backgroundColor=='rgba(0, 0, 0, 0)'&&getComputedStyle(m[1]).backgroundColor=='rgba(0, 0, 0, 0)'})()") and pg.inner_text('.lggr b') == '1학년')
     pg.evaluate("document.querySelector('[data-act=lgall]').click()")
-    for _ in range(120):
-        n = len(api('db.query', T, collection='guides').get('result', []))
-        if n >= 36: break
+    def pref():
+        ids = [d['id'] for d in api('db.query', T, collection='guides').get('result', [])]
+        return {k: sum(1 for i in ids if i.startswith(k)) for k in ('lg2_', 'pre_', 'edu_', 'w2b_', 'w2m_')}
+    for _ in range(400):
+        if pg.evaluate("!!window.__lgLast"): break
         time.sleep(.5)
-    ok('관리자 전체 만들기 → 36개월 저장', n >= 36, n)
+    c = pref(); nw = 36 * 3 - sum(1 for it in DEF for k in ('m1', 'm2') if not str(it.get(k) or '').strip())
+    ok('관리자 일체 만들기 → 36개월 학습지도·읽기 전·깊이 읽기·작품별 안내서', c['lg2_'] == 36 and c['pre_'] == 36 and c['edu_'] == 36 and c['w2b_'] + c['w2m_'] == nw, (c, nw))
+    n = sum(c.values())
     time.sleep(2)
     # 계획표 한 달 바꾸면 그 달 자료를 새로 만든다
     act('[data-act=view][data-v=admin]'); time.sleep(1); act('[data-act=admsec][data-v=course]'); time.sleep(.5); act('[data-act=admsub][data-v=month]'); time.sleep(.5)
     act('[data-act=admced][data-v="0"]'); time.sleep(.5)
     pg.fill('form[data-form=admcourse] input[name=m1]', '원더'); act('form[data-form=admcourse] button[type=submit]')
     for _ in range(60):
-        n2 = len(api('db.query', T, collection='guides').get('result', []))
-        if n2 >= 37: break
+        n2 = sum(pref().values())
+        if n2 >= n + 4: break
         time.sleep(.5)
-    ok('책·영화가 바뀐 달은 자동으로 새 자료', n2 == 37, n2)
+    time.sleep(2); n2 = sum(pref().values())
+    ok('책·영화가 바뀐 달은 자동으로 새 자료(학습지도·읽기 전·깊이 읽기·바뀐 영화 안내서)', n2 == n + 4, (n, n2))
     api('db.delete', T, path='config/course')
     ok('화면 오류 없음', not errs, errs)
     b.close()

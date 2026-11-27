@@ -7238,20 +7238,37 @@ function lgLoad(force){const {it}=lgCur();if(!it)return;gdLoad(lgKey(it),()=>lgP
 /* 관리자: 학습지도 자료를 중1 3월부터 차례로 미리 만들어 둔다. 계획표가 바뀌면 바뀐 달만 다시(키에 책·영화 제목이 들어 있어 새 키가 됨) */
 /* 계획표가 바뀌면 바뀐 달의 책 표지·영화 포스터를 바로 찾아 둔다(서버 캐시 → 모든 회원이 같은 그림을 바로 받음) */
 function lgArtPrefetch(only){const L=S.course||[];(only||L.map((_,i)=>i)).forEach(i=>{const it=L[i];if(!it)return;artOf(it.book,'book');artOf(it.m1,'movie',yearOf(it,it.m1));artOf(it.m2,'movie',yearOf(it,it.m2))})}
+/* 11-28 사용자 지시: 계획표가 바뀌면 관련 학습 자료 일체를 중1 3월부터 차례로 미리 만들어 서버에 둔다(회원은 누르자마자 봄).
+   달마다 ① 학습지도(lg2_) ② 책 읽기 전 생각하기(pre_) ③ 작품 깊이 읽기(edu_) ④ 책·영화 정보(info/) → 끝으로 ⑤ 작품별 부모 안내서(w2b_/w2m_).
+   이미 있는 것은 건너뛰고, AI 하루 한도에 걸리면 멈춘다(다시 누르면 이어서). 3개씩 함께 만든다 */
+async function gdMake(key,prompt,ok){
+  const sn=await S.db.doc('guides/'+key).get().catch(()=>null);
+  if(sn&&sn.exists&&sn.data()&&sn.data().data){S.gd=S.gd||{};S.gd[key]={data:sn.data().data};return 'have'}
+  let r=null;
+  for(let t=0;t<2&&!r;t++){try{const x=await S.sample.json(prompt()+HK_RULE,{cache:false});if(x&&typeof x==='object'&&!Array.isArray(x)&&ok(x))r=x}catch(e){if(e&&e.code==='rate_limited')throw e}}
+  if(!r)return 'fail';
+  await S.db.doc('guides/'+key).set({data:clone(r),by:S.id,at:Date.now()});S.gd=S.gd||{};S.gd[key]={data:r};return 'made'}
 async function lgBatch(only,quiet){
   if(!isAdmin()||!S.sample||S.lgBusy)return;const L=S.course||[];
   const order=GR.flatMap(g=>idxOf(g)).filter(i=>L[i]&&(!only||only.includes(i)));
-  S.lgBusy={n:0,of:order.length,made:0};if(!quiet)renderLayers();
-  for(const i of order){const it=L[i];const key=lgKey(it);S.lgBusy.n++;S.lgBusy.cur=it.g+' '+it.m;
-    if(S.view==='guide')render();
-    try{const sn=await S.db.doc('guides/'+key).get().catch(()=>null);
-      if(sn&&sn.exists&&sn.data()&&sn.data().data){S.gd=S.gd||{};S.gd[key]={data:sn.data().data};continue}
-      let r=null;for(let t=0;t<2&&!r;t++){try{const x=await S.sample.json(lgPrompt(it)+HK_RULE,{cache:false});if(x&&typeof x==='object'&&!Array.isArray(x)&&Array.isArray(x.works))r=x}catch(e){if(e&&e.code==='rate_limited'){S.lgBusy.stop='요청 한도에 걸려 멈췄어요. 내일 이어서 만들어요.';break}}}
-      if(S.lgBusy.stop)break;
-      if(r){await S.db.doc('guides/'+key).set({data:clone(r),by:S.id,at:Date.now()});S.gd=S.gd||{};S.gd[key]={data:r};S.lgBusy.made++}
-    }catch(e){}
-  }
-  const b=S.lgBusy;S.lgBusy=null;gdPersist();if(!quiet||b.made)toast(b.stop||`학습지도 자료 ${b.made}개를 새로 만들었어요.`);if(S.view==='guide')render();
+  const jobs=[];
+  for(const i of order){const it=L[i];const nm=it.g+' '+it.m;
+    jobs.push([nm+' 학습지도',()=>gdMake(lgKey(it),()=>lgPrompt(it),x=>Array.isArray(x.works))]);
+    jobs.push([nm+' 책 읽기 전 생각하기',()=>gdMake(preKey(it),()=>prePrompt(it),x=>Object.keys(x).length>0)]);
+    jobs.push([nm+' 작품 깊이 읽기',()=>gdMake(eduKey(it),()=>eduPrompt(it),x=>Object.keys(x).length>0)]);
+    if(S.mode!=='custom')WKS.filter(k=>String(it[k]||'').trim()).forEach(k=>jobs.push([nm+' 작품 정보',async()=>{await cardFill(i,k);return 'info'}]))}
+  for(const i of order){const it=L[i];const nm=it.g+' '+it.m;
+    WKS.filter(k=>String(it[k]||'').trim()).forEach(k=>{const title=k==='book'?it.book:k==='m1'?it.m1:it.m2;
+      jobs.push([nm+' 부모 안내서',()=>gdMake(w2Key(it,k),()=>w2Prompt(it,title,k==='book'),x=>Object.keys(x).length>0)])})}
+  S.lgBusy={n:0,of:jobs.length,made:0,fail:0};if(!quiet)renderLayers();
+  let next=0;
+  const worker=async()=>{while(!S.lgBusy.stop&&next<jobs.length){const [nm,run]=jobs[next++];S.lgBusy.cur=nm;
+      try{const r=await run();if(r==='made')S.lgBusy.made++;else if(r==='fail')S.lgBusy.fail++}
+      catch(e){if(e&&e.code==='rate_limited')S.lgBusy.stop='AI 하루 한도에 걸려 멈췄어요. 내일 다시 누르면 이어서 만들어요.';else S.lgBusy.fail++}
+      S.lgBusy.n++;if(S.view==='guide')render()}};
+  await Promise.all([worker(),worker(),worker()]);
+  const b=S.lgBusy;S.lgBusy=null;window.__lgLast=b;gdPersist();
+  if(!quiet||b.made)toast(b.stop||`학습 자료 ${b.made}개를 새로 만들었어요.${b.fail?` (실패 ${b.fail}개는 다시 누르면 다시 만들어요)`:''}`);if(S.view==='guide')render();
 }
 function lgSheetHTML(it,g){const T=hk;const A=x=>Array.isArray(x)?x:[];
   const nm={book:'책',m1:'영화 ①',m2:'영화 ②'};const ti={book:it.book,m1:it.m1,m2:it.m2};['m1','m2'].forEach(k=>{if(!String(it[k]||'').trim())delete nm[k]});
@@ -7364,7 +7381,7 @@ function lgHTML(){
       ${lgEvalSumHTML()}
       ${G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">모범 답안</button></div>`:''}
     </div>
-    ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습지도 자료를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')})</p>`:`<button class="btn ghost small" data-act="lgall">중1 3월부터 전체 자료 만들기 (없는 달만)</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
+    ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습 자료 일체를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')}) · 새로 ${S.lgBusy.made}개</p>`:`<button class="btn ghost small" data-act="lgall">중1 3월부터 학습 자료 일체 만들기 (없는 것만)</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
     ${G&&G.data?`<div class="lgprint" aria-hidden="true">${lgSheetHTML(it,G.data)}</div>`:''}`}
 async function lgPdf(){const {it}=lgCur();const G=gdGet(lgKey(it));if(!G||!G.data)return;
   if(!S.downloads){toast('이 화면에서는 PDF 저장을 쓸 수 없어요.');return}
@@ -7385,7 +7402,7 @@ const gdGet=k=>(S.gd||{})[k];
 /* 기기 저장본(localStorage yw.gd): 한 번 본 자료는 다음부터 네트워크 없이 바로. 지금 계획표에 있는 달 것만 남긴다 */
 let GD_SNAP=null,gdSaveT=null;
 function gdLocal(){try{const o=JSON.parse(localStorage.getItem('yw.gd')||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
-function gdPersist(){clearTimeout(gdSaveT);gdSaveT=setTimeout(()=>{try{const keep=new Set((S.course||[]).map(it=>lgKey(it)));const o={};for(const k in (S.gd||{}))if(keep.has(k)&&S.gd[k]&&S.gd[k].data)o[k]=S.gd[k].data;localStorage.setItem('yw.gd',JSON.stringify(o))}catch(e){}},800)}
+function gdPersist(){clearTimeout(gdSaveT);gdSaveT=setTimeout(()=>{try{const keep=new Set((S.course||[]).flatMap(it=>[lgKey(it),preKey(it),eduKey(it),...WKS.filter(k=>String(it[k]||'').trim()).map(k=>w2Key(it,k))]));const o={};for(const k in (S.gd||{}))if(keep.has(k)&&S.gd[k]&&S.gd[k].data)o[k]=S.gd[k].data;localStorage.setItem('yw.gd',JSON.stringify(o))}catch(e){}},800)}
 function gdSnap(){if(!GD_SNAP){S.gd=S.gd||{};const loc=gdLocal();for(const k in loc)if(!S.gd[k])S.gd[k]={data:loc[k]};
   GD_SNAP=fetch('data/guides.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{const g=Object.assign({},loc,(j&&j.guides)||{});for(const k in g)if(!S.gd[k]||(!S.gd[k].data&&!S.gd[k].busy)||((j&&j.guides)||{})[k])S.gd[k]={data:g[k]};gdPersist();return g}).catch(()=>loc)}return GD_SNAP}
 async function gdLoad(key,make,force){
@@ -7407,7 +7424,8 @@ async function gdLoad(key,make,force){
 }
 const eduKey=it=>'edu_'+gdH([it.book,it.m1,it.m2,it.topic].join('|'));
 function eduLoad(i,force){const it=items()[i];if(!it)return;
-  gdLoad(eduKey(it),()=>`너는 대한민국 대치동에서 20년 넘게 중학생 독서와 논술을 지도해 온 최고의 강사다. 아래 이달의 책 1권과 영화 2편을 중학생이 이해하기 쉽게 소개하는 '교육자료'를 쓴다. 학생과 부모가 함께 읽는다. 존댓말로, 쉬운 말로 쓴다. 작품 내용은 확실히 아는 사실만 쓰고 지어내지 않는다. 결말이나 반전은 밝히지 않는다. 작품을 잘 모르면 그 사실을 감추지 말고 이달의 주제를 중심으로 짧게 쓴다.\n\n- 학년: ${it.g}\n- 이달의 큰 주제: ${kwDisp(it)||it.genre||''}\n- 이달의 핵심 주제: ${it.topic}\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n\nJSON 객체 하나만 출력한다. 형식:\n{"intro":"이달의 주제를 세 작품과 함께 공부하는 이유 1~2문장",\n "book":{"summary":"줄거리 또는 내용 요약 3~4문장","point":"이 작품이 던지는 핵심 메시지 1문장"},\n "m1":{"summary":"줄거리 요약 3~4문장","point":"핵심 메시지 1문장"},\n "m2":{"summary":"줄거리 요약 3~4문장","point":"핵심 메시지 1문장"},\n "common":"세 작품을 하나로 잇는 공통 주제와 그 의미 3~4문장",\n "links":[{"pair":"책 ↔ 영화 ①","text":"두 작품이 어떻게 닮았고 어떻게 다른지 2문장"},{"pair":"책 ↔ 영화 ②","text":"2문장"},{"pair":"영화 ① ↔ 영화 ②","text":"2문장"}],\n "order":"세 작품을 어떤 순서로 보면 좋은지와 그 이유 1~2문장",\n "questions":["세 작품을 함께 보고 생각해 볼 질문 3개"]}`,force)}
+  gdLoad(eduKey(it),()=>eduPrompt(it),force)}
+const eduPrompt=(it)=>`너는 대한민국 대치동에서 20년 넘게 중학생 독서와 논술을 지도해 온 최고의 강사다. 아래 이달의 책 1권과 영화 2편을 중학생이 이해하기 쉽게 소개하는 '교육자료'를 쓴다. 학생과 부모가 함께 읽는다. 존댓말로, 쉬운 말로 쓴다. 작품 내용은 확실히 아는 사실만 쓰고 지어내지 않는다. 결말이나 반전은 밝히지 않는다. 작품을 잘 모르면 그 사실을 감추지 말고 이달의 주제를 중심으로 짧게 쓴다.\n\n- 학년: ${it.g}\n- 이달의 큰 주제: ${kwDisp(it)||it.genre||''}\n- 이달의 핵심 주제: ${it.topic}\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n\nJSON 객체 하나만 출력한다. 형식:\n{"intro":"이달의 주제를 세 작품과 함께 공부하는 이유 1~2문장",\n "book":{"summary":"줄거리 또는 내용 요약 3~4문장","point":"이 작품이 던지는 핵심 메시지 1문장"},\n "m1":{"summary":"줄거리 요약 3~4문장","point":"핵심 메시지 1문장"},\n "m2":{"summary":"줄거리 요약 3~4문장","point":"핵심 메시지 1문장"},\n "common":"세 작품을 하나로 잇는 공통 주제와 그 의미 3~4문장",\n "links":[{"pair":"책 ↔ 영화 ①","text":"두 작품이 어떻게 닮았고 어떻게 다른지 2문장"},{"pair":"책 ↔ 영화 ②","text":"2문장"},{"pair":"영화 ① ↔ 영화 ②","text":"2문장"}],\n "order":"세 작품을 어떤 순서로 보면 좋은지와 그 이유 1~2문장",\n "questions":["세 작품을 함께 보고 생각해 볼 질문 3개"]}`;
 function eduHTML(i){
   const it=items()[i];const key=eduKey(it);const G=gdGet(key);
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(key);if(!g||(!g.data&&!g.busy&&!g.err))eduLoad(i)},0);
@@ -7429,7 +7447,8 @@ function eduHTML(i){
    예전 교육자료(작품 요약·연결·질문)는 논술 첨삭 화면의 '작품 깊이 읽기'로 옮김 */
 const preKey=it=>'pre_'+gdH([it.book,it.m1,it.m2,it.topic].join('|'));
 function preLoad(i,force){const it=items()[i];if(!it)return;
-  gdLoad(preKey(it),()=>`너는 대한민국 대치동에서 20년 넘게 중학생 독서와 논술을 지도해 온 최고의 강사다. 학생이 이달의 책과 영화를 읽고 보기 '전에' 읽는 짧은 안내 '책 읽기 전 생각하기'를 쓴다. 존댓말로, 중학생이 바로 알아듣는 쉬운 말로, 항목마다 한두 문장으로 짧게 쓴다.
+  gdLoad(preKey(it),()=>prePrompt(it),force)}
+const prePrompt=(it)=>`너는 대한민국 대치동에서 20년 넘게 중학생 독서와 논술을 지도해 온 최고의 강사다. 학생이 이달의 책과 영화를 읽고 보기 '전에' 읽는 짧은 안내 '책 읽기 전 생각하기'를 쓴다. 존댓말로, 중학생이 바로 알아듣는 쉬운 말로, 항목마다 한두 문장으로 짧게 쓴다.
 반드시 지킬 것: 줄거리 요약, 인물에게 일어나는 일, 결말, 반전은 한 줄도 쓰지 않는다. 작품은 제목과 갈래(소설·시집·영화 등) 정도만 말한다. 확실하지 않은 내용은 쓰지 않는다. 이달의 주제를 중심으로 쓴다.
 
 - 학년: ${it.g}
@@ -7437,7 +7456,7 @@ function preLoad(i,force){const it=items()[i];if(!it)return;
 - 이달의 핵심 주제: ${it.topic}
 ${esLines(it)}
 JSON 객체 하나만 출력한다. 형식:
-{"theme":"이달의 주제가 무슨 뜻인지 중학생 눈높이로 2문장","why":"이 주제를 책과 영화로 함께 보면 좋은 이유 1문장","before":["읽고 보기 전에 나에게 물어볼 질문(자기 경험과 연결) 3개"],"look":[${esIds(it).map(k=>`{"k":"${k}","t":"읽거나 보며 눈여겨볼 점 한 문장(내용을 밝히지 않음)"}`).join(',')}],"link":"책과 영화를 이어서 생각해 볼 질문 1~2문장"}`,force)}
+{"theme":"이달의 주제가 무슨 뜻인지 중학생 눈높이로 2문장","why":"이 주제를 책과 영화로 함께 보면 좋은 이유 1문장","before":["읽고 보기 전에 나에게 물어볼 질문(자기 경험과 연결) 3개"],"look":[${esIds(it).map(k=>`{"k":"${k}","t":"읽거나 보며 눈여겨볼 점 한 문장(내용을 밝히지 않음)"}`).join(',')}],"link":"책과 영화를 이어서 생각해 볼 질문 1~2문장"}`;
 function preHTML(i){
   const it=items()[i];const key=preKey(it);const G=gdGet(key);
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(key);if(!g||(!g.data&&!g.busy&&!g.err))preLoad(i)},0);
@@ -7457,8 +7476,10 @@ const gdBase=it=>`너는 대한민국 대치동에서 20년 넘게 중학생의 
 function gdInfo(){const {i,k}=S.info;const it=items()[i];const title=k==='book'?it.book:k==='m1'?it.m1:it.m2;return {i,k,it,title,isBook:k==='book',wk:'w2'+(k==='book'?'b':'m')+'_'+gdH(title+'|'+it.topic)}}
 function gdWork(force){
   if(!S.info||!canGuide())return;const {it,title,isBook,wk}=gdInfo();
-  gdLoad(wk,()=>gdBase(it)+`- 안내서 대상: ${isBook?'책':'영화'} 「${title}」${isBook?'':' (부모와 자녀가 함께 본다)'}\n\n설명은 최소로 하고, 부모가 그대로 읽어 주면 되는 '친숙한 예시' 위주로 짧게 쓴다. 예시는 아이가 이미 아는 예능·드라마·웹툰·게임·유튜브·스포츠·학교생활·가족 일상에서 고른다. 예: 영화 「카모메 식당」이라면 예능 '윤식당'처럼 '낯선 곳에서 작은 식당을 열어 손님과 천천히 가까워지는 이야기'로 연결해 설명한다. 실제로 있는 프로그램·작품만 예로 든다.\n\nJSON 객체 하나만 출력한다. 형식:\n{"one":"작품을 한 줄로 (40자 이내)","msg":"아이에게 남길 핵심 메시지 한 문장","examples":[{"title":"친숙한 예시 이름 (예: 예능 '윤식당')","link":"작품과 어떻게 닮았는지 한 문장","say":"부모가 아이에게 그대로 건넬 말 1~2문장 (반말)"}],"ask":["보고 나서 건넬 짧은 질문 2개"],${isBook?'':'"care":"관람 등급이나 미리 알아 둘 장면 한 문장. 없으면 빈 문자열",'}"avoid":"피해야 할 말 한 문장"}\nexamples는 서로 다른 분야에서 정확히 3개. 모든 문장은 짧게 쓴다.`,force);
+  gdLoad(wk,()=>w2Prompt(it,title,isBook),force);
 }
+const w2Prompt=(it,title,isBook)=>gdBase(it)+`- 안내서 대상: ${isBook?'책':'영화'} 「${title}」${isBook?'':' (부모와 자녀가 함께 본다)'}\n\n설명은 최소로 하고, 부모가 그대로 읽어 주면 되는 '친숙한 예시' 위주로 짧게 쓴다. 예시는 아이가 이미 아는 예능·드라마·웹툰·게임·유튜브·스포츠·학교생활·가족 일상에서 고른다. 예: 영화 「카모메 식당」이라면 예능 '윤식당'처럼 '낯선 곳에서 작은 식당을 열어 손님과 천천히 가까워지는 이야기'로 연결해 설명한다. 실제로 있는 프로그램·작품만 예로 든다.\n\nJSON 객체 하나만 출력한다. 형식:\n{"one":"작품을 한 줄로 (40자 이내)","msg":"아이에게 남길 핵심 메시지 한 문장","examples":[{"title":"친숙한 예시 이름 (예: 예능 '윤식당')","link":"작품과 어떻게 닮았는지 한 문장","say":"부모가 아이에게 그대로 건넬 말 1~2문장 (반말)"}],"ask":["보고 나서 건넬 짧은 질문 2개"],${isBook?'':'"care":"관람 등급이나 미리 알아 둘 장면 한 문장. 없으면 빈 문자열",'}"avoid":"피해야 할 말 한 문장"}\nexamples는 서로 다른 분야에서 정확히 3개. 모든 문장은 짧게 쓴다.`;
+const w2Key=(it,k)=>{const title=k==='book'?it.book:k==='m1'?it.m1:it.m2;return 'w2'+(k==='book'?'b':'m')+'_'+gdH(title+'|'+it.topic)};
 function gdQs(i,src){
   const it=items()[i];let q=null,note='',pick=-1;
   if(src&&S.mode==='base'){const p=S.fam&&S.fam.kp[src];q=p&&p.qs&&p.qs['b'+i];
