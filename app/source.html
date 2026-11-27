@@ -2585,6 +2585,9 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgevbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:4px;border:0;border-radius:12px;padding:12px;background:#1F4637;color:#FFF8EA;font:700 14px var(--f-body);cursor:pointer}.lgevbtn .lgi{margin:0}
 .lgevbtn.ghost{background:#fff;color:#1F4637;border:1px solid #E6DCCB;margin-top:14px}.lgevbtn.ghost .lgi{transform:rotate(180deg)}
 .lgevfull{display:flex;flex-direction:column;gap:22px}.lgevfull .lgtile:not([aria-pressed=true]),.lgevfull .lgsteps li,.lgevfull .lgpt3 div,.lgevfull .lgref{background:#fff}
+.layer .ph .x,.panel .ph .x{width:40px;height:40px;background:#1F4637!important;color:#FFFFFF!important;border:2px solid #FFFFFF!important;box-shadow:0 3px 10px rgba(0,0,0,.25);transition:transform .12s}
+.layer .ph .x svg,.panel .ph .x svg{width:20px;height:20px;stroke-width:2.6}.layer .ph .x:active,.panel .ph .x:active{transform:scale(.92)}
+.cso .ph .x,.panel.vbzp .ph .x{background:#FFF8EA!important;color:#1F4637!important;border-color:#1F4637!important}
 /* PDF(A4 794×1123) */
 .lgpdf{width:794px;height:1123px;box-sizing:border-box;padding:44px 52px;background:#fff;font-family:'Noto Sans KR',sans-serif}
 .lgpdf .lgs{box-shadow:none;border-radius:0;padding:0;font-size:16px;line-height:1.75;background:#fff}
@@ -3265,11 +3268,11 @@ async function vbPubPics(v){const SV=window.__002&&window.__002.server;if(!SV||!
 function vbFullOpen(){const v=vbOf();if(!v||!v.board||document.getElementById('vbfull'))return;
   const d=document.createElement('div');d.id='vbfull';d.setAttribute('role','dialog');d.setAttribute('aria-label','비전보드 전체 보기');
   d.innerHTML=vbPhoneHTML(v).replace('id="vbphone"','')+`<button type="button" class="vbf-x" data-vbf="x" aria-label="닫기">${IC.x}</button><button type="button" class="vbf-dl" data-vbf="dl" aria-label="바탕화면용 이미지 저장" ${S.downloads?'':'disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19h14"/></svg></button>`;
-  document.body.appendChild(d);vbFit()}
+  document.body.appendChild(d);vbFit();navSync()}
 document.addEventListener('click',e=>{const t=e.target;if(!t||!t.closest)return;const f=t.closest('#vbfull');
-  if(f){const b=t.closest('[data-vbf]');if(b&&b.dataset.vbf==='dl'){vbSave(true);return}f.remove();return}
+  if(f){const b=t.closest('[data-vbf]');if(b&&b.dataset.vbf==='dl'){vbSave(true);return}f.remove();navSync();return}
   if(S.id&&S.view==='vision'&&t.closest('main .vphw')&&!t.closest('button,a,label,input,[data-act]'))vbFullOpen()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const f=document.getElementById('vbfull');if(f)f.remove()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const f=document.getElementById('vbfull');if(f){f.remove();navSync()}}});
 async function vbPubRetry(){if(S.vbPubTried||S.vbBusy)return;const v=vbOf();if(!v||!v.board)return;S.vbPubTried=true;
   const n=await vbPubPics(v);if(n){saveProgress();if(S.view==='vision'||S.view==='course')render()}}
 async function vbShot(el,sc){sc=sc||2;
@@ -5199,8 +5202,24 @@ function render(){
   {const lg=document.getElementById('legal');if(lg)lg.hidden=!(S.id&&S.view==='course')}
   renderLayers();updateBadges();seasonFx();if(S.id){loadBq();loadBud()}
 }
+/* 휴대폰 뒤로가기(11-27): 창(시트)·전체 화면·다른 메뉴가 열리면 기록을 하나씩 쌓고, 뒤로가기를 누르면 앱이 닫히지 않고 맨 위 창부터 닫는다 */
+let navDepth=0,navSkip=0;
+function navLevel(){if(!S.id)return 0;let n=0;if(S.view&&S.view!=='course')n++;const l1=document.getElementById('layer1'),l2=document.getElementById('layer2'),vf=document.getElementById('vbfull');
+  if(l1&&!l1.hidden)n++;if(l2&&!l2.hidden)n++;if(vf&&vf.isConnected&&!vf.hidden)n++;return n}
+function navSync(){const n=navLevel();
+  if(n>navDepth){for(;navDepth<n;navDepth++)try{history.pushState({nav:navDepth+1},'')}catch(e){}}
+  else if(n<navDepth){const k=navDepth-n;navDepth=n;navSkip++;try{history.go(-k)}catch(e){navSkip--}}}
+function navCloseTop(){
+  const vf=document.getElementById('vbfull');if(vf&&vf.isConnected&&!vf.hidden){const x=vf.querySelector('[data-vbf=x]');if(x){x.click();return}vf.remove();return}
+  const l1=document.getElementById('layer1'),l2=document.getElementById('layer2');
+  const btn=l=>l&&!l.hidden&&(l.querySelector('[data-act=close2]')||l.querySelector('.ph .x')||l.querySelector('[data-act=close1]'));
+  const b=btn(l2)||btn(l1);if(b){b.click();return}
+  if(l2&&!l2.hidden){S.survey=null;S.esConf=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;renderLayers();return}
+  if(l1&&!l1.hidden){S.sheet=null;render();return}
+  if(S.id&&S.view&&S.view!=='course'){S.view='course';render();window.scrollTo(0,0)}}
+window.addEventListener('popstate',()=>{if(navSkip>0){navSkip--;return}navDepth=Math.max(0,navDepth-1);navCloseTop();setTimeout(navSync,0)});
 function renderLayers(){
-  queueMicrotask(gsiMount);
+  queueMicrotask(gsiMount);queueMicrotask(navSync);
   if(S.id&&S.view==='guide'){const pg=document.querySelector('main .lgpage');if(pg)pg.innerHTML=lgHTML()}
   if(S.id&&S.view==='vision'){const pg=document.querySelector('main .vpage');if(pg){const n=S.vbW?S.vbW.n:0;pg.innerHTML=visionHTML(true);vbzGo(n,false)}}
   const l1=$('#layer1'),l2=$('#layer2');
