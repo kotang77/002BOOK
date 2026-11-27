@@ -2740,7 +2740,18 @@ const fromOK=(it,f)=>(f||[]).every(x=>x==='책'||(x==='영화 ①'?String(it.m1|
 const svAll=i=>wkOf(i).every(k=>svOK(i,k));
 /* 글쓰기·말하기는 책과 영화 한 편 이상을 끝내고 설문을 마치면 열린다(2026-11-25). 문항 생성(2차 특허, PX)은 그대로 세 작품으로 만든다 */
 const svReady=i=>svOK(i,'book')&&['m1','m2'].filter(k=>wkHas(i,k)).some(k=>svOK(i,k));
-const seenNote=i=>{const D=S.progress.done;return D[ik(i,'book')]&&(!!D[ik(i,'m1')]!==!!D[ik(i,'m2')])?`<p class="hint qseen">아직 안 본 영화가 나오는 질문은 넘기거나 '다른 질문 보기'로 바꿔요. 그 영화는 나중에 봐도 돼요.</p>`:''};
+/* 11-27 밤: 책 1권과 영화 1편만 끝내고 글쓰기·말하기를 하면 질문은 끝낸 작품으로만 낸다. 안 본 영화 칸을 비운 작품 묶음(세 작품을 다 끝냈으면 그대로).
+   2차 특허 문항 생성(PX.qmeta·theme·check)은 책과 영화 1편(서로 다른 매체 둘)으로도 그대로 돈다 */
+const seenIt=i=>{const it=items()[i];if(!it)return it;const D=S.progress.done;const o=Object.assign({},it);
+  const seen=['m1','m2'].filter(k=>wkHas(i,k)&&D[ik(i,k)]);if(!D[ik(i,'book')]||!seen.length)return o;
+  ['m1','m2'].forEach(k=>{if(!seen.includes(k)){o[k]='';delete o[k+'Info']}});return o};
+const esIds=it=>['책'].concat(String(it.m1||'').trim()?['영화 ①']:[],String(it.m2||'').trim()?['영화 ②']:[]);
+const esSig=i=>esIds(seenIt(i)).join('+');
+const esLines=it=>`- 책: 「${it.book}」\n`+[['영화 ①',it.m1],['영화 ②',it.m2]].filter(([,t])=>String(t||'').trim()).map(([k,t])=>`- ${k}: 「${t}」\n`).join('');
+const esCnt=it=>`책 1권과 영화 ${mvs(it).length}편`;
+const esCombos=it=>{const m=esIds(it).slice(1);return m.length>=2?[['책','영화 ①'],['책','영화 ②'],['책','영화 ①','영화 ②']]:m.length?[['책',m[0]],['책',m[0]],['책',m[0]]]:[['책'],['책'],['책']]};
+const esFrom=(it,f,n)=>{const ok=esIds(it);const x=(Array.isArray(f)?f.map(String):[]).filter(y=>ok.includes(y));return x.length>=2||(x.length&&ok.length<2)?x:esCombos(it)[n]||esCombos(it)[2]};
+const seenNote=i=>'';
 function svStars(q,v){let h='';for(let n=1;n<=5;n++){const st=v>=n?'f':v>=n-.5?'h':'e';h+=`<span class="svs ${st}"><button type="button" class="l" data-act="svset" data-q="${q}" data-v="${n-.5}" aria-label="${n-.5}점"></button><button type="button" class="r" data-act="svset" data-q="${q}" data-v="${n}" aria-label="${n}점"></button></span>`}return h}
 function surveyHTML(){
   const V=S.survey;const it=items()[V.i];const isB=V.k==='book';const name=bTitle(isB?it.book:V.k==='m1'?it.m1:it.m2);
@@ -3689,7 +3700,7 @@ const PKA=['#8FD0C9','#F7B29A','#A8DEC3','#F3D98F','#C9D3F2','#F4C7D0'];
 const PKB=['#2E4057','#E0684B','#3D8B7D','#D9822B','#5561A8','#B04A6A'];
 function artHTML(i,cls){const a=PKA[i%6],b=PKB[(i+1)%6],c=PKA[(i+3)%6];return `<span class="art v${i%3} ${cls||''}" style="--a:${a};--b:${b};--c:${c}" aria-hidden="true"><i></i><i></i><i></i></span>`}
 const STEP_T={work:'읽고 보기',note:'기록하기',essay:'글쓰기',oral:'말하기'};
-const STEP_G={work:'책 1권과 영화 2편을 읽고 보며 시작·완료를 눌러요. 책과 영화 한 편을 끝내고 설문을 하면 글쓰기가 열려요.',
+const STEP_G={work:'책 1권과 영화 2편을 읽고 보며 시작·완료를 눌러요. 책과 영화 한 편을 끝내고 설문을 하면 글쓰기·말하기가 열려요. 질문은 끝낸 작품에서만 나와요.',
   note:'책에서 마음에 남은 문장 하나, 영화에서 기억에 남는 장면 하나를 적어요.',
   essay:'질문 고르기 → 묻기 → 계획 → 원고지에 쓰기 → 첨삭 순서로 진행해요.',
   oral:'질문을 귀로 듣고 말로 답해요(중1은 1분 안팎). 모범 답안을 따라 읽고 다시 답하면 나아진 점을 알려 줘요.'};
@@ -3872,7 +3883,10 @@ function meHTML(){
 }
 
 /* ---------- 월 상세 ---------- */
-const TPL=(it)=>{const t=String(it.topic||'').split(':')[0];return [
+const TPL=(it)=>{const t=String(it.topic||'').split(':')[0];const mv=mvs(it);if(mv.length===1){const id=String(it.m1||'').trim()?'영화 ①':'영화 ②',m=mv[0];return [
+  {from:['책',id],q:`「${it.book}」와 영화 「${m}」는 '${t}'을(를) 서로 다른 방식으로 보여 줍니다. 두 작품 속 인물의 선택을 비교하고, 어느 쪽이 더 설득력 있는지 근거를 들어 논술하시오. (${esLenMid(it.g)}자 내외)`},
+  {from:['책',id],q:`「${it.book}」의 메시지는 오늘의 청소년에게도 유효한가? 영화 「${m}」의 장면 하나를 근거로 삼아 논하시오. (${esLenMid(it.g)}자 내외)`},
+  {from:['책',id],q:`책 「${it.book}」와 영화 「${m}」를 함께 관통하는 질문을 하나 세우고, 두 작품을 근거로 그 질문에 대한 자신의 답을 세 단락으로 서술하시오. (${esLenMid(it.g)}자 내외)`}]}return [
   {from:['책','영화 ①'],q:`「${it.book}」와 영화 「${it.m1}」는 '${t}'을(를) 서로 다른 방식으로 보여 줍니다. 두 작품 속 인물의 선택을 비교하고, 어느 쪽이 더 설득력 있는지 근거를 들어 논술하시오. (${esLenMid(it.g)}자 내외)`},
   {from:['책','영화 ②'],q:`「${it.book}」의 메시지는 오늘의 청소년에게도 유효한가? 영화 「${it.m2}」의 장면 하나를 근거로 삼아 논하시오. (${esLenMid(it.g)}자 내외)`},
   {from:['책','영화 ①','영화 ②'],q:`책 「${it.book}」와 영화 「${it.m1}」, 「${it.m2}」를 관통하는 질문을 하나 세우고, 세 작품을 근거로 그 질문에 대한 자신의 답을 세 단락으로 서술하시오. (${esLenMid(it.g)}자 내외)`}].filter(x=>fromOK(it,x.from))};
@@ -3892,25 +3906,28 @@ function qFix(i){
   if(ch){S.progress.qs[key]=q;S.progress.picks=S.progress.picks||{};if(p>=0)S.progress.picks[key]=p;if(S.essayDraft&&S.essayDraft.i===i)S.essayDraft.q=p;if(S.qIdx)S.qIdx[key]=Math.max(p,0);saveProgress()}
   return ch}
 function qState(i){return S.progress.qs[nk(i)]}
+/* 질문을 (다시) 만들어야 하나: 없음·옛 형식·AI 연결 뒤 / 끝낸 작품이 바뀌었는데 아직 질문을 고르지도 첨삭받지도 않음 */
+function qStale(i){const k=nk(i);const qq=qState(i);if(S.qBusy[k])return false;const pk=Number.isInteger((S.progress.picks||{})[k]);
+  if(!qq||(qq.v!==3&&!pk)||(!qq.ai&&S.sample))return true;return svReady(i)&&!pk&&!S.evals[k]&&(qq.sig||'책+영화 ①+영화 ②')!==esSig(i)}
 async function genQs(i){
-  const it=items()[i];const key=nk(i);
+  const it=seenIt(i);const key=nk(i);const sig=esSig(i);const one=mvs(it).length<2;
   S.qBusy[key]=true;renderLayers();
   let pool=null,tags=null,gr=null,meta=null;
   if(S.sample){
     try{
       try{meta=await PX.qmeta(it)}catch(e){meta=null}
-      const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n${PX.qAdd(meta)}조건:\n1. 정확히 3개를 출제하고, 세 작품의 주제를 섞는다. 각 질문은 서로 다른 작품 조합을 다룬다: 1번 책+영화 ①, 2번 책+영화 ②, 3번 책+영화 ①+영화 ② 모두를 관통하는 질문.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 대학 인문논술과 고등학교 서·논술형 평가 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량). 3개는 유형이 서로 달라야 한다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책","영화 ①"]}, ...] (from은 그 질문이 다루는 작품: "책", "영화 ①", "영화 ②")`;
+      const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n${esLines(it)}- 이달의 주제: ${it.topic}\n${PX.qAdd(meta)}조건:\n1. ${one?`정확히 3개를 출제한다. 학생은 위 두 작품만 감상했으므로 세 질문 모두 책과 ${esIds(it)[1]}를 함께 다루고, 위에 없는 다른 영화는 절대 넣지 않는다. 세 질문은 물음의 유형(비교, 가치 판단, 개념 적용 등)이 서로 달라야 한다.`:'정확히 3개를 출제하고, 세 작품의 주제를 섞는다. 각 질문은 서로 다른 작품 조합을 다룬다: 1번 책+영화 ①, 2번 책+영화 ②, 3번 책+영화 ①+영화 ② 모두를 관통하는 질문.'}\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 대학 인문논술과 고등학교 서·논술형 평가 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량). 3개는 유형이 서로 달라야 한다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책","영화 ①"]}, ...] (from은 그 질문이 다루는 작품: ${esIds(it).map(x=>'"'+x+'"').join(", ")})`;
       const arr=await S.sample.json(prompt,{cache:false});
       if(Array.isArray(arr)){
         const ok=arr.map(x=>typeof x==='string'?{q:x,from:[]}:x).filter(x=>x&&String(x.q||'').length>12).slice(0,3);
-        if(ok.length>=3){pool=ok.map(x=>String(x.q));tags=ok.map(x=>Array.isArray(x.from)?x.from.map(String).slice(0,3):[])}
+        if(ok.length>=3){pool=ok.map(x=>String(x.q));tags=ok.map((x,n)=>esFrom(it,x.from,n))}
       }
       if(pool&&meta){try{gr=await PX.reground(meta,pool,tags)}catch(e){gr=null}}
     }catch(e){if(e&&e.code==='rate_limited')toast('질문을 너무 자주 만들었어요. 잠시 뒤 다시 열어 주세요.')}
   }
-  const q={shown:[],tags:[],ai:false,v:3};const old=qState(i);
+  const q={shown:[],tags:[],ai:false,v:3,sig};const old=qState(i);
   if(pool){q.shown=pool;q.tags=tags;q.ai=true;q.hist=pool.slice();if(meta){q.theme=meta.theme;if(gr)q.gr=gr}}
-  else{if(old&&old.v===3&&old.shown.length>=3){q.shown=old.shown;q.tags=old.tags;q.ai=old.ai}
+  else{if(old&&old.v===3&&old.shown.length>=3&&(old.sig||'책+영화 ①+영화 ②')===sig){q.shown=old.shown;q.tags=old.tags;q.ai=old.ai}
     else{const t=TPL(it);q.shown=t.map(x=>x.q);q.tags=t.map(x=>x.from)}}
   if(!old||old.shown.join('|')!==q.shown.join('|')){if(S.progress.picks)delete S.progress.picks[key];if(S.essayDraft.i===i)S.essayDraft.q=-1;{const pp=(S.progress.prep||{})[key];if(pp){pp.qDone=false;pp.roadDone=false}}}
   S.progress.qs[key]=q;S.qBusy[key]=false;qFix(i);saveProgress();renderLayers();
@@ -3918,22 +3935,22 @@ async function genQs(i){
 /* 논술 질문 하나만 새로 받기(새로고침). 같은 작품 조합으로, 이미 낸 질문과 겹치지 않게 */
 const ES_COMBO=[['책','영화 ①'],['책','영화 ②'],['책','영화 ①','영화 ②']];
 async function genQ1(i,n){
-  const it=items()[i];const key=nk(i);const q=qState(i);if(!q||!q.shown[n]||S.qBusy[key]||S.evals[key])return;
+  const it=seenIt(i);const key=nk(i);const q=qState(i);if(!q||!q.shown[n]||S.qBusy[key]||S.evals[key])return;
   if(!S.sample){toast('Claude 연결이 없어 새 질문을 만들 수 없어요.');return}
   S.qBusy1=key+'_'+n;renderLayers();
   let nq=null,hist=[];
   try{
     let meta=null;try{meta=await PX.qmeta(it)}catch(e){meta=null}
     const theme=String(q.theme||(meta&&meta.theme)||it.topic||''),target=PX.target(it);hist=[...new Set([...(q.hist||[]),...q.shown])];
-    const combo=(q.tags&&q.tags[n]&&q.tags[n].length?q.tags[n]:ES_COMBO[n]||ES_COMBO[2]);
-    const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 쓸 논술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n[공통 주제] ${theme}\n[목표 난이도] ${['쉬움','보통','어려움'][target-1]} (${it.g} 수준)\n질문은 공통 주제의 낱말이 드러나게 쓰고 목표 난이도에 맞춘다.\n조건:\n1. 이미 낸 질문(${q.shown.map((x,k)=>(k+1)+'. '+x).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${n+1}번 자리에 들어갈 질문이므로 다루는 작품은 ${combo.join('+')}이다.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 대학 인문논술과 고등학교 서·논술형 평가 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량).\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":${JSON.stringify(combo)}}]`;
+    const combo=esFrom(it,q.tags&&q.tags[n],n);
+    const prompt=`너는 대한민국 대치동에서 고등학교 서·논술형 평가와 대학 논술의 기초, 외국어고·자사고 면접을 가르치는 최고의 논술 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 쓸 논술 질문을 새로 출제하라. 위에 없는 작품은 넣지 않는다.\n${esLines(it)}- 이달의 주제: ${it.topic}\n[공통 주제] ${theme}\n[목표 난이도] ${['쉬움','보통','어려움'][target-1]} (${it.g} 수준)\n질문은 공통 주제의 낱말이 드러나게 쓰고 목표 난이도에 맞춘다.\n조건:\n1. 이미 낸 질문(${q.shown.map((x,k)=>(k+1)+'. '+x).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${n+1}번 자리에 들어갈 질문이므로 다루는 작품은 ${combo.join('+')}이다.\n2. 실제 기출 문장을 그대로 쓰지 말고 새로 출제한다.\n3. 대학 인문논술과 고등학교 서·논술형 평가 경향(상반된 관점의 비교, 가치 판단과 근거 제시, 개념의 적용, 예상 반론 고려)을 반영하되 중학생이 쓸 수 있는 난이도로 한다.\n4. 질문은 두세 문장이고 끝에 분량 "(${esLenMid(it.g)}자 내외)"를 붙인다(${it.g||'중2'} 권장 분량).\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":${JSON.stringify(combo)}}]`;
     /* 후보 문항이 교체 조건(이력 문항과의 유사도·공통 주제 유사도·난이도)에 맞는지 보고, 안 맞으면 사유를 넣어 한 번 더 만든다. 두 번째 후보는 이미 낸 질문과 겹치지만 않으면 쓴다 */
     for(let a=0,why='';a<2&&!nq;a++){
       const arr=await S.sample.json(prompt+(why?`\n(직전 후보는 조건에 맞지 않았다: ${why}. 이 점을 고쳐 새로 출제한다.)`:''),{cache:false});
       const L=Array.isArray(arr)?arr:arr&&arr.q?[arr]:[];const x=L.find(y=>y&&y.q&&!q.shown.includes(String(y.q).trim()));const t=x&&String(x.q||'').trim();
       if(!(t&&t.length>12&&!q.shown.includes(t)))break;
       let ck={ok:true,dup:0,why:''};try{ck=PX.replaceOK(t,hist,theme,target)}catch(e){}
-      if(ck.ok||(a===1&&ck.dup<PX.DUP))nq={q:t,from:Array.isArray(x.from)?x.from.map(String).slice(0,3):combo};else why=ck.why||'조건에 맞지 않는다';
+      if(ck.ok||(a===1&&ck.dup<PX.DUP))nq={q:t,from:esFrom(it,x.from,n)};else why=ck.why||'조건에 맞지 않는다';
     }
   }catch(e){if(e&&e.code==='rate_limited'){toast('질문을 너무 자주 바꿨어요. 잠시 뒤 다시 눌러 주세요.')}}
   S.qBusy1=null;
@@ -3990,11 +4007,9 @@ function mactHTML(i){
   const tab=S.sheetTab||'work';const st=stepsOf(i);const nx=stepNext(i);const pos=st.findIndex(x=>x.k===tab);
   const it=items()[i];const go=(x,lab)=>`<button class="btn mact-b" data-act="stab" data-v="${x.k}">${lab||`${st.indexOf(x)+1}단계 · ${esc(x.t)}로 가기`}</button>`;
   let hint='',b='';
-  if(tab==='work'&&nx&&nx.k==='work'){const w=wkNext(i);if(w){const nm=bTitle(wkName(it,w.k));const v=wkVerb(w.k);
-      if(w.s==='rate'){hint='세 가지만 누르면 끝 · 10초';b=`<button class="btn mact-b" data-act="svopen" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 별점 남기기</button>`}
-      else if(w.s==='doing'){hint='누르면 10초 별점이 나와요';b=`<button class="btn mact-b" data-act="done" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 다 ${v[2]}</button>`}
-      else if(w.k!=='book'){hint='누르면 10초 별점이 나와요';b=`<button class="btn mact-b" data-act="done" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 다 ${v[2]}</button>`}
-      else{hint='시작을 누르면 친구와 부모님께 알려요';b=`<button class="btn mact-b" data-act="start" data-i="${i}" data-k="${w.k}">「${esc(nm)}」 ${v[0]} 시작</button>`}}}
+  /* 11-27 밤: 1단계 아래 큰 버튼은 작품 버튼과 같은 일이라 빼고, 그 자리에 '책 읽기 전 생각하기'(예전 교육자료 칩 자리 이동). Figma 03 '07 1단계' */
+  if(tab==='work'&&nx&&nx.k==='work'){b=`<button class="btn mact-b" data-act="stab" data-v="edu">책 읽기 전 생각하기</button>`}
+  else if(tab==='edu'){b=`<button class="btn mact-b" data-act="stab" data-v="work">1단계 · 읽고 보기로 가기</button>`}
   else if(tab==='note'&&!(pos>=0&&st[pos].done)){const n=(S.progress.notes||{})[nk(i)]||{};
     b=`<button class="btn mact-b" disabled>${!n.sentence?'책에서 마음에 남은 문장을 적어 주세요':'영화에서 기억에 남은 장면을 적어 주세요'}</button>`;hint='두 칸을 채우면 다음 단계로 갈 수 있어요'}
   else if(pos>=0&&st[pos].done&&nx&&tab!=='edu'){b=go(nx)}
@@ -4046,10 +4061,9 @@ function monthHTML(i){
     :tab===nx.k?`<h3 class="mhead">${esc(STEP_H[nx.k])}</h3>`
     :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>${yeyo(nx.t)}.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
   const cov=!S.covers[hid(it.book)]&&!coverOf(it.book)&&tab==='work'?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
-  const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?eduHTML(i):note;
+  const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?preHTML(i):note;
   return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
-  <div class="mmore"><button class="chip" data-act="stab" data-v="edu" aria-pressed="${tab==='edu'}">교육자료</button></div>
   ${guide}
   ${body}
   ${mactHTML(i)}</div>`;
@@ -5633,12 +5647,12 @@ PX.desc=(kind,title,sum)=>(kind+' 「'+title+'」 '+String(sum||'')).replace(/\s
 /* 공통 주제 점수 = 후보 주제어와 각 작품 임베딩 사이 유사도의 최솟값. 대주제와의 유사도 조건까지 지킨 후보 중 점수가 가장 큰 것 */
 PX.theme=(cands,works,major)=>{let best=null;const we=works.map(w=>PX.emb(w.desc)),me=PX.emb(major);(cands||[]).forEach(c=>{c=String(c||'').trim();if(c.length<2)return;const e=PX.emb(c);
   const s=Math.min.apply(null,we.map(x=>PX.cos(e,x)));if(s>=PX.TH1&&PX.cos(e,me)>=PX.TH2&&(!best||s>best.s))best={t:c,s}});return best};
-PX.qmeta=async(it)=>{const sig=[it.book,it.m1,it.m2,it.topic].join('|');S.qmeta=S.qmeta||{};if(sig in S.qmeta)return S.qmeta[sig];if(mvs(it).length<2)return S.qmeta[sig]=null;
+PX.qmeta=async(it)=>{const sig=[it.book,it.m1,it.m2,it.topic].join('|');S.qmeta=S.qmeta||{};if(sig in S.qmeta)return S.qmeta[sig];if(mvs(it).length<1)return S.qmeta[sig]=null;const WL=[['책','book',it.book],['영화 ①','film',it.m1],['영화 ②','film',it.m2]].filter(([,,t])=>String(t||'').trim());
   const lk='002.px.qm';let all={};try{all=JSON.parse(localStorage.getItem(lk)||'{}')||{}}catch(e){}
   if(all[sig]&&all[sig].works)return S.qmeta[sig]=all[sig];
-  const prompt=`아래 세 작품을 중학생 논술 수업에 쓰려고 한다. 작품마다 서술문에 넣을 요약과 고유 요소를 만들고, 세 작품을 잇는 후보 주제어를 만든다.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n1. works: 작품마다 id("책", "영화 ①", "영화 ②"), summary(줄거리와 핵심 갈등을 담은 두 문장. 이달의 주제와 이어지는 낱말을 살려 쓴다), entities(작품에 실제로 나오는 주요 인물·장소·사건·소재 이름 3~5개, 각 2~8자).\n2. themes: 세 작품의 요약에 공통으로 걸리는 후보 주제어 6개. 각각 2~4어절이고 요약과 이달의 주제에 쓴 낱말을 살린다.\n잘 모르는 작품은 지어내지 말고 summary를 빈 문자열, entities를 빈 배열로 둔다.\nJSON 객체 하나만 출력한다. 형식: {"works":[{"id":"책","summary":"","entities":[]}],"themes":[]}`;
-  const r=await S.sample.json(prompt,{cache:false,modelTier:'quick'});if(!r||!Array.isArray(r.works)||r.works.length<3)return S.qmeta[sig]=null;
-  const W=[['책','book',it.book],['영화 ①','film',it.m1],['영화 ②','film',it.m2]].map(([id,m,t])=>{const x=r.works.find(y=>y&&String(y.id).replace(/\s/g,'')===id.replace(/\s/g,''))||{};const title=PX.tt(t);
+  const NW=['','한','두','세'][WL.length]||'세';const prompt=`아래 ${NW} 작품을 중학생 논술 수업에 쓰려고 한다. 작품마다 서술문에 넣을 요약과 고유 요소를 만들고, ${NW} 작품을 잇는 후보 주제어를 만든다.\n${esLines(it)}- 이달의 주제: ${it.topic}\n1. works: 작품마다 id(${WL.map(w=>'"'+w[0]+'"').join(', ')}), summary(줄거리와 핵심 갈등을 담은 두 문장. 이달의 주제와 이어지는 낱말을 살려 쓴다), entities(작품에 실제로 나오는 주요 인물·장소·사건·소재 이름 3~5개, 각 2~8자).\n2. themes: ${NW} 작품의 요약에 공통으로 걸리는 후보 주제어 6개. 각각 2~4어절이고 요약과 이달의 주제에 쓴 낱말을 살린다.\n잘 모르는 작품은 지어내지 말고 summary를 빈 문자열, entities를 빈 배열로 둔다.\nJSON 객체 하나만 출력한다. 형식: {"works":[{"id":"책","summary":"","entities":[]}],"themes":[]}`;
+  const r=await S.sample.json(prompt,{cache:false,modelTier:'quick'});if(!r||!Array.isArray(r.works)||r.works.length<WL.length)return S.qmeta[sig]=null;
+  const W=WL.map(([id,m,t])=>{const x=r.works.find(y=>y&&String(y.id).replace(/\s/g,'')===id.replace(/\s/g,''))||{};const title=PX.tt(t);
     return {id,m,title,sum:String(x.summary||'').slice(0,140),desc:PX.desc(m==='book'?'책':'영화',title,x.summary),ents:(Array.isArray(x.entities)?x.entities:[]).map(String).map(s=>s.trim()).filter(s=>s.length>0&&s.length<=12).slice(0,5)}});
   const th=PX.theme(r.themes,W,it.topic);const meta={theme:th?th.t:String(it.topic||'').slice(0,40),score:th?Math.round(th.s*1000)/1000:0,fb:!th,works:W};
   S.qmeta[sig]=meta;try{const ks=Object.keys(all);if(ks.length>40)delete all[ks[0]];all[sig]=meta;localStorage.setItem(lk,JSON.stringify(all))}catch(e){}return meta};
@@ -5705,7 +5719,7 @@ const ES_GRADE={1:'중1의 도달(3): 분량 500~700자. 책 또는 영화 1편�
 async function evaluate(i,round){
   const r2=round===2;
   if(S.essayBusy||!S.sample)return;
-  const key=nk(i);const it=items()[i];const e1=S.evals[key];const d=r2?{q:0,text:String((S.progress.drafts2||{})[key]||''),files:[]}:S.essayDraft;const q=qState(i);
+  const key=nk(i);const it=seenIt(i);const e1=S.evals[key];const d=r2?{q:0,text:String((S.progress.drafts2||{})[key]||''),files:[]}:S.essayDraft;const q=qState(i);
   const question=r2?String((e1&&e1.question)||''):(q&&q.shown[d.q])||'(질문 없음: 이달의 책과 영화를 주제로 자유롭게 쓴 글)';
   if(!r2&&q&&q.shown.length&&!(d.q>=0&&q.shown[d.q])){toast('논술 질문을 먼저 골라 주세요.');return}
   if(!r2){const P=prepOf(i);if(!P.qDone||!P.roadDone){toast('궁금한 점 묻기와 로드맵을 먼저 마쳐 주세요.');return}}
@@ -5936,6 +5950,7 @@ function evalHTML(){
   ${D('잘한 점 · 고칠 점',`<div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev.strengths)}</div><div><h4>고칠 점</h4>${ul(ev.improvements)}</div></div>`)}
   ${ev.cumulative?D('나의 반복 실수 (최근 5회)',`<p>${esc(ev.cumulative)}</p>`):''}
   ${(ev.models||[]).length?D('모범 답안',(ev.models||[]).map((m,n)=>`<details ${n===0?'open':''}><summary>${esc(m.title||'모범 답안 '+(n+1))}</summary><p style="white-space:pre-wrap">${esc(m.text)}</p></details>`).join(''),cnt(ev.models)):''}
+  ${Number.isInteger(v.i)&&items()[v.i]?D('작품 깊이 읽기',eduHTML(v.i)):''}
   ${ev.unreadable&&ev.unreadable.length?`<p class="hint">판독이 불확실한 곳: ${esc(ev.unreadable.join(', '))}</p>`:''}
   <p class="ev-ai">이 첨삭은 생성형 AI(Anthropic Claude)가 작성했어요. 사실과 다를 수 있어요.</p></div>`;
 }
@@ -6097,18 +6112,18 @@ async function orSaveAns(i){
 function orTpl(it){
   const lv={'중1':'경험과 느낌을 중심으로','중2':'이유와 비교를 중심으로','중3':'가치 판단과 사회 적용을 중심으로'}[it.g]||'';
   return [{q:`「${it.book}」에서 가장 기억에 남는 인물의 선택은 무엇이었나요? 그 선택을 어떻게 생각하는지 이유와 함께 말해 보세요.`,from:['책'],tip:lv+' 인물이 한 일 → 내 생각 → 이유 순서로 말해요.'},
-    {q:`영화 「${it.m1}」와 「${it.m2}」의 주인공은 어려움 앞에서 어떻게 달랐나요? 둘 중 누구의 태도를 닮고 싶은지 말해 보세요.`,from:['영화 ①','영화 ②'],tip:'두 인물의 공통점과 차이점을 하나씩 짚어요.'},
-    {q:`이달의 주제 '${String(it.topic||'').split(':')[0]}'를 내 생활에 적용한다면 무엇을 바꾸고 싶나요? 세 작품 가운데 하나를 근거로 들어 말해 보세요.`,from:['책','영화 ①','영화 ②'],tip:'작품 속 장면 하나 + 나의 경험 하나를 연결해요.'}].filter(x=>fromOK(it,x.from)||x.from.length===3)}
+    mvs(it).length<2?{q:`영화 「${mvs(it)[0]||''}」의 주인공은 어려움 앞에서 어떻게 했나요? 「${it.book}」의 인물과 비교해 누구의 태도를 닮고 싶은지 말해 보세요.`,from:['책',String(it.m1||'').trim()?'영화 ①':'영화 ②'],tip:'두 인물의 공통점과 차이점을 하나씩 짚어요.'}:{q:`영화 「${it.m1}」와 「${it.m2}」의 주인공은 어려움 앞에서 어떻게 달랐나요? 둘 중 누구의 태도를 닮고 싶은지 말해 보세요.`,from:['영화 ①','영화 ②'],tip:'두 인물의 공통점과 차이점을 하나씩 짚어요.'},
+    {q:`이달의 주제 '${String(it.topic||'').split(':')[0]}'를 내 생활에 적용한다면 무엇을 바꾸고 싶나요? ${mvs(it).length<2?'두':'세'} 작품 가운데 하나를 근거로 들어 말해 보세요.`,from:esIds(it),tip:'작품 속 장면 하나 + 나의 경험 하나를 연결해요.'}].filter(x=>fromOK(it,x.from))}
 async function genOQs(i,only){
-  const it=items()[i];const key=nk(i);if(S.oBusy[key]||S.orals[key])return;
+  const it=seenIt(i);const one=mvs(it).length<2;const key=nk(i);if(S.oBusy[key]||S.orals[key])return;
   S.oBusy[key]=only==null?'all':'q'+only;renderLayers();
   const old=orQ(i);const lvl={'중1':'중학교 1학년: 작품 속 사실과 인물의 마음을 이해하고 자기 경험과 연결하는 수준. 어려운 개념어 없이 묻는다.','중2':'중학교 2학년: 인물·작품의 관점을 비교하고 이유를 들어 판단하는 수준.','중3':'중학교 3학년: 가치 판단, 사회 문제 적용, 반대 입장 고려까지 요구하는 외고·자사고 면접 수준.'}[it.g]||'중학생 수준.';
   let out=null;
   if(S.sample){
     try{
-      const ask=only==null?`정확히 3개를 출제한다. 1번은 책 「${it.book}」 중심, 2번은 영화 ${mvQ(it,' 또는 ')} 중심(책과 연결해도 좋다), 3번은 세 작품의 공통 주제를 학생 자신의 삶이나 사회와 연결하는 질문.`
-        :`이미 낸 질문(${(old&&old.shown||[]).map((q,n)=>(n+1)+'. '+q).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${only+1}번 자리에 들어갈 질문이므로 ${['책 중심','영화 중심','세 작품의 공통 주제와 학생의 삶·사회 연결'][only]} 질문으로 한다.`;
-      const prompt=`너는 대한민국 대치동에서 외국어고·자사고 면접과 말하기 평가를 20년 넘게 지도해 온 최고의 면접 강사다. ${it.g} 학생이 아래 책 1권과 영화 2편을 감상한 뒤 말로 답할 구술 질문을 새로 출제하라.\n- 책: 「${it.book}」\n- 영화 ①: 「${it.m1}」\n- 영화 ②: 「${it.m2}」\n- 이달의 주제: ${it.topic}\n- 학년 수준: ${lvl}\n조건:\n1. ${ask}\n2. 학생이 1분 30초~2분 안에 말로 답할 수 있는 질문이어야 한다. 한 질문에 묻는 것은 하나 또는 둘까지만. 질문은 면접관이 말하듯 1~2문장의 구어체 존댓말로 쓴다.\n3. 외고·자사고 면접 경향(자기 생각과 근거, 관점 비교, 가치 판단, 경험과의 연결)을 반영하되 위 학년 수준에 맞춘다. 기출 문장을 그대로 쓰지 않는다.\n4. tip에는 답을 짜는 방법을 한 줄(35자 안팎)로 쓴다. 정답을 알려 주지 않는다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책"],"tip":"답 짜는 요령"}] (from은 다루는 작품: "책", "영화 ①", "영화 ②")`;
+      const ask=only==null?`정확히 3개를 출제한다. 1번은 책 「${it.book}」 중심, 2번은 영화 ${mvQ(it,' 또는 ')} 중심(책과 연결해도 좋다), 3번은 ${one?'두':'세'} 작품의 공통 주제를 학생 자신의 삶이나 사회와 연결하는 질문.${one?' 학생은 위 두 작품만 감상했으므로 위에 없는 다른 영화는 절대 넣지 않는다.':''}`
+        :`이미 낸 질문(${(old&&old.shown||[]).map((q,n)=>(n+1)+'. '+q).join(' / ')})과 겹치지 않는 새 질문 1개만 출제한다. ${only+1}번 자리에 들어갈 질문이므로 ${['책 중심','영화 중심',(one?'두':'세')+' 작품의 공통 주제와 학생의 삶·사회 연결'][only]} 질문으로 한다. 위에 없는 작품은 넣지 않는다.`;
+      const prompt=`너는 대한민국 대치동에서 외국어고·자사고 면접과 말하기 평가를 20년 넘게 지도해 온 최고의 면접 강사다. ${it.g} 학생이 아래 ${esCnt(it)}을 감상한 뒤 말로 답할 구술 질문을 새로 출제하라.\n${esLines(it)}- 이달의 주제: ${it.topic}\n- 학년 수준: ${lvl}\n조건:\n1. ${ask}\n2. 학생이 1분 30초~2분 안에 말로 답할 수 있는 질문이어야 한다. 한 질문에 묻는 것은 하나 또는 둘까지만. 질문은 면접관이 말하듯 1~2문장의 구어체 존댓말로 쓴다.\n3. 외고·자사고 면접 경향(자기 생각과 근거, 관점 비교, 가치 판단, 경험과의 연결)을 반영하되 위 학년 수준에 맞춘다. 기출 문장을 그대로 쓰지 않는다.\n4. tip에는 답을 짜는 방법을 한 줄(35자 안팎)로 쓴다. 정답을 알려 주지 않는다.\nJSON 배열만 출력한다. 형식: [{"q":"질문","from":["책"],"tip":"답 짜는 요령"}] (from은 다루는 작품: ${esIds(it).map(x=>'"'+x+'"').join(", ")})`;
       const arr=await S.sample.json(prompt,{cache:false});
       if(Array.isArray(arr)){const ok=arr.filter(x=>x&&String(x.q||'').length>8).map(x=>({q:String(x.q).trim(),from:Array.isArray(x.from)?x.from.map(String).slice(0,3):[],tip:String(x.tip||'').trim().slice(0,80)}));
         if(only==null&&ok.length>=OR_N)out=ok.slice(0,OR_N);else if(only!=null&&ok.length)out=ok.slice(0,1)}
@@ -6118,7 +6133,7 @@ async function genOQs(i,only){
   if(only==null){const src=out||orTpl(it);q.shown=src.map(x=>x.q);q.from=src.map(x=>x.from);q.tips=src.map(x=>x.tip);q.ai=!!out}
   else if(out){q.shown[only]=out[0].q;q.from[only]=out[0].from;q.tips[only]=out[0].tip}
   else if(only!=null)toast('새 질문을 만들지 못했어요. 잠시 뒤 다시 눌러 주세요.');
-  q.at=Date.now();S.progress.oqs=Object.assign({},S.progress.oqs,{[key]:q});
+  q.sig=esSig(i);q.at=Date.now();S.progress.oqs=Object.assign({},S.progress.oqs,{[key]:q});
   const D=orD(i);let ch=false;
   D.heard=(D.heard||[]).slice();(old&&old.shown||[]).forEach((t,n)=>{if(q.shown[n]!==t&&D.heard[n]){D.heard[n]=0;ch=true}});
   q.shown.forEach((t,n)=>{if(D.ans[n]&&D.ans[n].q!==t){D.ans[n]=null;ch=true;S.db.doc('orauds/'+orAud(S.id,key,n,1)).delete().catch(()=>{});delete S.oaud[orAud(S.id,key,n,1)]}});
@@ -6246,7 +6261,7 @@ function orTickOn(){if(!ORTICK)ORTICK=setInterval(orTick,1000);setTimeout(orTick
 /* 구술 탭 (2026-11-21 재디자인): 맨 위 4단계 진행 줄 → 지금 할 일 → 평가 바. 녹음·판정·잠금·평가 로직은 그대로 */
 const orThinkL=()=>orThinkR();
 function oralHTML(i){
-  if(!svAll(i))return svLockHTML(i).replace(/<h3>[^<]*<\/h3><p class="hint">[^<]*<\/p>/,'<h3>말하기는 책과 영화 두 편을 모두 끝낸 뒤에 열려요</h3><p class="hint">말하기 질문은 세 작품 모두에서 나와요. 끝낸 작품마다 별점 세 개를 남겨 주세요.</p>');
+  if(!svReady(i))return svLockHTML(i).replace(/<h3>[^<]*<\/h3><p class="hint">[^<]*<\/p>/,'<h3>말하기는 책과 영화 한 편을 끝낸 뒤에 열려요</h3><p class="hint">말하기 질문은 끝낸 작품에서만 나와요. 끝낸 작품마다 별점 세 개를 남겨 주세요.</p>');
   const key=nk(i);
   if(!S.odoc[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
   const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];const ev2=S.orals2[key];
@@ -6254,8 +6269,9 @@ function oralHTML(i){
     :`<div class="orfoot"><button class="link" data-act="orhist" data-id="${esc(S.id)}">지난 구술 기록 ›</button>${!ev&&q&&q.ai?'<small>Claude(생성형 AI)가 이달 작품으로 낸 질문이에요</small>':''}</div>`;
   const wrap=(st,body)=>`<div class="sec orwrap" data-st="${st}">${orSteps(i)}${body}</div>${foot}`;
   if(ev)return wrap(ev2?'done':'r2',oralR2HTML(i));
-  if((!q||!Array.isArray(q.shown)||q.shown.length<OR_N)&&!busy){setTimeout(()=>genOQs(i),0)}
-  if(busy==='all'||!q||!q.shown||q.shown.length<OR_N)return wrap('r1','<div class="orcard orprep"><h3>질문을 준비하고 있어요</h3><div class="sk"></div><div class="sk"></div></div>');
+  const oStale=q&&!(orD(i).ans||[]).some(Boolean)&&(q.sig||'책+영화 ①+영화 ②')!==esSig(i);
+  if((!q||!Array.isArray(q.shown)||q.shown.length<OR_N||oStale)&&!busy){setTimeout(()=>genOQs(i),0)}
+  if(busy==='all'||!q||!q.shown||q.shown.length<OR_N||oStale)return wrap('r1','<div class="orcard orprep"><h3>질문을 준비하고 있어요</h3><div class="sk"></div><div class="sk"></div></div>');
   return wrap('r1',oralR1HTML(i));
 }
 function orRecBox(R){const t=R.mode==='s'?'따라 읽는 중':R.mode===2?'다시 대답하는 중':'대답하는 중';
@@ -6401,7 +6417,7 @@ function oralR2HTML(i){
 }
 /* ---------- 1차 평가 ---------- */
 async function oralEval(i){
-  const key=nk(i);const it=items()[i];const q=orQ(i);const ans=orAns(i);
+  const key=nk(i);const it=seenIt(i);const q=orQ(i);const ans=orAns(i);
   if(S.oralBusy||!S.sample||!q)return;
   if(q.shown.some((_,n)=>!ans[n]||!String(ans[n].text||'').trim())){toast('세 질문에 모두 답하고, 말한 내용이 적혀 있는지 확인해 주세요.');return}
   S.oralOff=null;S.oralBusy=key;S.oralMsg='1차 구술 평가를 시작했어요. 1분 안팎 걸리니 이 창을 닫지 말아 주세요.';renderLayers();
@@ -7265,6 +7281,34 @@ function eduHTML(i){
     ${qs.length?`<div class="sec"><h3>함께 생각해 볼 질문</h3><ol style="margin:0;padding-left:20px;line-height:1.7">${qs.map(q=>`<li>${T(q)}</li>`).join('')}</ol></div>`:''}
     <p class="hint">Claude가 쓴 요약이에요. 세부 내용은 직접 읽고 본 것과 다를 수 있어요.${isAdmin()?' <button class="chip" data-act="edugo" data-i="'+i+'" data-f="1">새로 만들기</button>':''}</p></div>`;
 }
+/* 11-27 밤: 책 읽기 전 생각하기 — 읽고 보기 전에 볼 짧은 안내. 줄거리·결말 없이 이달의 주제 설명, 나에게 물어볼 질문, 눈여겨볼 점, 책과 영화 잇기.
+   예전 교육자료(작품 요약·연결·질문)는 논술 첨삭 화면의 '작품 깊이 읽기'로 옮김 */
+const preKey=it=>'pre_'+gdH([it.book,it.m1,it.m2,it.topic].join('|'));
+function preLoad(i,force){const it=items()[i];if(!it)return;
+  gdLoad(preKey(it),()=>`너는 대한민국 대치동에서 20년 넘게 중학생 독서와 논술을 지도해 온 최고의 강사다. 학생이 이달의 책과 영화를 읽고 보기 '전에' 읽는 짧은 안내 '책 읽기 전 생각하기'를 쓴다. 존댓말로, 중학생이 바로 알아듣는 쉬운 말로, 항목마다 한두 문장으로 짧게 쓴다.
+반드시 지킬 것: 줄거리 요약, 인물에게 일어나는 일, 결말, 반전은 한 줄도 쓰지 않는다. 작품은 제목과 갈래(소설·시집·영화 등) 정도만 말한다. 확실하지 않은 내용은 쓰지 않는다. 이달의 주제를 중심으로 쓴다.
+
+- 학년: ${it.g}
+- 이달의 큰 주제: ${kwDisp(it)||it.genre||''}
+- 이달의 핵심 주제: ${it.topic}
+${esLines(it)}
+JSON 객체 하나만 출력한다. 형식:
+{"theme":"이달의 주제가 무슨 뜻인지 중학생 눈높이로 2문장","why":"이 주제를 책과 영화로 함께 보면 좋은 이유 1문장","before":["읽고 보기 전에 나에게 물어볼 질문(자기 경험과 연결) 3개"],"look":[${esIds(it).map(k=>`{"k":"${k}","t":"읽거나 보며 눈여겨볼 점 한 문장(내용을 밝히지 않음)"}`).join(',')}],"link":"책과 영화를 이어서 생각해 볼 질문 1~2문장"}`,force)}
+function preHTML(i){
+  const it=items()[i];const key=preKey(it);const G=gdGet(key);
+  if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(key);if(!g||(!g.data&&!g.busy&&!g.err))preLoad(i)},0);
+  const H='<h3 class="mhead">책 읽기 전 생각하기</h3>';
+  if(!G||G.busy)return `<div class="edu pre">${H}<div class="sk"></div><p class="hint" role="status">읽기 전에 생각할 거리를 정리하고 있어요. 20초쯤 걸려요.</p></div>`;
+  if(G.err)return `<div class="edu pre">${H}<p class="warn">${esc(G.err)}</p><div><button class="btn ghost small" data-act="prego" data-i="${i}">다시 만들기</button></div></div>`;
+  const g=G.data||{};const T=x=>esc(String(x||''));const bf=(Array.isArray(g.before)?g.before:[]).filter(Boolean).slice(0,3);
+  const nm={'책':it.book,'영화 ①':it.m1,'영화 ②':it.m2};const lk=(Array.isArray(g.look)?g.look:[]).filter(x=>x&&x.t&&String(nm[x.k]||'').trim());
+  return `<div class="edu pre">${H}
+    ${g.theme||g.why?`<div class="sec"><h3>이달의 주제 · ${esc(String(it.topic||'').split(':')[0])}</h3>${g.theme?`<p style="margin:0;line-height:1.7">${T(g.theme)}</p>`:''}${g.why?`<p class="em" style="margin:8px 0 0">${T(g.why)}</p>`:''}</div>`:''}
+    ${bf.length?`<div class="sec"><h3>읽기 전에 나에게 물어봐요</h3><ol style="margin:0;padding-left:20px;line-height:1.7">${bf.map(q=>`<li>${T(q)}</li>`).join('')}</ol></div>`:''}
+    ${lk.length?`<div class="sec"><h3>읽고 보며 눈여겨볼 점</h3><ul class="lk">${lk.map(x=>`<li><b>${esc(x.k)} 「${esc(bTitle(nm[x.k]))}」</b>${T(x.t)}</li>`).join('')}</ul></div>`:''}
+    ${g.link?`<div class="sec"><h3>책과 영화를 이어 생각하기</h3><p style="margin:0;line-height:1.7">${T(g.link)}</p></div>`:''}
+    <p class="hint">줄거리와 결말은 일부러 뺐어요. 작품 요약과 세 작품의 연결은 논술 첨삭을 받은 뒤 '작품 깊이 읽기'에서 볼 수 있어요.${isAdmin()?' <button class="chip" data-act="prego" data-i="'+i+'" data-f="1">새로 만들기</button>':''}</p></div>`;
+}
 const gdBase=it=>`너는 대한민국 대치동에서 20년 넘게 중학생의 독서와 논술을 지도해 온 최고의 논술 강사다. 중학생 자녀를 둔 부모가 집에서 직접 논술 선생님이 되어 자녀를 지도할 수 있도록 '부모용 지도 안내서'를 쓴다. 부모는 바빠서 긴 글을 읽지 않는다. 짧고 간결하게, 항목마다 한두 문장으로, 설명보다 아이가 아는 친숙한 예시 위주로 쓴다. 작품 내용은 확실히 아는 사실만 쓰고 지어내지 않는다. 작품을 잘 모르면 이달의 주제를 중심으로 쓴다. 존댓말로 쓴다.\n\n- 자녀 학년: ${it.g}\n- 이달의 주제: ${it.topic}\n- 이달의 작품: 책 「${it.book}」, 영화 「${it.m1}」, 영화 「${it.m2}」\n`;
 function gdInfo(){const {i,k}=S.info;const it=items()[i];const title=k==='book'?it.book:k==='m1'?it.m1:it.m2;return {i,k,it,title,isBook:k==='book',wk:'w2'+(k==='book'?'b':'m')+'_'+gdH(title+'|'+it.topic)}}
 function gdWork(force){
@@ -7528,7 +7572,7 @@ document.addEventListener('click',async e=>{
       break;
     case 'custommode':S.sheet={type:'custom'};renderLayers();break;
     case 'cvtab':{const i=+d.i;S.cvTab=Object.assign({},S.cvTab,{[i]:d.k});repaintCard(i);cardFill(i,d.k);break}
-    case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab=['work','note','essay','oral'].includes(d.tab)?d.tab:'work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();{const qq=qState(i);if((!qq||(qq.v!==3&&!Number.isInteger((S.progress.picks||{})[nk(i)]))||(!qq.ai&&S.sample))&&!S.qBusy[nk(i)])genQs(i)};loadMonthData(i);break}
+    case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab=['work','note','essay','oral'].includes(d.tab)?d.tab:'work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();if(qStale(i))genQs(i);loadMonthData(i);break}
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
     case 'wropen':if(!svReady(+d.i)){toast('책과 영화 한 편을 끝내고 별점을 먼저 남겨 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
@@ -7661,8 +7705,9 @@ document.addEventListener('click',async e=>{
       try{await S.db.doc('config/course').delete();S.course=DEFAULT;S.source='기본 계획표';S.admin=null;toast('처음 계획표로 되돌렸어요.');render()}
       catch(err){toast('되돌리지 못했어요. 이 계정에 편집 권한이 있는지 확인해 주세요.')}
       break;
-    case 'stab':if(OREC&&d.v!=='oral')orStop();if(d.v!=='oral')orSayStop();S.sheetTab=d.v;renderLayers();break;
+    case 'stab':if(OREC&&d.v!=='oral')orStop();if(d.v!=='oral')orSayStop();S.sheetTab=d.v;if(d.v==='essay'&&S.sheet&&S.sheet.type==='month'&&qStale(S.sheet.i))genQs(S.sheet.i);renderLayers();break;
     case 'edugo':eduLoad(+d.i,d.f==='1');break;
+    case 'prego':preLoad(+d.i,d.f==='1');break;
     case 'evaluate':evaluate(+d.i);break;
     case 'esconf':S.esConf={i:+d.i,a:false,b:false};renderLayers();break;
     case 'esck':if(S.esConf){S.esConf[d.k]=!S.esConf[d.k];renderLayers()}break;
