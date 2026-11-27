@@ -989,7 +989,7 @@ form{display:flex;flex-direction:column;gap:12px}
 .bshf .bcase::before{left:-5px;right:-5px;top:-9px;height:13px;border-radius:2px;
   background:linear-gradient(rgba(255,232,196,.42),rgba(255,232,196,.10) 18%,rgba(0,0,0,0) 40%,rgba(0,0,0,.18) 82%,rgba(0,0,0,.5)),var(--wh) 0 0/840px auto repeat-x,#4A2D18;
   box-shadow:0 4px 5px -1px rgba(0,0,0,.5),0 -1px 0 rgba(0,0,0,.25)}
-.bshf .bcase::after{height:24px;margin:0 -14px;border-radius:0 0 3px 3px;
+.bshf .bcase::after{height:48px;margin:0 -14px;border-radius:0 0 3px 3px;
   background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,0) 35%,rgba(255,226,186,.08) 70%,rgba(0,0,0,.35)),var(--wh) 0 0/840px auto repeat-x,#3A2313}
 .bshf .bn{padding:20px 12px 0;
   background:
@@ -1016,7 +1016,7 @@ form{display:flex;flex-direction:column;gap:12px}
 @media (min-width:721px){.bshf .bcase{margin-top:60px;padding:18px 18px 0}.bshf .bcase::after{margin:0 -18px}.bshf .bbd{margin:0 -18px}.spl3{width:124px;right:28px}}
 @media (max-width:720px){.bshf .bcase{padding-left:10px;padding-right:10px}.bshf .bcase::before{left:0;right:0}.bshf .bcase::after{margin:0 -10px}.bshf .bbd{margin:0 -10px}}
 /* 11-28 받침 나무 1.5배(16→24px), 오른쪽 아래 제작사 명판: 오래된 황동(헤어라인·얼룩·모서리 나사), 글자는 음각(검게 파이고 아래에 빛) */
-.bshf .bplate{position:absolute;right:16px;bottom:3px;height:18px;display:flex;align-items:center;gap:7px;padding:0 10px 0 11px;border-radius:1.5px;z-index:2;
+.bshf .bplate{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);height:32px;display:flex;align-items:center;gap:9px;padding:0 12px 0 13px;border-radius:1.5px;z-index:2;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cfilter id='p' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 0.9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.15 0 0 0 0 0.04 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/160px 40px,
     repeating-linear-gradient(0deg,rgba(255,240,190,.09) 0 .5px,rgba(60,40,10,.08) .5px 1.5px),
     radial-gradient(circle at 18% 30%,rgba(70,48,16,.32),rgba(70,48,16,0) 28%),radial-gradient(circle at 74% 72%,rgba(70,48,16,.28),rgba(70,48,16,0) 30%),radial-gradient(circle at 52% 12%,rgba(255,236,170,.35),rgba(255,236,170,0) 40%),
@@ -1026,8 +1026,11 @@ form{display:flex;flex-direction:column;gap:12px}
 .bshf .bplate::before{left:3.5px}.bshf .bplate::after{right:3.5px}
 .bshf .bplate b,.bshf .bplate i{color:#1C1306;text-shadow:0 1px 0 rgba(255,236,176,.55),0 -.5px 0 rgba(0,0,0,.45);line-height:1;white-space:nowrap}
 .bshf .bplate b{font:700 12.5px/1 'Noto Serif KR',serif;letter-spacing:.04em}
-.bshf .bplate i{font:500 8.5px/1 'Noto Serif KR',serif;font-style:italic;letter-spacing:.06em;opacity:.92}
-@media (min-width:721px){.bshf .bplate{right:24px;height:20px}.bshf .bplate b{font-size:14px}.bshf .bplate i{font-size:9.5px}}
+.bshf .bplate b{font-size:16px!important}
+.bshf .bplate .bpr{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.bshf .bplate i{font:500 9px/1 'Noto Serif KR',serif;font-style:italic;letter-spacing:.06em;opacity:.92}
+.bshf .bplate small{font:500 6.5px/1 'Noto Serif KR',serif;letter-spacing:.14em;color:#1C1306;text-shadow:0 1px 0 rgba(255,236,176,.5);opacity:.85;font-style:italic}
+@media (min-width:721px){.bshf .bplate{height:34px}.bshf .bplate b{font-size:18px!important}.bshf .bplate i{font-size:10px}.bshf .bplate small{font-size:7px}}
 .sb{flex:0 0 auto;position:relative;width:62px;height:84px;padding:0;border:0;border-radius:2px 4px 4px 2px;overflow:hidden;background:linear-gradient(160deg,var(--a),var(--b));box-shadow:2px 3px 6px rgba(0,0,0,.55);transform:none;cursor:pointer;transition:transform .15s}
 .sb:hover,.sb:focus-visible{transform:translateY(-5px)}
 .sb[aria-pressed=true]{outline:2px solid #F4C34F;outline-offset:1px;transform:translateY(-7px)}
@@ -4653,7 +4656,7 @@ function shelfHTML(inSheet){
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
   }
-  return `<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness"><b>Jacob</b><i>built for greatness</i></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
+  return `<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
 }
 function myBooksHTML(){
   const h=hexScores(),ha=hexScores('all');const p=h.p,n=h.all;const bs=hexBooks();
