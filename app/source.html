@@ -3773,7 +3773,7 @@ function todoHTML(pct,ct){
   else if(nx.k==='essay'){const ev=S.evals&&S.evals[nk(i)];title=nx.part?'쓰던 글을 이어서 써요':'질문 하나를 골라<br>글 한 편을 써요';sub=ev?'첨삭 결과가 나왔어요':'다 쓰면 AI 선생님이 첨삭해요';btn=nx.part?'이어서 쓰기':'글쓰기'}
   else{title='질문을 듣고<br>말로 답해요';sub=nx.part?'2차 답변이 남았어요':'모범 답안을 따라 읽고 다시 답해요';btn='말하기'}
   return `<section class="todo" aria-label="지금 할 일">
-    <div class="todo-m">${wkThumb(it,i,nx.k==='work'?k:'book','todo-th')}<div class="todo-x"><span class="todo-k">지금 할 일 · ${n}단계 ${esc(nx.t)}</span><b class="todo-t">${title}</b><small>${sub}</small></div><button class="btn todo-b" ${act}>${btn}</button></div>
+    <div class="todo-m">${wkThumb(it,i,nx.k==='work'?k:'book','todo-th')}<div class="todo-x"><b class="todo-t">${title}</b><small>${sub}</small></div><button class="btn todo-b" ${act}>${btn}</button></div>
     <div class="todo-p"><span class="todo-g">${esc(it.g)} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kw?' · '+esc(kw):''}</span><div class="todo-bar" aria-hidden="true">${st.map(x=>`<i class="${x.done?'dn':x.k===nx.k?'nx':''}"></i>`).join('')}</div><span class="todo-n" aria-label="4단계 중 ${dn}단계 완료"><b>${dn}</b>/4</span></div>
     ${sx}
   </section>`;
