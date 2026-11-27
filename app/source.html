@@ -1877,9 +1877,11 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 .top.tnav .bell .dot{position:absolute;top:7px;right:auto;left:calc(50% + 4px)}
 @media (min-width:721px){.wrap .top.tnav .ti{width:52px;font-size:11px}}
 /* 표지·포스터: 불러온 그림의 실제 비율로 틀을 맞춤 — 잘리지도, 빈 여백도 없게 (2026-11-26) */
-:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd{aspect-ratio:var(--ar)!important;height:auto!important}
-:is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd>img{object-fit:fill!important;object-position:center!important;width:100%!important;height:100%!important}
-img.pth.fitd{height:auto!important;aspect-ratio:var(--ar);object-fit:fill!important}
+/* 11-27: 모든 표지 칸은 신국판 비율(152:225)로 같은 크기. 표지는 잘리지 않게 칸 안에 전부(contain), 남는 얇은 여백은 표지 가장자리 색(--cbg) */
+html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi):is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi){aspect-ratio:152/225!important;height:auto!important}
+html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd.fitd{aspect-ratio:152/225!important;height:auto!important;background:var(--cbg,#E9DFCC)!important}
+html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd.fitd>img{object-fit:contain!important;object-position:center!important;width:100%!important;height:100%!important;background:transparent!important}
+html img.pth.fitd.fitd{height:auto!important;aspect-ratio:152/225!important;object-fit:contain!important;background:var(--cbg,#E9DFCC)!important}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
 /* 홈 진열장 책 옆 색 탭(책·영화 1·영화 2): 작은 손글씨(나눔펜) */
@@ -5808,7 +5810,16 @@ document.addEventListener('scroll',e=>{const c=e.target;if(!c||!c.classList||!c.
 (()=>{const FR='.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi';
   const fit=im=>{if(!im||!im.naturalWidth||!im.naturalHeight)return;const r=im.naturalWidth/im.naturalHeight;if(r<.4||r>2.5)return;
     const t=im.classList.contains('pth')?im:(im.parentElement&&im.parentElement.matches(FR)?im.parentElement:null);if(!t)return;
-    t.style.setProperty('--ar',r.toFixed(4));t.classList.add('fitd')};
+    t.style.setProperty('--ar',r.toFixed(4));t.classList.add('fitd');edge(im,t)};
+  /* 여백 색: 표지 가장자리(위·아래 또는 좌·우 끝줄) 평균색. 다른 주소 그림은 CORS 사본으로, 안 되면 기본 크림색 */
+  const EC=new Map(),K=152/225;
+  const edge=(im,t)=>{const src=im.currentSrc||im.src;if(!src)return;const r=im.naturalWidth/im.naturalHeight;if(Math.abs(r-K)<.01)return;
+    const put=c=>{if(c)t.style.setProperty('--cbg',c)};if(EC.has(src)){const v=EC.get(src);if(v&&v.then)v.then(put);else put(v);return}
+    const calc=img=>{try{const w=80,h=Math.max(8,Math.round(80/r)),cv=document.createElement('canvas');cv.width=w;cv.height=h;const x=cv.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0,w,h);
+      const px=r>K?[...x.getImageData(0,0,w,1).data,...x.getImageData(0,h-1,w,1).data]:[...x.getImageData(0,0,1,h).data,...x.getImageData(w-1,0,1,h).data];
+      let R=0,G=0,B=0,n=0;for(let i=0;i<px.length;i+=4){R+=px[i];G+=px[i+1];B+=px[i+2];n++}return n?`rgb(${R/n|0},${G/n|0},${B/n|0})`:null}catch(e){return null}};
+    let c=calc(im);if(c){EC.set(src,c);put(c);return}
+    const pr=new Promise(ok=>{const j=new Image();j.crossOrigin='anonymous';j.onload=()=>ok(calc(j));j.onerror=()=>ok(null);j.src=src}).then(v=>{EC.set(src,v);return v});EC.set(src,pr);pr.then(put)};
   document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG')fit(t)},true);
   let q=0;const scan=()=>{q=0;document.querySelectorAll('img').forEach(im=>{if(im.complete&&!(im.parentElement&&im.parentElement.classList.contains('fitd'))&&!im.classList.contains('fitd'))fit(im)})};
   try{new MutationObserver(()=>{if(!q)q=requestAnimationFrame(scan)}).observe(document.body,{childList:true,subtree:true})}catch(e){}})();
