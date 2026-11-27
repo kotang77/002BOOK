@@ -2612,6 +2612,8 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgmon{flex:none;display:flex;align-items:center;background:#1F4637;border-radius:99px;padding:3px}
 .lgmon button{border:0;background:none;color:#FFF6E8;font:700 18px/1 var(--f-body);width:30px;height:30px;border-radius:50%;cursor:pointer}.lgmon button:disabled{opacity:.3;cursor:default}
 .lgmon b{color:#FFF6E8;font:700 14px var(--f-body);min-width:36px;text-align:center}
+/* 11-27 Figma 16 선택줄 v6: ‹ 학년 › · ‹ 달 › 두 알약, 녹색 바탕 없이 테두리만 */
+.lgmon{background:none!important;border:1.5px solid #1F4637;padding:2px}.lgmon button,.lgmon b{color:#1F4637!important}.lgmon.lggr b{min-width:52px}.lgpick{padding:8px 10px!important}
 .lgevsum{background:#F7F1E4;border-radius:18px;padding:16px;scroll-margin-top:80px}
 .lgevl{margin:-4px 0 12px!important}
 .lgevrows{display:grid;gap:8px;margin-bottom:12px}
@@ -7190,8 +7192,8 @@ function lgHTML(){
   const plan=!G||G.busy?'<div class="lgload"><div class="sk"></div><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 지도 방법을 정리하고 있어요. 1분쯤 걸려요.</p></div>'
     :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
   return `<div class="lgh"><h2>학습지도</h2><p>이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
-    <div class="lgsh"><div class="lgpickw"><div class="lgpick"><b class="lgpg">${lgT(lgGN(S.lg.g))}</b>
-        <button class="lggb" data-act="lggnext" aria-label="학년 바꾸기 (지금 ${lgT(lgGN(S.lg.g))})" title="학년 바꾸기">${lgI('swap',18)}</button><span class="lgsp"></span>
+    <div class="lgsh"><div class="lgpickw"><div class="lgpick">
+        <div class="lgmon lggr" role="group" aria-label="학년 고르기"><button data-act="lggstep" data-d="-1" aria-label="이전 학년" ${GR.indexOf(S.lg.g)<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(String(S.lg.g).replace(/^중/,''))}학년</b><button data-act="lggstep" data-d="1" aria-label="다음 학년" ${GR.indexOf(S.lg.g)>=GR.length-1?'disabled':''}>›</button></div><span class="lgsp"></span>
         <div class="lgmon" role="group" aria-label="달 고르기"><button data-act="lgmstep" data-d="-1" aria-label="이전 달" ${pos<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(it.m)}</b><button data-act="lgmstep" data-d="1" aria-label="다음 달" ${pos>=ids.length-1?'disabled':''}>›</button></div></div>
 </div>
       ${plan}
@@ -7671,6 +7673,7 @@ document.addEventListener('click',async e=>{
     case 'famno':{if(famRel(d.id)==='family'&&S._fam!==d.id){S._fam=d.id;toast('한 번 더 누르면 가족 연결이 끊어져요.');setTimeout(()=>{if(S._fam===d.id)S._fam=null},3500);break}S._fam=null;famRemove(d.id);break}
     case 'famkid':S.sheet={type:'kid',id:d.id};renderLayers();famLoadKid(d.id);break;
     case 'lgg':S.lg=S.lg||{};S.lg.g=d.g;S.lg.i=-1;S.lg.q=null;S.lg.more=false;S.lg.gsel=false;render();break;
+    case 'lggstep':{const k=GR.indexOf(S.lg.g)+(+d.d);if(k>=0&&k<GR.length){S.lg.g=GR[k];S.lg.i=-1;S.lg.q=null;S.lg.more=false;render()}break}
     case 'lggnext':{const g=GR[(GR.indexOf(S.lg.g)+1)%GR.length];S.lg.g=g;S.lg.i=-1;S.lg.q=null;S.lg.more=false;render();break}
     case 'lgmstep':{const c=lgCur();const n=c.ids[c.ids.indexOf(c.i)+(+d.d)];if(n!==undefined){S.lg.i=n;S.lg.q=null;S.lg.more=false;render()}break}
     case 'lgevopen':S.lg.evOpen=!S.lg.evOpen;renderLayers();if(!S.lg.evOpen)setTimeout(()=>{const e=document.getElementById('lgev');if(e)e.scrollIntoView({block:'start'})},0);break;
