@@ -3051,6 +3051,9 @@ const VBQ=[
  ['place2','travel','🗺️','TRAVEL','다음 여행에서 감탄하며 바라보는 곳은 어디인가요?','예: 뉴욕 브로드웨이','#7FB5A8','#E1F1EC'],
  ['place3','travel','🌅','TRAVEL','언젠가 노을을 보며 쉬고 있는 곳은 어디인가요?','예: 그리스 산토리니','#E9A27C','#FBE6DA']];
 const vbOf=()=>(S.progress&&S.progress.vision)||null;
+/* 성인(부모·선생님·일반) 비전보드 칸: 고등학교·대학 칸은 빼고, 학생용 문장은 어른 말로 */
+const VBQ_AD={job:['10년 뒤의 나는 어떤 일을 하며 즐겁게 일하고 있나요?','예: 동네 작은 책방 주인, 독서 교육 강사'],me:['가족과 동료들이 나를 어떤 사람이라고 말해 주나요?','예: 따뜻하고 믿음직한 사람'],place:['꼭 가 보고 싶었던 곳에 도착한 나, 그곳은 어디인가요?','예: 스위스 알프스'],give:['넉넉해진 나는 누구에게 어떤 기쁨을 선물하나요?','예: 아이들과 부모님께 가족 여행 선물하기']};
+const vbQ=()=>vbAdult()?VBQ.filter(([k])=>k!=='high'&&k!=='univ').map(x=>{const o=VBQ_AD[x[0]];if(!o)return x;const y=x.slice();y[4]=o[0];y[5]=o[1];return y}):VBQ;
 // 비전보드 질문 더 하기: [키, 구역, 이모지, 질문, 예시]
 const VBX=[['xbook','growth','📚','꿈을 이룬 내가 "인생 책"이라며 소개하는 책은 무엇인가요?','예: 어린 왕자'],['xday','big','🎉','꿈을 이룬 날, 나는 누구와 어떻게 축하하고 있나요?','예: 가족과 하와이 바닷가에서 파티'],['xlang','growth','🗣️','자유롭게 쓰는 외국어로 나는 무엇을 하고 있나요?','예: 일본 친구와 일본어로 수다 떨기'],['xhelp','career','🤝','내 재능으로 세상의 누구를 돕고 있나요?','예: 공부가 어려운 동생들에게 무료 과외'],['xroom','life','🛋️','미래의 내 방(작업실)에는 무엇이 있나요?','예: 창가의 큰 책상과 책으로 가득한 책장'],['xpet','life','🐶','미래의 나와 함께 사는 반려동물이나 식물은 무엇인가요?','예: 골든 리트리버'],['xhobby','growth','🎨','바쁜 날에도 즐기는 나만의 취미는 무엇인가요?','예: 주말마다 그림 그리기'],['xfam','big','📸','가족과 함께 이룬 가장 행복한 순간은 어떤 모습인가요?','예: 바다가 보이는 집에서 가족 사진 찍기'],['xtrip','travel','🧳','가족과 함께 꼭 가는 여행지는 어디인가요?','예: 도쿄 디즈니씨'],['xaward','career','🏆','내가 받은 상이나 인정은 무엇인가요?','예: 전국 영어 말하기 대회 대상'],['xhabit','growth','⏰','꿈을 이룬 나의 아침 습관은 무엇인가요?','예: 6시 기상, 영어 일기 쓰기'],['xgift','life','💝','첫 월급으로 누구에게 무엇을 선물했나요?','예: 엄마에게 꽃다발과 편지']];
 const vbAR=(v,k)=>{const r=+(((v&&v.ir)||{})[k]);return r>0?Math.min(2.2,Math.max(.45,r)):4/3};
@@ -3060,7 +3063,7 @@ function vbWhenOpts(sel){const y0=new Date().getFullYear();let o='<option value=
 function vbItem(v,k){const b=v&&v.board;return b&&Array.isArray(b.items)?b.items.find(x=>x&&x.k===k):null}
 function vbList(v){
   if(!v)return [];const a=v.a||{},no=v.none||{},wh=v.when||{},im=v.img||{};
-  const L=VBQ.filter(([k])=>!no[k]&&String(a[k]||'').trim()).map(([k,sec,e,tag,q,,c1,c2])=>({k,sec,e,tag,q,c1,c2,text:String(a[k]).trim(),when:wh[k]||'',img:im[k]||((v.pub||{})[k]||{}).u||'',pub:!im[k]&&!!((v.pub||{})[k]||{}).u,ar:im[k]?vbAR(v,k):4/3}));
+  const L=vbQ().filter(([k])=>!no[k]&&String(a[k]||'').trim()).map(([k,sec,e,tag,q,,c1,c2])=>({k,sec,e,tag,q,c1,c2,text:String(a[k]).trim(),when:wh[k]||'',img:im[k]||((v.pub||{})[k]||{}).u||'',pub:!im[k]&&!!((v.pub||{})[k]||{}).u,ar:im[k]?vbAR(v,k):4/3}));
   (Array.isArray(v.cus)?v.cus:[]).forEach(c=>{if(c&&c.text)L.push({k:c.id,sec:VSEC.some(x=>x[0]===c.sec)?c.sec:'big',e:c.e||'✨',tag:'MY DREAM',q:c.q||'나만의 꿈',c1:'#E7C66B',c2:'#FBF2D5',text:c.text,when:c.when||'',img:im[c.id]||'',ar:vbAR(v,c.id),cus:true})});
   return L;
 }
@@ -3225,7 +3228,7 @@ function vbFormHTML(v){const a=(v&&v.a)||{},no=(v&&v.none)||{},wh=(v&&v.when)||{
   const q=([k,sec,e,tag,qq,ph])=>`<div class="vbq${no[k]?' off':''}"><label for="vb-${k}">${e} ${esc(qq)}<input id="vb-${k}" name="${k}" maxlength="60" placeholder="${esc(ph)}" value="${esc(a[k]||'')}" ${no[k]?'readonly':''}></label><div class="vbqo"><select name="when-${k}" aria-label="이루는 때">${vbWhenOpts(wh[k])}</select><label class="vnn"><input type="checkbox" name="none-${k}" ${no[k]?'checked':''}>답변 없음</label><span class="vbqi" id="vbth-${k}">${vbThumb(k,I[k])}</span></div></div>`;
   return `<form data-form="vision" class="vbform"><p class="hint" style="margin:0 0 12px">꿈이 이미 이루어진 미래의 나를 떠올리며 적어 보세요. 대답하기 어려운 질문은 '답변 없음'을 누르면 보드에서 빠져요. 이루는 해를 고르면 꿈 연대표가 생기고, 사진을 붙이면 보드가 더 멋져져요.</p>
     <div class="vbfs vbdd"><label for="vb-dday">🏆 모든 꿈이 완성되는 날<input type="date" id="vb-dday" name="dday" value="${esc((v&&v.dday)||'')}"></label></div>
-    ${VSEC.map(([s,en,ko])=>`<fieldset class="vbfs"><legend><b>${en}</b>${ko}</legend>${VBQ.filter(x=>x[1]===s).map(q).join('')}</fieldset>`).join('')}
+    ${VSEC.map(([s,en,ko])=>`<fieldset class="vbfs"><legend><b>${en}</b>${ko}</legend>${vbQ().filter(x=>x[1]===s).map(q).join('')}</fieldset>`).join('')}
     <fieldset class="vbfs"><legend><b>MY OWN DREAMS</b>나만의 꿈</legend><p class="hint" style="margin:0 0 8px">질문에 없는 꿈을 자유롭게 더해요. 보드의 어느 자리에 붙일지도 고를 수 있어요. (최대 12개)</p><div id="vbcus">${(S.vbCus||[]).map(c=>vbCusRow(c,I)).join('')}</div><button type="button" class="btn ghost small" data-act="vbadd">＋ 나만의 꿈 추가</button></fieldset>
     <label for="vb-word" style="margin-bottom:12px">💌 꿈을 이룬 미래의 나에게 한마디<textarea id="vb-word" name="word" maxlength="120" placeholder="예: 포기하지 않아 줘서 고마워!">${esc(a.word||'')}</textarea></label>
     <div class="vbsub"><button class="btn" type="submit">✨ 비전보드 만들기</button>${v&&v.board?'<button class="btn ghost" type="button" data-act="vbcancel">취소</button>':''}</div></form>`;
@@ -3245,7 +3248,7 @@ async function vbImgUp(k,file){
    학업과 이어진 가능한 자기(Oyserman 외, 2006) · 내재적 목표(Kasser & Ryan, 1996) · 자기결정성 이론의 관계성(Deci & Ryan, 2000) ·
    과정 심상화(Pham & Taylor, 1999) · 정신적 대조 WOOP(Oettingen, 2014) · 실행 의도 '만약-그러면'(Gollwitzer, 1999) */
 /* 2026-11-26 질문 재구성(사용자 지시): 흐름·연결은 그대로, 답이 구체적으로 나오게 — 한 가지만·숫자·이름·장소·언제를 묻는다 */
-const VBW=[
+const VBW_KID=[
  ['skill','지금의 나','지난 한 달, 시간 가는 줄 모르고 한 일 한 가지는? 무엇을 얼마나 했는지 적어요.','예: 주말마다 3시간씩 웹툰 그리기','몰입 경험 떠올리기 · Csikszentmihalyi(1990)'],
  ['me','바라는 나','스무 살의 나를 친구가 한 문장으로 소개한다면? “걔는 ___ 사람이야.”','예: 약속을 꼭 지키는 믿음직한 사람','가능한 자기 · Markus & Nurius(1986)'],
  ['dream','최고의 미래',A=>`10년 뒤 오늘,${A.skill?` ‘${A.skill}’을(를) 하던`:''} 내가 이룬 일을 뉴스 제목처럼 써 봐요. 무엇을·어디서·몇 개나?`,'예: 내 그림책 3권이 교보문고에 나왔다','최고의 나 상상하기 · King(2001)'],
@@ -3256,27 +3259,43 @@ const VBW=[
  ['place','구체화','꿈을 이룬 날을 사진 한 장으로 찍는다면? 장소와 내가 하고 있는 일을 적어요.','예: 광화문 교보문고 사인회 책상에 앉아 있어요','과정 심상화 · Pham & Taylor(1999)'],
  ['obst','장애물',A=>`이번 주에 꿈을 위한 일을 미루게 만든 내 습관 한 가지는? 언제, 어디서 그랬는지 적어요.`,'예: 밤 10시 침대에서 휴대폰 1시간 보기','정신적 대조 WOOP · Oettingen(2014)'],
  ['plan','실행 계획',A=>`‘만약 ${A.obst||'그 습관'}이(가) 시작되면, 나는 ___.’ 어디서·몇 분 동안 할지 넣어 빈칸을 채워요.`,'예: 휴대폰을 거실에 두고 책상에서 10분 먼저 그릴 거예요','실행 의도 · Gollwitzer(1999)']];
-const vbWQ=(n,A)=>{const q=VBW[n][2];return typeof q==='function'?q(A):q};
-function vbzCard(n){const W=S.vbW,[k,stage,,ex]=VBW[n];const A=W.a,I=S.vbImgs||{};const pic=n<8;
+/* 11-27 밤(사용자 지시): 부모·선생님·일반 어른은 성인용 꿈 인터뷰. 흐름(지금의 나 → 바라는 나 → 최고의 미래 → 구체화 → 장애물 → 실행 계획)과 근거는 같고,
+   학교·대학 대신 '꿈을 오래 이어 갈 건강 습관'(건강 영역의 가능한 자기, Hooker & Kaus 1994), 시점은 스무 살 대신 5년 뒤로 묻는다 */
+const VBW_AD=[
+ ['skill','지금의 나','지난 한 달, 시간 가는 줄 모르고 몰입한 일 한 가지는? 무엇을 얼마나 했는지 적어요.','예: 주말마다 2시간씩 아이와 함께 책 읽기','몰입 경험 떠올리기 · Csikszentmihalyi(1990)'],
+ ['me','바라는 나','5년 뒤의 나를 가까운 사람이 한 문장으로 소개한다면? “그 사람은 ___ 사람이야.”','예: 가족 곁을 지키면서 자기 꿈도 놓지 않는 사람','가능한 자기 · Markus & Nurius(1986)'],
+ ['dream','최고의 미래',A=>`10년 뒤 오늘,${A.skill?` ‘${A.skill}’을(를) 해 온`:''} 내가 이룬 일을 뉴스 제목처럼 써 봐요. 무엇을·어디서·얼마나?`,'예: 내 이름으로 낸 독서 교육 책이 1만 부 팔렸다','최고의 나 상상하기 · King(2001)'],
+ ['job','최고의 미래',A=>`${A.dream?`‘${A.dream}’ 그날, `:''}나를 소개하는 명함에는 어떤 일이 적혀 있나요? 그 일로 누구를 돕나요?`,'예: 독서 교육 강사 · 책을 어려워하는 중학생','가능한 자기와 일 · Markus & Nurius(1986)'],
+ ['health','구체화',A=>`${A.job?`‘${A.job}’을(를) `:'그 꿈을 '}오래 이어 가려면 꼭 지킬 건강 습관 한 가지는? 언제, 얼마나 할지 적어요.`,'예: 매일 아침 6시 반 동네 30분 걷기','건강 영역의 가능한 자기 · Hooker & Kaus(1994)'],
+ ['want','구체화','5년 안에 꼭 해 보고 싶은 경험 한 가지는? 어디서, 누구와 할지까지 적어요.','예: 가족과 제주 올레길 한 코스 완주하기','내재적 목표 · Kasser & Ryan(1996)'],
+ ['give','구체화','꿈을 이룬 날 가장 먼저 알리고 싶은 사람은 누구인가요? 그 사람에게 무엇을 해 주고 싶나요?','예: 부모님 · 직접 차린 저녁상으로 함께 축하하기','관계와 기여 · Deci & Ryan(2000)'],
+ ['place','구체화','꿈을 이룬 날을 사진 한 장으로 찍는다면? 장소와 내가 하고 있는 일을 적어요.','예: 동네 도서관 강연장에서 학부모들 앞에 서 있어요','과정 심상화 · Pham & Taylor(1999)'],
+ ['obst','장애물',A=>`이번 주에 꿈을 위한 일을 미루게 만든 내 습관 한 가지는? 언제, 어디서 그랬는지 적어요.`,'예: 퇴근 뒤 소파에서 휴대폰 1시간 보기','정신적 대조 WOOP · Oettingen(2014)'],
+ ['plan','실행 계획',A=>`‘만약 ${A.obst||'그 습관'}이(가) 시작되면, 나는 ___.’ 어디서·몇 분 동안 할지 넣어 빈칸을 채워요.`,'예: 휴대폰을 현관 서랍에 두고 식탁에서 15분 먼저 원고를 쓸 거예요','실행 의도 · Gollwitzer(1999)']];
+const vbAdult=()=>!!S.me&&!/^(초|중|고)\d$/.test(String(S.me.grade||''));
+const vbw=()=>vbAdult()?VBW_AD:VBW_KID;
+const vbWho=()=>vbAdult()?'회원':'학생';
+const vbWQ=(n,A)=>{const q=vbw()[n][2];return typeof q==='function'?q(A):q};
+function vbzCard(n){const W=S.vbW,[k,stage,,ex]=vbw()[n];const A=W.a,I=S.vbImgs||{};const pic=n<8;
   return `<section class="vbz-c" data-n="${n}" aria-label="꿈 인터뷰 ${n+1}번 카드"><div class="lchead" aria-hidden="true"><span>002. JM. 꿈 ${String(n+1).padStart(2,'0')}</span><span>No. 1024</span></div>
     <h4 class="vbz-tt"><i class="tw">${esc(stage)}</i></h4>
     <h3 class="vbz-q">${esc(vbWQ(n,A))}</h3>
     <div class="vbz-ab"><textarea id="vbz-in-${n}" class="vbz-in${pic?' cam':''}" maxlength="60" rows="2" placeholder="${esc(ex)}" aria-label="답 적기">${esc(A[k]||'')}</textarea>${pic?`<div class="vbz-cm" id="vbth-${k}" data-small="cam">${vbCam(k,I[k])}</div>`:''}</div>
-    ${n===VBW.length-1?'<button class="btn vbz-mk" data-act="vbwnext">✨ 비전보드 만들기</button>':''}</section>`}
+    ${n===vbw().length-1?'<button class="btn vbz-mk" data-act="vbwnext">✨ 비전보드 만들기</button>':''}</section>`}
 function vbWizHTML(){const n=S.vbW.n;
-  return `<div class="vbz"><div class="vbz-h"><small id="vbz-st">꿈 인터뷰 ${n+1} / ${VBW.length} · ${esc(VBW[n][1])}</small><ol class="vbz-bar" aria-hidden="true">${VBW.map((_,i)=>`<li class="${i<=n?'on':''}"></li>`).join('')}</ol></div>
-    <div class="vbz-sl"><div class="vbz-tr" id="vbz-tr">${VBW.map((_,i)=>vbzCard(i)).join('')}</div>
+  return `<div class="vbz"><div class="vbz-h"><small id="vbz-st">꿈 인터뷰 ${n+1} / ${vbw().length} · ${esc(vbw()[n][1])}</small><ol class="vbz-bar" aria-hidden="true">${vbw().map((_,i)=>`<li class="${i<=n?'on':''}"></li>`).join('')}</ol></div>
+    <div class="vbz-sl"><div class="vbz-tr" id="vbz-tr">${vbw().map((_,i)=>vbzCard(i)).join('')}</div>
       <button class="vbz-ar l" data-act="vbwprev" aria-label="이전 질문" ${n?'':'disabled'}><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <button class="vbz-ar r" data-act="vbwnext" id="vbz-nx" aria-label="다음 질문" ${n===VBW.length-1?'disabled':''}><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
-    <button class="lnk vbz-skip" data-act="vbwskip">${n===VBW.length-1?'건너뛰고 만들기':'이 질문 건너뛰기'}</button></div>`}
+      <button class="vbz-ar r" data-act="vbwnext" id="vbz-nx" aria-label="다음 질문" ${n===vbw().length-1?'disabled':''}><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <button class="lnk vbz-skip" data-act="vbwskip">${n===vbw().length-1?'건너뛰고 만들기':'이 질문 건너뛰기'}</button></div>`}
 /* 카드 n으로 이동(좌우 밀기와 버튼 모두). 이동할 때 답을 저장하고, 앞 답을 이어 쓴 질문 문장을 새로 고친다 */
 function vbzFit(el){el.style.height='auto';el.style.height=Math.max(72,Math.ceil((el.scrollHeight-6)/36)*36)+'px';vbzH()}
 /* 넘기는 줄 높이 = 지금 카드 높이(긴 카드 때문에 카드 아래가 비지 않게) */
 function vbzH(){const tr=document.getElementById('vbz-tr');if(!tr||!S.vbW)return;const c=tr.children[S.vbW.n];if(c)tr.style.height=(c.offsetHeight+16)+'px'}
-function vbzGo(n,smooth){const tr=document.getElementById('vbz-tr');if(!tr||!S.vbW)return;tr.querySelectorAll('.vbz-in').forEach(vbzFit);n=Math.max(0,Math.min(VBW.length-1,n));
+function vbzGo(n,smooth){const tr=document.getElementById('vbz-tr');if(!tr||!S.vbW)return;tr.querySelectorAll('.vbz-in').forEach(vbzFit);n=Math.max(0,Math.min(vbw().length-1,n));
   const c=tr.children[n];if(c)tr.scrollTo({left:c.offsetLeft-tr.offsetLeft-(tr.clientWidth-c.clientWidth)/2,behavior:smooth?'smooth':'auto'});vbzSet(n)}
-function vbzSet(n){const W=S.vbW;if(!W)return;vbWizSave();W.n=n;const last=n===VBW.length-1;
-  const st=document.getElementById('vbz-st');if(st)st.textContent=`꿈 인터뷰 ${n+1} / ${VBW.length} · ${VBW[n][1]}`;
+function vbzSet(n){const W=S.vbW;if(!W)return;vbWizSave();W.n=n;const last=n===vbw().length-1;
+  const st=document.getElementById('vbz-st');if(st)st.textContent=`꿈 인터뷰 ${n+1} / ${vbw().length} · ${vbw()[n][1]}`;
   document.querySelectorAll('.vbz-bar li').forEach((li,i)=>li.classList.toggle('on',i<=n));
   const nx=document.getElementById('vbz-nx');if(nx)nx.disabled=last;
   const pv=document.querySelector('.vbz-ar.l');if(pv)pv.disabled=!n;
@@ -3284,9 +3303,9 @@ function vbzSet(n){const W=S.vbW;if(!W)return;vbWizSave();W.n=n;const last=n===V
   document.querySelectorAll('.vbz-c').forEach(c=>{const i=+c.dataset.n,q=c.querySelector('.vbz-q');if(q)q.textContent=vbWQ(i,W.a);c.classList.toggle('on',i===n)});vbzH()}
 document.addEventListener('input',e=>{const t=e.target;if(t&&t.classList&&t.classList.contains('vbz-in'))vbzFit(t)});
 document.addEventListener('scroll',e=>{const tr=e.target;if(!tr||tr.id!=='vbz-tr'||!S.vbW)return;clearTimeout(tr._t);tr._t=setTimeout(()=>{const C=[...tr.children];const mid=tr.scrollLeft+tr.clientWidth/2;let best=0,bd=1e9;C.forEach((c,i)=>{const d=Math.abs(c.offsetLeft-tr.offsetLeft+c.clientWidth/2-mid);if(d<bd){bd=d;best=i}});if(best!==S.vbW.n)vbzSet(best)},90)},true);
-function vbWizSave(){const W=S.vbW;if(!W)return;VBW.forEach(([k],i)=>{const el=document.getElementById('vbz-in-'+i);if(el){const t=String(el.value||'').trim().slice(0,60);if(t)W.a[k]=t;else delete W.a[k]}})}
-async function vbWizDone(){const W=S.vbW;const a={};VBW.forEach(([k])=>{if(W.a[k])a[k]=W.a[k]});
-  if(!VBW.slice(0,8).some(([k])=>a[k])){toast('꿈 질문에 하나 이상 답해 주세요.');return}
+function vbWizSave(){const W=S.vbW;if(!W)return;vbw().forEach(([k],i)=>{const el=document.getElementById('vbz-in-'+i);if(el){const t=String(el.value||'').trim().slice(0,60);if(t)W.a[k]=t;else delete W.a[k]}})}
+async function vbWizDone(){const W=S.vbW;const a={};vbw().forEach(([k])=>{if(W.a[k])a[k]=W.a[k]});
+  if(!vbw().slice(0,8).some(([k])=>a[k])){toast('꿈 질문에 하나 이상 답해 주세요.');return}
   const img={},ir={};Object.entries(S.vbImgs||{}).forEach(([k,d])=>{if(a[k]&&d){img[k]=d;const r=(S.vbIr||{})[k];if(r)ir[k]=r}});
   S.progress.vision={a,none:{},when:{},cus:[],dday:'',img,ir,pub:{},board:null,at:Date.now(),wiz:1};S.vbW=null;S.vbImgs=null;S.vbIr=null;saveProgress();await vbMake();}
 function visionHTML(page){setTimeout(vbPubRetry,0);if(page)return visionHTML().replace(/<button class="x" data-act="close1"[^>]*>[\s\S]*?<\/button>/,'').replace(/^<div class="panel/,'<div class="vpg');
@@ -3299,7 +3318,7 @@ function visionHTML(page){setTimeout(vbPubRetry,0);if(page)return visionHTML().r
 }
 /* 비전보드에 들어올 때마다 꿈 질문 하나: 아직 답하지 않은 기본 질문이나 더 하기 질문 가운데 하나를 골라요. 답하면 그 자리에서 보드에 꽂혀요 */
 function vbPickQ(v,ex){if(!v||!v.board)return null;const a=v.a||{},no=v.none||{},cu=(v.cus||[]),has=new Set(cu.map(c=>c&&c.id));
-  const P=[...VBQ.filter(([k])=>!String(a[k]||'').trim()&&!no[k]).map(([k,sec,e,,q,ph])=>({id:k,base:1,sec,e,q,ph})),...(cu.length<12?VBX.filter(([k])=>!has.has(k)).map(([k,sec,e,q,ph])=>({id:k,sec,e,q,ph})):[])];
+  const P=[...vbQ().filter(([k])=>!String(a[k]||'').trim()&&!no[k]).map(([k,sec,e,,q,ph])=>({id:k,base:1,sec,e,q,ph})),...(cu.length<12?VBX.filter(([k])=>!has.has(k)).map(([k,sec,e,q,ph])=>({id:k,sec,e,q,ph})):[])];
   const Q=P.length>1?P.filter(x=>x.id!==ex):P;return Q.length?Q[Math.floor(Math.random()*Q.length)]:null}
 function vbAskHTML(v){const A=S.vbAsk;if(!A||!v||!v.board)return '';
   /* 추가 질문도 꿈 인터뷰와 같은 도서 대출 카드 모양(2026-11-26 사용자 지시) */
@@ -3319,17 +3338,17 @@ async function vbAnswer(){
   if(im){v.img=v.img||{};v.img[A.id]=im;if(ir){v.ir=v.ir||{};v.ir[A.id]=ir}}
   const it={k:A.id,head:t.slice(0,24),line:'',step:'',emoji:A.e};v.board.items=(v.board.items||[]).filter(x=>x&&x.k!==A.id);v.board.items.push(it);
   S.vbAskBusy=true;renderLayers();
-  try{if(S.sample){const r=await S.sample.json(`너는 중학생의 꿈을 응원하는 다정한 진로 코치이자 감각 있는 잡지 에디터다. ${(S.me&&S.me.grade)||'중학생'} 학생이 비전보드 질문에 답했다.\n질문: ${A.q}\n답: ${t}${when?`\n이루는 해: ${when}년`:''}\n규칙: 답의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 이름·장소는 그대로 쓴다. 부정적인 표현은 밝은 미래 표현으로 바꾼다.\nJSON 객체 하나만 출력한다: {"head":"잡지 헤드라인처럼 짧고 강렬한 문구 (16자 이내)","line":"이미 이룬 듯한 현재형 확언 한 문장 (30자 이내)","step":"이번 주에 바로 할 수 있는 작은 첫 걸음 (25자 이내)","emoji":"어울리는 이모지 1개"}`,{modelTier:'quick',cache:false});
+  try{if(S.sample){const r=await S.sample.json(`너는 ${vbAdult()?'어른의 꿈을 응원하는 다정한 라이프 코치':'중학생의 꿈을 응원하는 다정한 진로 코치'}이자 감각 있는 잡지 에디터다. ${(S.me&&S.me.grade)||'중학생'} ${vbWho()}이 비전보드 질문에 답했다.\n질문: ${A.q}\n답: ${t}${when?`\n이루는 해: ${when}년`:''}\n규칙: 답의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 이름·장소는 그대로 쓴다. 부정적인 표현은 밝은 미래 표현으로 바꾼다.\nJSON 객체 하나만 출력한다: {"head":"잡지 헤드라인처럼 짧고 강렬한 문구 (16자 이내)","line":"이미 이룬 듯한 현재형 확언 한 문장 (30자 이내)","step":"이번 주에 바로 할 수 있는 작은 첫 걸음 (25자 이내)","emoji":"어울리는 이모지 1개"}`,{modelTier:'quick',cache:false});
     if(r&&typeof r==='object'){it.head=String(r.head||t).slice(0,24);it.line=String(r.line||'').slice(0,40);it.step=String(r.step||'').slice(0,30);it.emoji=String(r.emoji||A.e).slice(0,4)}}}catch(e){}
   S.vbAskBusy=false;S.vbAsk=null;S.vbImgs=null;S.vbIr=null;saveProgress();renderLayers();render();toast('비전보드에 꽂았어요! 📌');
 }
 async function vbSubmit(fd){
   const a={},none={},when={};const yr=w=>/^\d{4}$/.test(String(w||''))?String(w):'';
-  VBQ.forEach(([k])=>{a[k]=String(fd.get(k)||'').trim().slice(0,60);if(fd.get('none-'+k))none[k]=1;const w=yr(fd.get('when-'+k));if(w)when[k]=w});
+  vbQ().forEach(([k])=>{a[k]=String(fd.get(k)||'').trim().slice(0,60);if(fd.get('none-'+k))none[k]=1;const w=yr(fd.get('when-'+k));if(w)when[k]=w});
   a.word=String(fd.get('word')||'').trim().slice(0,120);
   const cus=[];for(const [key,val] of fd.entries()){if(!key.startsWith('ctext-'))continue;const id=key.slice(6),t=String(val).trim().slice(0,60);if(t){const o=(((vbOf()||{}).cus)||[]).find(c=>c&&c.id===id)||{};cus.push({id,sec:String(fd.get('csec-'+id)||'big'),text:t,when:yr(fd.get('when-'+id)),e:o.e||'',q:o.q||''})}}
   const dd=String(fd.get('dday')||'');const dday=/^\d{4}-\d{2}-\d{2}$/.test(dd)?dd:'';
-  const keep=new Set([...VBQ.filter(([k])=>a[k]&&!none[k]).map(([k])=>k),...cus.slice(0,12).map(c=>c.id)]);
+  const keep=new Set([...vbQ().filter(([k])=>a[k]&&!none[k]).map(([k])=>k),...cus.slice(0,12).map(c=>c.id)]);
   if(!keep.size){toast('꿈을 하나 이상 적어 주세요.');return}
   const img={};Object.entries(S.vbImgs||{}).forEach(([k,d])=>{if(keep.has(k)&&d)img[k]=d});const ir={};Object.keys(img).forEach(k=>{const r=(S.vbIr||{})[k];if(r)ir[k]=r});
   S.progress.vision={a,none,when,cus:cus.slice(0,12),dday,img,ir,board:null,at:Date.now()};S.vbEdit=false;S.vbImgs=null;S.vbIr=null;S.vbCus=null;saveProgress();await vbMake();
@@ -3345,7 +3364,7 @@ async function vbMake(){
     const secName=s=>(VSEC.find(x=>x[0]===s)||[])[2]||'';
     const list=L.map(x=>`- ${x.k} [${secName(x.sec)} / ${x.q}]: ${x.text}${x.when?` (이루는 해: ${x.when}년${vbStage(+x.when)?', '+vbStage(+x.when):''})`:''}`).join('\n');
     const A=v.a;
-    const r=await S.sample.json(`너는 중학생의 꿈을 응원하는 다정한 진로 코치이자 감각 있는 잡지 에디터다. ${(S.me&&S.me.grade)||'중학생'} 학생 '${(S.me&&S.me.nick)||''}'이(가) 적은 꿈으로 코르크 보드에 오려 붙인 비전보드 문구를 쓴다.\n\n[학생이 적은 꿈]\n${list}\n${A.word?'- 미래의 나에게: '+A.word+'\n':''}${A.obst?'- 꿈을 막을 것 같은 내 안의 장애물: '+A.obst+'\n':''}${A.plan?'- 만약-그러면 계획: '+A.plan+'\n':''}${v.dday?'- 모든 꿈이 완성되는 날: '+v.dday+'\n':''}\n규칙: 학생이 적은 내용의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 학교·대학 이름은 그대로 쓴다. 부정적이거나 불안한 표현은 밝고 긍정적인 미래 표현으로 바꾼다. 헤드라인은 잡지처럼 짧고 강렬하게, 확언은 이미 이룬 듯한 현재형으로 쓴다. 첫 걸음은 중학생이 이번 주에 바로 할 수 있는 구체적이고 작은 행동으로 쓴다. 이루는 해가 있으면 그 시기에 맞는 현실적인 첫 걸음을 고른다.\nJSON 객체 하나만 출력한다:\n{"title":"보드 제목 (8자 이내, 예: 바다를 품은 나)","statement":"비전 선언문 한 문장 (30자 이내)","words":["꿈을 대표하는 키워드 3~4개, 각 6자 이내"],"pledge":"학생 본인이 직접 쓴 것처럼 1인칭으로 쓴 다짐 글 2~3문장 (100자 이내). '~하겠다', '~할 것이다'처럼 단단한 의지가 담긴 말투. 꿈 2~3개를 자연스럽게 담고, 지금 당장 할 작은 실천 하나를 넣는다. 만약-그러면 계획이 있으면 그 계획을 그대로 살려 넣는다","items":[{"k":"위 항목 키 그대로","head":"잡지 헤드라인처럼 다듬은 짧은 제목 (12자 이내)","line":"현재형 확언 한 문장 (24자 이내)","step":"지금 할 수 있는 첫 걸음 (20자 이내)","emoji":"어울리는 이모지 1개","en":"이 꿈을 보여 줄 사진 검색어 영어 2~3단어. 사람 얼굴·실존 인물·상표·학교 이름 없이 사물·장소·풍경 위주 (예: art gallery, graduation cap, ocean house)"}]}\nitems는 위 항목마다 하나씩, 같은 순서로 쓴다.`,{cache:false});
+    const r=await S.sample.json(`너는 ${vbAdult()?'어른의 꿈을 응원하는 다정한 라이프 코치':'중학생의 꿈을 응원하는 다정한 진로 코치'}이자 감각 있는 잡지 에디터다. ${(S.me&&S.me.grade)||'중학생'} ${vbWho()} '${(S.me&&S.me.nick)||''}'이(가) 적은 꿈으로 코르크 보드에 오려 붙인 비전보드 문구를 쓴다.\n\n[${vbWho()}이 적은 꿈]\n${list}\n${A.word?'- 미래의 나에게: '+A.word+'\n':''}${A.obst?'- 꿈을 막을 것 같은 내 안의 장애물: '+A.obst+'\n':''}${A.plan?'- 만약-그러면 계획: '+A.plan+'\n':''}${v.dday?'- 모든 꿈이 완성되는 날: '+v.dday+'\n':''}\n규칙: ${vbWho()}이 적은 내용의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 학교·대학 이름은 그대로 쓴다. 부정적이거나 불안한 표현은 밝고 긍정적인 미래 표현으로 바꾼다. 헤드라인은 잡지처럼 짧고 강렬하게, 확언은 이미 이룬 듯한 현재형으로 쓴다. 첫 걸음은 중학생이 이번 주에 바로 할 수 있는 구체적이고 작은 행동으로 쓴다. 이루는 해가 있으면 그 시기에 맞는 현실적인 첫 걸음을 고른다.\nJSON 객체 하나만 출력한다:\n{"title":"보드 제목 (8자 이내, 예: 바다를 품은 나)","statement":"비전 선언문 한 문장 (30자 이내)","words":["꿈을 대표하는 키워드 3~4개, 각 6자 이내"],"pledge":"학생 본인이 직접 쓴 것처럼 1인칭으로 쓴 다짐 글 2~3문장 (100자 이내). '~하겠다', '~할 것이다'처럼 단단한 의지가 담긴 말투. 꿈 2~3개를 자연스럽게 담고, 지금 당장 할 작은 실천 하나를 넣는다. 만약-그러면 계획이 있으면 그 계획을 그대로 살려 넣는다","items":[{"k":"위 항목 키 그대로","head":"잡지 헤드라인처럼 다듬은 짧은 제목 (12자 이내)","line":"현재형 확언 한 문장 (24자 이내)","step":"지금 할 수 있는 첫 걸음 (20자 이내)","emoji":"어울리는 이모지 1개","en":"이 꿈을 보여 줄 사진 검색어 영어 2~3단어. 사람 얼굴·실존 인물·상표·학교 이름 없이 사물·장소·풍경 위주 (예: art gallery, graduation cap, ocean house)"}]}\nitems는 위 항목마다 하나씩, 같은 순서로 쓴다.`,{cache:false});
     if(!r||typeof r!=='object'||!Array.isArray(r.items))throw 0;
     const ok=new Set(L.map(x=>x.k));
     v.board={title:String(r.title||fb.title).slice(0,14),statement:String(r.statement||'').slice(0,50),words:(Array.isArray(r.words)?r.words:[]).map(x=>String(x).slice(0,10)).slice(0,5),pledge:String(r.pledge||fb.pledge).slice(0,160),
@@ -7615,9 +7634,9 @@ document.addEventListener('click',async e=>{
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
     case 'wropen':if(!svReady(+d.i)){toast('책과 영화 한 편을 끝내고 별점을 먼저 남겨 주세요.');break}wrOpen(+d.i);break;
     case 'svopen':S.survey={i:+d.i,k:d.k,v:Object.assign({},svOf(+d.i,d.k))};renderLayers();break;
-    case 'vbwnext':{vbWizSave();const W=S.vbW;if(!W)break;if(W.n<VBW.length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
+    case 'vbwnext':{vbWizSave();const W=S.vbW;if(!W)break;if(W.n<vbw().length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
     case 'vbwprev':{vbWizSave();if(S.vbW&&S.vbW.n>0)vbzGo(S.vbW.n-1,true);break}
-    case 'vbwskip':{const W=S.vbW;if(!W)break;const el=document.getElementById('vbz-in-'+W.n);if(el)el.value='';delete W.a[VBW[W.n][0]];if(W.n<VBW.length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
+    case 'vbwskip':{const W=S.vbW;if(!W)break;const el=document.getElementById('vbz-in-'+W.n);if(el)el.value='';delete W.a[vbw()[W.n][0]];if(W.n<vbw().length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
     case 'svset':if(S.survey){S.survey.v[d.q]=d.q==='diff'?5.5-(+d.v):+d.v;renderLayers()}break;
     case 'mbrate':{const o=rateObj(d.sc,d.id);if(!o)break;o[d.q]=+d.v;
       const box=document.querySelector(`[data-rbox="${d.sc}:${CSS.escape(d.id)}"]`);if(box)box.outerHTML=rateBox(d.sc,d.id,o);  // 입력 중인 글이 지워지지 않게 별점 칸만 다시 그린다

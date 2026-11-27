@@ -18,7 +18,7 @@ fail=0
 if [ $# = 0 ]; then echo "=== px/unit.js"; node "$ROOT/tests/px/unit.js" | grep -vE '^PASS'; [ "${PIPESTATUS[0]}" = 0 ] || fail=1; fi
 if [ $# = 0 ]; then echo "=== rubric_unit.ts"; ( cd "$ROOT/supabase/functions/api" && FAKE_DB=1 "$DENO" run -A --unstable-sloppy-imports "$ROOT/tests/rubric_unit.ts" ) | grep -vE '^PASS'; [ "${PIPESTATUS[0]}" = 0 ] || fail=1; fi
 if [ $# = 0 ]; then echo "=== books_unit.ts"; ( cd "$ROOT/supabase/functions/api" && FAKE_DB=1 "$DENO" run -A --unstable-sloppy-imports "$ROOT/tests/books_unit.ts" ) | grep -vE '^PASS'; [ "${PIPESTATUS[0]}" = 0 ] || fail=1; fi
-TESTS=("${@}"); [ ${#TESTS[@]} = 0 ] && TESTS=("../e2e.py" "smoke.py" "shelf.py" "qref.py" "essay.py" "flow.py mobile" "flow.py desktop" "miclost.py" "google.py" "admin.py" "post.py" "guide.py" "back.py" "seen.py")
+TESTS=("${@}"); [ ${#TESTS[@]} = 0 ] && TESTS=("../e2e.py" "smoke.py" "shelf.py" "qref.py" "essay.py" "flow.py mobile" "flow.py desktop" "miclost.py" "google.py" "admin.py" "post.py" "guide.py" "back.py" "seen.py" "vbadult.py")
 for t in "${TESTS[@]}"; do
   echo "=== $t"; python3 "$ROOT/tests/oral/"$t 2>&1 | grep -E '^(PASS|FAIL)|^[0-9]+/[0-9]+|^errors' | grep -vE '^PASS' ; r=${PIPESTATUS[0]}
   [ "$r" = 0 ] || fail=1
