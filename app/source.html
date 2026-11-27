@@ -2622,6 +2622,10 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .layer .ph .x,.panel .ph .x{width:40px;height:40px;background:#1F4637!important;color:#FFFFFF!important;border:2px solid #FFFFFF!important;box-shadow:0 3px 10px rgba(0,0,0,.25);transition:transform .12s}
 .layer .ph .x svg,.panel .ph .x svg{width:20px;height:20px;stroke-width:2.6}.layer .ph .x:active,.panel .ph .x:active{transform:scale(.92)}
 .cso .ph .x,.panel.vbzp .ph .x{background:#FFF8EA!important;color:#1F4637!important;border-color:#1F4637!important}
+/* 11-27: 창닫기 = 중1 학년 칩처럼 빛나는 원형 전구(전구색 #FFD98A, 따뜻한 빛 번짐), 밝은·어두운 바탕 모두 같게. Figma 창닫기 버튼 86:225 */
+html .layer .ph .x,html .panel .ph .x,html .cso .ph .x,html .panel.vbzp .ph .x{background:radial-gradient(120% 120% at 50% 35%,#FFF6D8 0%,#FFD98A 55%,#E9A93F 100%)!important;color:#5A3A10!important;border:1.5px solid #F7D58C!important;
+  box-shadow:0 0 0 1px rgba(246,213,142,.35),0 0 16px 4px rgba(255,206,120,.7),0 0 34px 10px rgba(255,190,90,.3),inset 0 1px 0 rgba(255,250,230,.8)!important}
+html .layer .ph .x svg,html .panel .ph .x svg{filter:drop-shadow(0 0 2px rgba(255,240,200,.9))}
 /* PDF(A4 794×1123) */
 .lgpdf{width:794px;height:1123px;box-sizing:border-box;padding:44px 52px;background:#fff;font-family:'Noto Sans KR',sans-serif}
 .lgpdf .lgs{box-shadow:none;border-radius:0;padding:0;font-size:16px;line-height:1.75;background:#fff}
