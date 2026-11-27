@@ -4085,6 +4085,10 @@ function monthHTML(i){
     :tab!=='edu'?`<div class="mguide"><span>다음 할 일은 <b>${esc(nx.t)}</b>${yeyo(nx.t)}.</span><button class="btn small" data-act="stab" data-v="${nx.k}">${esc(nx.t)}로 가기</button></div>`:'';
   const cov=!S.covers[hid(it.book)]&&!coverOf(it.book)&&tab==='work'?`<div class="mcov"><label class="btn ghost small up">${coverOf(it.book)?'표지 바꾸기':'표지 올리기'}<input type="file" accept="image/*" data-cover="${hid(it.book)}"></label><span>${coverOf(it.book)?'자동으로 찾은 표지예요. 가진 책과 다르면 찍어서 바꿔요.':'책 표지를 찍어 올리면 모두에게 보여요.'}</span></div>`:'';
   const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?preHTML(i):note;
+  /* 11-27 밤: 책 읽기 전 생각하기 화면은 달 제목·단계 원을 빼고 창 제목을 '책 읽기 전 생각하기'로. Figma 03 07b(108:1286) */
+  if(tab==='edu')return `<div class="panel pk mpanel mpre"><div class="ph"><h2>책 읽기 전 생각하기</h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
+  ${body}
+  ${mactHTML(i)}</div>`;
   return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
   <ol class="msteps" aria-label="이달의 단계">${st.map((x,n)=>`<li class="${x.done?'s-dn':x.part?'s-pt':''}${nx&&nx.k===x.k?' s-nx':''}"><button data-act="stab" data-v="${x.k}" aria-pressed="${tab===x.k}" aria-label="${n+1}단계 ${x.t}${x.done?' 완료':''}"><span class="mn">${x.done?'✓':n+1}</span>${x.t}</button></li>`).join('')}</ol>
   ${guide}
@@ -7320,7 +7324,7 @@ JSON 객체 하나만 출력한다. 형식:
 function preHTML(i){
   const it=items()[i];const key=preKey(it);const G=gdGet(key);
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(key);if(!g||(!g.data&&!g.busy&&!g.err))preLoad(i)},0);
-  const H='<h3 class="mhead">책 읽기 전 생각하기</h3>';
+  const H='';
   if(!G||G.busy)return `<div class="edu pre">${H}<div class="sk"></div><p class="hint" role="status">읽기 전에 생각할 거리를 정리하고 있어요. 20초쯤 걸려요.</p></div>`;
   if(G.err)return `<div class="edu pre">${H}<p class="warn">${esc(G.err)}</p><div><button class="btn ghost small" data-act="prego" data-i="${i}">다시 만들기</button></div></div>`;
   const g=G.data||{};const T=x=>esc(String(x||''));const bf=(Array.isArray(g.before)?g.before:[]).filter(Boolean).slice(0,3);
