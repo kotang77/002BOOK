@@ -1208,6 +1208,8 @@ html body .mbr .svr{display:flex;align-items:center;flex-wrap:wrap;margin-top:4p
 html body .mbr .svs.f::before{color:#D9A441}html body .mbr .svs.h::before{background:linear-gradient(90deg,#D9A441 50%,#D8CBB5 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* 11-27 밤: 휴대폰 서점 안 화면(독서·내 서재·비전보드·학습지도)은 아래 여백이 0이라 마지막 칸이 하단 메뉴에 가려 끝까지 내려가지 않았음 → 메뉴 높이+안전 영역만큼 여백 */
 @media (max-width:720px){html body .wrap.shopin:not(.frl) main{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}}
+/* 11-28 사용자 지시: 독서 화면은 진열장 바로 아래에 사이트 정보가 붙게(아래 탭만큼의 여백은 사이트 정보 쪽에 있음) */
+@media (max-width:720px){html body:has(#legal:not([hidden])) .wrap.shopin:not(.frl) main{padding-bottom:4px!important}}
 .sdrate{font-weight:600}
 /* 서가의 책을 누르면 보이는 인상적인 문구 */
 .shqtop{margin-top:14px}
@@ -2664,7 +2666,8 @@ body:has(.wrap.shopin) .nav{background:radial-gradient(rgba(255,255,255,.035) 1p
 .shopin .todo-m{gap:9px!important;align-items:center}
 .shopin .todo-th{width:34px!important;height:46px!important}
 .shopin .todo-x{gap:1px!important}
-.shopin .todo-t{display:block!important;-webkit-line-clamp:unset!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px!important;line-height:1.3!important}
+/* 11-28 사용자 지시: 책 제목이 길면 두 줄로(말줄임 대신) */
+.shopin .todo-t{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2!important;white-space:normal;word-break:keep-all;overflow:hidden;font-size:14px!important;line-height:1.3!important}
 .shopin .todo-b{min-height:30px!important;padding:0 11px!important;font-size:12.5px!important;width:auto!important}
 .shopin .todo-s{padding:4px 2px 3px!important;margin-top:0!important}
 .shopin .todo-s .ts-c>b{font-size:14px!important}.shopin .todo-s .ts-c>small{font-size:10.5px!important}
