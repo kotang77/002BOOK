@@ -19,7 +19,7 @@ with sync_playwright() as p:
     act('[data-act=month][data-i="0"]'); time.sleep(.8)
     ok('창 열림', not pg.locator('#layer1').is_hidden())
     x=pg.locator('#layer1 .ph .x').first; bg=pg.evaluate("e=>{const c=getComputedStyle(e);return c.backgroundImage+' | '+c.boxShadow}", x.element_handle())
-    ok('닫기 버튼 눈에 띄게(빛나는 전구색 원 40px)', 'radial-gradient' in bg and 'rgb(255, 217, 138)' in bg and x.bounding_box()['width']>=39, bg[:160])
+    ok('닫기 버튼 눈에 띄게(빛나는 전구색 원 40px)', 'radial-gradient' in bg and 'rgb(255, 210, 122)' in bg and x.bounding_box()['width']>=39, bg[:160])
     pg.go_back(); time.sleep(.8)
     ok('뒤로가기 → 창만 닫힘(앱 그대로)', pg.locator('#layer1').is_hidden() and pg.locator('.who').count()==1 and pg.url.startswith(WEB))
     act('[data-act=view][data-v=vision]'); time.sleep(.8)
