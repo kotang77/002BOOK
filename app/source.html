@@ -1887,6 +1887,9 @@ body:has(.wrap.shopin) #legal a{color:inherit}
 html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi):is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi){aspect-ratio:152/225!important;height:auto!important}
 html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd.fitd{aspect-ratio:152/225!important;height:auto!important;background:var(--cbg,#E9DFCC)!important}
 html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd.fitd>img{object-fit:contain!important;object-position:center!important;width:100%!important;height:100%!important;background:transparent!important}
+/* 11-27: 칸과 비율 차가 12% 이내인 포스터·표지(.fill)는 여백 없이 꽉 채움(가장자리만 조금 잘림). 그보다 많이 다르면 지금처럼 전부 보이고 남는 여백만 색으로 */
+html :is(.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi).fitd.fitd.fill>img{object-fit:cover!important}
+html img.pth.fitd.fitd.fill{object-fit:cover!important}
 html img.pth.fitd.fitd{height:auto!important;aspect-ratio:152/225!important;object-fit:contain!important;background:var(--cbg,#E9DFCC)!important}
 .authcard .tabs{display:flex;align-items:center}.authcard .tabs .tpv{margin-left:auto;padding:0 6px;font-family:var(--tw);font-size:11px;color:#789CC8;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
@@ -5868,7 +5871,7 @@ document.addEventListener('scroll',e=>{const c=e.target;if(!c||!c.classList||!c.
 (()=>{const FR='.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi';
   const fit=im=>{if(!im||!im.naturalWidth||!im.naturalHeight)return;const r=im.naturalWidth/im.naturalHeight;if(r<.4||r>2.5)return;
     const t=im.classList.contains('pth')?im:(im.parentElement&&im.parentElement.matches(FR)?im.parentElement:null);if(!t)return;
-    t.style.setProperty('--ar',r.toFixed(4));t.classList.add('fitd');edge(im,t)};
+    t.style.setProperty('--ar',r.toFixed(4));t.classList.add('fitd');t.classList.toggle('fill',Math.abs(r-152/225)/(152/225)<=.12);edge(im,t)};
   /* 여백 색: 표지 가장자리(위·아래 또는 좌·우 끝줄) 평균색. 다른 주소 그림은 CORS 사본으로, 안 되면 기본 크림색 */
   const EC=new Map(),K=152/225;
   const edge=(im,t)=>{const src=im.currentSrc||im.src;if(!src)return;const r=im.naturalWidth/im.naturalHeight;if(Math.abs(r-K)<.01)return;
