@@ -2412,6 +2412,8 @@ html .auth:has(form.loan) .lpocket::after{display:none!important}
   background:radial-gradient(rgba(60,38,15,.16) .6px,transparent 1px) 0 0/3px 3px,radial-gradient(rgba(255,240,210,.12) .6px,transparent 1px) 1px 2px/4px 4px,
     repeating-linear-gradient(88deg,rgba(70,45,20,.04) 0 1px,transparent 1px 6px),linear-gradient(rgba(60,38,15,.12),rgba(60,38,15,.04)),#B08A5E}
 .auth .lpk-back.on{visibility:visible}
+/* 11-27: 봉투 모서리 r = 카드 r(6px) — 뒷판 위 두 모서리, 앞판 아래 두 모서리 */
+html .auth .lpk-back{border-radius:6px 6px 0 0!important}html .auth:has(form.loan) .lpocket{border-radius:0 0 6px 6px!important}
 @media (min-width:821px){.auth .lpk-back{position:fixed}}
 .auth:has(form.loan):not(.played) .lpk-back{animation:pocketIn .5s ease .5s both}
 /* 표지·포스터는 평면(2026-11-26 사용자 지시): 책등 줄·안쪽 선·빛 덧칠을 모두 빼고, 그림은 틀을 여백 없이 가득 채움 */
