@@ -2626,12 +2626,13 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .cso .ph .x,.panel.vbzp .ph .x{background:#FFF8EA!important;color:#1F4637!important;border-color:#1F4637!important}
 /* 11-27: 창닫기 = 중1 학년 칩처럼 빛나는 원형 전구(전구색 #FFD98A, 따뜻한 빛 번짐), 밝은·어두운 바탕 모두 같게. Figma 창닫기 버튼 86:225 */
 html .layer .ph .x,html .panel .ph .x,html .cso .ph .x,html .panel.vbzp .ph .x{background:radial-gradient(120% 120% at 50% 35%,#FFFFFF 0%,#FFF1BE 40%,#FFD27A 75%,#F2B347 100%)!important;color:#5A3A10!important;border:1.5px solid #FFE3A0!important;
-  box-shadow:0 0 0 1px rgba(255,226,160,.6),0 0 18px 7px rgba(255,214,120,1),0 0 44px 18px rgba(255,196,90,.6),0 0 80px 26px rgba(255,190,90,.25),inset 0 1px 0 #FFFFFF!important}
+  box-shadow:0 0 0 1px rgba(255,226,160,.5),0 0 12px 1px rgba(255,214,120,.55),0 6px 26px 4px rgba(255,196,90,.25),inset 0 1px 0 #FFFFFF!important}
 /* 11-27: 전구를 창 제목 첫 줄(예: 중1 첫째 달 · 가족) 가운데선에 맞춤 — 제목 한 줄 높이 약 25px, 전구 40px → 위로 8px */
 html .layer .ph,html .panel .ph{align-items:flex-start}html .layer .ph>.x,html .panel .ph>.x{margin-top:-8px}
 html .layer .ph .x svg,html .panel .ph .x svg{filter:drop-shadow(0 0 2px rgba(255,240,200,.9))}
+/* 11-27 밤: 전구 닫기 불빛은 '책 읽기 전 생각하기' 버튼과 같은 조도(번짐 12px·26px)로 낮춤 */
 /* 11-27 밤: 전구 닫기를 모든 열림창에 — 제목 줄 밖 닫기·뒤로(.x)와 비전보드 전체 보기(#vbfull)까지. 위치·크기는 각 창 그대로 */
-html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x){display:grid;place-items:center;width:40px;height:40px;border-radius:50%;padding:0;background:radial-gradient(120% 120% at 50% 35%,#FFFFFF 0%,#FFF1BE 40%,#FFD27A 75%,#F2B347 100%)!important;color:#5A3A10!important;border:1.5px solid #FFE3A0!important;box-shadow:0 0 0 1px rgba(255,226,160,.6),0 0 18px 7px rgba(255,214,120,1),0 0 44px 18px rgba(255,196,90,.6),0 0 80px 26px rgba(255,190,90,.25),inset 0 1px 0 #FFFFFF!important}
+html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x){display:grid;place-items:center;width:40px;height:40px;border-radius:50%;padding:0;background:radial-gradient(120% 120% at 50% 35%,#FFFFFF 0%,#FFF1BE 40%,#FFD27A 75%,#F2B347 100%)!important;color:#5A3A10!important;border:1.5px solid #FFE3A0!important;box-shadow:0 0 0 1px rgba(255,226,160,.5),0 0 12px 1px rgba(255,214,120,.55),0 6px 26px 4px rgba(255,196,90,.25),inset 0 1px 0 #FFFFFF!important}
 html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x) svg{width:20px;height:20px;stroke-width:2.6;filter:drop-shadow(0 0 2px rgba(255,240,200,.9))}
 html body #vbfull .vbf-x{width:40px;height:40px}
 /* PDF(A4 794×1123) */
