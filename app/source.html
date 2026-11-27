@@ -2404,6 +2404,16 @@ div.pc-row{cursor:default}
 .auth:has(form.loan):not(.played) .lpocket{animation:pocketHold3 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
 .auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
 @media (prefers-reduced-motion:reduce){.auth:has(form.loan) .authcard,.auth:has(form.loan) .lpocket,.auth:has(form.loan) .lpk-bk::before{animation:none!important}}
+/* 11-27 봉투 뒷판 통판(Figma 08 봉투 뒷판 v7): 뒷판은 카드 뒤(형제 요소 .lpk-back, 카드보다 아래 층)에 가운데까지 꽉 찬 한 장.
+   양옆 띠에 그려 두던 어두운 음영은 지우고, 음영은 카드가 올라오며 드리우는 카드 자체 그림자로만 생김. 위치는 주머니 윗변에 맞춰 JS(lpkPlace)가 잡음 */
+html .auth:has(form.loan) .lpocket::after{display:none!important}
+.lpk-bk{display:none!important}
+.auth .lpk-back{position:absolute;z-index:1;height:106px;pointer-events:none;border-radius:4px 4px 0 0;visibility:hidden;
+  background:radial-gradient(rgba(60,38,15,.16) .6px,transparent 1px) 0 0/3px 3px,radial-gradient(rgba(255,240,210,.12) .6px,transparent 1px) 1px 2px/4px 4px,
+    repeating-linear-gradient(88deg,rgba(70,45,20,.04) 0 1px,transparent 1px 6px),linear-gradient(rgba(60,38,15,.12),rgba(60,38,15,.04)),#B08A5E}
+.auth .lpk-back.on{visibility:visible}
+@media (min-width:821px){.auth .lpk-back{position:fixed}}
+.auth:has(form.loan):not(.played) .lpk-back{animation:pocketIn .5s ease .5s both}
 /* 표지·포스터는 평면(2026-11-26 사용자 지시): 책등 줄·안쪽 선·빛 덧칠을 모두 빼고, 그림은 틀을 여백 없이 가득 채움 */
 .cvmain .cvimg:has(>img)::after,.cvmain .cvimg:has(>img)::before{content:none!important}
 .cvmain .cvimg:has(>img){border-radius:2px!important;background:none!important}
@@ -3407,7 +3417,7 @@ function authHTML(){
   else if(t==='login')body=`<form data-form="login" class="loan"><div class="lrow lpw lid"><label for="li-id"><span><i class="tw">아이디</i></span></label><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required value="${esc(savedId())}"><label class="lsave" for="li-save"><input type="checkbox" id="li-save" name="saveid"${S.liSave??!!savedId()?' checked':''}><i class="tw">아이디 저장</i></label></div>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
-    <div class="lpocket"><span class="lpk-bk" aria-hidden="true"></span><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 구름 속에 아이들이 뛰어다니는 마을</span></div></form>`;
+    <div class="lpocket"><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 구름 속에 아이들이 뛰어다니는 마을</span></div></form>`;
   else if(t==='find')body=`<form data-form="find"><p class="hint">아이디와 가입할 때 적은 이메일을 넣어 주세요. 관리자가 확인한 뒤 그 이메일로 임시 비밀번호를 보내 드려요.</p>
     <label for="fd-id">아이디<input id="fd-id" name="id" autocomplete="username" autocapitalize="none" required></label>
     <label for="fd-email">가입한 이메일<input id="fd-email" name="email" type="email" autocomplete="email" required></label>
@@ -3417,7 +3427,7 @@ function authHTML(){
   else body=suFormHTML(false);
   return `<div class="wrap auth${intro?'':' played'}"><section class="hero" aria-label="영원이북 서점 입구"><div class="scene"><img class="sbg" src="login/lane.webp" width="1024" height="1024" alt=""><img class="sdim" src="login/lane-dim.webp" alt=""><div class="sign">${logoSVG(512,'biglogo','url(#lgGold)').replace('fill="#fff"','fill="none"').replace('<circle','<defs><linearGradient id="lgGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE3A8"/><stop offset=".55" stop-color="#D9AE62"/><stop offset="1" stop-color="#B3874A"/></linearGradient></defs><circle')}<h1>영원이북</h1></div></div>
     <p class="tg">좋은 책과 영화로 내 꿈을 그려가요</p></section>
-    <svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><section class="authcard"><div class="lchead" aria-hidden="true"><span>002. JM. 고486</span><span>No. 1024</span></div><div class="ahead"><h2>도서대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}"><i class="tw">로그인</i></button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}"><i class="tw">회원가입</i></button><a class="tpv" href="/privacy.html">개인정보처리방침</a></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
+    <svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg>${t==='login'&&S.dbState!=='none'?'<span class="lpk-back" aria-hidden="true"></span>':''}<section class="authcard"><div class="lchead" aria-hidden="true"><span>002. JM. 고486</span><span>No. 1024</span></div><div class="ahead"><h2>도서대출 카드</h2><div class="tabs"><button data-act="authtab" data-v="login" aria-pressed="${t==='login'}"><i class="tw">로그인</i></button><button data-act="authtab" data-v="signup" aria-pressed="${t==='signup'||t==='gsignup'}"><i class="tw">회원가입</i></button><a class="tpv" href="/privacy.html">개인정보처리방침</a></div></div>${t==='signup'&&gOn()&&S.dbState!=='loading'&&S.dbState!=='none'?`<div class="gsi"><div data-gsi="auth" data-txt="${t==='signup'?'signup_with':'signin_with'}"></div><p class="gor"><span>또는 아이디로 ${t==='signup'?'가입':'로그인'}</span></p></div>`:''}${body}</section>
     <div class="tai" role="img" aria-label="TAi Edutech · Think &amp; Action by Ai"><span class="t1"><b>TAi</b><i>Edutech</i></span><span class="t2"><b>T</b>hink &amp; <b>A</b>ction by <b>Ai</b></span></div></div>`;
 }
 
@@ -5815,6 +5825,15 @@ function mnPage(ev,lines,marks,p,total,geo){
 function fitMn(){document.querySelectorAll('.mnw').forEach(w=>{const p=w.firstElementChild;if(p)p.style.zoom=Math.max(w.clientWidth/794,innerWidth<720?.4:.72)})}
 window.addEventListener('resize',fitMn);
 document.addEventListener('scroll',e=>{const c=e.target;if(!c||!c.classList||!c.classList.contains('lgcar'))return;const f=c.firstElementChild;if(!f)return;const n=Math.round(c.scrollLeft/(f.offsetWidth+10));const d=c.nextElementSibling;if(d)d.querySelectorAll('i').forEach((x,k)=>x.classList.toggle('on',k===n))},true);
+/* 봉투 뒷판(.lpk-back)을 주머니 윗변 바로 위에 맞춤(주머니는 등장 중에도 화면에서 제자리라 언제 재도 같음) */
+(()=>{let ro=null,seen=null;
+  const place=()=>{const a=document.querySelector('.auth'),b=a&&a.querySelector('.lpk-back'),p=a&&a.querySelector('.lpocket'),c=a&&a.querySelector('.authcard');if(!b||!p)return;
+    if(c&&c!==seen){seen=c;try{ro&&ro.disconnect();ro=new ResizeObserver(place);ro.observe(c);ro.observe(p)}catch(e){}}
+    const fx=getComputedStyle(b).position==='fixed',ar=fx?{left:0,top:0}:a.getBoundingClientRect(),pr=p.getBoundingClientRect();
+    b.style.left=(pr.left-ar.left)+'px';b.style.top=(pr.top-ar.top-104)+'px';b.style.width=pr.width+'px';b.classList.add('on')};
+  let q=0;const sch=()=>{if(!q)q=requestAnimationFrame(()=>{q=0;place()})};
+  window.lpkPlace=sch;addEventListener('resize',sch);try{document.fonts&&document.fonts.ready.then(sch)}catch(e){}
+  try{new MutationObserver(()=>{if(document.querySelector('.lpk-back'))sch()}).observe(document.body,{childList:true,subtree:true})}catch(e){}})();
 /* 표지·포스터 자동 맞춤: 그림이 다 불러와지면 틀의 비율을 그림 비율로 바꾼다 */
 (()=>{const FR='.cvimg,.fcv,.mcv,.todo-th,.wk-th,.mdone-th,.pk-th,.sb,.rcv,.lgcvi';
   const fit=im=>{if(!im||!im.naturalWidth||!im.naturalHeight)return;const r=im.naturalWidth/im.naturalHeight;if(r<.4||r>2.5)return;
