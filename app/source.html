@@ -2405,10 +2405,10 @@ div.pc-row{cursor:default}
 @keyframes backUp{from{transform:translateY(-38px)}to{transform:translateY(-153px)}}
 .auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 2s cubic-bezier(.4,0,.3,1) 1.1s both}
 @media (prefers-reduced-motion:reduce){.auth:has(form.loan) .lpk-bk::before{animation:none!important}}
-/* 카드가 올라오는 것이 느껴지게: 3초 동안 거의 일정한 속도로(처음·끝만 살짝 부드럽게), 프레임이 끊기지 않게 합성 레이어로 */
-.auth:has(form.loan):not(.played) .authcard{animation:pocketIn .5s ease .5s both,cardPull3 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform,clip-path}
-.auth:has(form.loan):not(.played) .lpocket{animation:pocketHold3 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
-.auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 3s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
+/* 카드가 올라오는 것이 느껴지게(11-27 사용자 지시로 3초 → 2초): 2초 동안 거의 일정한 속도로(처음·끝만 살짝 부드럽게), 프레임이 끊기지 않게 합성 레이어로 */
+.auth:has(form.loan):not(.played) .authcard{animation:pocketIn .5s ease .5s both,cardPull3 2s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform,clip-path}
+.auth:has(form.loan):not(.played) .lpocket{animation:pocketHold3 2s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
+.auth:has(form.loan):not(.played) .lpk-bk::before{animation:backUp 2s cubic-bezier(.25,.1,.75,.9) 1.1s both;will-change:transform}
 @media (prefers-reduced-motion:reduce){.auth:has(form.loan) .authcard,.auth:has(form.loan) .lpocket,.auth:has(form.loan) .lpk-bk::before{animation:none!important}}
 /* 11-27 봉투 뒷판 통판(Figma 08 봉투 뒷판 v7): 뒷판은 카드 뒤(형제 요소 .lpk-back, 카드보다 아래 층)에 가운데까지 꽉 찬 한 장.
    양옆 띠에 그려 두던 어두운 음영은 지우고, 음영은 카드가 올라오며 드리우는 카드 자체 그림자로만 생김. 위치는 주머니 윗변에 맞춰 JS(lpkPlace)가 잡음 */
@@ -5432,7 +5432,7 @@ window.__002gcb=gCred;
 /* 부팅(서버 연결·계획표·설정)이 끝났는지. 로그인 화면은 먼저 보이므로 로그인 처리는 이것을 기다린다 */
 let bootDone;const bootReady=new Promise(r=>{bootDone=r});
 /* 로그인 화면 등장(0.5초 뒤 봉투 → 1.1초부터 2초 동안 카드)이 끝나는 시각까지 기다림 */
-const INTRO_MS=4300;
+const INTRO_MS=3300; // 1.1초 시작 + 카드 2초 + 여유 0.2초
 /* 11-27 앱(TWA)에서 등장이 안 보이던 문제: 앱은 시작 화면(스플래시)이 페이지를 덮고 있는 동안 등장이 다 끝나 버림.
    그래서 등장은 멈춘 채(.iwait) 그려 두고, 화면이 실제로 보이고·서점 사진을 다 불러오고·(앱이면) 시작 화면이 걷힌 뒤에 시작한다. 늦어도 7초 안에는 시작 */
 const introWait=()=>new Promise(r=>{const t=()=>{if(!S.introGo)return setTimeout(t,120);const w=(S.introAt||Date.now())+INTRO_MS-Date.now();w>0?setTimeout(r,w):r()};t()});
