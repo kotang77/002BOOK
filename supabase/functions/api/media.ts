@@ -95,22 +95,28 @@ async function kmdb(title: string, year: string): Promise<Art | null> {
      정확히 같은 제목이 없으면 한쪽 제목이 다른 쪽을 포함하는 것(루디 ↔ 루디 이야기)도 연도가 맞으면 받는다. 포스터가 없는 항목은 건너뛴다.
      시리즈 영화는 1편 기준(사용자 지시): 연도를 모르면 같은 제목·포함 제목 가운데 가장 먼저 나온 것 */
   const q = new URLSearchParams({ collection: 'kmdb_new2', detail: 'Y', ServiceKey: key, title, listCount: '30' });
-  if (year) { q.set('createDts', String(+year - 1)); q.set('createDte', String(+year + 1)); }
+  /* 11-28: createDts·createDte로 좁히면 제작연도가 비었거나 다르게 적힌 작품(아이 엠 샘 등)이 빠진다 → 조건 없이 30개 받고 아래에서 연도로 고른다 */
   const j = await getJSON('http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?' + q) as { Data?: { Result?: Record<string, unknown>[] }[] } | null;
   const t = normT(title);
   const rows = (j?.Data?.[0]?.Result ?? []).map((m) => ({ m, n: normT(m.title), y: Number(m.prodYear) || 0, p: String(m.posters ?? '').split('|').map(https).find(Boolean) || '' }))
-    .filter((r) => r.p && !(year && r.y && Math.abs(r.y - Number(year)) > 1));
-  const pick = rows.filter((r) => r.n === t).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0]
-    ?? (t.length >= 2 ? rows.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => (a.y || 9999) - (b.y || 9999) || Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
-  return pick ? { url: pick.p, src: 'kmdb', title: clean(String(pick.m.title).replace(/!H[SE]/g, ''), 120) } : null;
+    .filter((r) => r.p);
+  const near = year ? rows.filter((r) => !(r.y && Math.abs(r.y - Number(year)) > 1)) : rows;
+  const pick = near.filter((r) => r.n === t).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0]
+    ?? (t.length >= 2 ? near.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => (a.y || 9999) - (b.y || 9999) || Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
+  // 연도가 맞는 것이 없으면 제목이 똑같은 것 가운데 연도가 가장 가까운 것
+  const pk = pick ?? (year ? rows.filter((r) => r.n === t).sort((a, b) => Math.abs((a.y || 0) - +year) - Math.abs((b.y || 0) - +year))[0] : undefined);
+  return pk ? { url: pk.p, src: 'kmdb', title: clean(String(pk.m.title).replace(/!H[SE]/g, ''), 120) } : null;
 }
 /* 영상자료원에 등록된 이름이 앱 제목과 다른 영화(루디 이야기 → 루디 등)는 다른 이름으로 한 번 더 찾는다 */
-const MOVIE_AKA: Record<string, string[]> = { '알파위대한여정': ['알파'], '루디이야기': ['루디'],
+/* 영상자료원에 없는 영화(넷플릭스 영화 등)는 같은 이야기의 원작 책 표지를 쓴다 */
+const MOVIE_BOOK: Record<string, [string, string]> = { '바람을길들인풍차소년': ['바람을 길들인 풍차소년', '윌리엄 캄쾀바'] };
+const MOVIE_AKA: Record<string, string[]> = { '알파위대한여정': ['알파'], '루디이야기': ['루디'], '달려라루디': ['루디'],
   '바람을길들인풍차소년': ['바람을 길들인 풍차 소년', 'The Boy Who Harnessed the Wind'] };
 export async function movieArt(title: string, year: string): Promise<Art | null> {
   const r = (await tmdb(title, year)) ?? (await kmdb(title, year));
   if (r) return r;
   for (const t of MOVIE_AKA[normT(title)] ?? []) { const a = (await tmdb(t, year)) ?? (await kmdb(t, year)); if (a) return a; }
+  const bk = MOVIE_BOOK[normT(title)]; if (bk) return bookArt(bk[0], bk[1]);
   return null;
 }
 
