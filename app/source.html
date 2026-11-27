@@ -5273,7 +5273,7 @@ function pcBoxHTML(){
       <span class="pc-th">${pcHTML(x,{mark:true,seal:!x.openedAt})}</span><span class="pc-mt"><b>${x.from===S.id?'나에게 보낸 엽서':esc(x.fromNick)}</b><small>${pcDate(x.deliverAt||x.at)} 도착 · ${x.openedAt?'읽음':'<em>새 엽서</em>'}</small></span></button>`).join('')
     :'<p class="pc-none">아직 받은 엽서가 없어요.</p>';
   const rout=out.length?out.map(x=>`<div class="pc-row"><button type="button" class="pc-th" data-act="pcopen" data-id="${esc(x.id)}" aria-label="${esc(x.toNick)}님에게 보낸 엽서 보기">${pcHTML(x,{mark:true})}</button>
-      <span class="pc-mt"><b>${esc(x.toNick)}에게</b><small>${pcDate(x.at)} 보냄 · ${x.openedAt?'상대가 읽었어요':Date.now()<(x.deliverAt||0)?'배달 중 · '+pcWhen(x.deliverAt)+' 도착':'도착했어요 · 아직 안 읽었어요'}</small>${x.openedAt?'':`<button class="btn ghost small" data-act="pccancel" data-id="${esc(x.id)}">발신 취소</button>`}</span></div>`).join('')
+      <span class="pc-mt"><b>${esc(x.toNick)}에게</b><small>${pcDate(x.at)} 보냄 · ${x.openedAt?'상대가 읽었어요':Date.now()<(x.deliverAt||0)?'배달 중<br>'+pcWhen(x.deliverAt)+' 도착':'도착했어요 · 아직 안 읽었어요'}</small></span></div>`).join('')
     :'<p class="pc-none">아직 보낸 엽서가 없어요.</p>';
   const F=S.fr;const un=inn.filter(x=>!x.openedAt).length;if(F.pbox===undefined)F.pbox=un?'in':'';
   const ic=(act,v,on,svg,label,n)=>`<button type="button" class="pc-ic${on?' on':''}" data-act="${act}"${v?` data-v="${v}"`:''} aria-label="${label}"${v?` aria-pressed="${on}"`:''}><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg>${n?`<i>${n}</i>`:''}</button>`;
@@ -5291,7 +5291,7 @@ function pcComposeHTML(){
     <form data-form="pcsend" class="pc-form">
       <label for="pc-to">받는 사람<select id="pc-to" name="to">${T.map(([id,rel])=>`<option value="${esc(id)}"${id===sh.to?' selected':''}>${id===S.id?'나':esc(frName(id)||famName(id))} · ${rel}</option>`).join('')}</select></label>
       <label for="pc-day" class="pc-day"${self?'':' hidden'}>받을 날짜 <small class="hint">그날 아침 8시에 나에게 도착해요 · 보낸 뒤에는 취소할 수 없어요</small><input id="pc-day" name="day" type="date" min="${pcDay(1)}" max="${pcDay(365*5)}" value="${esc(sh.day)}"></label>
-      <p class="pc-eta" id="pc-eta"${self?' hidden':''}>보내면 24시간 뒤 ${pcWhen(Date.now()+86400000)}에 도착해요. 상대가 읽기 전에는 취소할 수 있어요.</p>
+      <p class="pc-eta" id="pc-eta"${self?' hidden':''}>보내면 24시간 뒤 ${pcWhen(Date.now()+86400000)}에 도착해요.</p>
       <label for="pc-in">응원 한마디 <small class="hint" id="pc-cnt">${(sh.text||'').length}/120</small><textarea id="pc-in" name="text" maxlength="120" rows="4" required placeholder="오늘도 한 페이지, 같이 읽자! 이번 달 책 다 읽으면 라운지에서 이야기 나눠.">${esc(sh.text||'')}</textarea></label>
       <button class="btn pc-go">우표 붙여 보내기</button></form></div>`}
 function pcViewHTML(){
@@ -5300,7 +5300,7 @@ function pcViewHTML(){
   const mine=p.from===S.id;
   return `<div class="panel pcp">${head}<div class="pc-big">${pcHTML(p,{mark:true})}</div>
     <p class="pc-info">${p.to===S.id&&mine?`${pcDate(p.at)}에 나에게 보낸 엽서가 ${pcDate(p.deliverAt||p.at)}에 도착했어요`:mine?`${esc(p.toNick)}님에게 ${pcDate(p.at)}에 보냈어요 · ${p.openedAt?pcDate(p.openedAt)+'에 읽었어요':Date.now()<(p.deliverAt||0)?pcWhen(p.deliverAt)+' 도착 예정':'도착했어요'}`:`${esc(p.fromNick)}님이 ${pcDate(p.at)}에 보낸 엽서가 ${pcDate(p.deliverAt||p.at)}에 도착했어요`}</p>
-    ${mine&&p.to!==S.id&&!p.openedAt?`<button class="btn ghost" data-act="pccancel" data-id="${esc(p.id)}">발신 취소</button>`:''}${!mine&&pcTargets().some(x=>x[0]===p.from&&x[0]!==S.id)?`<button class="btn" data-act="pcreply" data-id="${esc(p.from)}">답장 엽서 쓰기</button>`:''}</div>`}
+    ${!mine&&pcTargets().some(x=>x[0]===p.from&&x[0]!==S.id)?`<button class="btn" data-act="pcreply" data-id="${esc(p.from)}">답장 엽서 쓰기</button>`:''}</div>`}
 function pcDraw(){const sh=S.sheet;if(!sh||sh.type!=='post')return;const el=$('#pc-prev');if(!el)return;
   const ta=$('#pc-in'),to=$('#pc-to'),dy=$('#pc-day');if(ta)sh.text=ta.value;if(to)sh.to=to.value;if(dy&&dy.value)sh.day=dy.value;
   const self=sh.to===S.id;const lb=document.querySelector('.pc-day');if(lb)lb.hidden=!self;const et=$('#pc-eta');if(et)et.hidden=self;
