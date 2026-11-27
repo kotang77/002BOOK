@@ -1200,6 +1200,12 @@ details.ora>summary{cursor:pointer;font-size:16px}details.ora>summary span{font-
 .mbr .svs{width:30px;height:30px}
 .mbr .svs::before{font-size:28px;line-height:30px}
 .mbr .svn{font-size:12.5px;margin-left:4px;font-weight:600}
+/* 11-27 밤: 서가 평가 칸을 코스 완료 설문과 같은 모양으로 */
+html body .mbr{gap:14px;padding:12px 14px}html body .mbr .svq{background:none;border:0;padding:0}html body .mbr .svq b{display:block;font-family:var(--f-body);font-size:15px;font-weight:700}html body .mbr .svq small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+html body .mbr .svr{display:flex;align-items:center;flex-wrap:wrap;margin-top:4px}html body .mbr .svs{width:40px;height:40px}html body .mbr .svs::before{font-size:37px;line-height:40px}html body .mbr .svn{font-size:14px;margin-left:8px;font-weight:700}
+html body .mbr .svs.f::before{color:#D9A441}html body .mbr .svs.h::before{background:linear-gradient(90deg,#D9A441 50%,#D8CBB5 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* 11-27 밤: 휴대폰 서점 안 화면(독서·내 서재·비전보드·학습지도)은 아래 여백이 0이라 마지막 칸이 하단 메뉴에 가려 끝까지 내려가지 않았음 → 메뉴 높이+안전 영역만큼 여백 */
+@media (max-width:720px){html body .wrap.shopin:not(.frl) main{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}}
 .sdrate{font-weight:600}
 /* 서가의 책을 누르면 보이는 인상적인 문구 */
 .shqtop{margin-top:14px}
@@ -2694,6 +2700,12 @@ html .panel .ph.phx{align-items:center;gap:12px;padding-bottom:14px;margin-botto
    책 읽기 전 생각하기·논술 첨삭·구술 평가·구술 기록·논술 성적·논술 첨삭자료·학습지도. Figma 03 '07b v3'(121:1217), 컴포넌트 '제목/형광펜'(121:1268) */
 html body .hl{display:inline;color:var(--ink);text-shadow:none;padding:.04em .3em;margin:0 -.1em;border-radius:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34' preserveAspectRatio='none'%3E%3Cpath d='M5 6C60 3 150 5 214 3L217 10L213 18L218 27C150 31 70 30 3 32L6 24L2 15Z' fill='%23FFE34D' fill-opacity='.85'/%3E%3Cpath d='M10 11C80 8 150 9 208 8L209 25C150 27 80 26 9 28Z' fill='%23FFD21F' fill-opacity='.3'/%3E%3C/svg%3E") no-repeat 0 62%/100% 90%;-webkit-box-decoration-break:clone;box-decoration-break:clone;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html body .phd-t.hl{display:block;margin:0}
+/* 11-27 밤(3): 교육자료 본문 핵심 구절 = 같은 마커를 글자 아래 58% 띠로. Figma 03 '07b v4'(122:1264), 컴포넌트 '본문/형광펜'(122:1259) */
+html body mark.hk{color:inherit;font-weight:inherit;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34' preserveAspectRatio='none'%3E%3Cpath d='M5 6C60 3 150 5 214 3L217 10L213 18L218 27C150 31 70 30 3 32L6 24L2 15Z' fill='%23FFE34D' fill-opacity='.85'/%3E%3Cpath d='M10 11C80 8 150 9 208 8L209 25C150 27 80 26 9 28Z' fill='%23FFD21F' fill-opacity='.3'/%3E%3C/svg%3E") no-repeat 0 90%/100% 58%;padding:0 .12em;margin:0 -.04em;-webkit-box-decoration-break:clone;box-decoration-break:clone;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html body .lghero mark.hk{color:var(--ink)}
+/* 11-27 밤(4): 형광펜 3색(노랑·연두·하늘). 글자로 정해지는 무작위(다시 그려도 같은 색). data-c는 hkPaint가 붙임. Figma 03 v3·v4 */
+html body .hl[data-c=g],html body mark.hk[data-c=g]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34' preserveAspectRatio='none'%3E%3Cpath d='M5 6C60 3 150 5 214 3L217 10L213 18L218 27C150 31 70 30 3 32L6 24L2 15Z' fill='%23A6F07A' fill-opacity='.85'/%3E%3Cpath d='M10 11C80 8 150 9 208 8L209 25C150 27 80 26 9 28Z' fill='%237BDB4A' fill-opacity='.3'/%3E%3C/svg%3E")}
+html body .hl[data-c=b],html body mark.hk[data-c=b]{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 34' preserveAspectRatio='none'%3E%3Cpath d='M5 6C60 3 150 5 214 3L217 10L213 18L218 27C150 31 70 30 3 32L6 24L2 15Z' fill='%238FDBFF' fill-opacity='.85'/%3E%3Cpath d='M10 11C80 8 150 9 208 8L209 25C150 27 80 26 9 28Z' fill='%235CC6F5' fill-opacity='.3'/%3E%3C/svg%3E")}
 .edu.pre>.sec{margin-top:16px}.edu.pre>.mhead{margin-bottom:4px}.edu.pre>.hint{margin-top:16px}
 /* 11-27 밤: 웹(PC) 홈 — 비전보드 띠와 '지금 할 일' 대시보드 높이를 줄여 첫 화면에 진열장 1열 책이 모두 보이게(창 1536×704 기준). 휴대폰은 그대로. Figma 17 진열장 'PC 홈 컴팩트' */
 @media (min-width:821px){
@@ -2754,6 +2766,17 @@ const GENRES=['자기계발','고전','소설','에세이','시','철학','역�
 const DEFAULT=[{"g":"중1","m":"3월","season":"새 학기 시작","genre":"자기계발","book":"누가 내 치즈를 옮겼을까?","m1":"업 (Up)","m2":"월터의 상상은 현실이 된다","topic":"비전: 변화 앞에서 꿈을 그리고 한 걸음 내딛는 용기","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"피트 닥터","year":2009,"runtime":96,"rating":"전체","ott":["디즈니플러스","웨이브"],"intro":"풍선 수천 개로 집을 띄운 할아버지와 꼬마 러셀이 남미로 떠나는 모험과 우정을 그린 애니메이션입니다."},"bookInfo":{"author":"스펜서 존슨","publisher":"진명출판사","pubdate":"2015-05-08","intro":"미로 속 생쥐와 꼬마인간이 사라진 치즈 앞에서 변화에 대처하는 지혜를 보여 주는 이야기예요."}},{"g":"중1","m":"4월","season":"중간고사 시기","genre":"동행","book":"순례주택","m1":"인생은 아름다워","m2":"패밀리 맨","topic":"가족: 함께 사는 집과 가족의 의미, 서로를 지키는 마음","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"로베르토 베니니","year":1999,"runtime":116,"rating":"전체","intro":"수용소에서 아들이 아픔을 느끼지 않도록 게임이라 속이는 아버지의 유머와 사랑을 그린 영화입니다."},"m2Info":{"director":"브렛 래트너","year":2000,"runtime":125,"rating":"15세","ott":["넷플릭스","웨이브","왓챠","티빙"],"intro":"성공한 사업가 잭이 평범한 가장이 된 또 다른 삶을 겪으며 진짜 행복이 무엇인지 깨닫는 이야기입니다."}},{"g":"중1","m":"5월","season":"","genre":"동행","book":"에너지 버스 (존 고든)","m1":"세 얼간이","m2":"써니","topic":"우정: 함께 성장하는 우정과 서로에게 좋은 에너지가 되는 법","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"라지쿠마르 히라니","year":2009,"runtime":170,"rating":"12세","intro":"공대 기숙사의 세 친구가 성적 경쟁 대신 진짜 배움과 꿈의 의미를 찾아가는 인도 영화입니다."},"bookInfo":{"author":"존 고든","publisher":"쌤앤파커스","price":12000,"pubdate":"2019-12-12","intro":"인생이라는 버스의 운전대를 잡고 긍정 에너지로 팀과 삶을 이끄는 10가지 법칙을 배우는 우화예요."}},{"g":"중1","m":"6월","season":"기말고사 시기","genre":"인문Ⅰ","book":"꽃을 보듯 너를 본다 (나태주)","m1":"비긴 어게인","m2":"물랑루즈","topic":"시: 짧은 말에 담긴 마음과 시선의 아름다움","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"존 카니","year":2014,"runtime":104,"rating":"15세","ott":["넷플릭스","왓챠","티빙","웨이브"],"intro":"뉴욕에서 만난 싱어송라이터와 전직 프로듀서가 거리에서 음반을 만들며 다시 시작하는 이야기입니다."},"bookInfo":{"author":"나태주","publisher":"지혜","intro":"풀꽃 시인 나태주가 일상의 사랑과 위로를 쉬운 말로 풀어낸 짧은 시들을 모은 시집이에요."}},{"g":"중1","m":"7월","season":"여름방학 시작","genre":"예술","book":"방구석 미술관","m1":"러빙 빈센트","m2":"미드나잇 인 파리","topic":"미술: 화가의 삶과 작품 속에 담긴 이야기","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"도로타 코비엘라, 휴 웰치먼","year":2017,"runtime":95,"rating":"15세","ott":["왓챠","웨이브"],"intro":"화가 반 고흐의 그림 수만 장을 직접 손으로 그려 만든 애니메이션으로, 그의 죽음의 진실을 추적합니다."},"m2Info":{"director":"우디 앨런","year":2011,"runtime":94,"rating":"15세","ott":["넷플릭스","웨이브","왓챠","티빙"],"intro":"파리에 간 작가 지망생이 밤마다 1920년대로 시간 여행을 하며 예술가들을 만나는 로맨틱 판타지입니다."}},{"g":"중1","m":"8월","season":"여름방학","genre":"인문Ⅱ","book":"사랑하라 한번도 사랑하지 않은 것처럼","m1":"러브레터","m2":"이프 온리","topic":"시: 사랑과 그리움을 말로 옮기는 법","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"이와이 슌지","year":1995,"runtime":117,"intro":"세상을 떠난 연인에게 보낸 편지에 같은 이름의 여자가 답장을 보내며, 잊고 있던 첫사랑의 기억이 되살아나는 일본 영화입니다."}},{"g":"중1","m":"9월","season":"2학기 시작","genre":"인문Ⅱ","book":"종이여자","m1":"나미야 잡화점의 기적","m2":"빅피쉬","topic":"소설: 이야기가 현실이 되는 상상과 작가의 세계","level":2,"memo":"","parent":false,"todo":false},{"g":"중1","m":"10월","season":"중간고사 시기","genre":"경영","book":"만약 고교 여자 매니저가 피터 드러커를 읽는다면","m1":"머니볼","m2":"리바운드","topic":"관리: 팀을 이끄는 리더십과 목표 관리","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"베넷 밀러","year":2011,"runtime":133,"rating":"12세","ott":["왓챠","웨이브"],"intro":"만년 약체 야구팀 단장이 데이터 분석으로 선수를 뽑아 상식을 뒤집는 실화입니다."}},{"g":"중1","m":"11월","season":"","genre":"나","book":"사막을 건너는 여섯 가지 방법","m1":"모아나","m2":"국가대표","topic":"목표: 나의 길을 찾아 나서는 용기와 방법","level":2,"memo":"","parent":false,"todo":false,"m2Info":{"director":"김용화","year":2009,"runtime":137,"rating":"12세","intro":"1996년 무주, 동계올림픽 유치를 위해 급히 만든 스키점프 국가대표팀이 열악한 환경과 편견을 넘어 하늘을 나는 꿈에 도전하는 한국 영화입니다."},"bookInfo":{"author":"스티브 도나휴","publisher":"김영사","price":12000,"pubdate":"2011-12-12","intro":"사막 같은 인생의 위기를 건너는 여섯 가지 방법을 짧은 우화로 보여 주는 책이에요."}},{"g":"중1","m":"12월","season":"기말·겨울방학 시작","genre":"고전","book":"노인과 바다 (헤밍웨이)","m1":"시네마 천국","m2":"인턴","topic":"인생: 끝까지 포기하지 않는 삶의 자세와 세대 간의 지혜","level":2,"memo":"","parent":false,"todo":false,"bookInfo":{"author":"어니스트 헤밍웨이","publisher":"민음사","price":8000,"pubdate":"2012-01-02","intro":"늙은 어부 산티아고가 거대한 청새치와 사흘간 맞서 싸우며 인간의 존엄과 불굴의 의지를 보여 줍니다."}},{"g":"중1","m":"1월","season":"겨울방학","genre":"사회","book":"동물농장 (조지 오웰)","m1":"국제시장","m2":"프리 가이","topic":"사회: 사회의 구조와 권력, 평범한 사람들의 삶","level":2,"memo":"","parent":false,"todo":false,"m1Info":{"director":"윤제균","year":2014,"runtime":126,"rating":"12세","ott":["넷플릭스","왓챠","티빙","웨이브"],"intro":"흥남 철수부터 파독 광부, 베트남전까지 격동의 한국 현대사를 살아낸 덕수 아버지의 삶을 그린 영화입니다."},"m2Info":{"director":"숀 레비","year":2021,"runtime":115,"rating":"12세","ott":["디즈니플러스"],"intro":"게임 속 배경 캐릭터 가이가 자신이 프로그램임을 깨닫고 스스로 선택하는 영웅이 되어 가는 모험 코미디입니다."},"bookInfo":{"author":"조지 오웰","publisher":"민음사","intro":"농장 동물들이 인간을 몰아내고 평등을 외치지만 결국 새로운 독재가 생기는 과정을 그린 풍자 소설입니다."}},{"g":"중1","m":"2월","season":"학년 마무리","genre":"자기계발","book":"아주 작은 습관의 힘","m1":"쇼생크 탈출","m2":"당갈","topic":"변화: 작은 습관과 끈기가 나를 바꾸는 힘","level":2,"memo":"","parent":false,"todo":false},{"g":"중2","m":"3월","season":"새 학기 시작","genre":"예술","book":"빛이 이끄는 곳으로","m1":"건축학개론","m2":"콜럼버스","topic":"건축: 공간이 사람과 기억에 남기는 이야기","level":3,"memo":"","parent":false,"todo":false},{"g":"중2","m":"4월","season":"중간고사 시기","genre":"철학","book":"진짜 어른이 되기 위한 청소년 논어 (판덩)","m1":"라이프 오브 파이","m2":"나의 문어선생님","topic":"철학: 배움과 수양, 삶의 지혜","level":3,"memo":"","parent":false,"todo":false,"bookInfo":{"author":"판덩","publisher":"미디어숲","pubdate":"2024-04-20","intro":"공자와 제자들의 대화를 청소년의 눈높이로 풀어, 배움과 친구 관계, 인격을 어떻게 가꿀지 알려 주는 논어 입문서예요."}},{"g":"중2","m":"5월","season":"","genre":"인문Ⅱ","book":"여행의 이유(김영하)","m1":"비포 선 라이즈","m2":"먹고 기도하고 사랑하라","topic":"여행: 여행이 나를 바꾸는 이유","level":3,"memo":"","parent":false,"todo":false},{"g":"중2","m":"6월","season":"기말고사 시기","genre":"과학","book":"천문학자는 별을 보지 않는다 (심채경)","m1":"마션","m2":"인터스텔라","topic":"공간: 우주라는 큰 무대와 그 속의 인간","level":3,"memo":"","parent":false,"todo":false,"m1Info":{"director":"리들리 스콧","year":2015,"runtime":141,"rating":"12세","ott":["디즈니플러스","웨이브"],"intro":"화성에 홀로 남겨진 우주 비행사가 과학 지식으로 살아남아 지구로 돌아가려는 생존기."},"m2Info":{"director":"크리스토퍼 놀란","year":2014,"runtime":169,"rating":"12세","ott":["넷플릭스","웨이브"],"intro":"인류가 살 새로운 행성을 찾아 웜홀을 통과하는 우주 비행사와 딸의 시공간을 넘은 사랑 이야기."}},{"g":"중2","m":"7월","season":"여름방학 시작","genre":"경영","book":"장사의 신","m1":"논나","m2":"파운더","topic":"사업: 작게 시작해 가치를 만드는 일","level":3,"memo":"","parent":false,"todo":false,"m2Info":{"director":"존 리 핸콕","year":2017,"runtime":115,"rating":"15세","ott":["웨이브","왓챠","티빙"],"intro":"작은 햄버거 가게를 세계적 맥도날드로 키운 레이 크록의 성공과 야망, 윤리 문제를 다룬 영화입니다."}},{"g":"중2","m":"8월","season":"여름방학","genre":"나","book":"그릿","m1":"바람을 길들인 풍차소년","m2":"루디 이야기","topic":"태도: 끈기와 열정으로 한계를 넘는 힘","level":3,"memo":"","parent":false,"todo":false,"m2Info":{"director":"데이비드 앤스파","year":1993,"runtime":114}},{"g":"중2","m":"9월","season":"2학기 시작","genre":"역사","book":"사피엔스 그래픽 히스토리 1: 인류의 탄생 (유발 하라리)","m1":"알파:위대한 여정","m2":"엑소더스","topic":"역사: 인류의 역사와 서양 문명의 흐름","level":3,"memo":"","parent":false,"todo":false},{"g":"중2","m":"10월","season":"중간고사 시기","genre":"동행","book":"화성에서 온 남자, 금성에서 온 여자","m1":"라라랜드","m2":"쉬","topic":"사랑: 서로 다른 시선을 이해하고 존중하는 관계 맺기","level":3,"memo":"","parent":false,"todo":false,"m1Info":{"director":"데이미언 셔젤","year":2016,"runtime":129,"rating":"12세","ott":["웨이브","왓챠"],"intro":"재즈 피아니스트와 배우 지망생이 사랑과 꿈 사이에서 선택을 하는 음악 영화입니다."}},{"g":"중2","m":"11월","season":"","genre":"인문Ⅰ","book":"직업으로서의 소설가","m1":"킹스 스피치","m2":"노트북","topic":"글쓰기: 자신의 일과 삶을 대하는 태도와 글쓰기","level":3,"memo":"","parent":false,"todo":false,"m1Info":{"director":"톰 후퍼","year":2011,"runtime":118,"rating":"12세","ott":["웨이브","왓챠","티빙"],"intro":"말더듬이 왕 조지 6세가 언어치료사와 함께 두려움을 이겨내고 국민 앞에 서는 과정을 그립니다."}},{"g":"중2","m":"12월","season":"기말·겨울방학 시작","genre":"경영","book":"돈의 속성 (김승호)","m1":"행복을 찾아서","m2":"밀리언즈","topic":"자유: 돈을 다루는 태도와 경제적 자유의 의미","level":3,"memo":"","parent":false,"todo":false,"m1Info":{"director":"가브리엘레 무치노","year":2006,"runtime":117,"rating":"전체","ott":["왓챠","웨이브"],"intro":"집도 돈도 잃은 크리스가 어린 아들과 함께 노숙하며 주식 중개인의 꿈을 이루려 분투하는 실화 영화입니다."},"bookInfo":{"author":"김승호","publisher":"스노우폭스북스","pubdate":"2020-06-15","intro":"돈을 사람처럼 대하는 태도와 부자가 되기 위한 마음가짐, 습관을 쉽게 풀어 쓴 책입니다."}},{"g":"중2","m":"1월","season":"겨울방학","genre":"나","book":"미움받을 용기 (기시미 이치로)","m1":"포레스트 검프","m2":"원더","topic":"용기: 나를 있는 그대로 받아들이고 용기 내기","level":3,"memo":"","parent":false,"todo":false,"m1Info":{"director":"로버트 저메키스","year":1994,"runtime":142,"rating":"12세","ott":["왓챠","웨이브"],"intro":"순수한 마음의 청년 포레스트가 미국 현대사의 굵직한 순간들을 겪으며 살아가는 이야기입니다."},"m2Info":{"director":"스티븐 크보스키","year":2017,"runtime":113,"rating":"전체","ott":["넷플릭스","왓챠","티빙","웨이브"],"intro":"남들과 다른 얼굴로 태어난 소년 어기가 처음 학교에 가 친구를 사귀며 성장하는 따뜻한 이야기입니다."},"bookInfo":{"author":"기시미 이치로, 고가 후미타케","intro":"아들러 심리학을 바탕으로 철학자와 청년의 대화로 자유롭고 행복하게 사는 법을 풀어내요."}},{"g":"중2","m":"2월","season":"학년 마무리","genre":"고전","book":"변신 (프란츠 카프카)","m1":"위대한 캐츠비","m2":"작은 아씨들","topic":"정체성: 낯선 존재가 된 나를 가족과 사회는 어떻게 대하는가","level":3,"memo":"","parent":false,"todo":false},{"g":"중3","m":"3월","season":"새 학기 시작","genre":"인문Ⅰ","book":"공중그네","m1":"인 더 풀","m2":"패치 아담스","topic":"소설: 유쾌한 이야기 속에서 마음의 병을 치유하는 힘","level":4,"memo":"","parent":false,"todo":false},{"g":"중3","m":"4월","season":"중간고사 시기","genre":"예술","book":"금난새와 떠나는 클래식 여행","m1":"아마데우스","m2":"위대한 쇼맨","topic":"음악: 음악가의 열정과 음악이 주는 감동","level":4,"memo":"","parent":false,"todo":false,"m1Info":{"director":"밀로시 포르만","year":1984,"runtime":160,"rating":"12세","intro":"천재 모차르트를 질투한 궁정 음악가 살리에리의 시선으로 재능과 열등감을 그립니다."},"m2Info":{"director":"마이클 그레이시","year":2017,"runtime":105,"rating":"12세","ott":["디즈니플러스","웨이브"],"intro":"가난한 청년 바넘이 독특한 사람들과 서커스 쇼를 만들며 꿈을 이루는 뮤지컬 영화입니다."}},{"g":"중3","m":"5월","season":"","genre":"철학","book":"세 종교 이야기","m1":"다빈치 코드","m2":"킹덤 오브 헤븐","topic":"종교: 서로 다른 믿음을 이해하고 존중하기","level":4,"memo":"","parent":false,"todo":false},{"g":"중3","m":"6월","season":"기말고사 시기","genre":"자기계발","book":"부의 확신","m1":"조이","m2":"히든 피겨스","topic":"습관: 믿음과 태도가 현실을 만드는 과정","level":4,"memo":"","parent":false,"todo":false},{"g":"중3","m":"7월","season":"여름방학 시작","genre":"사회","book":"설득의 심리학 (로버트 치알디니)","m1":"캐치 미 이프 유 캔","m2":"아이 앰 샘","topic":"심리: 사람은 어떻게 설득되고, 어떻게 판단하는가","level":4,"memo":"","parent":false,"todo":false,"bookInfo":{"author":"로버트 치알디니","intro":"사람들이 왜 설득당하는지 여섯 가지 심리 원리로 설명하고 현명하게 대처하는 법을 알려 줘요."}},{"g":"중3","m":"8월","season":"여름방학","genre":"사회","book":"청소년을 위한 월든 (헨리 데이비드 소로)","m1":"카모메 식당","m2":"리틀 포레스트","topic":"자연: 자연 속에서 단순하고 깊이 있게 사는 삶","level":4,"memo":"","parent":false,"todo":false,"m1Info":{"director":"오기가미 나오코","year":2006,"runtime":102,"rating":"전체","ott":["넷플릭스","웨이브","왓챠","티빙"],"intro":"핀란드 헬싱키의 작은 일식당에서 만난 사람들이 서로 위로하며 천천히 삶의 여유를 찾아가는 영화입니다."},"m2Info":{"director":"임순례","year":2018,"runtime":103,"rating":"전체","ott":["넷플릭스","웨이브"],"intro":"도시에서 지친 혜원이 고향 시골로 돌아와 직접 키운 음식을 해 먹으며 마음을 회복해 가는 이야기입니다."}},{"g":"중3","m":"9월","season":"2학기 시작","genre":"철학","book":"소피의 세계","m1":"죽은 시인의 사회","m2":"트루먼 쇼","topic":"철학: 나는 누구이며 세계는 무엇인가를 묻기","level":4,"memo":"","parent":false,"todo":false,"m1Info":{"director":"피터 위어","year":1989,"runtime":129,"rating":"12세","ott":["디즈니플러스"],"intro":"엄격한 명문 학교에 온 영어 교사가 학생들에게 스스로 삶을 선택하라고 가르칩니다."},"m2Info":{"director":"피터 위어","year":1998,"runtime":103,"rating":"12세","ott":["웨이브"],"intro":"자신의 삶이 전부 TV 쇼라는 사실을 알게 된 남자가 진짜 세상으로 나가려 합니다."}},{"g":"중3","m":"10월","season":"중간고사 시기","genre":"고전","book":"달과 6펜스 (서머싯 몸)","m1":"수상한 그녀","m2":"어바웃 타임","topic":"현재: 지금 이 순간을 어떻게 살 것인가","level":4,"memo":"","parent":false,"todo":false,"bookInfo":{"author":"서머싯 몸","intro":"안정된 삶을 버리고 오직 그림에 인생을 건 화가를 통해 예술과 삶의 의미를 묻는 소설이에요."}},{"g":"중3","m":"11월","season":"","genre":"고전","book":"이반 일리치의 죽음","m1":"버킷 리스트","m2":"신과 함께","topic":"죽음: 끝을 생각하며 지금의 삶을 돌아보기","level":4,"memo":"","parent":false,"todo":false},{"g":"중3","m":"12월","season":"기말·겨울방학 시작","genre":"고전","book":"아큐정전 (루쉰)","m1":"블라인드 사이드","m2":"국가부도의 날","topic":"성찰: 스스로를 속이는 정신 승리에서 깨어나 나를 바로 보기","level":4,"memo":"","parent":false,"todo":false},{"g":"중3","m":"1월","season":"겨울방학","genre":"과학","book":"도킨스의 이기적 유전자 (이정우)","m1":"아일랜드","m2":"터미네이터","topic":"생명: 생명과 유전자, 기술 앞에서 인간이란 무엇인가","level":4,"memo":"","parent":false,"todo":false,"m2Info":{"director":"제임스 카메론","year":1984,"runtime":107}},{"g":"중3","m":"2월","season":"학년 마무리","genre":"과학","book":"당신 인생의 이야기(테드 창)","m1":"백 투 더 퓨처","m2":"시간을 달리는 소녀","topic":"시간: 시간이란 무엇이며 우리는 어떻게 경험하는가","level":4,"memo":"","parent":false,"todo":false}];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* 11-27 밤(3): 교육자료 본문 핵심 구절 형광펜. 새 자료는 AI가 ==구절==로 표시(HK_RULE), 예전 자료는 따옴표로 강조한 개념(한 글에 2개까지) */
+const HK_RULE='\n\n핵심 표시: 설명하는 문장 항목(주제 풀이·이유·요약·안내 문장)마다 가장 중요한 핵심 구절 하나만 ==핵심 구절== 처럼 등호 두 개로 감싼다. 문장 전체가 아니라 3~12어절만 감싼다. 질문, 낱말, 제목, 모범 답안, 아이에게 할 말(대사)에는 표시하지 않는다. JSON 형식은 그대로 지킨다.';
+const hkStrip=x=>String(x==null?'':x).replace(/==([^=\n]{1,80})==/g,'$1');
+function hk(x){const s=String(x==null?'':x);const mk=t=>`<mark class="hk">${t}</mark>`;let o='',p=0,m;
+  if(/==[^=\n]{1,80}==/.test(s)){const re=/==([^=\n]{1,80})==/g;while((m=re.exec(s))){o+=esc(s.slice(p,m.index))+mk(esc(m[1]));p=re.lastIndex}return o+esc(s.slice(p))}
+  const re=/(['‘"“])([^'‘’"“”\n]{2,30})(['’"”])/g;let n=0;
+  while(n<2&&(m=re.exec(s))){const a=m[1],b=m[3];if(!(((a==="'"||a==='‘')&&(b==="'"||b==='’'))||((a==='"'||a==='“')&&(b==='"'||b==='”'))))continue;o+=esc(s.slice(p,m.index))+mk(esc(m[0]));p=re.lastIndex;n++}
+  return o+esc(s.slice(p))}
+const HKC=['y','g','b'];const hkHash=t=>{let h=0;for(const c of String(t))h=(h*31+c.charCodeAt(0))|0;return Math.abs(h)%3};
+function hkPaint(){document.querySelectorAll('.hl:not([data-c]),mark.hk:not([data-c])').forEach(e=>{e.dataset.c=HKC[hkHash(e.textContent)]})}
+try{new MutationObserver(hkPaint).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
 const clone=o=>JSON.parse(JSON.stringify(o));
 function hid(s){let h=5381;for(const ch of String(s)){h=(((h<<5)+h)+ch.charCodeAt(0))>>>0}return h.toString(36)}
 let tt=null;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>{t.hidden=true},3200)}
@@ -4437,9 +4460,11 @@ const rateOK=v=>!!(v&&MBQ.every(([q])=>Number(v[q])>0));
 function rateStars(sc,id,q,v){let h='';for(let n=1;n<=5;n++){const st=v>=n?'f':v>=n-.5?'h':'e';
   h+=`<span class="svs ${st}"><button type="button" class="l" data-act="mbrate" data-sc="${sc}" data-id="${esc(id)}" data-q="${q}" data-v="${n-.5}" aria-label="${n-.5}점"></button><button type="button" class="r" data-act="mbrate" data-sc="${sc}" data-id="${esc(id)}" data-q="${q}" data-v="${n}" aria-label="${n}점"></button></span>`}return h}
 /* sc: form(직접 추가) · rv(사진으로 추가) · rec(추천 책 '읽음') · shelf(서가의 책 평가 고치기) */
+/* 11-27 밤: 서가 평가 = 코스 완료 설문과 같은 형식(질문 문구·'쉬웠나요?'로 묻는 난이도·n.n점). 저장은 그대로(diff = 어려운 정도). Figma 09 v2(124:6) */
+const MBX={fun:['재미있었나요?',''],diff:['읽기 쉬웠나요?','별이 많을수록 쉬웠다는 뜻이에요'],again:['나중에 다시 읽고 싶나요?','']};
 function rateBox(sc,id,v){
-  return `<div class="mbr${rateOK(v)?'':' need'}" data-rbox="${sc}:${esc(id)}">${MBQ.map(([q,t,ask])=>{const x=Number(v&&v[q])||0;
-    return `<div class="mbq"><span class="mbt" title="${esc(ask)}">${t}</span><span class="svr" role="group" aria-label="${t} 별점: ${esc(ask)}">${rateStars(sc,id,q,x)}</span><small class="svn">${x?x.toFixed(1):'별을 눌러요'}</small></div>`}).join('')}</div>`}
+  return `<div class="mbr${rateOK(v)?'':' need'}" data-rbox="${sc}:${esc(id)}">${MBQ.map(([q,t])=>{const raw=Number(v&&v[q])||0;const x=q==='diff'&&raw?5.5-raw:raw;const [a,s2]=MBX[q];
+    return `<div class="svq"><b>${a}</b>${s2?`<small>${s2}</small>`:''}<div class="svr" role="group" aria-label="${t} 별점">${rateStars(sc,id,q,x)}<span class="svn">${x?x.toFixed(1)+'점':''}</span></div></div>`}).join('')}</div>`}
 function rateObj(sc,id){
   if(sc==='form')return S.mbRate=S.mbRate||{};
   if(sc==='rv'){const it=S.bkRev&&S.bkRev.items.find(x=>x.id===id);return it?(it.rate=it.rate||{}):null}
@@ -6022,7 +6047,7 @@ function evalHTML(){
   const v=S.evalView;const ev=v.r===2?S.evals2[v.key]:S.evals[v.key];
   if(!ev)return `<div class="panel"><div class="ph"><h2>첨삭</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div><p>첨삭을 찾지 못했어요.</p></div>`;
   const sc=ev.scores||{};const r2=ev.round===2;
-  const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p class="hint">없음</p>';
+  const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${hk(x)}</li>`).join('')}</ul>`:'<p class="hint">없음</p>';
   const cnt=a=>Array.isArray(a)&&a.length?`<span class="n">${a.length}</span>`:'';
   const pr=a=>Array.isArray(a)&&a.length?a.map(x=>`<div class="rv"><span><s>${esc(x.orig)}</s> → <b>${esc(x.fix)}</b></span><span class="hint">${esc(x.why)}</span></div>`).join(''):'<p class="hint">지적할 곳이 없어요.</p>';
   const gc=g=>g==='잘함'?'ok':g==='고침'?'rev':'md';
@@ -6035,16 +6060,16 @@ function evalHTML(){
   <div class="ev-sum"><div class="ev-s1">
       ${ev.rb?`<p class="ev-lv"><b>${rbReach(sc)}</b>/${Object.keys(sc).length}개 영역이 학년 기대 수준(도달)에 닿았어요${ev.process?` · 쓰기 과정: 계획 ${esc(ev.process.plan)}`:''}</p>`:''}<p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
       ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
-    <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${esc(ev.progress)}</p>`:''}${PX.html(ev)}${ev.teacher?`<blockquote class="ev-t">${esc(ev.teacher)}</blockquote>`:''}</div></div>
+    <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${hk(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${hk(ev.progress)}</p>`:''}${PX.html(ev)}${ev.teacher?`<blockquote class="ev-t">${hk(ev.teacher)}</blockquote>`:''}</div></div>
   <div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
     ${!r2&&rwLeft(ev)?`<small class="hint">${esc(rwHint(ev))}</small>`:''}${S.downloads?'':'<small class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</small>'}</div>
   ${D('원고지 첨삭',`<p class="evq">${qShowHTML(ev)}</p>${ev.writeSec||ev.asked!=null?`<p class="hint">${ev.asked!=null?'쓰기 전 질문 '+ev.asked+'개 · 계획 작성 · ':''}쓴 시간 ${ev.writeSec?fmtSw(ev.writeSec):'기록 없음'}</p>`:''}<p class="hint">파란색은 고친 곳, 초록색은 선생님 메모예요. 손가락으로 크게 볼 수 있어요.</p>${mnSheets(ev).map(h=>`<div class="mnw">${h}</div>`).join('')}`,'',innerWidth>=720)}
-  ${D('점수 이유',`${ev.comment?`<p>${esc(ev.comment)}</p>`:''}${why||'<p class="hint">항목별 이유가 없어요.</p>'}`)}
+  ${D('점수 이유',`${ev.comment?`<p>${hk(ev.comment)}</p>`:''}${why||'<p class="hint">항목별 이유가 없어요.</p>'}`)}
   ${D('맞춤법',pr(ev.spelling),cnt(ev.spelling))}
   ${D('문장 고치기',sr(ev.sentences),cnt(ev.sentences))}
-  ${D('문단 고치기',`<p>${esc(ev.paragraphs)}</p>${prv(ev.paraReview)}${rewriteAll(ev)?`<details><summary>다시 쓴 글 전체 보기</summary><p style="white-space:pre-wrap">${esc(rewriteAll(ev))}</p></details>`:''}`)}
+  ${D('문단 고치기',`<p>${hk(ev.paragraphs)}</p>${prv(ev.paraReview)}${rewriteAll(ev)?`<details><summary>다시 쓴 글 전체 보기</summary><p style="white-space:pre-wrap">${esc(rewriteAll(ev))}</p></details>`:''}`)}
   ${D('잘한 점 · 고칠 점',`<div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev.strengths)}</div><div><h4>고칠 점</h4>${ul(ev.improvements)}</div></div>`)}
-  ${ev.cumulative?D('나의 반복 실수 (최근 5회)',`<p>${esc(ev.cumulative)}</p>`):''}
+  ${ev.cumulative?D('나의 반복 실수 (최근 5회)',`<p>${hk(ev.cumulative)}</p>`):''}
   ${(ev.models||[]).length?D('모범 답안',(ev.models||[]).map((m,n)=>`<details ${n===0?'open':''}><summary>${esc(m.title||'모범 답안 '+(n+1))}</summary><p style="white-space:pre-wrap">${esc(m.text)}</p></details>`).join(''),cnt(ev.models)):''}
   ${Number.isInteger(v.i)&&items()[v.i]?D('작품 깊이 읽기',eduHTML(v.i)):''}
   ${ev.unreadable&&ev.unreadable.length?`<p class="hint">판독이 불확실한 곳: ${esc(ev.unreadable.join(', '))}</p>`:''}
@@ -6711,13 +6736,13 @@ function oralEvalHTML(){
       ${a.model?`<details><summary>모범 답안</summary><p style="white-space:pre-wrap">${esc(a.model)}</p></details>`:''}
       ${a.followUp?`<p class="orfu"><b>면접관 꼬리 질문</b> ${esc(a.followUp)}</p>`:''}</details>`;
     return `<div class="panel ev pk">${top(`1차 구술 평가<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」</small>`)}
-    <div class="orhero">${ev.rb?`<p class="ev-lv"><b>${rbReach(ev.scores)}</b>/${Object.keys(ev.scores||{}).length}개 영역이 학년 기대 수준(도달)에 닿았어요</p>`:''}<p class="tot">${esc(ev.total)}<small>점</small></p><p>${esc(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev.praise)}</p></div>`:''}</div>
+    <div class="orhero">${ev.rb?`<p class="ev-lv"><b>${rbReach(ev.scores)}</b>/${Object.keys(ev.scores||{}).length}개 영역이 학년 기대 수준(도달)에 닿았어요</p>`:''}<p class="tot">${esc(ev.total)}<small>점</small></p><p>${hk(ev.comment)}</p>${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${hk(ev.praise)}</p></div>`:''}</div>
     ${uid===S.id&&!ev2?`<div class="ornext"><b>이제 2차 도전!</b><p>모범 답안을 따라 읽고, ${orThinkL()} 생각한 뒤 다시 대답해요.</p><button class="btn orbig" data-act="close2">2차 도전 시작하기</button></div>`:''}
     <div class="sec"><h3>항목 점수</h3>${orScoreRows(ev)}</div>
     ${(ev.answers||[]).map(ans).join('')}
     <div class="sec"><div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev.strengths)}</div><div><h4>고칠 점</h4>${ul(ev.improvements)}</div></div></div>
-    ${ev.cumulative?`<details class="sec orx"><summary>누적 분석 (최근 5회)</summary><p>${esc(ev.cumulative)}</p></details>`:''}
-    ${ev.teacher?`<details class="sec orx"><summary>선생님 한마디</summary><p>${esc(ev.teacher)}</p></details>`:''}
+    ${ev.cumulative?`<details class="sec orx"><summary>누적 분석 (최근 5회)</summary><p>${hk(ev.cumulative)}</p></details>`:''}
+    ${ev.teacher?`<details class="sec orx"><summary>선생님 한마디</summary><p>${hk(ev.teacher)}</p></details>`:''}
     <p class="ev-ai">이 평가는 생성형 AI(Anthropic Claude)가 작성했어요. 사실과 다를 수 있어요.</p></div>`;
   }
   const d=ev2.total-ev.total;const gw=ev2.growthWhy||{};
@@ -6731,13 +6756,13 @@ function oralEvalHTML(){
   return `<div class="panel ev pk">${top(`구술 테스트 최종 리포트<small>${esc(ev.g)} ${esc(ev.m)} · 「${esc(ev.title)}」 · 1·2차 종합</small>`)}
   <div class="sec"><div class="orsum big"><div><small>1차 총점</small><b>${esc(ev.total)}</b></div><div><small>2차 총점</small><b>${esc(ev2.total)}</b><em class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'} ${Math.abs(d)}</em></div><div class="g"><small>나아진 영역</small><b>${ev2.up??orUp(ev.scores,ev2.scores)}<small>/${Object.keys(ev2.scores||{}).length}</small></b></div></div>
     ${S.orSend&&S.orSend.key===v.key&&/중이에요|못했어요|여러 번/.test(S.orSend.msg)?`<p class="hint" role="status">${esc(S.orSend.msg)}</p>`:ev2.sentAt?`<p class="hint">✓ ${esc((ev2.sentTo||[]).join(', '))}님께 보냈어요 · 최종 리포트 · ${new Date(ev2.sentAt).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}</p>`:''}
-    <div class="praise"><b>성장 총평</b><p>${esc(ev2.growthComment||'')}</p></div>
+    <div class="praise"><b>성장 총평</b><p>${hk(ev2.growthComment||'')}</p></div>
     ${(gw.plus||[]).length||(gw.minus||[]).length?`<div class="swy">${(gw.plus||[]).map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${(gw.minus||[]).map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}</div>
-  <div class="sec"><h3>항목 점수 <small class="hint">연한 막대 1차 · 진한 막대 2차</small></h3>${orScoreRows(ev2,ev.scores)}<p>${esc(ev2.comment||'')}</p>${ev2.praise?`<div class="praise"><b>칭찬과 응원</b><p>${esc(ev2.praise)}</p></div>`:''}</div>
+  <div class="sec"><h3>항목 점수 <small class="hint">연한 막대 1차 · 진한 막대 2차</small></h3>${orScoreRows(ev2,ev.scores)}<p>${hk(ev2.comment||'')}</p>${ev2.praise?`<div class="praise"><b>칭찬과 응원</b><p>${hk(ev2.praise)}</p></div>`:''}</div>
   ${(ev2.answers||[]).map(ans2).join('')}
-  <div class="sec"><div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev2.strengths)}</div><div><h4>다음까지 연습할 점</h4>${ul(ev2.improvements)}</div></div>${ev2.nextGoal?`<p class="orfu"><b>다음 목표</b> ${esc(ev2.nextGoal)}</p>`:''}</div>
-  ${ev2.cumulative?`<details class="sec orx"><summary>누적 분석 (최근 5회)</summary><p>${esc(ev2.cumulative)}</p></details>`:''}
-  ${ev2.teacher?`<details class="sec orx"><summary>선생님 한마디</summary><p>${esc(ev2.teacher)}</p></details>`:''}
+  <div class="sec"><div class="ev-2c"><div><h4>잘한 점</h4>${ul(ev2.strengths)}</div><div><h4>다음까지 연습할 점</h4>${ul(ev2.improvements)}</div></div>${ev2.nextGoal?`<p class="orfu"><b>다음 목표</b> ${hk(ev2.nextGoal)}</p>`:''}</div>
+  ${ev2.cumulative?`<details class="sec orx"><summary>누적 분석 (최근 5회)</summary><p>${hk(ev2.cumulative)}</p></details>`:''}
+  ${ev2.teacher?`<details class="sec orx"><summary>선생님 한마디</summary><p>${hk(ev2.teacher)}</p></details>`:''}
   <p class="ev-ai">이 리포트는 생성형 AI(Anthropic Claude)가 작성했어요. 사실과 다를 수 있어요.</p></div>`;
 }
 /* ---------- PDF ---------- */
@@ -7198,14 +7223,14 @@ async function lgBatch(only,quiet){
     if(S.view==='guide')render();
     try{const sn=await S.db.doc('guides/'+key).get().catch(()=>null);
       if(sn&&sn.exists&&sn.data()&&sn.data().data){S.gd=S.gd||{};S.gd[key]={data:sn.data().data};continue}
-      let r=null;for(let t=0;t<2&&!r;t++){try{const x=await S.sample.json(lgPrompt(it),{cache:false});if(x&&typeof x==='object'&&!Array.isArray(x)&&Array.isArray(x.works))r=x}catch(e){if(e&&e.code==='rate_limited'){S.lgBusy.stop='요청 한도에 걸려 멈췄어요. 내일 이어서 만들어요.';break}}}
+      let r=null;for(let t=0;t<2&&!r;t++){try{const x=await S.sample.json(lgPrompt(it)+HK_RULE,{cache:false});if(x&&typeof x==='object'&&!Array.isArray(x)&&Array.isArray(x.works))r=x}catch(e){if(e&&e.code==='rate_limited'){S.lgBusy.stop='요청 한도에 걸려 멈췄어요. 내일 이어서 만들어요.';break}}}
       if(S.lgBusy.stop)break;
       if(r){await S.db.doc('guides/'+key).set({data:clone(r),by:S.id,at:Date.now()});S.gd=S.gd||{};S.gd[key]={data:r};S.lgBusy.made++}
     }catch(e){}
   }
   const b=S.lgBusy;S.lgBusy=null;gdPersist();if(!quiet||b.made)toast(b.stop||`학습지도 자료 ${b.made}개를 새로 만들었어요.`);if(S.view==='guide')render();
 }
-function lgSheetHTML(it,g){const T=x=>esc(String(x||''));const A=x=>Array.isArray(x)?x:[];
+function lgSheetHTML(it,g){const T=hk;const A=x=>Array.isArray(x)?x:[];
   const nm={book:'책',m1:'영화 ①',m2:'영화 ②'};const ti={book:it.book,m1:it.m1,m2:it.m2};['m1','m2'].forEach(k=>{if(!String(it[k]||'').trim())delete nm[k]});
   const works=A(g.works).filter(x=>x&&nm[x.k]);const link=A(g.link).filter(x=>x&&nm[x.k]);
   const pts=A(g.points).filter(x=>x&&(x.t||x.d)).slice(0,5);const tk=A(g.talk).filter(x=>x&&(x.q||typeof x==='string')).slice(0,5);
@@ -7256,15 +7281,15 @@ function lgViewHTML(it,g,key){
   const topic=String(it.topic||'').split(':')[0].trim()||'이달의 주제';const qo=S.lg.q==null?0:S.lg.q;
   const cover=k=>{const u=ti[k]?artOf(ti[k],k==='book'?'book':'movie'):'';return `<figure class="lgcv"><div class="lgcvi">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>${lgT(bTitle(ti[k]))}</span>`}</div><figcaption><small>${nm[k]}</small>${lgT(bTitle(ti[k]))}</figcaption></figure>`};
   const P=S.lg.more?pts:pts.slice(0,3);
-  return `<section class="lghero"><small>이달의 주제</small><h3><span class="hl">${lgT(topic)}</span></h3>${g.theme?`<p>${lgT(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].filter(k=>String(it[k]||'').trim()).map(cover).join('')}</div></section>
-  ${g.intro?`<div class="lgnote">${lgI('msg')}<div><b>부모님께</b><p>${lgT(g.intro)}</p></div></div>`:''}
-  ${g.why?`<section>${lgSec('세 작품, 왜 함께 볼까?')}<p class="lgp1">${lgT(g.why)}</p></section>`:''}
-  ${works.length?`<section>${lgSec('작품 안내',works.length)}<div class="lgcar" tabindex="0" aria-label="작품 안내. 옆으로 넘겨 보세요">${works.map(w=>`<article class="lgwc"><span class="lgk">${nm[w.k]}</span><h4>${lgT(bTitle(ti[w.k]))}</h4><p>${lgT(w.sum)}</p>${w.who?`<dl><dt>인물</dt><dd>${lgT(w.who)}</dd></dl>`:''}${w.look?`<dl><dt>눈여겨볼 점</dt><dd>${lgT(w.look)}</dd></dl>`:''}${link[w.k]?`<p class="lglink">주제와 연결 · ${lgT(link[w.k])}</p>`:''}</article>`).join('')}</div><div class="lgdots" aria-hidden="true">${works.map((_,n)=>`<i class="${n?'':'on'}"></i>`).join('')}</div></section>`:''}
-  ${pts.length?`<section>${lgSec('가르칠 포인트',pts.length)}<ol class="lgpts">${P.map((x,n)=>`<li><b class="lgnum">${String(n+1).padStart(2,'0')}</b><div><b>${lgT(x.t)}</b><p>${lgT(x.d)}</p></div></li>`).join('')}</ol>${pts.length>3?`<button class="lgmore" data-act="lgmore" aria-expanded="${!!S.lg.more}">${S.lg.more?'접기':`+ ${pts.length-3}개 더 보기`}</button>`:''}</section>`:''}
-  ${tk.length?`<section>${lgSec('함께 나눌 질문',tk.length)}<div class="lgqs">${tk.map((x,n)=>{const q=typeof x==='string'?x:x.q,h=typeof x==='string'?'':x.hint;return `<div class="lgqc"><p class="lgqq"><span>Q${n+1}</span>${lgT(q)}</p>${h?(qo===n?`<div class="lgqh"><small>생각의 방향</small><p>${lgT(h)}</p></div>`:`<button class="lgqb" data-act="lgqo" data-i="${n}" aria-expanded="false">생각의 방향 보기 ${lgI('chev',14)}</button>`):''}</div>`}).join('')}</div></section>`:''}
+  return `<section class="lghero"><small>이달의 주제</small><h3><span class="hl">${lgT(topic)}</span></h3>${g.theme?`<p>${hk(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].filter(k=>String(it[k]||'').trim()).map(cover).join('')}</div></section>
+  ${g.intro?`<div class="lgnote">${lgI('msg')}<div><b>부모님께</b><p>${hk(g.intro)}</p></div></div>`:''}
+  ${g.why?`<section>${lgSec('세 작품, 왜 함께 볼까?')}<p class="lgp1">${hk(g.why)}</p></section>`:''}
+  ${works.length?`<section>${lgSec('작품 안내',works.length)}<div class="lgcar" tabindex="0" aria-label="작품 안내. 옆으로 넘겨 보세요">${works.map(w=>`<article class="lgwc"><span class="lgk">${nm[w.k]}</span><h4>${lgT(bTitle(ti[w.k]))}</h4><p>${hk(w.sum)}</p>${w.who?`<dl><dt>인물</dt><dd>${hk(w.who)}</dd></dl>`:''}${w.look?`<dl><dt>눈여겨볼 점</dt><dd>${hk(w.look)}</dd></dl>`:''}${link[w.k]?`<p class="lglink">주제와 연결 · ${hk(link[w.k])}</p>`:''}</article>`).join('')}</div><div class="lgdots" aria-hidden="true">${works.map((_,n)=>`<i class="${n?'':'on'}"></i>`).join('')}</div></section>`:''}
+  ${pts.length?`<section>${lgSec('가르칠 포인트',pts.length)}<ol class="lgpts">${P.map((x,n)=>`<li><b class="lgnum">${String(n+1).padStart(2,'0')}</b><div><b>${lgT(x.t)}</b><p>${hk(x.d)}</p></div></li>`).join('')}</ol>${pts.length>3?`<button class="lgmore" data-act="lgmore" aria-expanded="${!!S.lg.more}">${S.lg.more?'접기':`+ ${pts.length-3}개 더 보기`}</button>`:''}</section>`:''}
+  ${tk.length?`<section>${lgSec('함께 나눌 질문',tk.length)}<div class="lgqs">${tk.map((x,n)=>{const q=typeof x==='string'?x:x.q,h=typeof x==='string'?'':x.hint;return `<div class="lgqc"><p class="lgqq"><span>Q${n+1}</span>${hk(q)}</p>${h?(qo===n?`<div class="lgqh"><small>생각의 방향</small><p>${hk(h)}</p></div>`:`<button class="lgqb" data-act="lgqo" data-i="${n}" aria-expanded="false">생각의 방향 보기 ${lgI('chev',14)}</button>`):''}</div>`}).join('')}</div></section>`:''}
   ${wd.length?`<section>${lgSec('알아 둘 낱말',wd.length)}<div class="lgwds">${wd.map(x=>`<div><b>${lgT(x.w)}</b><p>${lgT(x.m)}</p></div>`).join('')}</div></section>`:''}
   ${ac.length?`<section>${lgSec('이번 달 집에서 할 활동',ac.length)}<div class="lgacts">${ac.map((a,n)=>`<button class="lgac${done.includes(n)?' on':''}" data-act="lgchk" data-i="${n}" aria-pressed="${done.includes(n)}"><span class="lgbx">${lgI('check',14)}</span><span>${lgT(a)}</span></button>`).join('')}</div></section>`:''}
-  ${g.care?`<div class="lgnote lgwarn">${lgI('warn')}<div><b>지도할 때 주의할 점</b><p>${lgT(g.care)}</p></div></div>`:''}
+  ${g.care?`<div class="lgnote lgwarn">${lgI('warn')}<div><b>지도할 때 주의할 점</b><p>${hk(g.care)}</p></div></div>`:''}
   <p class="lgai">생성형 AI(Claude)가 쓴 자료예요. 작품 세부 내용은 직접 읽고 본 것과 다를 수 있어요.</p>`}
 /* 평가 방식: 배점은 관리자가 고친 지금 기준(RBC)과 육각형 목표(HXT)를 그대로 그린다 */
 function lgBars(items){const mx=Math.max(1,...items.map(x=>Number(x.w)||0));
@@ -7349,7 +7374,7 @@ async function gdLoad(key,make,force){
     if(sn&&sn.exists&&sn.data()&&sn.data().data)S.gd[key]={data:sn.data().data};
     else{
       if(!S.sample)throw {code:'no_sample'};
-      const r=await S.sample.json(make(),{cache:false});
+      const r=await S.sample.json(make()+HK_RULE,{cache:false});
       if(!r||typeof r!=='object'||Array.isArray(r))throw {code:'invalid_json'};
       S.gd[key]={data:r};
       S.db.doc('guides/'+key).set({data:clone(r),by:S.id,at:Date.now()}).catch(()=>{});
@@ -7365,7 +7390,7 @@ function eduHTML(i){
   if(!G||(!G.data&&!G.busy&&!G.err))setTimeout(()=>{const g=gdGet(key);if(!g||(!g.data&&!g.busy&&!g.err))eduLoad(i)},0);
   if(!G||G.busy)return `<div class="edu"><div class="sk"></div><p class="hint" role="status">세 작품을 요약하고 서로 어떻게 이어지는지 정리하고 있어요. 30초쯤 걸려요.</p></div>`;
   if(G.err)return `<div class="edu"><p class="warn">${esc(G.err)}</p><div><button class="btn ghost small" data-act="edugo" data-i="${i}">다시 만들기</button></div></div>`;
-  const g=G.data||{};const T=x=>esc(String(x||''));
+  const g=G.data||{};const T=hk;
   const card=(lab,title,o)=>{o=o&&typeof o==='object'?o:{};return `<div class="note2"><small>${lab}</small><h4>「${esc(title)}」</h4>${o.summary?`<p>${T(o.summary)}</p>`:''}${o.point?`<p class="em">핵심: ${T(o.point)}</p>`:''}</div>`};
   const links=Array.isArray(g.links)?g.links.filter(x=>x&&x.text):[];const qs=Array.isArray(g.questions)?g.questions.filter(Boolean):[];
   return `<div class="edu">
@@ -7396,7 +7421,7 @@ function preHTML(i){
   const H='';
   if(!G||G.busy)return `<div class="edu pre">${H}<div class="sk"></div><p class="hint" role="status">읽기 전에 생각할 거리를 정리하고 있어요. 20초쯤 걸려요.</p></div>`;
   if(G.err)return `<div class="edu pre">${H}<p class="warn">${esc(G.err)}</p><div><button class="btn ghost small" data-act="prego" data-i="${i}">다시 만들기</button></div></div>`;
-  const g=G.data||{};const T=x=>esc(String(x||''));const bf=(Array.isArray(g.before)?g.before:[]).filter(Boolean).slice(0,3);
+  const g=G.data||{};const T=hk;const bf=(Array.isArray(g.before)?g.before:[]).filter(Boolean).slice(0,3);
   const nm={'책':it.book,'영화 ①':it.m1,'영화 ②':it.m2};const lk=(Array.isArray(g.look)?g.look:[]).filter(x=>x&&x.t&&String(nm[x.k]||'').trim());
   return `<div class="edu pre">${H}
     ${g.theme||g.why?`<div class="sec"><h3>이달의 주제 · ${esc(String(it.topic||'').split(':')[0])}</h3>${g.theme?`<p style="margin:0;line-height:1.7">${T(g.theme)}</p>`:''}${g.why?`<p class="em" style="margin:8px 0 0">${T(g.why)}</p>`:''}</div>`:''}
@@ -7426,16 +7451,16 @@ function gdQ(n,force){
 }
 function guideHTML(){
   const {i,k,it,title,isBook,wk}=gdInfo();const W=gdGet(wk)||{};
-  const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
+  const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${hk(x)}</li>`).join('')}</ul>`:'';
   const blk=(t,b)=>b?`<div class="gb"><b>${t}</b>${b}</div>`:'';
   let work;
   if(W.busy)work='<div class="sk"></div><div class="sk"></div><p class="hint" role="status">Claude가 안내서를 쓰고 있어요. 30초쯤 걸려요.</p>';
   else if(W.err)work=`<p class="warn">${esc(W.err)}</p><div><button class="btn ghost small" data-act="gdwork">다시 만들기</button></div>`;
   else if(W.data){const g=W.data;const ex=Array.isArray(g.examples)?g.examples.filter(x=>x&&(x.title||x.say)):[];
-    work=(g.one?`<p class="g1"><b>${esc(g.one)}</b></p>`:g.summary?`<p>${esc(g.summary)}</p>`:'')+(g.msg?`<p class="gmsg">${esc(g.msg)}</p>`:'')
-      +(ex.length?`<div class="gex">${ex.map(x=>`<div class="gx"><b>${esc(x.title||'')}</b>${x.link?`<p>${esc(x.link)}</p>`:''}${x.say?`<p class="say">“${esc(x.say)}”</p>`:''}</div>`).join('')}</div>`:'')
+    work=(g.one?`<p class="g1"><b>${hk(g.one)}</b></p>`:g.summary?`<p>${hk(g.summary)}</p>`:'')+(g.msg?`<p class="gmsg">${hk(g.msg)}</p>`:'')
+      +(ex.length?`<div class="gex">${ex.map(x=>`<div class="gx"><b>${esc(x.title||'')}</b>${x.link?`<p>${hk(x.link)}</p>`:''}${x.say?`<p class="say">“${esc(hkStrip(x.say))}”</p>`:''}</div>`).join('')}</div>`:'')
       +(Array.isArray(g.ask)&&g.ask.length?`<div class="gb"><b>이렇게 물어보세요</b>${ul(g.ask)}</div>`:'')
-      +(g.care?`<p class="note">${esc(g.care)}</p>`:'')+(g.avoid?`<p class="hint">피할 말 · ${esc(g.avoid)}</p>`:'')
+      +(g.care?`<p class="note">${hk(g.care)}</p>`:'')+(g.avoid?`<p class="hint">피할 말 · ${esc(hkStrip(g.avoid))}</p>`:'')
       +`<div><button class="chip" data-act="gdwork">새로 만들기</button></div>`}
   else work=`<div><button class="btn" data-act="gdwork">안내서 만들기</button></div>`;
   const src=S.info.gsrc||'';const kids=guideKids();const Q=gdQs(i,src);
@@ -7445,11 +7470,11 @@ function guideHTML(){
     if(G.busy)b='<div class="sk"></div><p class="hint" role="status">모범 답안과 지도 순서를 쓰고 있어요. 1분쯤 걸려요.</p>';
     else if(G.err)b=`<p class="warn">${esc(G.err)}</p><div><button class="btn ghost small" data-act="gdq" data-n="${x.n}">다시 만들기</button></div>`;
     else if(G.data){const g=G.data;
-      b=(g.intent?`<p>${esc(g.intent)}</p>`:'')+(g.example?`<div class="gx"><b>${esc(g.example.title||'이렇게 설명해요')}</b>${g.example.say?`<p class="say">“${esc(g.example.say)}”</p>`:''}</div>`:'')
+      b=(g.intent?`<p>${hk(g.intent)}</p>`:'')+(g.example?`<div class="gx"><b>${esc(g.example.title||'이렇게 설명해요')}</b>${g.example.say?`<p class="say">“${esc(hkStrip(g.example.say))}”</p>`:''}</div>`:'')
         +blk('답안에 꼭 들어갈 것',ul(g.keys))
-        +(Array.isArray(g.steps)&&g.steps.length?`<div class="gb"><b>지도 순서</b><ol class="gst">${g.steps.map(s=>`<li><b>${esc(s.step)}</b>${s.say?`<span class="say">${esc(s.say)}</span>`:''}</li>`).join('')}</ol></div>`:'')
-        +(g.model&&g.model.text?`<details><summary>모범 답안${g.model.title?' · '+esc(g.model.title):''}</summary><p style="white-space:pre-wrap">${esc(g.model.text)}</p><p class="hint">자녀가 먼저 스스로 쓴 뒤에 비교하는 기준으로 써 주세요.</p></details>`:'')
-        +(g.praise?`<p class="hint">칭찬 한마디 · ${esc(g.praise)}</p>`:'')}
+        +(Array.isArray(g.steps)&&g.steps.length?`<div class="gb"><b>지도 순서</b><ol class="gst">${g.steps.map(s=>`<li><b>${hk(s.step)}</b>${s.say?`<span class="say">${esc(hkStrip(s.say))}</span>`:''}</li>`).join('')}</ol></div>`:'')
+        +(g.model&&g.model.text?`<details><summary>모범 답안${g.model.title?' · '+esc(g.model.title):''}</summary><p style="white-space:pre-wrap">${esc(hkStrip(g.model.text))}</p><p class="hint">자녀가 먼저 스스로 쓴 뒤에 비교하는 기준으로 써 주세요.</p></details>`:'')
+        +(g.praise?`<p class="hint">칭찬 한마디 · ${esc(hkStrip(g.praise))}</p>`:'')}
     else b=`<div><button class="btn ghost small" data-act="gdq" data-n="${x.n}">모범 답안과 지도 가이드 보기</button></div>`;
     return `<div class="note2"><div class="qtop"><b>문제 ${x.n+1}</b>${x.n===Q.pick?'<span class="tagk">자녀가 고른 문제</span>':''}</div>${x.from.length?`<div class="qtags">${x.from.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}<p>${esc(x.q)}</p>${b}</div>`}).join('');
   return `<div class="panel gd"><div class="ph"><h2><span class="hl">논술 첨삭자료</span><br><small style="font-size:15px;font-weight:400;color:var(--muted)">${isBook?'책':'영화'} 「${esc(title)}」 · ${esc(it.g)} ${esc(it.m)}</small></h2><button class="x" data-act="gdclose" aria-label="뒤로">${IC.back}</button></div>
@@ -7677,7 +7702,7 @@ document.addEventListener('click',async e=>{
     case 'vbwprev':{vbWizSave();if(S.vbW&&S.vbW.n>0)vbzGo(S.vbW.n-1,true);break}
     case 'vbwskip':{const W=S.vbW;if(!W)break;const el=document.getElementById('vbz-in-'+W.n);if(el)el.value='';delete W.a[vbw()[W.n][0]];if(W.n<vbw().length-1)vbzGo(W.n+1,true);else await vbWizDone();break}
     case 'svset':if(S.survey){S.survey.v[d.q]=d.q==='diff'?5.5-(+d.v):+d.v;renderLayers()}break;
-    case 'mbrate':{const o=rateObj(d.sc,d.id);if(!o)break;o[d.q]=+d.v;
+    case 'mbrate':{const o=rateObj(d.sc,d.id);if(!o)break;o[d.q]=d.q==='diff'?5.5-(+d.v):+d.v;
       const box=document.querySelector(`[data-rbox="${d.sc}:${CSS.escape(d.id)}"]`);if(box)box.outerHTML=rateBox(d.sc,d.id,o);  // 입력 중인 글이 지워지지 않게 별점 칸만 다시 그린다
       if(d.sc==='rv')bkBtn();if(d.sc==='shelf'){saveProgress();const l=document.querySelector('.sdrate');if(l)l.textContent=rateLine(o)}break}
     case 'svclose':S.survey=null;renderLayers();toast('별점은 작품 옆 "별점 남기기"로 다시 할 수 있어요.');break;

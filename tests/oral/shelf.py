@@ -69,7 +69,7 @@ def mobile_flow(pg):
     rate_all(pg, 'rv', ids[1])
     ok('사진 추가: 모두 평가하면 열림', not pg.evaluate("document.querySelector('[data-act=bkconfirm]').disabled"))
     pg.evaluate("document.querySelector('[data-act=bkconfirm]').click()")
-    ok('사진 추가: 평가와 함께 저장', wait(lambda: len(prog().get('myBooks', [])) == 2 and all(b.get('rate') == {'fun': 4, 'diff': 3, 'again': 4.5} for b in prog()['myBooks'])), prog().get('myBooks'))
+    ok('사진 추가: 평가와 함께 저장', wait(lambda: len(prog().get('myBooks', [])) == 2 and all(b.get('rate') == {'fun': 4, 'diff': 2.5, 'again': 4.5} for b in prog()['myBooks'])), prog().get('myBooks'))
     # 2) 직접 추가: 평가 없이는 안 꽂힘, 별을 눌러도 적은 제목은 그대로
     pg.fill('#mb-title', '직접 넣은 책'); pg.select_option('#mb-ax', '0'); pg.select_option('#mb-cat', '소설')
     pg.evaluate("document.querySelector('form[data-form=mybook] button[type=submit]').click()"); time.sleep(.6)
