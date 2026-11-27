@@ -2414,8 +2414,10 @@ html .auth:has(form.loan) .lpocket::after{display:none!important}
 .auth .lpk-back.on{visibility:visible}
 /* 11-27: 봉투 모서리 r = 카드 r(6px) — 뒷판 위 두 모서리, 앞판 아래 두 모서리 */
 html .auth .lpk-back{border-radius:6px 6px 0 0!important}
-/* 11-27: 뒷판 윗선 = 앞판 윗선(진갈색 #7E5A33 2px + 그 아래 밝은 1px) */
-html .auth .lpk-back{box-shadow:inset 0 2px 0 #7E5A33,inset 0 3px 0 rgba(255,236,205,.55),inset 0 4px 0 rgba(255,236,205,.18)!important}html .auth:has(form.loan) .lpocket{border-radius:0 0 6px 6px!important}
+/* 11-27: 뒷판 윗선은 끝선이라 어두운 계열만(진갈색 #7E5A33 2px + 바깥 살짝 그림자, 밝은 선 없음) */
+html .auth .lpk-back{box-shadow:inset 0 2px 0 #7E5A33,0 -1px 2px rgba(30,18,8,.35)!important}
+/* 앞판 윗선도 끝선이라 어두운 계열만: 안쪽 밝은 줄 2개를 빼고 진갈색 2px 테두리·바깥 그림자만 */
+html .auth:has(form.loan) .lpocket{box-shadow:0 -3px 4px -1px rgba(30,18,8,.45),0 -10px 14px -8px rgba(30,18,8,.4),0 14px 26px -8px rgba(20,12,6,.55)!important}html .auth:has(form.loan) .lpocket{border-radius:0 0 6px 6px!important}
 @media (min-width:821px){.auth .lpk-back{position:fixed}}
 .auth:has(form.loan):not(.played) .lpk-back{animation:pocketIn .5s ease .5s both}
 /* 표지·포스터는 평면(2026-11-26 사용자 지시): 책등 줄·안쪽 선·빛 덧칠을 모두 빼고, 그림은 틀을 여백 없이 가득 채움 */
