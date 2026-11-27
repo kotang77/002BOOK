@@ -18,12 +18,19 @@ export const bigCover = (u: string) => { const m = /[?&]fname=([^&]+)/.exec(u); 
 
 type Art = { url: string; src: string; title?: string };
 
+/* 11-28: 외부 API가 실패(한도 초과·시간 초과·오류 응답)하면 '못 찾음'으로 하루 동안 캐시하던 것을 고친다.
+   실패는 ER.n에 세어 두고, 실패가 있었던 '못 찾음'은 30분만 기억해 곧 다시 찾게 한다 */
+const ER = { n: 0 };
 async function getJSON(url: string, headers: Record<string, string> = {}) {
   try {
     const r = await fetch(url, { headers, signal: AbortSignal.timeout(7000) });
-    if (!r.ok) { console.log('art http', r.status, url.split('?')[0]); return null; }
-    return await r.json().catch(() => null);
-  } catch (e) { console.log('art fetch', String(e).slice(0, 120)); return null; }
+    if (!r.ok) { ER.n++; console.log('art http', r.status, url.split('?')[0]); return null; }
+    const j = await r.json().catch(() => null);
+    if (j === null) ER.n++;
+    // KMDb는 한도 초과도 200으로 주고 본문에 오류를 적는다
+    else if (/koreafilm/.test(url) && !(j as { Data?: unknown }).Data) { ER.n++; console.log('art kmdb err', JSON.stringify(j).slice(0, 160)); }
+    return j;
+  } catch (e) { ER.n++; console.log('art fetch', String(e).slice(0, 120)); return null; }
 }
 
 /* ---------- 책 ---------- */
@@ -88,12 +95,18 @@ async function kmdb(title: string, year: string): Promise<Art | null> {
     ?? (t.length >= 2 ? rows.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => (a.y || 9999) - (b.y || 9999) || Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
   return pick ? { url: pick.p, src: 'kmdb', title: clean(String(pick.m.title).replace(/!H[SE]/g, ''), 120) } : null;
 }
+/* 영상자료원에 등록된 이름이 앱 제목과 다른 영화(아이 앰 샘 → 아이 엠 샘 등)는 다른 이름으로 한 번 더 찾는다 */
+const MOVIE_AKA: Record<string, string[]> = { '아이앰샘': ['아이 엠 샘'], '알파위대한여정': ['알파'], '루디이야기': ['루디'],
+  '바람을길들인풍차소년': ['바람을 길들인 풍차 소년', 'The Boy Who Harnessed the Wind'] };
 export async function movieArt(title: string, year: string): Promise<Art | null> {
-  return (await tmdb(title, year)) ?? (await kmdb(title, year));
+  const r = (await tmdb(title, year)) ?? (await kmdb(title, year));
+  if (r) return r;
+  for (const t of MOVIE_AKA[normT(title)] ?? []) { const a = (await tmdb(t, year)) ?? (await kmdb(t, year)); if (a) return a; }
+  return null;
 }
 
 /* ---------- op ---------- */
-export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO) {
+export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO, admin = false) {
   const kind = b.kind === 'movie' ? 'movie' : 'book';
   const title = clean(b.title, 80).replace(/\s*\(.*\)\s*$/, ''), au = clean(b.author, 40), year = /^\d{4}$/.test(String(b.year ?? '')) ? String(b.year) : '';
   if (normT(title).length < 1) fail('bad_request', '제목이 필요해요.');
@@ -102,9 +115,9 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO)
     fail('art_not_configured', '표지·포스터 자동 찾기가 아직 설정되지 않았어요.', 503);
   const p = `sys/art_${(await sha256hex(kind + '|' + normT(title) + '|' + year)).slice(0, 24)}`;
   const row = await io.read(p);
-  if (row) {
-    const at = Number(row.data.at) || 0, ok = !!row.data.url;
-    if (Date.now() - at < (ok ? 7 : 1) * DAY) return { url: String(row.data.url || ''), src: String(row.data.src || ''), cached: true };
+  if (row && !(admin && b.fresh && !row.data.url)) { // 관리자는 '못 찾음' 캐시를 건너뛰고 다시 찾을 수 있다
+    const at = Number(row.data.at) || 0, ok = !!row.data.url, ttl = ok ? 7 * DAY : row.data.err ? 30 * 60e3 : DAY;
+    if (Date.now() - at < ttl) return { url: String(row.data.url || ''), src: String(row.data.src || ''), cached: true };
   }
   // 회원당 하루 조회 수 (캐시로 답한 것은 세지 않음)
   const qp = `sys/artuse_${uid}`; const qr = await io.read(qp);
@@ -112,12 +125,13 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO)
   const n = qr && qr.data.day === day ? Number(qr.data.n) || 0 : 0;
   if (n >= DAILY()) fail('rate_limited', '오늘 표지·포스터 찾기를 다 썼어요. 내일 다시 찾아요.', 429);
   await io.write(qp, { day, n: n + 1 }, null, qr);
-  let art: Art | null = null;
+  let art: Art | null = null; const e0 = ER.n;
   if (fake) { // 시험용: {"book:제목": "https://…", "movie:제목": "https://…"}
     const m = JSON.parse(fake) as Record<string, string>; const u = m[kind + ':' + title];
     art = u ? { url: u, src: 'fake' } : null;
   } else art = kind === 'book' ? await bookArt(title, au) : await movieArt(title, year);
-  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', kind, title, year, at: Date.now() }, null, row);
+  const err = !art && ER.n > e0;
+  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', kind, title, year, at: Date.now(), ...(err ? { err: 1 } : {}) }, null, row);
   return { url: art?.url ?? '', src: art?.src ?? '', cached: false };
 }
 

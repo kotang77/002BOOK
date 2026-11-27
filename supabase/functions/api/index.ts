@@ -605,7 +605,7 @@ async function handle(req: Request, b: Record<string, unknown>) {
 
     /* ---- 도서 서지 (국립중앙도서관) ---- */
     case 'media.art':
-      return artOp(need(ctx), b, { read: readRow, write: writeRow });
+      return artOp(need(ctx), b, { read: readRow, write: writeRow }, ctx.admin);
     case 'media.pics':
       return picsOp(need(ctx), b, { read: readRow, write: writeRow });
     case 'book.isbn': case 'book.find':
