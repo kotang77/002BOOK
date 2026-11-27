@@ -41,9 +41,13 @@ async function kakaoBook(title: string, author: string): Promise<Art | null> {
   const docs = j?.documents ?? [];
   const t = normT(title), a = normT(author);
   let best: Record<string, unknown> | null = null, bs = -1;
+  /* 11-28: 서점 등록 제목이 앱 제목과 조금 다른 책(사피엔스 그래픽 히스토리 Vol.1 등)은 한쪽 제목이 다른 쪽을 포함하고 저자가 같으면 받는다 */
   for (const d of docs) {
-    if (normT(d.title) !== t || !https(d.thumbnail)) continue;
-    let s = 1; const au = normT((d.authors as string[] | undefined)?.join(''));
+    if (!https(d.thumbnail)) continue;
+    const dt = normT(d.title), au = normT((d.authors as string[] | undefined)?.join(''));
+    const same = dt === t, near = !same && t.length >= 2 && dt.length >= 2 && (dt.includes(t) || t.includes(dt)) && !!a && au.includes(a);
+    if (!same && !near) continue;
+    let s = same ? 3 : 1;
     if (a && au.includes(a)) s += 2;
     if (s > bs) { bs = s; best = d; }
   }
@@ -58,8 +62,13 @@ export async function bookArt(title: string, author: string): Promise<Art | null
       if (bk?.cover) return { url: bk.cover, src: 'nl', title: bk.title };
     } catch { /* 국립중앙도서관이 안 되면 카카오로 */ }
   }
-  return kakaoBook(title, author);
+  const r = await kakaoBook(title, author);
+  if (r) return r;
+  for (const t of BOOK_AKA[normT(title)] ?? []) { const a = await kakaoBook(t, author); if (a) return a; }
+  return null;
 }
+/* 서점에 앱 제목 그대로는 없는 책: 다른 이름으로 한 번 더(저자가 같아야 받음) */
+const BOOK_AKA: Record<string, string[]> = { '청소년을위한월든': ['월든'], '사피엔스그래픽히스토리1인류의탄생': ['사피엔스 그래픽 히스토리'], '사피엔스그래픽히스토리vol1': ['사피엔스 그래픽 히스토리'] };
 
 /* ---------- 영화 ---------- */
 async function tmdb(title: string, year: string): Promise<Art | null> {
@@ -95,8 +104,8 @@ async function kmdb(title: string, year: string): Promise<Art | null> {
     ?? (t.length >= 2 ? rows.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => (a.y || 9999) - (b.y || 9999) || Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
   return pick ? { url: pick.p, src: 'kmdb', title: clean(String(pick.m.title).replace(/!H[SE]/g, ''), 120) } : null;
 }
-/* 영상자료원에 등록된 이름이 앱 제목과 다른 영화(아이 앰 샘 → 아이 엠 샘 등)는 다른 이름으로 한 번 더 찾는다 */
-const MOVIE_AKA: Record<string, string[]> = { '아이앰샘': ['아이 엠 샘'], '알파위대한여정': ['알파'], '루디이야기': ['루디'],
+/* 영상자료원에 등록된 이름이 앱 제목과 다른 영화(루디 이야기 → 루디 등)는 다른 이름으로 한 번 더 찾는다 */
+const MOVIE_AKA: Record<string, string[]> = { '알파위대한여정': ['알파'], '루디이야기': ['루디'],
   '바람을길들인풍차소년': ['바람을 길들인 풍차 소년', 'The Boy Who Harnessed the Wind'] };
 export async function movieArt(title: string, year: string): Promise<Art | null> {
   const r = (await tmdb(title, year)) ?? (await kmdb(title, year));
@@ -117,7 +126,7 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO,
   const row = await io.read(p);
   if (row && !(admin && b.fresh && !row.data.url)) { // 관리자는 '못 찾음' 캐시를 건너뛰고 다시 찾을 수 있다
     const at = Number(row.data.at) || 0, ok = !!row.data.url, ttl = ok ? 7 * DAY : row.data.err ? 30 * 60e3 : DAY;
-    if (Date.now() - at < ttl) return { url: String(row.data.url || ''), src: String(row.data.src || ''), cached: true };
+    if (Date.now() - at < ttl) return { url: String(row.data.url || ''), src: String(row.data.src || ''), title: String(row.data.found || ''), cached: true };
   }
   // 회원당 하루 조회 수 (캐시로 답한 것은 세지 않음)
   const qp = `sys/artuse_${uid}`; const qr = await io.read(qp);
@@ -131,8 +140,8 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO,
     art = u ? { url: u, src: 'fake' } : null;
   } else art = kind === 'book' ? await bookArt(title, au) : await movieArt(title, year);
   const err = !art && ER.n > e0;
-  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', kind, title, year, at: Date.now(), ...(err ? { err: 1 } : {}) }, null, row);
-  return { url: art?.url ?? '', src: art?.src ?? '', cached: false };
+  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', found: art?.title ?? '', kind, title, year, at: Date.now(), ...(err ? { err: 1 } : {}) }, null, row);
+  return { url: art?.url ?? '', src: art?.src ?? '', title: art?.title ?? '', cached: false };
 }
 
 /* ---------- 비전보드 공개 사진 (서버 op: media.pics, 2026-11-26) ----------

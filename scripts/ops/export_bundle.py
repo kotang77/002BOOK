@@ -4,7 +4,7 @@
 - 자동으로 찾은 표지·포스터 주소(sys/art_* 서버 캐시) → 종류|제목 기준 주소표
   표지 목록과 주소표는 dist/data/art.json 하나로 묶는다.
 앱은 묶음을 먼저 쓰고, 묶음에 없는 것만 서버·AI에 묻는다. REF·TOKEN이 없으면(로컬 빌드) 빈 묶음을 쓴다."""
-import base64, hashlib, json, os, re, time, urllib.request
+import base64, hashlib, json, os, re, time, urllib.parse, urllib.request
 REF = os.environ.get('REF', ''); TOKEN = os.environ.get('TOKEN', '')
 def sql(q):
     req = urllib.request.Request(f'https://api.supabase.com/v1/projects/{REF}/database/query', data=json.dumps({'query': q}).encode(),
@@ -41,6 +41,36 @@ if REF and TOKEN:
             y = x.get('y') or ''
             art[('m' if x.get('k') == 'movie' else 'b') + '|' + norm(x.get('t')) + ('|' + y if y else '')] = u
     except Exception as e: print('표지·포스터 주소를 가져오지 못했어요:', e)
+# 11-28 속도: 자동으로 찾은 표지·포스터 그림도 사이트 안(data/art/)에 내려받아 둔다. 같은 주소라 서비스 워커가 기기에 저장해
+# 두 번째부터는 내려받지 않고, 외부 서버(영상자료원·카카오)가 느리거나 막혀도 보인다. Pillow가 있으면 긴 변 480px JPEG로 줄인다.
+# 못 받은 그림은 원래 주소를 그대로 둔다
+def big(u):  # 카카오 작은 썸네일 → 다음 원본(앱 bigCover와 같은 규칙)
+    m = re.search(r'[?&]fname=([^&]+)', u)
+    if not m: return u
+    f = urllib.parse.unquote(m.group(1))
+    return re.sub(r'^http:', 'https:', f) if re.match(r'^https?://[a-z0-9.-]*daumcdn\.net/', f, re.I) else u
+if art:
+    os.makedirs('dist/data/art', exist_ok=True)
+    try:
+        from PIL import Image; import io
+    except Exception: Image = None
+    got = 0
+    for k, u in list(art.items()):
+        for src in dict.fromkeys([big(u), u]):
+            try:
+                with urllib.request.urlopen(urllib.request.Request(src, headers={'User-Agent': 'Mozilla/5.0 002book-build'}), timeout=20) as r: raw = r.read()
+                if len(raw) < 800: continue
+                ext = 'jpg'
+                if Image:
+                    im = Image.open(io.BytesIO(raw)).convert('RGB'); im.thumbnail((480, 480)); b = io.BytesIO(); im.save(b, 'JPEG', quality=82, optimize=True); raw = b.getvalue()
+                elif raw[:8].startswith(b'\x89PNG'): ext = 'png'
+                elif raw[8:12] == b'WEBP': ext = 'webp'
+                name = hashlib.sha256(k.encode()).hexdigest()[:16]
+                with open(f'dist/data/art/{name}.{ext}', 'wb') as f: f.write(raw)
+                art[k] = f"data/art/{name}.{ext}?v={hashlib.sha256(raw).hexdigest()[:8]}"; got += 1
+                break
+            except Exception as e: print('그림을 받지 못했어요:', k, str(e)[:80])
+    print(f'표지·포스터 그림 {got}/{len(art)}개를 사이트 안에 저장')
 with open('dist/data/guides.json', 'w') as f: json.dump({'at': time.time(), 'guides': guides}, f, ensure_ascii=False, separators=(',', ':'))
 with open('dist/data/art.json', 'w') as f: json.dump({'at': time.time(), 'covers': covers, 'art': art}, f, ensure_ascii=False, separators=(',', ':'))
 print(f'묶음: 학습지도 {len(guides)} · 올린 표지 {len(covers)} · 표지·포스터 주소 {len(art)}')

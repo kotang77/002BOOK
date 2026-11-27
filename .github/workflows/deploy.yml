@@ -90,7 +90,9 @@ jobs:
           REF: ${{ vars.SUPABASE_PROJECT_REF }}
           TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           LIVE: ${{ github.event_name == 'schedule' && 'https://002book.com' || '' }}
-        run: python3 scripts/ops/export_bundle.py
+        run: |
+          python3 -m pip install -q pillow 2>/dev/null || python3 -m pip install -q --break-system-packages pillow || true
+          python3 scripts/ops/export_bundle.py
       - uses: actions/upload-pages-artifact@v3
         if: ${{ steps.bundle.outputs.changed != 'false' }}
         with: { path: dist }

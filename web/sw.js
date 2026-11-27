@@ -31,6 +31,11 @@ self.addEventListener('fetch', (e) => {
       .catch(() => caches.match(req).then((hit) => hit || new Response('{}', { headers: { 'content-type': 'application/json' } }))));
     return;
   }
+  // 표지·포스터 그림(data/art·data/cv, 주소에 내용 해시): 배포가 바뀌어도 지우지 않는 별도 저장소에 캐시 우선(11-28)
+  if (url.origin === location.origin && /^\/data\/(art|cv)\//.test(url.pathname)) {
+    e.respondWith(caches.open('yw-art').then((x) => x.match(req).then((hit) => hit || fetch(req).then((r) => { if (r.ok) x.put(req, r.clone()); return r; }))));
+    return;
+  }
   // 글꼴·CDN 라이브러리·아이콘: 캐시 우선
   if (url.origin === location.origin || /fonts\.(googleapis|gstatic)\.com|cdnjs\.cloudflare\.com/.test(url.hostname)) {
     e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((r) => {
