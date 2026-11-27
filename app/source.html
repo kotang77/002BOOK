@@ -4032,7 +4032,7 @@ function mactHTML(i){
   let hint='',b='';
   /* 11-27 밤: 1단계 아래 큰 버튼은 작품 버튼과 같은 일이라 빼고, 그 자리에 '책 읽기 전 생각하기'(예전 교육자료 칩 자리 이동). Figma 03 '07 1단계' */
   if(tab==='work'&&nx&&nx.k==='work'){b=`<button class="btn mact-b mact-think" data-act="stab" data-v="edu">책 읽기 전 생각하기</button>`}
-  else if(tab==='edu'){b=`<button class="btn mact-b" data-act="stab" data-v="work">1단계 · 읽고 보기로 가기</button>`}
+  else if(tab==='edu'){b=`<button class="btn mact-b mact-think" data-act="stab" data-v="work">생각 끝내기</button>`}
   else if(tab==='note'&&!(pos>=0&&st[pos].done)){const n=(S.progress.notes||{})[nk(i)]||{};
     b=`<button class="btn mact-b" disabled>${!n.sentence?'책에서 마음에 남은 문장을 적어 주세요':'영화에서 기억에 남은 장면을 적어 주세요'}</button>`;hint='두 칸을 채우면 다음 단계로 갈 수 있어요'}
   else if(pos>=0&&st[pos].done&&nx&&tab!=='edu'){b=go(nx)}

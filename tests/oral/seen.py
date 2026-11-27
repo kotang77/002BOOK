@@ -46,7 +46,7 @@ with sync_playwright() as p:
     ok('책 읽기 전 생각하기 화면', '이달의 주제' in txt and '읽기 전에 나에게 물어봐요' in txt and '책과 영화를 이어 생각하기' in txt, txt[:300])
     pp = J("window.__calls.find(c=>c.includes('책 읽기 전 생각하기'))||''")
     ok('지시문: 줄거리·결말 금지(저장본이 있으면 생략)', (not pp) or ('결말' in pp and '줄거리 요약' in pp), pp[:200])
-    ok('돌아가기 버튼', J("(document.querySelector('#mact .mact-b')||{}).textContent") == '1단계 · 읽고 보기로 가기')
+    ok('돌아가기 버튼 = 생각 끝내기(같은 초록 등 모양)', J("(document.querySelector('#mact .mact-b.mact-think')||{}).textContent") == '생각 끝내기')
     J("document.querySelector('#layer1 .ph .x').click()"); time.sleep(.6)
     # ── 책 + 영화 ①만 끝낸 달: 논술 질문은 두 작품으로만
     J("window.__calls=[]")
