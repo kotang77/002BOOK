@@ -4062,7 +4062,7 @@ function monthHTML(i){
       <button class="nm" data-act="info" data-i="${i}" data-k="${k}"><small>${t}${info?' · '+info:''}</small><strong>${esc(name)}</strong><em>정보와 후기 ›</em></button>
       ${on&&!svOK(i,k)?`<button class="rb sv" data-act="svopen" data-i="${i}" data-k="${k}">설문</button>`:''}<div class="rdb"><button class="rb${st||on?' on':''}" data-act="start" data-i="${i}" data-k="${k}" aria-pressed="${!!(st||on)}" aria-label="${t} 시작" ${on?'disabled':''}>시작</button><button class="rb${on?' on':''}" data-act="done" data-i="${i}" data-k="${k}" aria-pressed="${on}" aria-label="${t} 완료">완료</button></div>${pg}</div>`};
   const wn=stepNext(i);const cw=wn&&wn.k==='work'?wkNext(i):null;
-  const work=`${it.parent?'<p class="note">이달의 작품 중에는 부모님과 함께 보면 좋은 소재가 있어요.</p>':''}
+  const work=`<p class="note">책 읽기를 시작하면 친구, 부모님에게 알람이 갑니다.</p>
     <div class="wks">${wkOf(i).map(k=>wkRowHTML(i,k,cw&&cw.k===k)).join('')}</div>
 `;
   const essay=svReady(i)?essayHTML(i):svLockHTML(i);
