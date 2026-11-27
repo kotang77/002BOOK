@@ -1714,6 +1714,12 @@ body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-
 body:has(.auth) #legal{display:none!important}
 @media (min-width:821px){.auth .tai{position:fixed;right:max(48px,7.5vw);bottom:max(44px,7vh);width:300px;margin:0;padding:0}.auth .tai{text-shadow:0 1px 3px rgba(30,20,10,.8),0 0 10px rgba(30,20,10,.5)}}
 
+/* 11-27 Figma 08 v6: 아이디 줄 오른쪽 끝 '아이디 저장' 체크박스 */
+html .authcard .lrow.lid>.lsave{display:flex!important;flex-direction:row!important;align-items:center;gap:4px;margin:0 4px 0 0;padding:6px 2px;font-size:11px;color:#789CC8;white-space:nowrap;cursor:pointer;border:0}
+html .authcard .lrow.lid>.lsave>input{appearance:none;-webkit-appearance:none;flex:none;width:14px!important;height:14px!important;min-width:0;margin:0;padding:0!important;border:1.5px solid #789CC8!important;border-radius:3px;background:#FFFDF6!important;box-shadow:none!important;display:grid;place-items:center;cursor:pointer}
+html .authcard .lrow.lid>.lsave>input:checked{background:#1F4637 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 5.2l2 2 4-4.4' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/10px no-repeat!important;border-color:#1F4637!important}
+html .authcard .lrow.lid>.lsave>input:focus-visible{outline:2px solid #789CC8;outline-offset:1px}
+html .authcard .lrow.lid>.lsave>i{font-style:normal;font-family:var(--tw);letter-spacing:.02em}
 /* 대출 카드 정리(2026-11-26, Figma 08 v5): '잊었어요?'는 비밀번호 칸 오른쪽 끝으로, 구글 로그인은 초록 버튼 옆 네모 아이콘 버튼(구글 공식 아이콘 버튼)으로 → 주머니가 한 줄 */
 .authcard .lrow.lpw{grid-template-columns:64px 1fr auto}
 .authcard .lrow.lpw>label{display:block;font-size:12px;gap:0;border-right:1px solid var(--ll)}
@@ -3398,7 +3404,7 @@ function authHTML(){
      불러오기가 끝나도 다시 그리지 않는다(다시 그리면 봉투 없는 카드가 잠깐 보이거나 등장이 처음부터 다시 시작됨) */
   const intro=t==='login'&&S.dbState!=='none'&&!S.introAt;if(intro)S.introAt=Date.now();
   if(S.dbState==='none')body='<p class="warn">서버에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.</p>';
-  else if(t==='login')body=`<form data-form="login" class="loan"><label for="li-id" class="lrow"><span><i class="tw">아이디</i></span><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required></label>
+  else if(t==='login')body=`<form data-form="login" class="loan"><div class="lrow lpw lid"><label for="li-id"><span><i class="tw">아이디</i></span></label><input id="li-id" name="id" autocomplete="username" autocapitalize="none" required value="${esc(savedId())}"><label class="lsave" for="li-save"><input type="checkbox" id="li-save" name="saveid"${S.liSave??!!savedId()?' checked':''}><i class="tw">아이디 저장</i></label></div>
     <div class="lrow lpw"><label for="li-pw"><span><i class="tw">비밀번호</i></span></label><input id="li-pw" name="pw" type="password" autocomplete="current-password" required><button type="button" class="lnk" data-act="authtab" data-v="find" aria-label="비밀번호를 잊었어요">잊었어요?</button></div>
     ${S.authMsg?`<p class="okmsg">${esc(S.authMsg)}</p>`:''}<p class="err" id="autherr">${esc(S.authErr)}</p>
     <div class="lpocket"><span class="lpk-bk" aria-hidden="true"></span><span class="lpk-dt" aria-hidden="true">대출일 <i>${new Date().toLocaleDateString('ko-KR')}</i></span><button class="btn" type="submit">문 열고 들어가기</button>${gOn()?'<div class="gsi gico" title="구글로 로그인"><div data-gsi="auth" data-type="icon" data-txt="signin_with"></div></div>':''}<span class="lpk-nt" aria-hidden="true">♧ 책에 낙서하지 맙시다</span><span class="lpk-ft" aria-hidden="true">찾아오시는 길 · 구름 속에 아이들이 뛰어다니는 마을</span></div></form>`;
@@ -4873,7 +4879,7 @@ async function deleteMember(id){
 /* ---------- 로그아웃·탈퇴 ---------- */
 function doLogout(){S.introAt=0;window.__002.auth.logout();S.gs=null;S.admX=false;try{if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect()}catch(e){}
   Object.assign(S,{id:null,me:null,sheet:null,info:null,reviews:null,fr:null,fam:null,gd:{},progress:{done:{},notes:{},qs:{},evalLog:[]},custom:null,mode:'base',evals:{},essays:{},evalView:null,covers:{},wr:null,bulk:null,authTab:'login',authErr:'',authMsg:'',view:'course'});
-  render();window.scrollTo(0,0);{const f=$('#li-id');if(f)f.focus()}}
+  render();window.scrollTo(0,0);{const f=$('#li-id');if(f)(f.value?$('#li-pw')||f:f).focus()}}
 async function doWithdraw(fd){
   const er=m=>{const e=$('#wderr');if(e)e.textContent=m};
   if(isAdmin())return er('관리자 계정은 탈퇴할 수 없어요.');
@@ -5301,8 +5307,11 @@ window.__002gcb=gCred;
 let bootDone;const bootReady=new Promise(r=>{bootDone=r});
 /* 로그인 화면 등장(0.5초 뒤 봉투 → 1.1초부터 2초 동안 카드)이 끝나는 시각까지 기다림 */
 const INTRO_MS=4300;const introWait=()=>new Promise(r=>setTimeout(r,Math.max(0,(S.introAt||Date.now())+INTRO_MS-Date.now())));
+/* 아이디 저장(11-27, Figma 08 v6): 체크하고 로그인하면 이 기기에 아이디만 저장(비밀번호는 저장 안 함), 끄고 로그인하면 지움 */
+function savedId(){try{return localStorage.getItem('002.saveid')||''}catch(e){return ''}}
 async function doLogin(fd){
   const id=String(fd.get('id')||'').trim().toLowerCase();const pw=String(fd.get('pw')||'');
+  S.liSave=fd.get('saveid')!=null;try{if(S.liSave&&id)localStorage.setItem('002.saveid',id);else if(!S.liSave)localStorage.removeItem('002.saveid')}catch(e){}
   if(!id||!pw){S.authErr='아이디와 비밀번호를 넣어 주세요.';return render()}
   await bootReady;if(S.dbState==='none')return render();
   try{
