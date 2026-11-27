@@ -2674,6 +2674,20 @@ body:has(.wrap.frl){overflow:hidden;height:100svh}
 .frl .pc-ic{width:34px;height:34px}.frl .pc-ic svg{width:17px;height:17px}
 body:has(.wrap.frl) #legal{display:none}
 @media (min-width:721px){.frl main{bottom:16px}}
+/* 11-27 밤: 웹(PC) 홈 — 비전보드 띠와 '지금 할 일' 대시보드 높이를 줄여 첫 화면에 진열장 1열 책이 모두 보이게(창 1536×704 기준). 휴대폰은 그대로. Figma 17 진열장 'PC 홈 컴팩트' */
+@media (min-width:821px){
+  html body div.vban2{grid-template-columns:minmax(0,1fr) minmax(300px,35%);align-items:center;gap:6px 16px;padding:6px;margin-bottom:8px}
+  html body div.vban2 .vbcap{flex-direction:column;align-items:flex-start;gap:6px;padding:2px 6px 2px 0}
+  html body div.vban2 .vbct{gap:1px}
+  html body div.vban2 .vbct p{font-size:15px;line-height:1.4;-webkit-line-clamp:2}
+  html body div.vban2 .vbcap .mbtn{align-self:flex-end}
+  html body main .todo{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-areas:"m s" "p s";align-items:center;gap:6px 18px;padding:10px 16px;margin:0 0 10px}
+  html body main .todo>.todo-m{grid-area:m;gap:12px}html body main .todo>.todo-p{grid-area:p}html body main .todo>.todo-s{grid-area:s;align-self:stretch;margin:0}
+  html body main .todo .todo-th{width:40px;height:56px}
+  html body main .todo .todo-t{font-size:16px;line-height:1.35}
+  html body main .todo .todo-b{width:auto;min-height:40px;padding:0 16px;font-size:14.5px}
+  html body main .todo>.todo-k{grid-column:1/-1}
+}
 </style>
 
 <div id="app"></div>
