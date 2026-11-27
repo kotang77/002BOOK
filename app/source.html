@@ -92,6 +92,7 @@ html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% 
 .mok{display:flex;align-items:center;gap:6px;background:var(--done-bg);color:var(--done);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:700;margin:0}
 .pk .ocr{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;min-height:50px;border:1.5px solid var(--primary);border-radius:999px;background:var(--paper);color:var(--primary-ink,var(--primary));font-weight:700;font-size:15px;cursor:pointer}
 .pk .ocr input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pk .ocr2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pk .ocr2 .ocr{position:relative;font-size:14px;padding:0 8px}
 .pk .ocr:focus-within{outline:3px solid var(--accent);outline-offset:2px}
 .mact{position:sticky;bottom:0;margin:14px -18px 0;padding:10px 18px calc(12px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;z-index:3}
 .mact small{text-align:center;font-size:12.5px;color:var(--muted)}
@@ -2733,12 +2734,18 @@ const GR=['중1','중2','중3'];
 const STU=[['중1','중학교 1학년'],['중2','중학교 2학년'],['중3','중학교 3학년'],['기타','기타']],ADULT=[['부모','부모'],['선생님','선생님'],['독서회원','독서회원']];
 const SCHOOL=[...STU,...ADULT,['아빠','부모'],['엄마','부모']];const PARENTG=['아빠','엄마','선생님','부모'];const isParentG=g=>PARENTG.includes(g);
 const ADULTG=[...PARENTG,'독서회원'];const isAdultG=g=>ADULTG.includes(String(g||''));
+/* 사진 첨부(11-27): 'image/*'만 적으면 일부 안드로이드·앱(TWA)에서 카메라가 바로 열림. 형식을 하나하나 적으면 사진 고르기(갤러리) 창이 열린다 */
+const GALLERY='image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif';
+/* 학생 '기타'를 고르면 직접 입력 칸을 보인다 */
+const gEtcSync=f=>{const l=f.querySelector('[data-getc]');if(!l)return;const s=f.querySelector('[data-gpane=stu] select');l.hidden=!(s&&!s.disabled&&s.value==='기타')};
+const gradeTxt=m=>m&&m.grade==='기타'&&m.gradeEtc?m.gradeEtc:((m&&(m.grade==='아빠'||m.grade==='엄마'))?'부모':(m&&m.grade)||'');
 const isMidG=g=>/^중[1-3]$/.test(String(g||''));
 /* 친구 맺기: 중학생은 같은 학년 중학생끼리만(가족 맺기와 헷갈려 잘못 이어지지 않게). 서버 rules.ts도 같은 규칙 */
 const frGradeOk=(a,b)=>!(isMidG(a)||isMidG(b))||String(a)===String(b);
-const gradeFields=(cur,p)=>{const ad=isAdultG(cur);if(cur==='아빠'||cur==='엄마')cur='부모';const o=c=>([v,t])=>`<option value="${v}"${v===c?' selected':''}>${t}</option>`;const rb='style="flex-direction:row;gap:6px;align-items:center;display:inline-flex;margin-right:18px"';
+const gradeFields=(cur,p,etc)=>{const ad=isAdultG(cur);if(cur==='아빠'||cur==='엄마')cur='부모';const o=c=>([v,t])=>`<option value="${v}"${v===c?' selected':''}>${t}</option>`;const rb='style="flex-direction:row;gap:6px;align-items:center;display:inline-flex;margin-right:18px"';
   return `<div class="gkind"><span>구분</span><div style="margin-top:4px"><label ${rb}><input type="radio" name="${p}-kind" value="stu" data-gkind style="width:auto"${ad?'':' checked'}> 학생</label><label ${rb}><input type="radio" name="${p}-kind" value="adult" data-gkind style="width:auto"${ad?' checked':''}> 성인</label></div></div>`
   +`<label for="${p}-grade" data-gpane="stu"${ad?' hidden':''}>학년<select id="${p}-grade" name="grade"${ad?' disabled':''}>${STU.map(o(ad?'':cur)).join('')}</select></label>`
+  +`<label for="${p}-etc" data-getc${ad||cur!=='기타'?' hidden':''}>기타 학년 직접 입력<input id="${p}-etc" name="gradeEtc" maxlength="10" placeholder="예: 초등 6학년, 고1, 홈스쿨" value="${esc(etc||'')}"></label>`
   +`<label for="${p}-adult" data-gpane="adult"${ad?'':' hidden'}>성인 구분<select id="${p}-adult" name="grade"${ad?'':' disabled'}>${ADULT.map(o(ad?cur:'')).join('')}</select></label>`};
 const SCODES=SCHOOL.map(x=>x[0]);const GENDERS=['여자','남자'];
 const genderOpts=cur=>`<option value=""${cur?'':' selected'} disabled>선택해 주세요</option>`+GENDERS.map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');
@@ -3279,7 +3286,20 @@ const VBW_AD=[
  ['obst','장애물',A=>`이번 주에 꿈을 위한 일을 미루게 만든 내 습관 한 가지는? 언제, 어디서 그랬는지 적어요.`,'예: 퇴근 뒤 소파에서 휴대폰 1시간 보기','정신적 대조 WOOP · Oettingen(2014)'],
  ['plan','실행 계획',A=>`‘만약 ${A.obst||'그 습관'}이(가) 시작되면, 나는 ___.’ 어디서·몇 분 동안 할지 넣어 빈칸을 채워요.`,'예: 휴대폰을 현관 서랍에 두고 식탁에서 15분 먼저 원고를 쓸 거예요','실행 의도 · Gollwitzer(1999)']];
 const vbAdult=()=>!!S.me&&isAdultG(S.me.grade);
-const vbw=()=>vbAdult()?VBW_AD:VBW_KID;
+/* 11-27 사용자 지시: 성인은 가입 때 적은 생년으로 나이대를 보고 예시·기간을 맞춘다(20대·30대·40대·50대·60대 이상). 부모가 아닌 독서회원은 자녀 예시를 빼고 */
+const vbAgeN=()=>{const m=String((S.me&&S.me.birth)||'').match(/^(\d{4})/);return m?new Date().getFullYear()-(+m[1]):0};
+const vbBand=()=>{const n=vbAgeN();return !n?'':n<30?'20대':n<40?'30대':n<50?'40대':n<60?'50대':'60대 이상'};
+const VBEX={
+ '20대':{skill:'예: 퇴근 뒤 1시간씩 영어 회화 연습하기',me:'예: 하고 싶은 일을 찾아 꾸준히 도전하는 사람',dream:'예: 첫 책을 내고 서점에서 북토크를 열었다',job:'예: 콘텐츠 기획자 · 책을 어려워하는 청년들',health:'예: 주 3회 퇴근길 30분 달리기',want:'예: 친구와 산티아고 순례길 한 구간 걷기',give:'예: 부모님 · 첫 성과급으로 여행 보내 드리기',place:'예: 서점 북토크 무대에서 독자들과 이야기하고 있어요',obst:'예: 자기 전 침대에서 휴대폰 1시간 보기'},
+ '30대':{},'40대':{},
+ '50대':{skill:'예: 매일 새벽 1시간 좋은 문장 필사하기',me:'예: 경험을 나누며 새로운 배움을 즐기는 사람',dream:'예: 지역 도서관에서 인생 2막 독서 강좌를 열었다',job:'예: 독서 지도사 · 책과 멀어진 이웃',health:'예: 매일 저녁 40분 걷기와 10분 스트레칭',want:'예: 배우자와 한 달 동안 유럽 소도시 여행하기',give:'예: 자녀 · 함께 쓴 가족 책 선물하기',place:'예: 동네 도서관 강좌실에서 이웃들과 책 이야기를 나눠요',obst:'예: 저녁마다 TV 앞에서 2시간 보내기'},
+ '60대 이상':{skill:'예: 매일 아침 신문 칼럼 한 편 필사하기',me:'예: 배움을 멈추지 않고 이웃과 나누는 사람',dream:'예: 내가 쓴 회고록을 가족과 이웃에게 선물했다',job:'예: 도서관 그림책 낭독 봉사자 · 동네 아이들',health:'예: 매일 아침 30분 걷기와 근력 운동 10분',want:'예: 손주와 함께 제주 올레길 한 코스 걷기',give:'예: 배우자 · 직접 차린 저녁상으로 함께 축하하기',place:'예: 동네 도서관 낭독회에서 아이들에게 책을 읽어 주고 있어요',obst:'예: 낮잠이 길어져 오후를 그냥 보내기'}};
+const VBEX_RD={skill:'예: 주말마다 2시간씩 독서 모임 책 읽고 메모하기',me:'예: 일과 삶의 균형을 지키며 자기 꿈도 놓지 않는 사람',give:'예: 오랜 친구 · 내 이름으로 낸 책을 첫 권으로 선물하기'};
+function vbwAdult(){const band=vbBand(),ex=Object.assign({},(S.me&&S.me.grade)==='독서회원'?VBEX_RD:{},VBEX[band]||{}),old=band==='60대 이상';
+  return VBW_AD.map(r=>{const y=r.slice();if(ex[y[0]])y[3]=ex[y[0]];
+    if(old&&(y[0]==='dream'||y[0]==='job')){const q=y[2];y[2]=A=>{let t=typeof q==='function'?q(A):q;t=t.replace('10년 뒤','5년 뒤');if(y[0]==='job')t=t.replace('명함에는 어떤 일이','명함(또는 이름표)에는 어떤 일·역할이');return t}}
+    return y})}
+const vbw=()=>vbAdult()?vbwAdult():VBW_KID;
 const vbWho=()=>vbAdult()?'회원':'학생';
 const vbWQ=(n,A)=>{const q=vbw()[n][2];return typeof q==='function'?q(A):q};
 function vbzCard(n){const W=S.vbW,[k,stage,,ex]=vbw()[n];const A=W.a,I=S.vbImgs||{};const pic=n<8;
@@ -3344,7 +3364,7 @@ async function vbAnswer(){
   if(im){v.img=v.img||{};v.img[A.id]=im;if(ir){v.ir=v.ir||{};v.ir[A.id]=ir}}
   const it={k:A.id,head:t.slice(0,24),line:'',step:'',emoji:A.e};v.board.items=(v.board.items||[]).filter(x=>x&&x.k!==A.id);v.board.items.push(it);
   S.vbAskBusy=true;renderLayers();
-  try{if(S.sample){const r=await S.sample.json(`너는 ${vbAdult()?'어른의 꿈을 응원하는 다정한 라이프 코치':'중학생의 꿈을 응원하는 다정한 진로 코치'}이자 감각 있는 잡지 에디터다. ${(S.me&&S.me.grade)||'중학생'} ${vbWho()}이 비전보드 질문에 답했다.\n질문: ${A.q}\n답: ${t}${when?`\n이루는 해: ${when}년`:''}\n규칙: 답의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 이름·장소는 그대로 쓴다. 부정적인 표현은 밝은 미래 표현으로 바꾼다.\nJSON 객체 하나만 출력한다: {"head":"잡지 헤드라인처럼 짧고 강렬한 문구 (16자 이내)","line":"이미 이룬 듯한 현재형 확언 한 문장 (30자 이내)","step":"이번 주에 바로 할 수 있는 작은 첫 걸음 (25자 이내)","emoji":"어울리는 이모지 1개"}`,{modelTier:'quick',cache:false});
+  try{if(S.sample){const r=await S.sample.json(`너는 ${vbAdult()?'어른의 꿈을 응원하는 다정한 라이프 코치':'중학생의 꿈을 응원하는 다정한 진로 코치'}이자 감각 있는 잡지 에디터다. ${vbAdult()&&vbBand()?vbBand()+' ':''}${(S.me&&S.me.grade)||'중학생'} ${vbWho()}이 비전보드 질문에 답했다.\n질문: ${A.q}\n답: ${t}${when?`\n이루는 해: ${when}년`:''}\n규칙: 답의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 이름·장소는 그대로 쓴다. 부정적인 표현은 밝은 미래 표현으로 바꾼다.\nJSON 객체 하나만 출력한다: {"head":"잡지 헤드라인처럼 짧고 강렬한 문구 (16자 이내)","line":"이미 이룬 듯한 현재형 확언 한 문장 (30자 이내)","step":"이번 주에 바로 할 수 있는 작은 첫 걸음 (25자 이내)","emoji":"어울리는 이모지 1개"}`,{modelTier:'quick',cache:false});
     if(r&&typeof r==='object'){it.head=String(r.head||t).slice(0,24);it.line=String(r.line||'').slice(0,40);it.step=String(r.step||'').slice(0,30);it.emoji=String(r.emoji||A.e).slice(0,4)}}}catch(e){}
   S.vbAskBusy=false;S.vbAsk=null;S.vbImgs=null;S.vbIr=null;saveProgress();renderLayers();render();toast('비전보드에 꽂았어요! 📌');
 }
@@ -3370,7 +3390,7 @@ async function vbMake(){
     const secName=s=>(VSEC.find(x=>x[0]===s)||[])[2]||'';
     const list=L.map(x=>`- ${x.k} [${secName(x.sec)} / ${x.q}]: ${x.text}${x.when?` (이루는 해: ${x.when}년${vbStage(+x.when)?', '+vbStage(+x.when):''})`:''}`).join('\n');
     const A=v.a;
-    const r=await S.sample.json(`너는 ${vbAdult()?'어른의 꿈을 응원하는 다정한 라이프 코치':'중학생의 꿈을 응원하는 다정한 진로 코치'}이자 감각 있는 잡지 에디터다. ${(S.me&&S.me.grade)||'중학생'} ${vbWho()} '${(S.me&&S.me.nick)||''}'이(가) 적은 꿈으로 코르크 보드에 오려 붙인 비전보드 문구를 쓴다.\n\n[${vbWho()}이 적은 꿈]\n${list}\n${A.word?'- 미래의 나에게: '+A.word+'\n':''}${A.obst?'- 꿈을 막을 것 같은 내 안의 장애물: '+A.obst+'\n':''}${A.plan?'- 만약-그러면 계획: '+A.plan+'\n':''}${v.dday?'- 모든 꿈이 완성되는 날: '+v.dday+'\n':''}\n규칙: ${vbWho()}이 적은 내용의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 학교·대학 이름은 그대로 쓴다. 부정적이거나 불안한 표현은 밝고 긍정적인 미래 표현으로 바꾼다. 헤드라인은 잡지처럼 짧고 강렬하게, 확언은 이미 이룬 듯한 현재형으로 쓴다. 첫 걸음은 중학생이 이번 주에 바로 할 수 있는 구체적이고 작은 행동으로 쓴다. 이루는 해가 있으면 그 시기에 맞는 현실적인 첫 걸음을 고른다.\nJSON 객체 하나만 출력한다:\n{"title":"보드 제목 (8자 이내, 예: 바다를 품은 나)","statement":"비전 선언문 한 문장 (30자 이내)","words":["꿈을 대표하는 키워드 3~4개, 각 6자 이내"],"pledge":"학생 본인이 직접 쓴 것처럼 1인칭으로 쓴 다짐 글 2~3문장 (100자 이내). '~하겠다', '~할 것이다'처럼 단단한 의지가 담긴 말투. 꿈 2~3개를 자연스럽게 담고, 지금 당장 할 작은 실천 하나를 넣는다. 만약-그러면 계획이 있으면 그 계획을 그대로 살려 넣는다","items":[{"k":"위 항목 키 그대로","head":"잡지 헤드라인처럼 다듬은 짧은 제목 (12자 이내)","line":"현재형 확언 한 문장 (24자 이내)","step":"지금 할 수 있는 첫 걸음 (20자 이내)","emoji":"어울리는 이모지 1개","en":"이 꿈을 보여 줄 사진 검색어 영어 2~3단어. 사람 얼굴·실존 인물·상표·학교 이름 없이 사물·장소·풍경 위주 (예: art gallery, graduation cap, ocean house)"}]}\nitems는 위 항목마다 하나씩, 같은 순서로 쓴다.`,{cache:false});
+    const r=await S.sample.json(`너는 ${vbAdult()?'어른의 꿈을 응원하는 다정한 라이프 코치':'중학생의 꿈을 응원하는 다정한 진로 코치'}이자 감각 있는 잡지 에디터다. ${vbAdult()&&vbBand()?vbBand()+' ':''}${(S.me&&S.me.grade)||'중학생'} ${vbWho()} '${(S.me&&S.me.nick)||''}'이(가) 적은 꿈으로 코르크 보드에 오려 붙인 비전보드 문구를 쓴다.\n\n[${vbWho()}이 적은 꿈]\n${list}\n${A.word?'- 미래의 나에게: '+A.word+'\n':''}${A.obst?'- 꿈을 막을 것 같은 내 안의 장애물: '+A.obst+'\n':''}${A.plan?'- 만약-그러면 계획: '+A.plan+'\n':''}${v.dday?'- 모든 꿈이 완성되는 날: '+v.dday+'\n':''}\n규칙: ${vbWho()}이 적은 내용의 뜻을 바꾸거나 새 꿈을 지어내지 않는다. 학교·대학 이름은 그대로 쓴다. 부정적이거나 불안한 표현은 밝고 긍정적인 미래 표현으로 바꾼다. 헤드라인은 잡지처럼 짧고 강렬하게, 확언은 이미 이룬 듯한 현재형으로 쓴다. 첫 걸음은 중학생이 이번 주에 바로 할 수 있는 구체적이고 작은 행동으로 쓴다. 이루는 해가 있으면 그 시기에 맞는 현실적인 첫 걸음을 고른다.\nJSON 객체 하나만 출력한다:\n{"title":"보드 제목 (8자 이내, 예: 바다를 품은 나)","statement":"비전 선언문 한 문장 (30자 이내)","words":["꿈을 대표하는 키워드 3~4개, 각 6자 이내"],"pledge":"학생 본인이 직접 쓴 것처럼 1인칭으로 쓴 다짐 글 2~3문장 (100자 이내). '~하겠다', '~할 것이다'처럼 단단한 의지가 담긴 말투. 꿈 2~3개를 자연스럽게 담고, 지금 당장 할 작은 실천 하나를 넣는다. 만약-그러면 계획이 있으면 그 계획을 그대로 살려 넣는다","items":[{"k":"위 항목 키 그대로","head":"잡지 헤드라인처럼 다듬은 짧은 제목 (12자 이내)","line":"현재형 확언 한 문장 (24자 이내)","step":"지금 할 수 있는 첫 걸음 (20자 이내)","emoji":"어울리는 이모지 1개","en":"이 꿈을 보여 줄 사진 검색어 영어 2~3단어. 사람 얼굴·실존 인물·상표·학교 이름 없이 사물·장소·풍경 위주 (예: art gallery, graduation cap, ocean house)"}]}\nitems는 위 항목마다 하나씩, 같은 순서로 쓴다.`,{cache:false});
     if(!r||typeof r!=='object'||!Array.isArray(r.items))throw 0;
     const ok=new Set(L.map(x=>x.k));
     v.board={title:String(r.title||fb.title).slice(0,14),statement:String(r.statement||'').slice(0,50),words:(Array.isArray(r.words)?r.words:[]).map(x=>String(x).slice(0,10)).slice(0,5),pledge:String(r.pledge||fb.pledge).slice(0,160),
@@ -4106,11 +4126,11 @@ function monthHTML(i){
   const essay=svReady(i)?essayHTML(i):svLockHTML(i);
   const wDone=stepsOf(i)[0].done;const nDone=stepsOf(i)[1].done;
   const note=`${wDone&&!nDone?'<p class="mok">'+IC.check+'<span>1단계 끝! 이제 기록하기 차례예요</span></p>':''}<div class="note2"><h3>책에서 마음에 남은 문장</h3>
-      <label class="ocr" for="ph-sentence">${IC.cam}<span>책 사진 찍어서 채우기</span><input id="ph-sentence" type="file" accept="image/*" data-ocr="sentence"></label>
+      <div class="ocr2"><label class="ocr" for="ph-sentence">${IC.cam}<span>카메라로 찍기</span><input id="ph-sentence" type="file" accept="image/*" capture="environment" data-ocr="sentence"></label><label class="ocr" for="ph-sentence-g"><span>🖼 사진 첨부</span><input id="ph-sentence-g" type="file" accept="${GALLERY}" data-ocr="sentence"></label></div>
       <label for="n-sentence">문장<textarea id="n-sentence" data-note="sentence" placeholder="마음에 남은 문장을 그대로 옮겨 적어요">${esc(n.sentence||'')}</textarea></label>
       <label for="n-sreason">그 이유<textarea id="n-sreason" data-note="sreason" placeholder="왜 마음에 남았나요? 한두 문장이면 돼요">${esc(n.sreason||'')}</textarea></label></div>
     <div class="note2"><h3>영화에서 기억에 남은 장면</h3>
-      <label class="ocr" for="ph-scene">${IC.cam}<span>장면 사진으로 채우기</span><input id="ph-scene" type="file" accept="image/*" data-ocr="scene"></label>
+      <div class="ocr2"><label class="ocr" for="ph-scene">${IC.cam}<span>카메라로 찍기</span><input id="ph-scene" type="file" accept="image/*" capture="environment" data-ocr="scene"></label><label class="ocr" for="ph-scene-g"><span>🖼 사진 첨부</span><input id="ph-scene-g" type="file" accept="${GALLERY}" data-ocr="scene"></label></div>
       <label for="n-scene">장면<textarea id="n-scene" data-note="scene" placeholder="어떤 장면이었는지 적어요">${esc(n.scene||'')}</textarea></label>
       <label for="n-creason">그 이유<textarea id="n-creason" data-note="creason" placeholder="왜 기억에 남았나요? 한두 문장이면 돼요">${esc(n.creason||'')}</textarea></label></div>
     <p class="hint">${IC.check} 쓰는 대로 저장돼요.</p>`;
@@ -4303,7 +4323,8 @@ const KYAX={'소설':0,'시/에세이':0,'인문':1,'자기계발':1,'사회과�
 /* 기본 코스 36권의 분야를 책마다 고정한다 [주 분야, 부 분야]. 주제어가 아니라 책의 주제로 나눈다(서지 확인 전 작성자 판단) */
 const BKAX={'순례주택':[0],'누가 내 치즈를 옮겼을까?':[1],'꽃을 보듯 너를 본다':[0],'설득의 심리학':[1],'당신 인생의 이야기':[0,4],'방구석 미술관':[5],'종이여자':[0],'만약 고교 여자 매니저가 피터 드러커를 읽는다면':[2,0],'사피엔스':[3],'노인과 바다':[0],'진짜 어른이 되기 위한 청소년 논어':[1],'사막을 건너는 여섯 가지 방법':[1],
  '에너지 버스':[1],'아주 작은 습관의 힘':[1],'공중그네':[0],'동물농장':[0,2],'이기적인 유전자':[4],'금난새와 떠나는 클래식 여행':[5],'사랑하라 한번도 사랑하지 않은 것처럼':[0],'장사의 신':[2],'삼국지':[0,3],'이반 일리치의 죽음':[0],'소피의 세계':[1,0],'그릿':[1],
- '화성에서 온 남자, 금성에서 온 여자':[1],'부의 확신':[1],'직업으로서의 소설가':[0],'월든':[0,1],'코스모스':[4],'빛이 이끄는 곳으로':[0,5],'여행의 이유':[0],'돈의 속성':[2],'칼의 노래':[0,3],'달과 6펜스':[0,5],'세 종교 이야기':[1],'미움받을 용기':[1]};
+ '화성에서 온 남자, 금성에서 온 여자':[1],'부의 확신':[1],'직업으로서의 소설가':[0],'월든':[0,1],'코스모스':[4],'빛이 이끄는 곳으로':[0,5],'여행의 이유':[0],'돈의 속성':[2],'칼의 노래':[0,3],'달과 6펜스':[0,5],'세 종교 이야기':[1],'미움받을 용기':[1],
+ '천문학자는 별을 보지 않는다':[4],'사피엔스 그래픽 히스토리 1: 인류의 탄생':[3],'변신':[0],'아큐정전':[0],'청소년을 위한 월든':[0,1],'도킨스의 이기적 유전자':[4]};
 const HEXFULL=6;  // 예전 기준(영역마다 6권). 화면에서는 쓰지 않는다
 /* ---------- 도서 서지 조회 (국립중앙도서관 ISBN 서지정보, 서버 book.isbn·book.find) ----------
    분야는 도서관 분류(KDC)를 먼저 쓰고, 서지가 없을 때만 AI가 제안한다. 조회 기능이 꺼져 있으면(인증키 없음) 조용히 AI로 넘어간다 */
@@ -4315,7 +4336,7 @@ function kdcKY(kdc,main){const k=String(kdc||'');if(/^81[14]/.test(k)||/^8\d[14]
 function bkApply(b,x){if(!x)return false;b.nl=1;
   if(x.isbn)b.isbn=x.isbn;if(x.kdc)b.kdc=x.kdc;if(x.add)b.add=x.add;if(!b.author&&x.author)b.author=x.author;if(x.kid)b.kid=1;
   if(x.nc){b.nc=1;b.ncw=x.nc}
-  if(Number.isInteger(x.main)&&x.main>=0&&x.main<6){b.main=x.main;b.sub=null;b.v=2;b.src='nl';b.why=(x.from==='kdc'?'도서관 분류 '+x.kdc:'ISBN 부가기호 '+x.add)+' · '+AX[x.main][1];if(!b.catSet)b.cat=kdcKY(x.kdc,x.main);return true}
+  if(Number.isInteger(x.main)&&x.main>=0&&x.main<6){b.main=x.main;b.sub=null;b.v=2;b.src='nl';b.why=(x.from==='kdc'?'도서관 분류 '+x.kdc:'ISBN 부가기호 '+x.add)+' · '+AX[x.main][1];if(!b.catUser)b.cat=kdcKY(x.kdc,x.main);return true}
   return false}
 async function bkLookup(q){try{const r=q.isbn?await bkSrv('isbn',{isbn:q.isbn}):await bkSrv('find',{title:bTitle(q.title),author:q.author||''});return r&&r.book||null}catch(e){if(q.isbn&&e&&e.code==='bad_isbn')throw e;return null}}
 const isbnOK=v=>{const s=String(v||'').replace(/[^0-9Xx]/g,'');if(s.length===13)return /^97[89]/.test(s)&&String((10-[...s.slice(0,12)].reduce((a,c,i)=>a+ +c*(i%2?3:1),0)%10)%10)===s[12];if(s.length===10){let t=0;for(let i=0;i<10;i++){const c=s[i].toUpperCase()==='X'?10:+s[i];t+=c*(10-i)}return t%11===0}return false};
@@ -4399,10 +4420,15 @@ const KY=['소설','시/에세이','인문','역사/문화','사회과학','경�
 const KYC={'소설':['#8E4B3E','#C27A5E'],'시/에세이':['#C9788C','#E8A9B6'],'인문':['#4E6A8A','#7E9CBF'],'역사/문화':['#8A6B3E','#C4A262'],'사회과학':['#3F7A6B','#79B3A2'],'경제/경영':['#D49A2A','#F0C860'],'자기계발':['#D2683A','#F0A070'],'과학':['#3B6FB0','#7AAEE0'],'예술/대중문화':['#7A5AA8','#B49AD6'],'청소년':['#5C9A4E','#9CCB86'],'기타':['#7A7A7A','#B0B0B0']};
 const GKY={'고전':'소설','소설':'소설','SF·고전':'소설','시':'시/에세이','철학':'인문','심리':'인문','글쓰기':'인문','역사':'역사/문화','경제':'경제/경영','자기계발':'자기계발','예술':'예술/대중문화'};
 const AXKY=['소설','인문','사회과학','역사/문화','과학','예술/대중문화'];
-function catOfItem(it){const t=String(it.book||'');if(/자유론|정의란/.test(t))return '사회과학';return GKY[it.genre]||'기타'}
+/* 코스 책의 서가 칸(11-27 사용자 지시: ISBN 기준 분류로): ① 국립중앙도서관 서지(KDC) → ② 책마다 고정한 분야(BKAX) → ③ 예전처럼 장르 */
+function catOfItem(it){const t=String(it.book||'');if(/자유론|정의란/.test(t))return '사회과학';const T=bTitle(t);
+  const nl=((S.progress&&S.progress.bkax)||{})[hid(T)];if(nl&&nl.m>=0)return kdcKY(nl.k,nl.m);
+  const f=BKAX[T];if(f&&AXKY[f[0]])return AXKY[f[0]];return GKY[it.genre]||'기타'}
 const bTitle=t=>String(t||'').replace(/\s*\(.*\)\s*$/,'');
 function bAuthor(t){const m=String(t||'').match(/\(([^)]*)\)\s*$/);return m?m[1]:''}
-function bCat(b){const h=hid(b.title);const ov=(S.progress.catOv||{})[h];if(ov&&KY.includes(ov))return ov;if(b.cat&&KY.includes(b.cat))return b.cat;return AXKY[b.main]||'기타'}
+function bCat(b){const h=hid(b.title);const ov=(S.progress.catOv||{})[h];if(ov&&KY.includes(ov))return ov;if(b.cat&&b.catUser&&KY.includes(b.cat))return b.cat;
+  if(b.kdc&&b.src==='nl'&&b.main>=0&&b.main<6)return kdcKY(b.kdc,b.main); // 도서관 분류(ISBN·KDC)가 있으면 그 칸 — AI가 짐작한 칸보다 먼저
+  if(b.cat&&KY.includes(b.cat))return b.cat;return AXKY[b.main]||'기타'}
 const shTitleOf=h=>{const b=hexBooks().find(x=>hid(x.title)===h);return b?b.title:''};
 const shQuotes=h=>((S.progress.quotes||{})[h])||[];
 /* ---------- 서가에 꽂을 때 매기는 평가: 재미·난이도·다시 읽고 싶은 정도 (0.5~5점) ---------- */
@@ -4474,7 +4500,7 @@ function shelfExtra(sel,h){
       <div class="sxr"><input id="sh-qp" maxlength="8" inputmode="numeric" placeholder="쪽수" aria-label="쪽수" value="${esc(D.p||'')}"><input id="sh-qr" maxlength="120" placeholder="왜 마음에 남았나요? (선택)" aria-label="이유" value="${esc(D.r||'')}"></div>
       ${P?`<div class="shqp"><img src="${P.img}" alt="올린 문구 사진"><div><p class="hint" role="status">${P.busy?'사진 속 글을 읽어 위 칸에 채우는 중이에요…':'사진과 함께 저장돼요. 글은 고쳐도 돼요.'}</p><button type="button" class="chip" data-act="shqimgx" data-h="${h}">사진 빼기</button></div></div>`:''}
       <div class="sdb"><button type="button" class="btn small" data-act="shqadd" data-h="${h}" ${P&&P.busy?'disabled':''}>문구 저장</button>
-        <label class="btn ghost small up">${P?'사진 바꾸기':'문구 사진 올리기'}<input type="file" accept="image/*" data-shqimg="${h}"></label></div>
+        <label class="btn ghost small up">📷 ${P?'다시 찍기':'카메라로 찍기'}<input type="file" accept="image/*" capture="environment" data-shqimg="${h}"></label><label class="btn ghost small up">🖼 사진 첨부<input type="file" accept="${GALLERY}" data-shqimg="${h}"></label></div>
       <p class="hint">책 쪽을 찍어 올리면 글을 읽어 칸에 채워 줘요. 사진만 저장해도 돼요. 모은 문구는 이 책을 누르면 맨 위에 보이고, 내 서재의 "모아 둔 문장과 장면"에도 모여요.</p>`})()}</div></div>`;
 }
 async function loadShRv(h){
@@ -4661,7 +4687,7 @@ async function addMyBook(fd){
   if(!title){if(!nlx||!nlx.title){toast(S.nlOff==='isbn_not_configured'?'지금은 ISBN 조회를 쓸 수 없어요. 책 제목을 적어 주세요.':'이 ISBN으로 책을 찾지 못했어요. 책 제목을 적어 주세요.');renderLayers();return}title=nlx.title.slice(0,80)}
   if(hexBooks().some(x=>bkNorm(x.title)===bkNorm(title))){toast('「'+bTitle(title)+'」은(는) 이미 서가에 있어요.');renderLayers();return}
   const b={id:hid(title+Date.now()+Math.random()),title,author,main:-1,sub:null,v:2,g:hxGrade(),why:'',at:Date.now(),rate:Object.assign({},S.mbRate)};
-  if(catSel!=='auto'&&KY.includes(catSel)){b.cat=catSel;b.catSet=1}
+  if(catSel!=='auto'&&KY.includes(catSel)){b.cat=catSel;b.catSet=1;b.catUser=1}
   const byNl=ax==='auto'&&bkApply(b,nlx);if(nlx&&!byNl)bkApply(b,nlx);
   if(ax!=='auto'){b.main=+ax;b.src='me'}
   if(((ax==='auto'&&!byNl)||(catSel==='auto'&&!b.cat))&&S.sample){
@@ -5065,7 +5091,7 @@ function friendsHTML(){
   const pn=pcIn().filter(x=>!x.openedAt).length;
   const fq=famRecv().length;const an=pn+recv.length+fq;
   const tabs=`<div class="stabs lgtabs" style="margin-bottom:12px">${[['my','친구',0],['fam','가족',0],['club','북클럽',0],['post','엽서함',0],['alarm','알람',an]].map(([k,t,n])=>`<button data-act="frtab" data-v="${k}" aria-pressed="${tab===k}">${t}${n?`<i class="lgn">${n}</i>`:''}</button>`).join('')}</div>`;
-  const sub=id=>{const m=frMem(id);return [m.grade,m.region].filter(Boolean).join(' · ')};
+  const sub=id=>{const m=frMem(id);return [gradeTxt(m),m.region].filter(Boolean).join(' · ')};
   let body='';
   if(tab==='my'){
     body=fr.length?fr.map(id=>{const u=frUnread(id);return `<div class="frr">${frAv(id)}<div class="fi"><b>${esc(frName(id))}${u?` <i class="fbd">${u}</i>`:''}</b><small>${esc(sub(id))}</small>${frMem(id).bio?`<small style="display:block;color:var(--ink)">${esc(frMem(id).bio)}</small>`:''}</div><div class="fa"><button class="btn small" data-act="frchat" data-id="${esc(id)}">대화</button><button class="btn ghost small" data-act="frprof" data-id="${esc(id)}">진도·논술</button></div></div>`}).join('')
@@ -5475,7 +5501,7 @@ async function saveProfile(fd){
   const cur=String(fd.get('cur')||''),pw=String(fd.get('pw')||'');
   if(!EMAILRE.test(email))return er('이메일 주소를 정확히 적어 주세요.');
   const gender=String(fd.get('gender')||'');const theme=fd.get('theme')==='sky'?'sky':'cream';
-  const up={theme,pub:{bio:!!fd.get('pub_bio'),grade:!!fd.get('pub_grade'),region:!!fd.get('pub_region'),photo:!!fd.get('pub_photo')},nick,email,region,grade:SCODES.includes(grade)?grade:S.me.grade,bio:String(fd.get('bio')||'').trim().slice(0,40),buddy:String(fd.get('buddy')||'').trim().slice(0,10)||BUDDY0,...budFields()};if(GENDERS.includes(gender))up.gender=gender;
+  const up={theme,pub:{bio:!!fd.get('pub_bio'),grade:!!fd.get('pub_grade'),region:!!fd.get('pub_region'),photo:!!fd.get('pub_photo')},nick,email,region,grade:SCODES.includes(grade)?grade:S.me.grade,gradeEtc:grade==='기타'?String(fd.get('gradeEtc')||'').trim().slice(0,10):'',bio:String(fd.get('bio')||'').trim().slice(0,40),buddy:String(fd.get('buddy')||'').trim().slice(0,10)||BUDDY0,...budFields()};if(GENDERS.includes(gender))up.gender=gender;
   try{
     if(pw){
       if(pw.length<8)return er('새 비밀번호는 8자 이상이어야 해요.');
@@ -5498,7 +5524,7 @@ function profileHTML(){
     <label for="pf-buddy">나의 가상 친구 이름 <small class="hint">인사하고 응원해 주는 친구예요</small><input id="pf-buddy" name="buddy" maxlength="10" value="${esc(buddyOf(m))}"></label>${budPickHTML(m)}
     <label for="pf-region">거주지역<select id="pf-region" name="region">${REGIONS.map(r=>`<option${r===m.region?' selected':''}>${r}</option>`).join('')}</select></label>
     <label for="pf-gender">성별<select id="pf-gender" name="gender">${genderOpts(m.gender||'')}</select></label>
-    ${gradeFields(m.grade,'pf')}
+    ${gradeFields(m.grade,'pf',m.gradeEtc)}
     <div class="sec" style="margin-top:6px"><h3>앱 색</h3><p class="hint">누르면 바로 바뀌어요. 저장하면 다른 기기에서도 같은 색이에요.</p>${themePick(m.theme||themeNow(),'pf')}</div>
     <div class="sec" style="margin-top:6px"><h3>공개 설정</h3><p class="hint">다른 회원에게는 <b>닉네임</b>만 보여요. 아래에서 켠 정보만 함께 보여요. 이메일·성별·태어난 연월은 항상 비공개예요.</p>
       <label style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="pub_bio" style="width:auto" ${(m.pub||{}).bio?'checked':''}> 한 줄 소개 공개</label>
@@ -5531,7 +5557,8 @@ async function doSignup(fd){
   if(age<14&&(!g('gname')||!EMAILRE.test(g('gemail'))))return er('만 14세 미만은 보호자 이름과 보호자 이메일을 적어 주세요.');
   if(G&&age<14&&g('gemail').toLowerCase()===S.gs.email.toLowerCase())return er('보호자 이메일은 내 구글 이메일과 달라야 해요.');
   if(!fd.get('agt')||!fd.get('agp'))return er('이용약관 동의와 개인정보 처리 안내 확인에 체크해 주세요.');
-  const p={id,pw,nick,region:g('region'),grade:SCODES.includes(g('grade'))?g('grade'):'중1',gender:g('gender'),bio:g('bio').slice(0,40),buddy:g('buddy').slice(0,10)||BUDDY0,...budFields(),
+  if(g('grade')==='기타'&&!g('gradeEtc'))return er('기타를 골랐다면 학년(예: 초등 6학년, 고1)을 직접 적어 주세요.');
+  const p={id,pw,nick,region:g('region'),grade:SCODES.includes(g('grade'))?g('grade'):'중1',gradeEtc:g('grade')==='기타'?g('gradeEtc').slice(0,10):'',gender:g('gender'),bio:g('bio').slice(0,40),buddy:g('buddy').slice(0,10)||BUDDY0,...budFields(),
     email:g('email').slice(0,120),birth:g('birth'),guardianName:g('gname'),guardianEmail:g('gemail'),agreeTerms:!!fd.get('agt'),agreePrivacy:!!fd.get('agp'),agreeMarketing:!!fd.get('agm'),theme:g('theme')==='sky'?'sky':'cream'};
   const btn=$('form[data-form='+(G?'gsignup':'signup')+'] button[type=submit]');if(btn)btn.disabled=true;
   try{
@@ -7095,7 +7122,7 @@ async function famRemove(id){
   frRefresh(true);
 }
 function famHTML(){
-  const F=S.fr;const sub=id=>{const m=frMem(id);return [m.grade,m.region].filter(Boolean).join(' · ')};
+  const F=S.fr;const sub=id=>{const m=frMem(id);return [gradeTxt(m),m.region].filter(Boolean).join(' · ')};
   const row=(id,s,btns,k)=>`<div class="frr"${k?` data-k="${esc(k)}"`:''}>${frAv(id)}<div class="fi"><b>${esc(famName(id))}</b><small>${esc(s)}</small></div><div class="fa">${btns}</div></div>`;
   const recv=famRecv(),par=famParents();let h='';
   if(recv.length)h+=`<div class="sec"><h3>받은 가족 요청 ${recv.length}건</h3><p class="hint">수락하면 부모님이 내 진도와 논술, 첨삭 점수를 볼 수 있어요.</p>${recv.map(d=>row(d.parent,'부모님으로 가족 맺기를 요청했어요',`<button class="btn small" data-act="famok" data-id="${esc(d.parent)}">수락</button><button class="btn ghost small" data-act="famno" data-id="${esc(d.parent)}">거절</button>`)).join('')}</div>`;
@@ -7515,7 +7542,8 @@ document.addEventListener('change',e=>{
   const el=e.target;
   if(el.name==='theme'&&el.type==='radio'){applyTheme(el.value);return}
   if(el.id==='su-birth'){suGuard();return}
-  if(el.dataset&&el.dataset.gkind!==undefined){const f=el.form;if(f)f.querySelectorAll('[data-gpane]').forEach(l=>{const on=l.dataset.gpane===el.value;l.hidden=!on;const q=l.querySelector('select');if(q)q.disabled=!on});return}
+  if(el.dataset&&el.dataset.gkind!==undefined){const f=el.form;if(f){f.querySelectorAll('[data-gpane]').forEach(l=>{const on=l.dataset.gpane===el.value;l.hidden=!on;const q=l.querySelector('select');if(q)q.disabled=!on});gEtcSync(f)}return}
+  if(el.name==='grade'&&el.tagName==='SELECT'&&el.form&&el.form.querySelector('[data-getc]')){gEtcSync(el.form);if(el.value==='기타'){const i=el.form.querySelector('[data-getc] input');if(i)i.focus()}return}
   if(el.id==='adm-sort'){admF().sort=el.value;render()}
   else if(el.id==='ad-file'&&el.files[0])readXlsx(el.files[0]);
   else if(el.id==='ad-bulk'&&el.files.length)bulkCovers([...el.files]);
@@ -7847,7 +7875,7 @@ try{
   }
 }catch(e){}
 /* 회귀 시험용 손잡이: 시험 스크립트가 미리 window.__002TEST를 둔 때만 넘긴다 */
-if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,items,nk,prepOf,rwLeft,rbScore,hexScores,hexBooks,radarSVG,orFill,orSpeed,hid,render,bkLookup,bkApply,hxSync,addMyBook,isbnOK});
+if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,items,nk,prepOf,rwLeft,rbScore,hexScores,hexBooks,radarSVG,orFill,orSpeed,hid,render,bkLookup,bkApply,hxSync,addMyBook,isbnOK,catOfItem,bCat});
 S.dbState=S.db?'ok':'none';
 if(S.db){
   // 계획표와 설정(요금·공지·차단 목록)은 서로 기다릴 필요가 없어 함께 불러온다. 로그인(enter)은 둘 다 받은 뒤에

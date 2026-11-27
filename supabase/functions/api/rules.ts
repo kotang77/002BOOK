@@ -118,7 +118,7 @@ export function redact(ctx: Ctx, row: Row): Row {
   if (!photo) out.avatar = src.avatar ?? '';                 // 앱이 주는 그림 캐릭터는 개인정보가 아님
   if (photo && pub.photo) { out.avatar = 'custom'; out.avatarImg = src.avatarImg; }
   if (pub.bio) out.bio = src.bio;
-  if (pub.grade) out.grade = src.grade;
+  if (pub.grade) { out.grade = src.grade; if (src.gradeEtc) out.gradeEtc = src.gradeEtc; }
   if (pub.region) out.region = src.region;
   return { ...row, data: out };
 }
