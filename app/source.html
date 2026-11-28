@@ -998,7 +998,7 @@ form{display:flex;flex-direction:column;gap:12px}
 /* 11-28: 한 칸에 4권, 책 사이를 넓혀 꼬리표가 옆 책에 닿지 않게 */
 html body .bshf .sbr{gap:22px!important;padding-right:20px!important}
 html body .bshf .sbr>.sb:not(.tb),html body .bshf .sbw{width:calc((100% - 66px - 20px)/4)!important}
-html body .bshf .sbw>.sb{width:100%!important}
+html body .bshf .sbw>.sb{width:100%!important;display:block;margin:0}html body .bshf .sbw{line-height:0;align-self:flex-end}
 html body .bshf .sqtabs{left:calc(100% + 1px)!important;gap:3px}
 html body .bshf .sqtab{width:16px;height:16px;font-size:10px;line-height:16px}
 .shqpop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px 20px 36px}
@@ -1802,6 +1802,11 @@ body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-
 .auth .tai .t2 b{font-weight:900}
 /* 11-28: 예시 책 줄 · 관리자 입력 */
 .shqpop-c blockquote{white-space:pre-line}
+/* 11-28 사용자 지시: 포스트잇 책 제목에 형광펜 두 번, 문구는 포스트잇 가운데(제목과 이전·다음 사이) */
+.pk .ocr3{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.pk .ocr3 .btn{flex:1;justify-content:center}.note2 .opt{font-size:.85em;color:var(--muted,#8A7C6E);font-weight:400}
+.shqpop-r{margin:0 0 10px;font:400 20px/1.3 'Nanum Pen Script','Gaegu',cursive;color:#5A4520}
+.shqpop-m{flex:1;display:flex;flex-direction:column;justify-content:center;padding:6px 0}
+.shqpop-h small .hl{position:relative;z-index:0;padding:.05em .3em;color:#3B2A12}.shqpop-h small .hl::before{content:"";position:absolute;inset:0;z-index:-1;background:inherit;background-position:3px 72%;background-size:98% 86%;pointer-events:none}
 .sbf{display:flex;flex-direction:column;gap:10px}.sbf label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:14px}
 .sbq{display:flex;gap:8px;align-items:flex-start}.sbq>label:first-child{flex:1}.sbq textarea{width:100%;font:inherit;font-weight:400;line-height:1.6;white-space:pre-wrap}.sbqp{width:72px;flex:none}.sbf .row{display:flex;gap:8px;flex-wrap:wrap}
 /* 11-28: 논술·구술 첨삭 예시 */
@@ -2616,6 +2621,40 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgq{margin:0;padding-left:20px}.lgq li{margin-bottom:4px}.lgq span{display:block;color:#6B6157;font-size:.92em}
 .lgwd{margin:0;padding-left:16px}.lgwd b{color:#3B2611}
 .lgcare p{background:#FBF1EC;border-left:3px solid #C0533F;padding:7px 10px;border-radius:2px}
+/* 11-28 학습지도 버튼 두 개 + 학습지도 창 + A4 재구성(l3) */
+.lgnbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lgnbtns .lgnbtn{margin-top:0}.lgnbtn.on{background:#1F4637;color:#FFF8EA}
+.lgdocw{display:flex;flex-direction:column}.lgdoc{flex:1;padding:2px 2px 12px}.lgdoc .lgs{background:#fff;border:1px solid #E6DCCB;border-radius:12px;padding:16px 14px;font-size:13.5px;line-height:1.6}
+.lgdocbar{position:sticky;bottom:0!important;margin:0}.lgdocbar .btn{flex:1}
+@media print{#layer1:has(.lgdocw){display:none!important}}
+.l3 h4{display:flex;align-items:center;gap:7px;margin:0 0 7px;font:800 14.5px var(--f-display);color:#1F4637}
+.l3 h4 em{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#1F4637;color:#FFF8EA;font:800 11.5px var(--f-body)}
+.l3 section{margin:0 0 13px}.l3 p{margin:0}
+.l3top{display:flex;justify-content:space-between;font:700 10.5px var(--f-body);color:#A57A35;border-bottom:2px solid #1F4637;padding-bottom:5px;margin-bottom:12px}
+.l3h{margin-bottom:12px}.l3h small{font:700 11px var(--f-body);color:#8A7C6E}.l3h h3{margin:2px 0 4px;font:800 26px/1.25 var(--f-display);color:#1F4637}
+.l3h h3 .hl{background:linear-gradient(transparent 55%,#BDE3F5 55%,#BDE3F5 92%,transparent 92%);padding:0 .15em}
+.l3h p{font:700 14.5px/1.5 var(--f-body);color:#2B2622}
+.l3flow{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 14px;padding:0}
+.l3flow li{background:#EEF3EC;border-radius:8px;padding:7px 8px;position:relative}.l3flow i{font-style:normal;font:800 11px var(--f-body);color:#fff;background:#1F4637;border-radius:4px;padding:0 5px;margin-right:4px}
+.l3flow b{font-size:12px;color:#1F4637}.l3flow span{display:block;font-size:11.5px;line-height:1.4;color:#4A4038;margin-top:2px}
+.l3link{display:grid;gap:6px}.l3link.l3c3{grid-template-columns:1fr 1fr 1fr}.l3link.l3c2{grid-template-columns:1fr 1fr}
+.l3link>div{border:1px solid #E6DCCB;border-top:3px solid #A57A35;border-radius:6px;padding:7px 9px}.l3link small{font:800 10.5px var(--f-body);color:#A57A35}
+.l3link b{display:block;font-size:12.5px;line-height:1.35;color:#2B2622}.l3link p{font-size:12px;line-height:1.45;color:#4A4038;margin-top:3px}
+.l3key ol{list-style:none;margin:0;padding:10px 12px;background:#FFF7E2;border:1.5px solid #E9C877;border-radius:10px;display:grid;gap:8px}
+.l3key li,.l3q li{display:flex;gap:10px;align-items:flex-start}.l3key li>i{flex:none;font-style:normal;width:26px;height:26px;border-radius:50%;background:#C98A1B;color:#fff;display:grid;place-items:center;font:800 14px var(--f-body)}
+.l3key b{display:block;font-size:14px;color:#3B2611}.l3key p{font-size:12.8px;line-height:1.5;color:#2B2622}
+.l3q ol{list-style:none;margin:0;padding:0;display:grid;gap:7px}.l3q li>i{flex:none;font-style:normal;font:800 11.5px var(--f-body);color:#1F4637;background:#EEF3EC;border-radius:5px;padding:2px 6px;margin-top:1px}
+.l3q b{display:block;font-size:13.2px;color:#2B2622}.l3q p{font-size:12px;line-height:1.45;color:#5A5048}.l3q p span{display:inline-block;font:700 10.5px var(--f-body);color:#1F4637;background:#EEF3EC;border-radius:3px;padding:0 4px;margin-right:5px}
+.l3care{background:#FBF1EC;border-left:4px solid #C0533F;border-radius:4px;padding:7px 10px}.l3care b{font-size:12.5px;color:#A8402E}.l3care p{font-size:12.3px;line-height:1.5}
+.l3intro p{font-size:12.8px;line-height:1.6}.l3intro p+p{margin-top:5px}.l3intro p:first-of-type{background:#EEF3EC;border-left:3px solid #1F4637;padding:6px 9px;border-radius:2px}
+.l3wk{display:grid;gap:7px}.l3wk>div{background:#F7F1E4;border-radius:8px;padding:8px 11px}.l3wh{display:flex;gap:7px;align-items:baseline;margin-bottom:2px}.l3wh small{font:800 10.5px var(--f-body);color:#A57A35}.l3wh b{font-size:13.5px;color:#1F4637}
+.l3wk p{font-size:12.5px;line-height:1.55}.l3sm{margin-top:3px!important}.l3sm b{display:inline-block;font:800 10.5px var(--f-body);color:#A57A35;margin-right:6px}.l3look b{color:#1F4637}
+.l3two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.l3more{margin:0;padding-left:20px;font-size:12.3px;line-height:1.5}.l3more li+li{margin-top:4px}.l3more b{color:#3B2611}
+.l3wd{list-style:none;margin:0;padding:0;display:grid;gap:5px}.l3wd li{display:flex;gap:8px;font-size:12.3px;line-height:1.45}.l3wd b{flex:none;font-weight:800;color:#3B2611;min-width:54px}
+.l3act{list-style:none;margin:0;padding:0;display:grid;gap:5px}.l3act li{display:flex;gap:8px;font-size:12.8px;line-height:1.5}.l3act .bx{flex:none;width:14px;height:14px;border:1.6px solid #1F4637;border-radius:3px;margin-top:3px}
+.lgs.l3 footer{font-size:10px}
+@media (max-width:520px){.l3flow{grid-template-columns:1fr 1fr}.l3link.l3c3{grid-template-columns:1fr}.l3two{grid-template-columns:1fr}}
+.lgpdf .l3flow{grid-template-columns:repeat(4,1fr)}.lgpdf .l3link.l3c3{grid-template-columns:1fr 1fr 1fr}.lgpdf .l3two{grid-template-columns:1fr 1fr}
+.lgpdf .lgs.l3{font-size:13px;line-height:1.6}.lgpdf .l3wk p{font-size:12.2px;line-height:1.5}.lgpdf .l3wk>div{padding:7px 11px}.lgpdf .l3 [data-p="2"] section{margin-bottom:11px}.lgpdf .l3 h4{font-size:14.5px}.lgpdf .l3h h3{font-size:27px}
 .lgadm{margin:6px 0 12px}.lgadm p{color:#F5E9D6;font-size:13px}
 .lgpdf .lgpage{height:1035px;overflow:hidden;margin:0;padding:0;border:0;position:relative}.lgpdf .lgpage footer{position:absolute;left:0;right:0;bottom:0}
 @media (min-width:640px){.lgworks{grid-template-columns:1fr 1fr 1fr}}.lgpdf .lgworks{grid-template-columns:1fr}
@@ -2932,7 +2971,16 @@ const SVQ=[['fun','재미','얼마나 재미있었나요?'],['diff','난이도',
 const svOf=(i,k)=>(S.progress.survey||{})[ik(i,k)];
 const svOK=(i,k)=>{const s=svOf(i,k);return !!(s&&s.fun&&s.diff&&s.again)};
 /* 월 이름은 '권장 시기'일 뿐 잠금이 아니다. 늦어져도 헷갈리지 않게 '첫째 달 (권장 3월)'로 보여 준다 */
-const MORD=['3월','4월','5월','6월','7월','8월','9월','10월','11월','12월','1월','2월'],MORDN=['첫째','둘째','셋째','넷째','다섯째','여섯째','일곱째','여덟째','아홉째','열째','열한째','열두째'];
+/* 11-28 사용자 지시: 중1은 초등학교 졸업 달인 12월부터 시작. 학년마다 12월 → 11월 순서.
+   옛 계획표(3월 시작, DB·엑셀에 남은 것)는 순서는 그대로 두고 달 이름만 12월부터 다시 붙이고, 시기 안내도 달에 맞춘다 */
+const MOLD=['3월','4월','5월','6월','7월','8월','9월','10월','11월','12월','1월','2월'];
+const SEAS={'12월':'기말·겨울방학 시작','1월':'겨울방학','2월':'새 학년 준비','3월':'새 학기 시작','4월':'중간고사 시기','5월':'','6월':'기말고사 시기','7월':'여름방학 시작','8월':'여름방학','9월':'2학기 시작','10월':'중간고사 시기','11월':''};
+const SEAS1={'12월':'초등학교 졸업','1월':'겨울방학','2월':'중학교 입학 준비'};
+function mFix(a){if(!Array.isArray(a))return a;const NEW=MORD;
+  ['중1','중2','중3'].forEach(g=>{const r=a.filter(x=>x&&x.g===g);if(!r.length||String(r[0].m)!=='3월')return;
+    r.forEach(x=>{const n=MOLD.indexOf(String(x.m));if(n<0)return;x.m=NEW[n];x.season=(g==='중1'&&SEAS1[x.m])||SEAS[x.m]||''})});return a}
+const MORD=['12월','1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월'],MORDN=['첫째','둘째','셋째','넷째','다섯째','여섯째','일곱째','여덟째','아홉째','열째','열한째','열두째'];
+mFix(DEFAULT);
 const ordM=m=>{const n=MORD.indexOf(String(m));return n<0?String(m):`${MORDN[n]} 달 (권장 ${m})`};
 /* 11-27: 계획표에서 작품 칸을 비워 둘 수 있음(예: 중3 4월 영화①). 빈 칸은 없는 작품으로 보고 완료·잠금 계산에서 뺀다 */
 const wkHas=(i,k)=>{const it=items()[i];return !!(it&&String((k==='book'?it.book:it[k])||'').trim())};
@@ -4368,13 +4416,13 @@ function monthHTML(i){
   const essay=svReady(i)?essayHTML(i):svLockHTML(i);
   const wDone=stepsOf(i)[0].done;const nDone=stepsOf(i)[1].done;
   const note=`${wDone&&!nDone?'<p class="mok">'+IC.check+'<span>1단계 끝! 이제 기록하기 차례예요</span></p>':''}<div class="note2"><h3>책에서 마음에 남은 문장</h3>
-      <div class="ocr2"><label class="ocr" for="ph-sentence">${IC.cam}<span>카메라로 찍기</span><input id="ph-sentence" type="file" accept="image/*" capture="environment" data-ocr="sentence"></label><label class="ocr" for="ph-sentence-g"><span>🖼 사진 첨부</span><input id="ph-sentence-g" type="file" accept="${GALLERY}" data-ocr="sentence"></label></div>
       <label for="n-sentence">문장<textarea id="n-sentence" data-note="sentence" placeholder="마음에 남은 문장을 그대로 옮겨 적어요">${esc(n.sentence||'')}</textarea></label>
-      <label for="n-sreason">그 이유<textarea id="n-sreason" data-note="sreason" placeholder="왜 마음에 남았나요? 한두 문장이면 돼요">${esc(n.sreason||'')}</textarea></label></div>
+      <label for="n-sreason">그 이유 <small class="opt">(선택)</small><textarea id="n-sreason" data-note="sreason" placeholder="왜 마음에 남았나요? 쓰지 않아도 돼요">${esc(n.sreason||'')}</textarea></label>
+      <div class="ocr3"><label class="btn ghost small up" for="ph-sentence">📷 카메라로 찍기<input id="ph-sentence" type="file" accept="image/*" capture="environment" data-ocr="sentence"></label><label class="btn ghost small up" for="ph-sentence-g">🖼 사진 첨부<input id="ph-sentence-g" type="file" accept="${GALLERY}" data-ocr="sentence"></label></div></div>
     <div class="note2"><h3>영화에서 기억에 남은 장면</h3>
-      <div class="ocr2"><label class="ocr" for="ph-scene">${IC.cam}<span>카메라로 찍기</span><input id="ph-scene" type="file" accept="image/*" capture="environment" data-ocr="scene"></label><label class="ocr" for="ph-scene-g"><span>🖼 사진 첨부</span><input id="ph-scene-g" type="file" accept="${GALLERY}" data-ocr="scene"></label></div>
       <label for="n-scene">장면<textarea id="n-scene" data-note="scene" placeholder="어떤 장면이었는지 적어요">${esc(n.scene||'')}</textarea></label>
-      <label for="n-creason">그 이유<textarea id="n-creason" data-note="creason" placeholder="왜 기억에 남았나요? 한두 문장이면 돼요">${esc(n.creason||'')}</textarea></label></div>
+      <label for="n-creason">그 이유 <small class="opt">(선택)</small><textarea id="n-creason" data-note="creason" placeholder="왜 기억에 남았나요? 쓰지 않아도 돼요">${esc(n.creason||'')}</textarea></label>
+      <div class="ocr3"><label class="btn ghost small up" for="ph-scene">📷 카메라로 찍기<input id="ph-scene" type="file" accept="image/*" capture="environment" data-ocr="scene"></label><label class="btn ghost small up" for="ph-scene-g">🖼 사진 첨부<input id="ph-scene-g" type="file" accept="${GALLERY}" data-ocr="scene"></label></div></div>
     <p class="hint">${IC.check} 쓰는 대로 저장돼요.</p>`;
   const st=stepsOf(i);const nx=stepNext(i);const pos=st.findIndex(x=>x.k===tab);
   const later=pos>=0&&st[pos].done?st.slice(pos+1).find(x=>!x.done):null;
@@ -4385,7 +4433,7 @@ function monthHTML(i){
   const body=tab==='work'?work+cov:tab==='essay'?essay:tab==='oral'?oralHTML(i):tab==='edu'?preHTML(i):note;
   /* 11-27 밤: 책 읽기 전 생각하기 화면은 달 제목·단계 원을 빼고 창 제목을 '책 읽기 전 생각하기'로. Figma 03 07b(108:1286) */
   /* 11-27 밤: 제목 꾸밈(전구 배지·작은 머리말·형광펜 밑줄) + X 닫기 버튼 없앰(아래 '생각 끝내기'와 겹침). 휴대폰 뒤로 가기는 그대로 창을 닫음. Figma 03 07b v2(120:1203) */
-  if(tab==='edu')return `<div class="panel pk mpanel mpre"><div class="ph phx"><span class="phd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></span><h2><span class="phd-k">읽기 전 준비 노트</span><span class="phd-t hl">책 읽기 전 생각하기</span></h2></div>
+  if(tab==='edu')return `<div class="panel pk mpanel mpre"><div class="ph phx"><h2><span class="phd-k">읽기 전 준비 노트</span><span class="phd-t hl">책 읽기 전 생각하기</span></h2></div>
   ${body}
   ${mactHTML(i)}</div>`;
   return `<div class="panel pk mpanel"><div class="ph"><h2>${esc(String(it.g))} ${esc(ordM(it.m).replace(/ \(.*\)$/,''))}${kwDisp(it)?' · '+esc(kwDisp(it)):''}<small>${MORD.includes(String(it.m))?'권장 '+esc(it.m)+' · ':''}${esc(it.topic)}</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
@@ -4713,7 +4761,8 @@ const SMP_AT=new Date(2026,10,28).getTime();/* 기본 샘플책 문구를 꽂은
 const smpQ=()=>{const c=smpCfg();return c?c.quotes.filter(q=>q&&q.t).map(q=>({t:String(q.t),p:q.p||'',r:q.r||'',s:1,at:+c.at||SMP_AT})):SMP_Q0.map(q=>Object.assign({at:SMP_AT},q))};
 const smpCover=()=>smpCfg()?(artOf(smpCfg().title,'book')||artOf(smpB().title,'book')||''):SMP_COVER;
 const smpOn=bs=>{const ns=S.progress&&S.progress.noSample,h=smpH();return !(ns===h||(ns===true&&!smpCfg()))&&!(bs||hexBooks()).some(b=>hid(b.title)===h)};
-const shBooks=()=>{const bs=hexBooks();return smpOn(bs)?bs.concat([smpB()]):bs};
+/* 11-28 사용자 지시: 샘플책은 서가 맨 첫 자리 */
+const shBooks=()=>{const bs=hexBooks();return smpOn(bs)?[smpB()].concat(bs):bs};
 const shTitleOf=h=>{const b=shBooks().find(x=>hid(x.title)===h);return b?b.title:''};
 const shQuotes=h=>{const mine=((S.progress.quotes||{})[h])||[];return h===smpH()&&smpOn()?mine.concat(smpQ()):mine};
 /* ---------- 서가에 꽂을 때 매기는 평가: 재미·난이도·다시 읽고 싶은 정도 (0.5~5점) ---------- */
@@ -4815,9 +4864,10 @@ function shelfBook(b,cls){
 function shqPopHTML(){const P=S.shqPop;if(!P)return '';const qs=shQuotes(P.h);if(!qs.length)return '';
   const b=shBooks().find(x=>hid(x.title)===P.h);const n=Math.max(0,Math.min(P.n,qs.length-1));const q=qs[n];const im=q.img?S.qimg[q.img]:'';
   return `<div class="shqpop" role="dialog" aria-modal="true" aria-label="인상적인 문구"><button type="button" class="shqpop-bg" data-act="shqpopx" aria-label="닫기"></button>
-    <div class="shqpop-n"><div class="shqpop-c"><div class="shqpop-h"><small>${esc(b?bTitle(b.title):'')}</small><button type="button" class="x" data-act="shqpopx" aria-label="닫기">${IC.x}</button></div>
-    ${q.t?`<blockquote>“${esc(q.t)}”</blockquote>`:''}${q.img?(im?`<img src="${im}" alt="문구 사진">`:'<p class="hint">사진을 불러오는 중…</p>'):''}
-    ${q.p||q.at?`<p class="shqpop-d">${q.p?esc(q.p)+'쪽':''}${q.p&&q.at?' · ':''}${q.at?shqDate(q.at):''}</p>`:''}
+    <div class="shqpop-n"><div class="shqpop-c"><div class="shqpop-h"><small>${b?`<span class="hl">${esc(bTitle(b.title))}</span>`:''}</small><button type="button" class="x" data-act="shqpopx" aria-label="닫기">${IC.x}</button></div>
+    <div class="shqpop-m">${q.t?`<blockquote>“${esc(q.t)}”</blockquote>`:''}${q.img?(im?`<img src="${im}" alt="문구 사진">`:'<p class="hint">사진을 불러오는 중…</p>'):''}
+    ${String(q.r||'').trim()?`<p class="shqpop-r">${esc(q.r)}</p>`:''}
+    ${q.p||q.at?`<p class="shqpop-d">${q.p?esc(q.p)+'쪽':''}${q.p&&q.at?' · ':''}${q.at?shqDate(q.at):''}</p>`:''}</div>
     ${qs.length>1?`<div class="shqpop-nav"><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n-1+qs.length)%qs.length}">‹ 이전</button><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n+1)%qs.length}">다음 ›</button></div>`:''}</div></div></div>`}
 /* 포스트잇 아래 '문구 저장한 날'(2026. 11. 28.) */
 function shqDate(at){const d=new Date(+at);return isNaN(d)?'':`${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`}
@@ -4828,7 +4878,8 @@ function shelfHTML(inSheet){
   const spare=KY.filter(c=>!by[c]&&c!=='기타');
   while(cats.length<3&&spare.length)cats.push(spare.shift());
   cats.sort((a,b)=>KY.indexOf(a)-KY.indexOf(b));
-  const recent=bs.slice(-5).reverse();
+  {const sp=bs.find(b=>b.src==='sample');if(sp&&cats.includes(sp.c2))cats=[sp.c2].concat(cats.filter(c=>c!==sp.c2))}
+  const sp0=bs.filter(b=>b.src==='sample');const recent=sp0.concat(bs.filter(b=>b.src!=='sample').slice(-(5-sp0.length)).reverse()).slice(0,5);
   // 책 상세는 한 곳에만 그린다(읽은 책 창이 열려 있으면 창 안에만). 같은 입력 칸이 두 벌 생기지 않게
   const sheetOpen=!!(S.sheet&&S.sheet.type==='mybooks');
   const sel=S.shelfSel&&(sheetOpen?!!inSheet:!inSheet)?bs.find(b=>hid(b.title)===S.shelfSel):null;
@@ -5701,7 +5752,7 @@ function renderLayers(){
   const sh=S.sheet;
   if(!S.id||!sh){l1.hidden=true;l1.innerHTML=''}
   else{l1.hidden=false;const keep=l1.querySelector('.panel');const top=keep?keep.scrollTop:0;
-    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='story'?storyHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='post'?pcComposeHTML():sh.type==='postv'?pcViewHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
+    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='story'?storyHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='lgdoc'?lgDocHTML():sh.type==='chat'?chatHTML():sh.type==='post'?pcComposeHTML():sh.type==='postv'?pcViewHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
     const p=l1.querySelector('.panel');if(p&&keep)p.scrollTop=top}
   if(S.id&&S.survey){l2.hidden=false;l2.innerHTML=surveyHTML();return}
   if(S.id&&S.esConf){l2.hidden=false;l2.innerHTML=esConfHTML();return}
@@ -5716,7 +5767,7 @@ async function enter(id,member){
   if(blockedOf(id))throw {code:'blocked'};
   S.me=clone(member);S.id=id;if(S.me.theme)applyTheme(S.me.theme);{const ss=window.__002.auth.session();S.admX=!!(ss&&ss.uid===id&&ss.admin)}
   S.progress=Object.assign({done:{},notes:{},qs:{},evalLog:[],drafts:{},picks:{}},p.exists?clone(p.data()):{});S.evals={};S.evals2={};S.essays={};S.evalView=null;S.orals={};S.orals2={};S.odoc={};S.oLoad={};S.oBusy={};S.oaud={};S.oralView=null;S.oralOff=null;S.oralHist=null;S.orSend=null;S.pushSt=null;
-  S.custom=c.exists?clone(c.data()):null;
+  S.custom=c.exists?clone(c.data()):null;if(S.custom)mFix(S.custom.items);
   S.mode=(S.me.mode==='custom'&&S.custom&&isPaid())?'custom':'base';
   S.grade=GR.includes(S.me.grade)?S.me.grade:'중1';S.view='course';S.sheet=null;S.info=null;
   S.adm={sec:null,sub:null,members:null,prog:{},open:null,to:'all',resets:[],tmp:{},adminIds:[]};
@@ -6410,7 +6461,7 @@ function exEssay(){
 변화 앞의 태도를 "그 변화가 나를 얼마나 성장시키는가"라는 기준으로 보면 칼의 변화가 더 깊다. 허는 새 치즈라는 결과를 얻었지만, 칼은 과거의 사랑을 현재의 사람에게 이어 주는 법을 배웠다. 혼자의 용기도 소중하지만, 다른 사람과 함께 깨달은 변화는 쉽게 되돌아가지 않는다. 새 학교에서도 나는 친구들과 함께 부딪히며 자라고 싶다.`}],
     asked:1,writeSec:1560};
   const RS=rbScore(ev.scores,RB_ES);ev.scores=RS.scores;ev.levels=RS.levels;ev.rb=2;
-  return Object.assign(ev,{total:RS.total,at:Date.now(),title:'누가 내 치즈를 옮겼을까?',g:'중1',m:'3월',ex:1});
+  return Object.assign(ev,{total:RS.total,at:Date.now(),title:'누가 내 치즈를 옮겼을까?',g:'중1',m:'12월',ex:1});
 }
 const EX_OQ=['「누가 내 치즈를 옮겼을까?」에서 가장 기억에 남는 인물은 누구이고, 왜 그런가요?','영화 「업」에서 칼 할아버지가 집 안의 가구를 버리고 집을 놓아주는 장면은 어떤 의미라고 생각하나요?','「월터의 상상은 현실이 된다」의 월터처럼 상상만 하던 일을 실제로 해 본 경험이 있나요? 그 경험을 작품과 연결해 말해 보세요.'];
 function exOral(){
@@ -6449,7 +6500,7 @@ function exOral(){
     teacher:'작품을 정확히 기억하고 자기 해석까지 말한 점이 훌륭해요. 다음에는 결론을 먼저 말하고 이유를 바로 붙여 보세요. 2차 도전에서 모범 답안의 순서를 따라 하면 금방 달라질 거예요.',
     answers:A1.map((a,n)=>Object.assign({no:n+1,q:EX_OQ[n]},a))};
   ev.answers.forEach(a=>{const st=orStat(a);Object.assign(a,{chars:st.ch,cpm:st.cpm,fill:st.fill})});
-  const R1=orScore(ev.scores);Object.assign(ev,{scores:R1.scores,levels:R1.levels,held:R1.held,rb:2,total:R1.total,at:Date.now(),title:'누가 내 치즈를 옮겼을까?',g:'중1',m:'3월',round:1,ex:1});
+  const R1=orScore(ev.scores);Object.assign(ev,{scores:R1.scores,levels:R1.levels,held:R1.held,rb:2,total:R1.total,at:Date.now(),title:'누가 내 치즈를 옮겼을까?',g:'중1',m:'12월',round:1,ex:1});
   const A2=[
     {sec:63,shAcc:91,growth:88,text:'제가 가장 기억에 남는 인물은 허입니다 이유는 두려움을 이겨 내고 스스로 움직였기 때문입니다 허는 처음에 헴과 함께 치즈가 사라진 창고에서 며칠을 기다렸지만 결국 혼자 운동화를 신고 미로로 나갑니다 특히 가는 길마다 벽에 깨달은 것을 적어 두는데 저는 이것이 자기 두려움을 정리하는 방법이라고 생각했습니다 그래서 저도 중학교에 올라가 낯설 때 허처럼 먼저 한 걸음 내디뎌 보고 싶습니다',
       summary:'허는 두려움을 이기고 스스로 움직였기에 가장 기억에 남는다.',improved:'1차의 "좀 멋있었어요"가 2차에서 "두려움을 이겨 내고 스스로 움직였기 때문입니다"라는 이유로 바뀌었어요. 결론-이유-장면-다짐 순서도 지켰어요.',still:'벽에 글을 남긴 이유를 "헴을 위한 배려"까지 넓히면 생각이 더 깊어져요.',
@@ -6479,7 +6530,7 @@ function exOral(){
     teacher:'한 번의 다시 도전으로 대답의 짜임이 크게 좋아졌어요. 부모님께서는 "왜 그렇게 생각해?"라고 한 번 더 물어 주시면 이유를 말하는 습관이 굳어져요. 다음 과제는 모범 답안을 내 말로 바꿔 말하는 것이에요.',
     answers:A2.map((a,n)=>Object.assign({no:n+1,q:EX_OQ[n],copied:false,sentences:[]},a))};
   ev2.answers.forEach(a=>{const st=orStat(a);Object.assign(a,{chars:st.ch,cpm:st.cpm,fill:st.fill})});
-  const R2=orScore(ev2.scores);Object.assign(ev2,{scores:R2.scores,levels:R2.levels,held:R2.held,rb:2,total:R2.total,at:Date.now(),title:ev.title,g:'중1',m:'3월',round:2,ex:1});
+  const R2=orScore(ev2.scores);Object.assign(ev2,{scores:R2.scores,levels:R2.levels,held:R2.held,rb:2,total:R2.total,at:Date.now(),title:ev.title,g:'중1',m:'12월',round:2,ex:1});
   ev2.up=orUp(ev.scores,ev2.scores);
   return [ev,ev2];
 }
@@ -7655,10 +7706,10 @@ const lgPrompt=it=>`너는 대한민국에서 20년 넘게 중학생 독서와 �
 "care":"시청·독서 지도 때 주의할 점(관람 등급·민감한 장면 등, 100자 이내)"}
 points는 정확히 5개, talk는 정확히 5개, words는 정확히 4개, acts는 정확히 2개.`;
 function lgLoad(force){const {it}=lgCur();if(!it)return;gdLoad(lgKey(it),()=>lgPrompt(it),force)}
-/* 관리자: 학습지도 자료를 중1 3월부터 차례로 미리 만들어 둔다. 계획표가 바뀌면 바뀐 달만 다시(키에 책·영화 제목이 들어 있어 새 키가 됨) */
+/* 관리자: 학습지도 자료를 중1 12월부터 차례로 미리 만들어 둔다. 계획표가 바뀌면 바뀐 달만 다시(키에 책·영화 제목이 들어 있어 새 키가 됨) */
 /* 계획표가 바뀌면 바뀐 달의 책 표지·영화 포스터를 바로 찾아 둔다(서버 캐시 → 모든 회원이 같은 그림을 바로 받음) */
 function lgArtPrefetch(only){const L=S.course||[];(only||L.map((_,i)=>i)).forEach(i=>{const it=L[i];if(!it)return;artOf(it.book,'book');artOf(it.m1,'movie',yearOf(it,it.m1));artOf(it.m2,'movie',yearOf(it,it.m2))})}
-/* 11-28 사용자 지시: 계획표가 바뀌면 관련 학습 자료 일체를 중1 3월부터 차례로 미리 만들어 서버에 둔다(회원은 누르자마자 봄).
+/* 11-28 사용자 지시: 계획표가 바뀌면 관련 학습 자료 일체를 중1 12월부터 차례로 미리 만들어 서버에 둔다(회원은 누르자마자 봄).
    달마다 ① 학습지도(lg2_) ② 책 읽기 전 생각하기(pre_) ③ 작품 깊이 읽기(edu_) ④ 책·영화 정보(info/) → 끝으로 ⑤ 작품별 부모 안내서(w2b_/w2m_).
    이미 있는 것은 건너뛰고, AI 하루 한도에 걸리면 멈춘다(다시 누르면 이어서). 3개씩 함께 만든다 */
 async function gdMake(key,prompt,ok){
@@ -7690,25 +7741,38 @@ async function lgBatch(only,quiet){
   const b=S.lgBusy;S.lgBusy=null;window.__lgLast=b;gdPersist();
   if(!quiet||b.made)toast(b.stop||`학습 자료 ${b.made}개를 새로 만들었어요.${b.fail?` (실패 ${b.fail}개는 다시 누르면 다시 만들어요)`:''}`);if(S.view==='guide')render();
 }
-function lgSheetHTML(it,g){const T=hk;const A=x=>Array.isArray(x)?x:[];
+/* 11-28 사용자 지시: 학습지도 PDF를 중요도 순으로 다시 짬. 1쪽 '이렇게 지도하세요'(지도 순서·작품 연결·주의·핵심 3가지·질문),
+   2쪽 '미리 알아 두세요'(안내·작품 요약·더 짚을 점·낱말·활동). 부모가 그대로 읽어 주며 설명할 수 있게 */
+function lgSheetHTML(it,g,id){const T=hk;const A=x=>Array.isArray(x)?x:[];
   const nm={book:'책',m1:'영화 ①',m2:'영화 ②'};const ti={book:it.book,m1:it.m1,m2:it.m2};['m1','m2'].forEach(k=>{if(!String(it[k]||'').trim())delete nm[k]});
-  const works=A(g.works).filter(x=>x&&nm[x.k]);const link=A(g.link).filter(x=>x&&nm[x.k]);
+  const works=A(g.works).filter(x=>x&&nm[x.k]);const lk={};A(g.link).forEach(x=>{if(x&&nm[x.k])lk[x.k]=x.how});
   const pts=A(g.points).filter(x=>x&&(x.t||x.d)).slice(0,5);const tk=A(g.talk).filter(x=>x&&(x.q||typeof x==='string')).slice(0,5);
   const wd=A(g.words).filter(x=>x&&x.w).slice(0,4);const ac=A(g.acts).filter(Boolean).slice(0,2);
-  const head=`<header><small>영원이북 학습지도 · ${T(it.g)} ${T(it.m)}</small><h3><span class="hl">${T(String(it.topic||'').split(':')[0]||'이달의 주제')}</span></h3>${g.theme?`<p class="lgt">${T(g.theme)}</p>`:''}</header>`;
-  return `<div class="lgs" id="lgsheet">
-   <div class="lgpage" data-p="1">${head}
-    ${g.intro?`<section class="lgintro"><p>${T(g.intro)}</p></section>`:''}
-    <section><h4>세 작품을 한 달에 묶은 이유</h4><p>${T(g.why)}</p></section>
-    <section class="lgworks">${works.map(w=>`<div class="lgwk"><h4>${nm[w.k]} · 「${T(bTitle(ti[w.k]))}」</h4><p>${T(w.sum)}</p>${w.who?`<p class="lgsm"><b>인물</b> ${T(w.who)}</p>`:''}${w.look?`<p class="lgsm"><b>눈여겨볼 점</b> ${T(w.look)}</p>`:''}</div>`).join('')}</section>
-    <footer>1 / 2</footer></div>
-   <div class="lgpage" data-p="2"><header class="lgh2"><small>영원이북 학습지도 · ${T(it.g)} ${T(it.m)} · 지도 방법</small></header>
-    ${link.length?`<section><h4>세 작품이 주제를 보여 주는 방식</h4><table class="lgtb">${link.map(x=>`<tr><th>${nm[x.k]}</th><td>${T(x.how)}</td></tr>`).join('')}</table></section>`:''}
-    <section><h4>자녀에게 가르칠 포인트</h4><ol class="lgp">${pts.map(x=>`<li><b>${T(x.t)}</b>${T(x.d)}</li>`).join('')}</ol></section>
-    <section><h4>함께 나눌 질문</h4><ol class="lgq">${tk.map(x=>typeof x==='string'?`<li>${T(x)}</li>`:`<li>${T(x.q)}${x.hint?`<span>→ ${T(x.hint)}</span>`:''}</li>`).join('')}</ol></section>
-    <section class="lgw2">${wd.length?`<div><h4>알아 둘 낱말</h4><ul class="lgwd">${wd.map(x=>`<li><b>${T(x.w)}</b> ${T(x.m)}</li>`).join('')}</ul></div>`:''}${ac.length?`<div><h4>이번 달 집에서 할 활동</h4><ul>${ac.map(a=>`<li>${T(a)}</li>`).join('')}</ul></div>`:''}</section>
-    ${g.care?`<section class="lgcare"><h4>지도할 때 주의할 점</h4><p>${T(g.care)}</p></section>`:''}
+  const topic=String(it.topic||'').split(':')[0].trim()||'이달의 주제';const ks=Object.keys(nm);
+  const top=(sub)=>`<div class="l3top"><span>영원이북 학습지도</span><span>${T(it.g)} ${T(it.m)} · ${sub}</span></div>`;
+  const flow=[['읽기 전','주제를 한 문장으로 소개해요'],['읽고 보는 중','2쪽 \'눈여겨볼 점\'을 짚어 줘요'],['다 본 뒤','아래 질문으로 대화해요'],['마무리','집에서 할 활동 두 가지']];
+  return `<div class="lgs l3" id="${id||'lgsheet'}">
+   <div class="lgpage" data-p="1">${top('이렇게 지도하세요')}
+    <header class="l3h"><small>이달의 주제</small><h3><span class="hl">${T(topic)}</span></h3>${g.theme?`<p>${T(g.theme)}</p>`:''}</header>
+    <ol class="l3flow">${flow.map(([a,b],n)=>`<li><i>${n+1}</i><b>${a}</b><span>${b}</span></li>`).join('')}</ol>
+    <section><h4><em>1</em>세 작품은 이렇게 이어져요</h4><div class="l3link l3c${ks.length}">${ks.map(k=>`<div><small>${nm[k]}</small><b>「${T(bTitle(ti[k]))}」</b>${lk[k]?`<p>${T(lk[k])}</p>`:''}</div>`).join('')}</div></section>
+    ${pts.length?`<section class="l3key"><h4><em>2</em>꼭 전할 핵심 ${Math.min(3,pts.length)}가지</h4><ol>${pts.slice(0,3).map((x,n)=>`<li><i>${n+1}</i><div><b>${T(x.t)}</b><p>${T(x.d)}</p></div></li>`).join('')}</ol></section>`:''}
+    ${tk.length?`<section class="l3q"><h4><em>3</em>이렇게 물어보세요</h4><ol>${tk.map((x,n)=>typeof x==='string'?`<li><i>Q${n+1}</i><div><b>${T(x)}</b></div></li>`:`<li><i>Q${n+1}</i><div><b>${T(x.q)}</b>${x.hint?`<p><span>이런 생각이 나오면 칭찬해 주세요</span>${T(x.hint)}</p>`:''}</div></li>`).join('')}</ol></section>`:''}
+    ${g.care?`<section class="l3care"><b>지도 전에 확인해요</b><p>${T(g.care)}</p></section>`:''}
+    <footer>1 / 2 · 002BOOK</footer></div>
+   <div class="lgpage" data-p="2">${top('미리 알아 두세요')}
+    ${g.intro||g.why?`<section class="l3intro"><h4>이번 달 안내</h4>${g.intro?`<p>${T(g.intro)}</p>`:''}${g.why?`<p>${T(g.why)}</p>`:''}</section>`:''}
+    ${works.length?`<section><h4>작품 한눈에</h4><div class="l3wk">${works.map(w=>`<div><div class="l3wh"><small>${nm[w.k]}</small><b>「${T(bTitle(ti[w.k]))}」</b></div><p>${T(w.sum)}</p>${w.who?`<p class="l3sm"><b>인물</b>${T(w.who)}</p>`:''}${w.look?`<p class="l3sm l3look"><b>눈여겨볼 점</b>${T(w.look)}</p>`:''}</div>`).join('')}</div></section>`:''}
+    <div class="l3two">${pts.length>3?`<section><h4>더 짚어 볼 점</h4><ol class="l3more" start="4">${pts.slice(3).map(x=>`<li><b>${T(x.t)}</b> ${T(x.d)}</li>`).join('')}</ol></section>`:''}
+     ${wd.length?`<section><h4>알아 둘 낱말</h4><ul class="l3wd">${wd.map(x=>`<li><b>${T(x.w)}</b><span>${T(x.m)}</span></li>`).join('')}</ul></section>`:''}</div>
+    ${ac.length?`<section><h4>이번 달 집에서 할 활동</h4><ul class="l3act">${ac.map(a=>`<li><span class="bx"></span><span>${T(a)}</span></li>`).join('')}</ul></section>`:''}
     <footer>2 / 2 · 002BOOK · 생성형 AI(Claude)가 쓴 자료예요. 작품 세부 내용은 직접 읽고 본 것과 다를 수 있어요.</footer></div></div>`}
+/* 학습지도 창(11-28): '부모님께' 블록의 학습지도 버튼으로 열고, PDF 저장·인쇄는 이 창 아래에만 */
+function lgDocHTML(){const {it}=lgCur();const G=it&&gdGet(lgKey(it));
+  const body=G&&G.data?lgSheetHTML(it,G.data,'lgsheetv'):'<p class="hint" role="status">학습지도 자료를 준비하고 있어요.</p>';
+  return `<div class="panel lgdocw"><div class="ph"><h2>학습지도 · ${esc(it?it.g+' '+it.m:'')}</h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
+    <div class="lgdoc">${body}</div>
+    ${G&&G.data?`<div class="lgbar lgdocbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button></div>`:''}</div>`}
 
 /* 학습지도: 평가 방식 설명(논술·구술·육각형 독서)과 근거 문헌. 배점은 관리자가 고친 지금 기준(RBC)을 그대로 보여 줌 */
 /* 근거 연구 (11-27 사용자 지시 '나 방식'): 한국인 교수 논문을 앞에, 앱 안에는 직접 쓴 요약 카드, 원문은 KCI·발행처 링크.
@@ -7742,7 +7806,7 @@ function lgViewHTML(it,g,key){
   const cover=k=>{const u=ti[k]?artOf(ti[k],k==='book'?'book':'movie'):'';return `<figure class="lgcv"><div class="lgcvi">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>${lgT(bTitle(ti[k]))}</span>`}</div><figcaption><small>${nm[k]}</small>${lgT(bTitle(ti[k]))}</figcaption></figure>`};
   const P=S.lg.more?pts:pts.slice(0,3);
   return `<section class="lghero"><small>이달의 주제</small><h3><span class="hl">${lgT(topic)}</span></h3>${g.theme?`<p>${hk(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].filter(k=>String(it[k]||'').trim()).map(cover).join('')}</div></section>
-  <div class="lgnote">${lgI('msg')}<div><b>부모님께</b>${g.intro?`<p>${hk(g.intro)}</p>`:''}<button type="button" class="lgnbtn" data-act="exes">샘플평가 보기<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+  <div class="lgnote">${lgI('msg')}<div><b>부모님께</b>${g.intro?`<p>${hk(g.intro)}</p>`:''}<div class="lgnbtns"><button type="button" class="lgnbtn on" data-act="lgdoc">학습지도<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="lgnbtn" data-act="exes">평가샘플<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div></div>
   ${g.why?`<section>${lgSec('세 작품, 왜 함께 볼까?')}<p class="lgp1">${hk(g.why)}</p></section>`:''}
   ${works.length?`<section>${lgSec('작품 안내',works.length)}<div class="lgcar" tabindex="0" aria-label="작품 안내. 옆으로 넘겨 보세요">${works.map(w=>`<article class="lgwc"><span class="lgk">${nm[w.k]}</span><h4>${lgT(bTitle(ti[w.k]))}</h4><p>${hk(w.sum)}</p>${w.who?`<dl><dt>인물</dt><dd>${hk(w.who)}</dd></dl>`:''}${w.look?`<dl><dt>눈여겨볼 점</dt><dd>${hk(w.look)}</dd></dl>`:''}${link[w.k]?`<p class="lglink">주제와 연결 · ${hk(link[w.k])}</p>`:''}</article>`).join('')}</div><div class="lgdots" aria-hidden="true">${works.map((_,n)=>`<i class="${n?'':'on'}"></i>`).join('')}</div></section>`:''}
   ${pts.length?`<section>${lgSec('가르칠 포인트',pts.length)}<ol class="lgpts">${P.map((x,n)=>`<li><b class="lgnum">${String(n+1).padStart(2,'0')}</b><div><b>${lgT(x.t)}</b><p>${hk(x.d)}</p></div></li>`).join('')}</ol>${pts.length>3?`<button class="lgmore" data-act="lgmore" aria-expanded="${!!S.lg.more}">${S.lg.more?'접기':`+ ${pts.length-3}개 더 보기`}</button>`:''}</section>`:''}
@@ -7799,9 +7863,8 @@ function lgHTML(){
 </div>
       ${plan}
       ${lgEvalSumHTML()}
-      ${G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button></div>`:''}
     </div>
-    ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습 자료 일체를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')}) · 새로 ${S.lgBusy.made}개</p>`:`<button class="btn ghost small" data-act="lgall">중1 3월부터 학습 자료 일체 만들기 (없는 것만)</button><button class="btn ghost small" data-act="artre">빠진 표지·포스터 다시 찾기</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
+    ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습 자료 일체를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')}) · 새로 ${S.lgBusy.made}개</p>`:`<button class="btn ghost small" data-act="lgall">중1 12월부터 학습 자료 일체 만들기 (없는 것만)</button><button class="btn ghost small" data-act="artre">빠진 표지·포스터 다시 찾기</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
     ${G&&G.data?`<div class="lgprint" aria-hidden="true">${lgSheetHTML(it,G.data)}</div>`:''}`}
 async function lgPdf(){const {it}=lgCur();const G=gdGet(lgKey(it));if(!G||!G.data)return;
   if(!S.downloads){toast('이 화면에서는 PDF 저장을 쓸 수 없어요.');return}
@@ -8291,7 +8354,7 @@ document.addEventListener('click',async e=>{
     case 'adminapply':{
       if(!S.admin||S.admin.err)break;
       try{await S.db.doc('config/course').set({items:clone(S.admin.items),updatedAt:Date.now(),by:S.id});
-        S.course=S.admin.items;S.source='관리자가 올린 엑셀 ('+new Date().toLocaleDateString('ko-KR')+')';S.admin=null;toast('새 계획표를 적용했어요. 바뀐 달의 학습지도 자료를 새로 만들어요.');render();lgArtPrefetch(null);lgBatch(null,true)}
+        S.course=mFix(S.admin.items);S.source='관리자가 올린 엑셀 ('+new Date().toLocaleDateString('ko-KR')+')';S.admin=null;toast('새 계획표를 적용했어요. 바뀐 달의 학습지도 자료를 새로 만들어요.');render();lgArtPrefetch(null);lgBatch(null,true)}
       catch(err){toast('적용하지 못했어요. 이 계정에 편집 권한이 있는지 확인해 주세요.')}
       break}
     case 'ytopen':e.stopPropagation();break;
@@ -8335,6 +8398,7 @@ document.addEventListener('click',async e=>{
     case 'lgall':lgBatch(null,false);break;
     case 'artre':artRetry();break;
     case 'lgpdf':lgPdf();break;
+    case 'lgdoc':S.sheet={type:'lgdoc'};renderLayers();break;
     case 'lgprint':window.print();break;
     case 'lgq':S.info={i:+d.i,k:'book',lg:1};
     case 'gdopen':{if(!canGuide()||!S.info)break;const kids=guideKids();S.info.guide=true;S.info.gsrc=S.mode==='base'&&kids.length?kids[0]:'';renderLayers();gdWork(false);
@@ -8377,13 +8441,13 @@ try{
   }
 }catch(e){}
 /* 회귀 시험용 손잡이: 시험 스크립트가 미리 window.__002TEST를 둔 때만 넘긴다 */
-if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,TPL,items,nk,prepOf,rwLeft,rbScore,hexScores,hexBooks,radarSVG,orFill,orSpeed,hid,render,bkLookup,bkApply,hxSync,addMyBook,isbnOK,catOfItem,bCat});
+if(typeof window.__002TEST==='function')window.__002TEST({S,PX,evaluate,genQs,genQ1,TPL,items,nk,prepOf,rwLeft,rbScore,hexScores,hexBooks,radarSVG,lgSheetHTML,lgCur,lgKey,gdGet,orFill,orSpeed,hid,render,bkLookup,bkApply,hxSync,addMyBook,isbnOK,catOfItem,bCat});
 S.dbState=S.db?'ok':'none';
 if(S.db){
   // 계획표와 설정(요금·공지·차단 목록)은 서로 기다릴 필요가 없어 함께 불러온다. 로그인(enter)은 둘 다 받은 뒤에
   await Promise.all([
     (async()=>{try{const cfg=await S.db.doc('config/course').get();
-      if(cfg.exists){const d=cfg.data();if(Array.isArray(d.items)&&d.items.length){S.course=clone(d.items);S.source=(d.via==='edit'?'관리자가 고친 계획표 (':'관리자가 올린 엑셀 (')+new Date(d.updatedAt||Date.now()).toLocaleDateString('ko-KR')+')'}}}catch(e){}})(),
+      if(cfg.exists){const d=cfg.data();if(Array.isArray(d.items)&&d.items.length){S.course=mFix(clone(d.items));S.source=(d.via==='edit'?'관리자가 고친 계획표 (':'관리자가 올린 엑셀 (')+new Date(d.updatedAt||Date.now()).toLocaleDateString('ko-KR')+')'}}}catch(e){}})(),
     loadConfig().catch(()=>{}),
     (async()=>{try{const r=await S.db.doc('config/rubric').get();if(r.exists)rbApply(r.data())}catch(e){}})()
   ]);

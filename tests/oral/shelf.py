@@ -80,7 +80,7 @@ def mobile_flow(pg):
     pg.evaluate("document.querySelector('form[data-form=mybook] button[type=submit]').click()")
     ok('직접 추가: 평가와 함께 저장', wait(lambda: any(b['title'] == '직접 넣은 책' and b.get('rate', {}).get('again') == 4.5 for b in prog()['myBooks'])))
     # 3) 서가의 책을 누르면 인상적인 문구가 맨 위에
-    time.sleep(.6); pg.evaluate("document.querySelector('#layer1 [data-act=shbook]').click()"); pg.wait_for_selector('#layer1 .shqtop', timeout=10000)
+    time.sleep(.6); pg.evaluate("document.querySelector('#layer1 [data-act=shbook]:not([aria-label^=샘플책])').click()"); pg.wait_for_selector('#layer1 .shqtop', timeout=10000)
     ok('책 상세는 한 곳에만', pg.locator('.sdt').count() == 1 and pg.locator('#sh-q').count() == 1, pg.locator('.sdt').count())
     ok('서가 책 누르면 문구 칸이 맨 위', pg.evaluate("(()=>{const a=document.querySelector('.shqtop'),b=document.querySelector('#shq-add');return !!(a&&b&&(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING))})()"))
     pg.fill('#sh-q', '마음에 남은 첫 문장'); pg.fill('#sh-qp', '42'); pg.evaluate("document.querySelector('[data-act=shqadd]').click()")
@@ -105,7 +105,7 @@ def mobile_flow(pg):
     pg.goto(WEB + '/'); pg.wait_for_selector('.who', timeout=20000); time.sleep(1)
     pg.get_by_role('button', name='내 서재').first.click(); time.sleep(1)
     pg.evaluate("document.querySelector('[data-act=mybooks]').click()"); time.sleep(1)
-    pg.evaluate("document.querySelector('#layer1 [data-act=shbook]').click()")
+    pg.evaluate("document.querySelector('#layer1 [data-act=shbook]:not([aria-label^=샘플책])').click()")
     ok('다시 열어도 문구 사진 보임', wait(lambda: pg.evaluate("[...document.querySelectorAll('#layer1 .shqtop .shqim img')].some(i=>i.naturalWidth>0)")))
     ok('서가 책 내 평가 보임', '재미 ★4.0' in pg.inner_text('#layer1 .sdrate'), pg.inner_text('#layer1 .sdrate'))
     n0 = len(prog()['quotes'][list(prog()['quotes'])[0]])

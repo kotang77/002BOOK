@@ -45,7 +45,7 @@ with sync_playwright() as p:
     links = pg.eval_on_selector_all('.lgref a', 'a=>a.map(x=>x.href)')
     ok('근거 연구: 국내 교수 논문 먼저·요약 카드·원문 링크', pg.locator('.lgref.kr').count() >= 4 and 'kci.go.kr' in links[0] and len(links) >= 5 and pg.locator('.lgref p').count() == pg.locator('.lgref').count(), links)
     act('[data-act=lgevopen]'); time.sleep(.3)
-    m0 = pg.inner_text('.lgmon:not(.lggr) b'); act('[data-act=lgmstep][data-d="1"]'); time.sleep(.5)
+    m0 = pg.inner_text('.lgmon:not(.lggr) b'); act('[data-act=lgmstep][data-d="-1"]' if pg.locator('.lgmon:not(.lggr) [data-act=lgmstep][data-d="1"]').is_disabled() else '[data-act=lgmstep][data-d="1"]'); time.sleep(.5)
     ok('달 넘기기', pg.inner_text('.lgmon:not(.lggr) b') != m0, m0)
     ok('학년 알약 ‹ 1학년 ›, 처음엔 이전 꺼짐', pg.inner_text('.lggr b') == '1학년' and pg.locator('[data-act=lggstep][data-d="-1"]').is_disabled())
     act('[data-act=lggstep][data-d="1"]'); time.sleep(.6)

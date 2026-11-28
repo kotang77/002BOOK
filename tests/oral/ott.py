@@ -31,7 +31,7 @@ with sync_playwright() as p:
         pg.route('**/cdnjs.cloudflare.com/**', lambda rt: rt.fulfill(body='', content_type='application/javascript'))
         pg.on('pageerror', lambda e: errs.append(str(e)[:200]))
         pg.goto(WEB + '/'); pg.evaluate("s=>localStorage.setItem('002.session',JSON.stringify(s))", s); pg.goto(WEB + '/'); pg.wait_for_selector('.who', timeout=20000); time.sleep(1)
-        i = pg.evaluate("[...document.querySelectorAll('[data-act=month]')].findIndex(e=>/^2월/.test(e.textContent.trim()))")
+        i = pg.evaluate("[...document.querySelectorAll('[data-act=month]')].findIndex(e=>/^11월/.test(e.textContent.trim()))")
         pg.evaluate("i=>document.querySelectorAll('[data-act=month]')[i].click()", i); time.sleep(1)
         def row(name): return pg.evaluate("n=>{const w=[...document.querySelectorAll('.wk')].find(x=>x.textContent.includes(n));return w?w.querySelector('.wk-x em').innerText:''}", name)
         for _ in range(40):
