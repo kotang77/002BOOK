@@ -2782,8 +2782,14 @@ html body .hl[data-c=b],html body mark.hk[data-c=b]{background-image:url("data:i
   html body main .todo>.todo-k{grid-column:1/-1}
 }
 /* 11-28 사용자 지시(Figma 86:219·86:222·110:1228·110:1232·118:23 먼저): 닫기 버튼과 '책 읽기 전 생각하기'·'생각 끝내기'를 빛·광택 없이 중간색 단색으로 */
-html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x),html body :is(.layer,.panel,.cso) .ph .x{background:#E0A23A!important;color:#3A2405!important;border:1px solid #B87E22!important;box-shadow:none!important}
-html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x) svg,html body :is(.layer,.panel,.cso) .ph .x svg{filter:none!important}
+/* 11-28 09:29 사용자 지시: 모든 창닫기 = 크림색 전구(가운데 흰 빛·둘레 따뜻한 노란 빛 번짐, 짙은 X), 위치는 창 오른쪽 위 모서리 */
+html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x),html body :is(.layer,.panel,.cso) .ph .x{
+  display:grid!important;place-items:center;width:44px!important;height:44px!important;border-radius:50%!important;padding:0!important;
+  background:radial-gradient(circle at 50% 42%,#FFFFFB 0%,#FFF7DF 45%,#FFEDB8 78%,#FFE29A 100%)!important;color:#2E1F0C!important;border:0!important;
+  box-shadow:0 0 14px 5px rgba(255,214,110,.55),0 0 38px 14px rgba(255,205,95,.28),inset 0 -2px 4px rgba(214,160,60,.25)!important}
+html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x) svg,html body :is(.layer,.panel,.cso) .ph .x svg{width:22px!important;height:22px!important;stroke-width:2.6;filter:none!important}
+html body :is(.layer,.panel,.cso) .ph{display:flex}
+html body :is(.layer,.panel,.cso) .ph>.x{margin-left:auto!important;flex:none}
 html body .mact .mact-b.mact-think{background:#6BA84F!important;color:#fff!important;border:1px solid #4F8636!important;box-shadow:none!important;text-shadow:none!important}
 html body .mact .mact-b.mact-think::after,html body .mact .mact-b.mact-think::before{display:none!important}
 /* 11-28 영국풍 우표: 안쪽은 SVG 그림이 꽉 채움(바깥 흰 종이·톱니 구멍은 그대로) */
