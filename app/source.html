@@ -985,11 +985,24 @@ form{display:flex;flex-direction:column;gap:12px}
 .sqtab{--c:#9CC8FF;width:18px;height:17px;padding:0 0 0 3px;border:0;cursor:pointer;font:700 10px/17px 'Nanum Pen Script','Gaegu',var(--f-body);color:rgba(55,38,28,.9);text-align:center;
   background:linear-gradient(90deg,color-mix(in srgb,var(--c) 38%,rgba(255,255,255,.55)) 0 3px,var(--c) 3px 100%);border-radius:1px 3px 3px 1px;box-shadow:0 1px 1px rgba(40,25,15,.35),1px 1px 3px rgba(40,25,15,.3)}
 .sqtab:active{transform:translateX(2px)}
+/* 11-28: 한 칸에 4권, 책 사이를 넓혀 꼬리표가 옆 책에 닿지 않게 */
+html body .bshf .sbr{gap:22px!important;padding-right:20px!important}
+html body .bshf .sbr>.sb:not(.tb),html body .bshf .sbw{width:calc((100% - 66px - 20px)/4)!important}
+html body .bshf .sbw>.sb{width:100%!important}
+html body .bshf .sqtabs{left:calc(100% + 1px)!important;gap:3px}
+html body .bshf .sqtab{width:16px;height:16px;font-size:10px;line-height:16px}
 .shqpop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px}
 .shqpop-bg{position:absolute;inset:0;border:0;background:rgba(20,12,6,.55);cursor:pointer}
-.shqpop-c{position:relative;max-width:420px;width:100%;max-height:80vh;overflow:auto;background:#FBF6EC;border-radius:14px;padding:16px 18px 18px;box-shadow:0 18px 40px -10px rgba(0,0,0,.6);color:var(--ink)}
-.shqpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.shqpop-h small{color:#8A6A3E}
-.shqpop-c blockquote{margin:6px 0 10px;font:600 17px/1.6 var(--f-display);color:#2E2318}
+.shqpop-c{position:relative;max-width:340px;width:100%;max-height:80vh;overflow:auto;color:#2B2117;padding:30px 22px 22px;border-radius:2px 2px 26px 2px/2px 2px 18px 2px;transform:rotate(-1.6deg);
+  background:linear-gradient(176deg,rgba(255,255,255,.35),rgba(255,255,255,0) 30%),linear-gradient(transparent 96%,rgba(0,0,0,.04) 96%) 0 0/100% 30px,#FFE98A;
+  box-shadow:0 1px 1px rgba(0,0,0,.15),0 18px 30px -12px rgba(0,0,0,.55),inset 0 -12px 18px -12px rgba(150,110,0,.25)}
+.shqpop-c::before{content:"";position:absolute;left:50%;top:-6px;width:96px;height:24px;transform:translateX(-50%) rotate(2deg);background:rgba(240,232,210,.78);box-shadow:0 1px 2px rgba(0,0,0,.15);
+  -webkit-mask:linear-gradient(90deg,transparent 0 3px,#000 3px calc(100% - 3px),transparent 0);mask:linear-gradient(90deg,transparent 0 3px,#000 3px calc(100% - 3px),transparent 0)}
+.shqpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.shqpop-h small{color:#6E5420;font:400 17px/1.2 'Nanum Pen Script','Gaegu',cursive}
+.shqpop-c blockquote{margin:8px 0 12px;font:400 27px/1.25 'Nanum Pen Script','Gaegu',cursive;color:#1E2A5A;letter-spacing:-.01em}
+.shqpop-c .hint{font:400 18px/1.2 'Nanum Pen Script','Gaegu',cursive;color:#6E5420}
+.shqpop-c img{transform:rotate(1deg);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.shqpop-nav .btn{background:none!important;border:0!important;box-shadow:none!important;font:400 20px/1 'Nanum Pen Script','Gaegu',cursive!important;color:#6E5420!important}
 .shqpop-c img{display:block;max-width:100%;border-radius:8px;margin:6px 0}
 .shqpop-nav{display:flex;justify-content:space-between;margin-top:10px}
 .bn.cont{padding-top:12px}
@@ -4729,7 +4742,7 @@ function shelfHTML(inSheet){
   // 책 상세는 한 곳에만 그린다(읽은 책 창이 열려 있으면 창 안에만). 같은 입력 칸이 두 벌 생기지 않게
   const sheetOpen=!!(S.sheet&&S.sheet.type==='mybooks');
   const sel=S.shelfSel&&(sheetOpen?!!inSheet:!inSheet)?bs.find(b=>hid(b.title)===S.shelfSel):null;
-  const rows=cats.map((c,i)=>{const L=by[c]||[];const ch=[];for(let k=0;k<L.length;k+=5)ch.push(L.slice(k,k+5));if(!ch.length)ch.push([]);
+  const rows=cats.map((c,i)=>{const L=by[c]||[];const ch=[];for(let k=0;k<L.length;k+=4)ch.push(L.slice(k,k+4));if(!ch.length)ch.push([]);
     return ch.map((g,n)=>`<div class="bn${n?' cont':''}">${n?'':`<div class="bnh"><span class="bnl">${c}</span><small>${L.length?(L.length+'권'):'비어 있어요'}</small></div>`}<div class="sbr">${g.map(b=>shelfBook(b)).join('')||'<span class="sbe">여기에 꽂힐 책을 기다려요</span>'}</div><div class="bbd"></div></div>`).join('')}).join('');
   const table=`<div class="stab"><div class="stb">${recent.map(b=>shelfBook(b,'tb')).join('')}</div><svg viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="150" cy="18" rx="138" ry="14" fill="#F4F1EA"/><path d="M12 18v5c0 8 60 14 138 14s138-6 138-14v-5c0 8-60 14-138 14S12 26 12 18z" fill="#C9B99B"/><path d="M142 36h16l4 28h-24z" fill="#8A5A3A"/><ellipse cx="150" cy="64" rx="46" ry="5" fill="#6E4626"/></svg></div>`;
   let det='';
