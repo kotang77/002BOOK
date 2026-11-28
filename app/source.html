@@ -978,6 +978,20 @@ form{display:flex;flex-direction:column;gap:12px}
 .sbr{overflow:visible}
 .sb{width:calc((100% - 32px)/5);height:auto;aspect-ratio:62/86}
 .sb.tb{width:46px;height:62px;aspect-ratio:auto}
+/* 서가 책 문구 꼬리표 */
+.sbw{position:relative;flex:0 0 auto;display:block;width:calc((100% - 32px)/5)}
+.sbw>.sb{width:100%}
+.sqtabs{position:absolute;left:calc(100% - 3px);top:8%;display:flex;flex-direction:column;gap:4px;z-index:2}
+.sqtab{--c:#9CC8FF;width:18px;height:17px;padding:0 0 0 3px;border:0;cursor:pointer;font:700 10px/17px 'Nanum Pen Script','Gaegu',var(--f-body);color:rgba(55,38,28,.9);text-align:center;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 38%,rgba(255,255,255,.55)) 0 3px,var(--c) 3px 100%);border-radius:1px 3px 3px 1px;box-shadow:0 1px 1px rgba(40,25,15,.35),1px 1px 3px rgba(40,25,15,.3)}
+.sqtab:active{transform:translateX(2px)}
+.shqpop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px}
+.shqpop-bg{position:absolute;inset:0;border:0;background:rgba(20,12,6,.55);cursor:pointer}
+.shqpop-c{position:relative;max-width:420px;width:100%;max-height:80vh;overflow:auto;background:#FBF6EC;border-radius:14px;padding:16px 18px 18px;box-shadow:0 18px 40px -10px rgba(0,0,0,.6);color:var(--ink)}
+.shqpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.shqpop-h small{color:#8A6A3E}
+.shqpop-c blockquote{margin:6px 0 10px;font:600 17px/1.6 var(--f-display);color:#2E2318}
+.shqpop-c img{display:block;max-width:100%;border-radius:8px;margin:6px 0}
+.shqpop-nav{display:flex;justify-content:space-between;margin-top:10px}
 .bn.cont{padding-top:12px}
 @media (max-width:720px){.bshf .bcase{margin-left:calc(-1*max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)));border-radius:0;padding-left:10px;padding-right:10px}.bshf .bcase::before{left:0;right:0;border-radius:0}.bshf .bcase::after{margin:0 -10px;border-radius:0}}
 .bbd{height:11px;margin:0 -8px;background:linear-gradient(#A2723F,#734A28);border-radius:0 0 3px 3px;box-shadow:0 4px 7px rgba(0,0,0,.45)}
@@ -2782,7 +2796,7 @@ html body .hl[data-c=b],html body mark.hk[data-c=b]{background-image:url("data:i
 }
 /* 11-28 사용자 지시(Figma 86:219·86:222·110:1228·110:1232·118:23 먼저): 닫기 버튼과 '책 읽기 전 생각하기'·'생각 끝내기'를 빛·광택 없이 중간색 단색으로 */
 /* 11-28 09:29 사용자 지시: 모든 창닫기 = 크림색 전구(가운데 흰 빛·둘레 따뜻한 노란 빛 번짐, 짙은 X), 위치는 창 오른쪽 위 모서리 */
-html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback]),.vbf-x),html body :is(.layer,.panel,.cso) .ph .x{
+html body :is(.x:is([data-act=close1],[data-act=close2],[data-act=svclose],[data-act=gdclose],[data-act=esback],[data-act=shqpopx]),.vbf-x),html body :is(.layer,.panel,.cso) .ph .x{
   display:grid!important;place-items:center;width:44px!important;height:44px!important;border-radius:50%!important;padding:0!important;
   background:radial-gradient(circle at 50% 42%,#FFFFFB 0%,#FFF7DF 45%,#FFEDB8 78%,#FFE29A 100%)!important;color:#2E1F0C!important;border:0!important;
   box-shadow:0 0 14px 5px rgba(255,214,110,.55),0 0 38px 14px rgba(255,205,95,.28),inset 0 -2px 4px rgba(214,160,60,.25)!important}
@@ -4670,10 +4684,22 @@ async function saveShRv(h,stars,text){
     const R=S.shRv&&S.shRv.h===h?S.shRv:(S.shRv={h,mine:{},list:[]});R.mine={stars,text:rec.text,at:rec.at};R.list=[rec].concat((R.list||[]).filter(x=>x.uid!==S.id));
     S.reviews=null;render();return true}catch(e){toast('저장하지 못했어요. 잠시 뒤 다시 해 주세요.');return false}
 }
+/* 11-28 사용자 지시: 서가의 책에 저장한 인상적인 문구 수만큼 색 꼬리표(독서 화면 책·영화 꼬리표 모양), 누르면 그 문구가 뜬다 */
+const SQC=['#9CC8FF','#A8E08F','#FFC27A','#F7A1B5','#C3A8F5','#8FDCCB'];
 function shelfBook(b,cls){
   const h=hid(b.title),img=artOf(b.title,'book'),c=KYC[bCat(b)]||KYC['기타'];
-  return `<button type="button" class="sb ${cls||''}" data-act="shbook" data-h="${h}" aria-label="${esc(bTitle(b.title))}${S.shelfSel===h?' (선택됨)':''}" aria-pressed="${S.shelfSel===h}" style="--a:${c[0]};--b:${c[1]}">${img?`<img src="${img}" alt="" loading="lazy">`:`<span class="sbp"><i></i><em>${esc(bTitle(b.title))}</em></span>`}</button>`;
+  const bk=`<button type="button" class="sb ${cls||''}" data-act="shbook" data-h="${h}" aria-label="${esc(bTitle(b.title))}${S.shelfSel===h?' (선택됨)':''}" aria-pressed="${S.shelfSel===h}" style="--a:${c[0]};--b:${c[1]}">${img?`<img src="${img}" alt="" loading="lazy">`:`<span class="sbp"><i></i><em>${esc(bTitle(b.title))}</em></span>`}</button>`;
+  const qs=cls?[]:shQuotes(h);if(!qs.length)return bk;
+  const n=Math.min(qs.length,5);
+  return `<span class="sbw">${bk}<span class="sqtabs">${Array.from({length:n},(_,k)=>`<button type="button" class="sqtab" style="--c:${SQC[k%SQC.length]}" data-act="shqtab" data-h="${h}" data-n="${k}" aria-label="인상적인 문구 ${k+1}${k===4&&qs.length>5?' 외 '+(qs.length-5)+'개':''} 보기">${k===4&&qs.length>5?'+':k+1}</button>`).join('')}</span></span>`;
 }
+function shqPopHTML(){const P=S.shqPop;if(!P)return '';const qs=shQuotes(P.h);if(!qs.length)return '';
+  const b=hexBooks().find(x=>hid(x.title)===P.h);const n=Math.max(0,Math.min(P.n,qs.length-1));const q=qs[n];const im=q.img?S.qimg[q.img]:'';
+  return `<div class="shqpop" role="dialog" aria-modal="true" aria-label="인상적인 문구"><button type="button" class="shqpop-bg" data-act="shqpopx" aria-label="닫기"></button>
+    <div class="shqpop-c"><div class="shqpop-h"><small>${esc(b?bTitle(b.title):'')} · 문구 ${n+1}/${qs.length}</small><button type="button" class="x" data-act="shqpopx" aria-label="닫기">${IC.x}</button></div>
+    ${q.t?`<blockquote>“${esc(q.t)}”</blockquote>`:''}${q.img?(im?`<img src="${im}" alt="문구 사진">`:'<p class="hint">사진을 불러오는 중…</p>'):''}
+    ${q.p||q.r?`<p class="hint">${q.p?esc(q.p)+'쪽':''}${q.p&&q.r?' · ':''}${esc(q.r||'')}</p>`:''}
+    ${qs.length>1?`<div class="shqpop-nav"><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n-1+qs.length)%qs.length}">‹ 이전</button><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n+1)%qs.length}">다음 ›</button></div>`:''}</div></div>`}
 function shelfHTML(inSheet){
   const bs=hexBooks().map(b=>Object.assign({},b,{c2:bCat(b)}));
   const by={};bs.forEach(b=>{(by[b.c2]=by[b.c2]||[]).push(b)});
@@ -4700,7 +4726,7 @@ function shelfHTML(inSheet){
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
   }
-  return `<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
+  return `${inSheet?'':shqPopHTML()}<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
 }
 function myBooksHTML(){
   const h=hexScores(),ha=hexScores('all');const p=h.p,n=h.all;const bs=hexBooks();
@@ -7800,6 +7826,8 @@ document.addEventListener('click',async e=>{
     case 'shqimgx':S.shqImg=null;shqKeep(d.h);render();break;
     case 'shqdel':{const h=d.h,n=+d.n;const a=(S.progress.quotes&&S.progress.quotes[h])||[];if(!a[n])break;const im=a[n].img;a.splice(n,1);if(!a.length)delete S.progress.quotes[h];saveProgress();render();
       if(im){S.db.doc('qimgs/'+im).delete().catch(()=>{});delete S.qimg[im]}break}
+    case 'shqtab':S.shqPop={h:d.h,n:+d.n||0};render();loadQImgs(d.h).then(()=>{if(S.shqPop)render()});break;
+    case 'shqpopx':S.shqPop=null;render();break;
     case 'shqbig':{const f=document.querySelector(`[data-qfig="${CSS.escape(d.id)}"]`);if(f)f.classList.toggle('big');break}
     case 'avatar':S.sheet={type:'avatar'};renderLayers();break;
     case 'scopen':S.sheet={type:'score'};S.scr=null;scLoad();break;
