@@ -1003,18 +1003,16 @@ html body .bshf .sqtabs{left:calc(100% + 1px)!important;gap:3px}
 html body .bshf .sqtab{width:16px;height:16px;font-size:10px;line-height:16px}
 .shqpop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px}
 .shqpop-bg{position:absolute;inset:0;border:0;background:rgba(20,12,6,.55);cursor:pointer}
-.shqpop-c{position:relative;max-width:340px;width:100%;max-height:80vh;overflow:auto;color:#2B2117;padding:30px 22px 22px;border-radius:2px 2px 26px 2px/2px 2px 18px 2px;transform:rotate(-1.6deg);
-  background:linear-gradient(176deg,rgba(255,255,255,.35),rgba(255,255,255,0) 30%),linear-gradient(transparent 96%,rgba(0,0,0,.04) 96%) 0 0/100% 30px,#FFE98A;
-  box-shadow:0 1px 1px rgba(0,0,0,.15),0 18px 30px -12px rgba(0,0,0,.55),inset 0 -12px 18px -12px rgba(150,110,0,.25)}
-.shqpop-c::before{content:"";position:absolute;left:50%;top:-6px;width:96px;height:24px;transform:translateX(-50%) rotate(2deg);background:rgba(240,232,210,.78);box-shadow:0 1px 2px rgba(0,0,0,.15);
-  -webkit-mask:linear-gradient(90deg,transparent 0 3px,#000 3px calc(100% - 3px),transparent 0);mask:linear-gradient(90deg,transparent 0 3px,#000 3px calc(100% - 3px),transparent 0)}
+.shqpop-c{position:relative;max-width:340px;width:100%;min-height:min(340px,calc(100vw - 40px));max-height:80vh;overflow:auto;display:flex;flex-direction:column;color:#2B2117;padding:26px 22px 18px;border-radius:1px;transform:rotate(-1.2deg);
+  background:linear-gradient(180deg,rgba(201,160,0,.10),rgba(201,160,0,.06) 38px,rgba(201,160,0,0) 44px),linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%,rgba(184,138,0,.10)),#FFE873;
+  box-shadow:0 1px 1px rgba(0,0,0,.14),0 3px 6px rgba(0,0,0,.18),2px 16px 18px -8px rgba(0,0,0,.42)}
 .shqpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.shqpop-h small{color:#6E5420;font:400 17px/1.2 'Nanum Pen Script','Gaegu',cursive}
 .shqpop-c blockquote{margin:8px 0 12px;font:400 27px/1.25 'Nanum Pen Script','Gaegu',cursive;color:#1E2A5A;letter-spacing:-.01em}
 .shqpop-c .hint{font:400 18px/1.2 'Nanum Pen Script','Gaegu',cursive;color:#6E5420}
 .shqpop-c img{transform:rotate(1deg);box-shadow:0 2px 6px rgba(0,0,0,.25)}
 .shqpop-nav .btn{background:none!important;border:0!important;box-shadow:none!important;font:400 20px/1 'Nanum Pen Script','Gaegu',cursive!important;color:#6E5420!important}
 .shqpop-c img{display:block;max-width:100%;border-radius:8px;margin:6px 0}
-.shqpop-nav{display:flex;justify-content:space-between;margin-top:10px}
+.shqpop-nav{display:flex;justify-content:space-between;margin-top:auto;padding-top:10px}
 .bn.cont{padding-top:12px}
 @media (max-width:720px){.bshf .bcase{margin-left:calc(-1*max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)));border-radius:0;padding-left:10px;padding-right:10px}.bshf .bcase::before{left:0;right:0;border-radius:0}.bshf .bcase::after{margin:0 -10px;border-radius:0}}
 .bbd{height:11px;margin:0 -8px;background:linear-gradient(#A2723F,#734A28);border-radius:0 0 3px 3px;box-shadow:0 4px 7px rgba(0,0,0,.45)}
@@ -4817,7 +4815,7 @@ function shelfHTML(inSheet){
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
   }
-  return `${inSheet?'':shqPopHTML()}<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${nReal?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
+  return `${inSheet?'':shqPopHTML()}<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2008. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2008. 10.24</small></span></span></div>${det}${nReal?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
 }
 function myBooksHTML(){
   const h=hexScores(),ha=hexScores('all');const p=h.p,n=h.all;const bs=hexBooks();
