@@ -3709,7 +3709,7 @@ function shellHTML(){
   const v=S.view;
   const tabs=[['course','독서'],['me','내 서재'],['vision','비전보드'],['friends','라운지']];if(canGuide())tabs.push(['guide','학습지도']);if(isAdmin())tabs.push(['admin','관리']); // 11-28: 관리는 맨 오른쪽 끝
   return `<div class="wrap${v==='course'||v==='me'||v==='vision'||v==='guide'?' shopin':v==='friends'?' shopin frl':''}"><svg class="tink" width="0" height="0" aria-hidden="true" focusable="false"><filter id="typeInk" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" result="d"/><feComponentTransfer in="n" result="g"><feFuncA type="discrete" tableValues="1 1 .7 1 .85 1 .9"/></feComponentTransfer><feComposite in="d" in2="g" operator="in"/></filter></svg><header class="top tnav"><button class="avb" data-act="avatar" aria-label="내 캐릭터 고르기">${avatarSrc()?`<img src="${avatarSrc()}" width="36" height="36" alt="">`:'<img class="avlogo" src="brand/app-icon-circle.png" width="36" height="36" alt="">'}</button>
-    <div class="tbr"><button class="brand" data-act="view" data-v="course" aria-label="002BOOK 홈"><span>002BOOK</span></button></div>
+    <div class="tbr"><button class="brand" data-act="story" aria-label="002BOOK을 만든 이유 보기"><span>002BOOK</span></button></div>
     <div class="seg" role="group" aria-label="코스 선택"><button data-act="basemode" aria-pressed="${S.mode==='base'}">기본</button><button data-act="custommode" aria-pressed="${S.mode==='custom'}">맞춤</button></div>
     <i class="tsep" aria-hidden="true"></i>
     <button class="x bell ti" data-act="notices" aria-label="알림${unread()?' (새 알림 있음)':''}">${IC.bell}${unread()||frAlerts().n>0?'<i class="dot"></i>':''}</button>
@@ -4399,6 +4399,24 @@ async function loadInfo(){
    if(need&&S.sample&&!(S.info.extra&&S.info.extra.ai))genInfo(i,k)}
 }
 
+/* 11-28 사용자 지시: 상단 002BOOK을 누르면 '만든 이유'를 맞춤 코스 공지(COMING SOON)와 같은 모양으로 */
+function storyHTML(){
+  return `<div class="panel cso"><div class="ph"><h2>002BOOK 이야기</h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
+  <div class="cso-glass">
+  <section class="cso-note" aria-label="002BOOK을 만든 이유">
+    <p class="cso-k">OUR STORY</p>
+    <h3 class="cso-t">한 권의 책과 두 편의 영화,<br>아이와 함께 읽는 시간</h3>
+    <div class="cso-rule" aria-hidden="true"></div>
+    <div class="cso-dl">
+      <p class="cso-r"><i>시작</i><span>두 아들과 <b>초등학교 4학년부터 고등학교 1학년까지</b> 함께 독서 수업을 했습니다</span></p>
+      <p class="cso-r"><i>지금</i><span>그 두 아들이 이제 대학생이 되었습니다</span></p>
+      <p class="cso-r"><i>이유</i><span>막내딸이 중학생이 되며, 그 수업을 <b>더 체계적이고 효율적으로</b> 이어 가려고 만들었습니다</span></p>
+      <p class="cso-r"><i>함께</i><span>같은 책을 읽고 같은 영화를 보며 나눈 이야기가 아이에게는 <b>훌륭한 밑거름</b>, 부모에게는 <b>아름다운 추억</b>이 되기를</span></p>
+      <p class="cso-r"><i>기록</i><span>자라며 만난 좋은 책의 아름다운 구절을 모으고, 이어지는 영화로 <b>생각의 힘</b>을 차곡차곡 정리합니다</span></p>
+    </div>
+    <p class="cso-s">행복한 사람으로 자라기를 바라며 · 영원이북 드림</p><i class="cso-tp l" aria-hidden="true"></i><i class="cso-tp r" aria-hidden="true"></i>
+  </section></div></div>`;
+}
 /* ---------- 맞춤형 설정 ---------- */
 const LV=['쉬움','보통','어려움'];const LEN=['얇게 (200쪽 이하)','보통','두껍게 (350쪽 이상)'];
 const PWHY=['재미와 몰입','새로운 지식','진로 탐색','생각 넓히기','마음의 위로','학교 공부'];
@@ -5568,7 +5586,7 @@ function renderLayers(){
   const sh=S.sheet;
   if(!S.id||!sh){l1.hidden=true;l1.innerHTML=''}
   else{l1.hidden=false;const keep=l1.querySelector('.panel');const top=keep?keep.scrollTop:0;
-    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='post'?pcComposeHTML():sh.type==='postv'?pcViewHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
+    l1.innerHTML=sh.type==='month'?monthHTML(sh.i):sh.type==='custom'?customHTML():sh.type==='story'?storyHTML():sh.type==='notices'?noticesHTML():sh.type==='profile'?profileHTML():sh.type==='mybooks'?myBooksHTML():sh.type==='avatar'?avatarHTML():sh.type==='vision'?visionHTML():sh.type==='score'?scoreHTML():sh.type==='chat'?chatHTML():sh.type==='post'?pcComposeHTML():sh.type==='postv'?pcViewHTML():sh.type==='kid'?kidHTML():sh.type==='subscribe'?subscribeHTML():paywallHTML();
     const p=l1.querySelector('.panel');if(p&&keep)p.scrollTop=top}
   if(S.id&&S.survey){l2.hidden=false;l2.innerHTML=surveyHTML();return}
   if(S.id&&S.esConf){l2.hidden=false;l2.innerHTML=esConfHTML();return}
@@ -7877,6 +7895,7 @@ document.addEventListener('click',async e=>{
       try{await S.db.doc('members/'+S.id).update({mode:'base'})}catch(err){}
       break;
     case 'custommode':S.sheet={type:'custom'};renderLayers();break;
+    case 'story':S.sheet={type:'story'};renderLayers();break;
     case 'cvtab':{const i=+d.i;S.cvTab=Object.assign({},S.cvTab,{[i]:d.k});repaintCard(i);cardFill(i,d.k);break}
     case 'month':{const i=+d.i;qFix(i);S.sheet={type:'month',i};S.sheetTab=['work','note','essay','oral'].includes(d.tab)?d.tab:'work';S.askDraft='';S.roadOpen=-1;S.essayDraft=draftOf(i);renderLayers();if(qStale(i))genQs(i);loadMonthData(i);break}
     case 'close1':if(S.wr){wrClose()}if(OREC)orStop();orSayStop();S.sheet=null;S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;S.admin=null;S.bulk=null;render();break;
