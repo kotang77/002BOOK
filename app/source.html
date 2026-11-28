@@ -985,6 +985,10 @@ form{display:flex;flex-direction:column;gap:12px}
 .sqtab{--c:#9CC8FF;width:18px;height:17px;padding:0 0 0 3px;border:0;cursor:pointer;font:700 10px/17px 'Nanum Pen Script','Gaegu',var(--f-body);color:rgba(55,38,28,.9);text-align:center;
   background:linear-gradient(90deg,color-mix(in srgb,var(--c) 38%,rgba(255,255,255,.55)) 0 3px,var(--c) 3px 100%);border-radius:1px 3px 3px 1px;box-shadow:0 1px 1px rgba(40,25,15,.35),1px 1px 3px rgba(40,25,15,.3)}
 .sqtab:active{transform:translateX(2px)}
+/* 11-28 샘플책 표시: 표지 아래 금색 띠, 상세의 작은 꼬리표 */
+.sbsmp{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:2px 0 3px;font:700 9px/1.2 var(--f-body);letter-spacing:.12em;text-align:center;color:#3A2A12;background:linear-gradient(#F1D58A,#D9B35A);box-shadow:0 -1px 0 rgba(0,0,0,.15)}
+.smpb{display:inline-block;margin:0 0 4px;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:700;color:#5A3E10;background:#F6E3B0}
+.smpq{font-size:11px;font-weight:700;color:#8A6420;background:#FBF0D2;border-radius:4px;padding:1px 6px}
 /* 11-28: 한 칸에 4권, 책 사이를 넓혀 꼬리표가 옆 책에 닿지 않게 */
 html body .bshf .sbr{gap:22px!important;padding-right:20px!important}
 html body .bshf .sbr>.sb:not(.tb),html body .bshf .sbw{width:calc((100% - 66px - 20px)/4)!important}
@@ -4626,8 +4630,20 @@ function bAuthor(t){const m=String(t||'').match(/\(([^)]*)\)\s*$/);return m?m[1]
 function bCat(b){const h=hid(b.title);const ov=(S.progress.catOv||{})[h];if(ov&&KY.includes(ov))return ov;if(b.cat&&b.catUser&&KY.includes(b.cat))return b.cat;
   if(b.kdc&&b.src==='nl'&&b.main>=0&&b.main<6)return kdcKY(b.kdc,b.main); // 도서관 분류(ISBN·KDC)가 있으면 그 칸 — AI가 짐작한 칸보다 먼저
   if(b.cat&&KY.includes(b.cat))return b.cat;return AXKY[b.main]||'기타'}
-const shTitleOf=h=>{const b=hexBooks().find(x=>hid(x.title)===h);return b?b.title:''};
-const shQuotes=h=>((S.progress.quotes||{})[h])||[];
+/* 11-28 사용자 지시: 서가에 샘플책 한 권(운수 좋은 날, 1924, 저작권 만료)을 비치하고 인상적인 문구 꼬리표를 미리 달아 둔다.
+   통계(hexBooks·육각형)에는 넣지 않고 서가 화면에서만 보인다. '서가에서 빼기' → progress.noSample */
+const SMP={id:'sample-unsu',src:'sample',title:'운수 좋은 날 (현진건)',author:'현진건',cat:'소설',catUser:true,
+  why:'1924년 현진건 단편. 비 오는 날 인력거꾼 김 첨지에게 오랜만에 손님이 몰려드는 "운수 좋은 날"이, 마지막에 어떻게 뒤집히는지 따라가 보세요. 책 옆 색 꼬리표를 누르면 인상적인 문구가 떠요.'};
+const SMP_H=hid(SMP.title);
+const SMP_Q=[
+  {t:'새침하게 흐린 품이 눈이 올 듯하더니 눈은 아니 오고 얼다가 만 비가 추적추적 내리었다.',r:'첫 문장의 흐리고 언 날씨가 비극으로 끝날 하루를 미리 알려 줘요.',s:1},
+  {t:'이상하게도 꼬리를 맞물고 덤비는 이 행운 앞에 조금 겁이 났음이다.',r:'좋은 일이 겹칠수록 커지는 불안. 제목이 반어라는 신호예요.',s:1},
+  {t:'설렁탕을 사다 놓았는데 왜 먹지를 못하니, 왜 먹지를 못하니…… 괴상하게도 오늘은! 운수가, 좋더니만…….',r:'"운수 좋은 날"이라는 제목이 가장 아프게 뒤집히는 마지막 문장.',s:1}];
+const SMP_COVER='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 172"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A4552"/><stop offset="1" stop-color="#1F262E"/></linearGradient></defs><rect width="124" height="172" fill="url(#g)"/><g stroke="#C9D3DC" stroke-opacity=".35" stroke-width="1.1" stroke-linecap="round">'+[[14,8],[40,20],[70,6],[98,16],[24,46],[58,40],[90,52],[110,36],[8,70],[44,74],[80,82],[104,96]].map(([x,y])=>`<line x1="${x}" y1="${y}" x2="${x-5}" y2="${y+14}"/>`).join('')+'</g><rect x="10" y="92" width="104" height="1" fill="#E8C877" opacity=".7"/><text x="62" y="115" text-anchor="middle" font-family="Noto Serif KR,Nanum Myeongjo,serif" font-weight="700" font-size="17" fill="#F5EBDD">운수 좋은 날</text><text x="62" y="133" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="9.5" fill="#E8C877" letter-spacing="2">현진건</text><g transform="translate(62 70)"><path d="M-17 -6h34c0 10-7 16-17 16s-17-6-17-16z" fill="#F2E6D2"/><rect x="-19" y="-8" width="38" height="3" rx="1.5" fill="#F7EEDF"/><path d="M-7 -12c-3-4 3-6 0-11M0 -12c-3-4 3-6 0-11M7 -12c-3-4 3-6 0-11" stroke="#F2E6D2" stroke-opacity=".6" stroke-width="1.3" fill="none" stroke-linecap="round"/></g><text x="62" y="146" text-anchor="middle" font-family="sans-serif" font-size="6.5" fill="#AEB8C2" letter-spacing="1">1924</text></svg>');
+const smpOn=bs=>!(S.progress&&S.progress.noSample)&&!(bs||hexBooks()).some(b=>hid(b.title)===SMP_H);
+const shBooks=()=>{const bs=hexBooks();return smpOn(bs)?bs.concat([SMP]):bs};
+const shTitleOf=h=>{const b=shBooks().find(x=>hid(x.title)===h);return b?b.title:''};
+const shQuotes=h=>{const mine=((S.progress.quotes||{})[h])||[];return h===SMP_H&&smpOn()?mine.concat(SMP_Q):mine};
 /* ---------- 서가에 꽂을 때 매기는 평가: 재미·난이도·다시 읽고 싶은 정도 (0.5~5점) ---------- */
 const MBQ=[['fun','재미','얼마나 재미있었나요?'],['diff','난이도','얼마나 어려웠나요? (별이 많을수록 어려움)'],['again','다시 읽기','어른이 되어서도 다시 읽고 싶나요?']];
 const rateOK=v=>!!(v&&MBQ.every(([q])=>Number(v[q])>0));
@@ -4678,7 +4694,7 @@ function shQuoteCards(h){
   if(!qs.length)return `<div class="shqs empty"><p class="hint">아직 모아 둔 문구가 없어요. 아래 "인상적인 문구 더하기"에서 적거나 사진을 올려 보세요.</p></div>`;
   return `<div class="shqs" aria-label="인상적인 문구 ${qs.length}개">${qs.map((q,n)=>{const im=q.img?S.qimg[q.img]:'';
     return `<figure class="shqc" data-qfig="${esc(q.img||'t'+n)}">${q.t?`<blockquote>“${esc(q.t)}”</blockquote>`:''}${q.img?(im?`<button type="button" class="shqim" data-act="shqbig" data-id="${esc(q.img)}" aria-label="문구 사진 크게 보기"><img src="${im}" alt="문구 사진"></button>`:'<span class="hint">사진을 불러오는 중…</span>'):''}
-      <figcaption>${q.p?esc(q.p)+'쪽':''}${q.p&&q.r?' · ':''}${esc(q.r||'')}<button type="button" class="chip" data-act="shqdel" data-h="${h}" data-n="${n}">지우기</button></figcaption></figure>`}).join('')}</div>`;
+      <figcaption>${q.s?'<span class="smpq">샘플 문구</span>':''}${q.p?esc(q.p)+'쪽':''}${q.p&&q.r?' · ':''}${esc(q.r||'')}${q.s?'':`<button type="button" class="chip" data-act="shqdel" data-h="${h}" data-n="${n}">지우기</button>`}</figcaption></figure>`}).join('')}</div>`;
 }
 function shelfExtra(sel,h){
   const R=S.shRv&&S.shRv.h===h?S.shRv:null;const mine=(R&&R.mine)||{stars:0,text:''};const list=(R&&R.list)||[];
@@ -4718,21 +4734,21 @@ async function saveShRv(h,stars,text){
 /* 11-28 사용자 지시: 서가의 책에 저장한 인상적인 문구 수만큼 색 꼬리표(독서 화면 책·영화 꼬리표 모양), 누르면 그 문구가 뜬다 */
 const SQC=['#9CC8FF','#A8E08F','#FFC27A','#F7A1B5','#C3A8F5','#8FDCCB'];
 function shelfBook(b,cls){
-  const h=hid(b.title),img=artOf(b.title,'book'),c=KYC[bCat(b)]||KYC['기타'];
-  const bk=`<button type="button" class="sb ${cls||''}" data-act="shbook" data-h="${h}" aria-label="${esc(bTitle(b.title))}${S.shelfSel===h?' (선택됨)':''}" aria-pressed="${S.shelfSel===h}" style="--a:${c[0]};--b:${c[1]}">${img?`<img src="${img}" alt="" loading="lazy">`:`<span class="sbp"><i></i><em>${esc(bTitle(b.title))}</em></span>`}</button>`;
+  const smp=b.src==='sample',h=hid(b.title),img=smp?((S.covers&&S.covers[h])||SMP_COVER):artOf(b.title,'book'),c=KYC[bCat(b)]||KYC['기타'];
+  const bk=`<button type="button" class="sb ${cls||''}" data-act="shbook" data-h="${h}" aria-label="${smp?'샘플책 ':''}${esc(bTitle(b.title))}${S.shelfSel===h?' (선택됨)':''}" aria-pressed="${S.shelfSel===h}" style="--a:${c[0]};--b:${c[1]}">${img?`<img src="${img}" alt="" loading="lazy">`:`<span class="sbp"><i></i><em>${esc(bTitle(b.title))}</em></span>`}${smp?'<span class="sbsmp" aria-hidden="true">샘플</span>':''}</button>`;
   const qs=cls?[]:shQuotes(h);if(!qs.length)return bk;
   const n=Math.min(qs.length,5);
   return `<span class="sbw">${bk}<span class="sqtabs">${Array.from({length:n},(_,k)=>`<button type="button" class="sqtab" style="--c:${SQC[k%SQC.length]}" data-act="shqtab" data-h="${h}" data-n="${k}" aria-label="인상적인 문구 ${k+1}${k===4&&qs.length>5?' 외 '+(qs.length-5)+'개':''} 보기">${k===4&&qs.length>5?'+':k+1}</button>`).join('')}</span></span>`;
 }
 function shqPopHTML(){const P=S.shqPop;if(!P)return '';const qs=shQuotes(P.h);if(!qs.length)return '';
-  const b=hexBooks().find(x=>hid(x.title)===P.h);const n=Math.max(0,Math.min(P.n,qs.length-1));const q=qs[n];const im=q.img?S.qimg[q.img]:'';
+  const b=shBooks().find(x=>hid(x.title)===P.h);const n=Math.max(0,Math.min(P.n,qs.length-1));const q=qs[n];const im=q.img?S.qimg[q.img]:'';
   return `<div class="shqpop" role="dialog" aria-modal="true" aria-label="인상적인 문구"><button type="button" class="shqpop-bg" data-act="shqpopx" aria-label="닫기"></button>
     <div class="shqpop-c"><div class="shqpop-h"><small>${esc(b?bTitle(b.title):'')} · 문구 ${n+1}/${qs.length}</small><button type="button" class="x" data-act="shqpopx" aria-label="닫기">${IC.x}</button></div>
     ${q.t?`<blockquote>“${esc(q.t)}”</blockquote>`:''}${q.img?(im?`<img src="${im}" alt="문구 사진">`:'<p class="hint">사진을 불러오는 중…</p>'):''}
     ${q.p||q.r?`<p class="hint">${q.p?esc(q.p)+'쪽':''}${q.p&&q.r?' · ':''}${esc(q.r||'')}</p>`:''}
     ${qs.length>1?`<div class="shqpop-nav"><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n-1+qs.length)%qs.length}">‹ 이전</button><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n+1)%qs.length}">다음 ›</button></div>`:''}</div></div>`}
 function shelfHTML(inSheet){
-  const bs=hexBooks().map(b=>Object.assign({},b,{c2:bCat(b)}));
+  const bs=shBooks().map(b=>Object.assign({},b,{c2:bCat(b)}));const nReal=bs.filter(b=>b.src!=='sample').length;
   const by={};bs.forEach(b=>{(by[b.c2]=by[b.c2]||[]).push(b)});
   let cats=KY.filter(c=>by[c]);
   const spare=KY.filter(c=>!by[c]&&c!=='기타');
@@ -4743,21 +4759,21 @@ function shelfHTML(inSheet){
   const sheetOpen=!!(S.sheet&&S.sheet.type==='mybooks');
   const sel=S.shelfSel&&(sheetOpen?!!inSheet:!inSheet)?bs.find(b=>hid(b.title)===S.shelfSel):null;
   const rows=cats.map((c,i)=>{const L=by[c]||[];const ch=[];for(let k=0;k<L.length;k+=4)ch.push(L.slice(k,k+4));if(!ch.length)ch.push([]);
-    return ch.map((g,n)=>`<div class="bn${n?' cont':''}">${n?'':`<div class="bnh"><span class="bnl">${c}</span><small>${L.length?(L.length+'권'):'비어 있어요'}</small></div>`}<div class="sbr">${g.map(b=>shelfBook(b)).join('')||'<span class="sbe">여기에 꽂힐 책을 기다려요</span>'}</div><div class="bbd"></div></div>`).join('')}).join('');
+    return ch.map((g,n)=>`<div class="bn${n?' cont':''}">${n?'':`<div class="bnh"><span class="bnl">${c}</span><small>${(k=>k?k+'권':L.length?'샘플 1권':'비어 있어요')(L.filter(b=>b.src!=='sample').length)}</small></div>`}<div class="sbr">${g.map(b=>shelfBook(b)).join('')||'<span class="sbe">여기에 꽂힐 책을 기다려요</span>'}</div><div class="bbd"></div></div>`).join('')}).join('');
   const table=`<div class="stab"><div class="stb">${recent.map(b=>shelfBook(b,'tb')).join('')}</div><svg viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="150" cy="18" rx="138" ry="14" fill="#F4F1EA"/><path d="M12 18v5c0 8 60 14 138 14s138-6 138-14v-5c0 8-60 14-138 14S12 26 12 18z" fill="#C9B99B"/><path d="M142 36h16l4 28h-24z" fill="#8A5A3A"/><ellipse cx="150" cy="64" rx="46" ry="5" fill="#6E4626"/></svg></div>`;
   let det='';
   if(sel){
-    const h=hid(sel.title),selImg=artOf(sel.title,'book'),has=!!selImg,c=KYC[sel.c2]||KYC['기타'];
+    const smp=sel.src==='sample',h=hid(sel.title),selImg=smp?((S.covers&&S.covers[h])||SMP_COVER):artOf(sel.title,'book'),has=!!selImg,c=KYC[sel.c2]||KYC['기타'];
     det=`<div class="sdt"><span class="cvimg big" style="--a:${c[0]};--b:${c[1]}">${has?`<img src="${selImg}" alt="${esc(bTitle(sel.title))} 표지">`:`<span class="phd">${BOOKG}<span>${esc(sel.c2)}</span></span>`}</span>
-      <div class="cvside"><b>${esc(bTitle(sel.title))}</b>${(sel.author||bAuthor(sel.title))?`<span class="hint"> ${esc(sel.author||bAuthor(sel.title))}</span>`:''}
+      <div class="cvside">${smp?'<span class="smpb">샘플책</span>':''}<b>${esc(bTitle(sel.title))}</b>${(sel.author||bAuthor(sel.title))?`<span class="hint"> ${esc(sel.author||bAuthor(sel.title))}</span>`:''}
       ${sel.why?`<p class="hint">${esc(sel.why)}</p>`:''}
       <label class="sdl">서점 분류<select data-bcat="${h}">${KY.map(k=>`<option${k===sel.c2?' selected':''}>${k}</option>`).join('')}</select></label>
-      <div class="sdb">${has?'':`<label class="btn ghost small up">표지 올리기<input type="file" accept="image/*" data-cover="${h}"></label>`}${sel.src==='mine'?`<button class="chip" data-act="mbdel" data-id="${esc(sel.id)}">서가에서 빼기</button>`:''}</div>
-      <p class="hint">${has?'올려 둔 표지예요. 더 잘 나온 사진으로 바꿀 수 있어요.':'책 표지를 찍거나 서점 화면을 캡처해서 올리면 서가에 표지가 보여요.'}</p></div></div>
+      <div class="sdb">${has?'':`<label class="btn ghost small up">표지 올리기<input type="file" accept="image/*" data-cover="${h}"></label>`}${sel.src==='mine'?`<button class="chip" data-act="mbdel" data-id="${esc(sel.id)}">서가에서 빼기</button>`:''}${smp?'<button class="chip" data-act="smpdel">샘플책 서가에서 빼기</button>':''}</div>
+      <p class="hint">${smp?'서가가 어떻게 쓰이는지 보여 주는 샘플책이에요. 읽고 나면 별점·서평·문구를 남겨 보세요.':has?'올려 둔 표지예요. 더 잘 나온 사진으로 바꿀 수 있어요.':'책 표지를 찍거나 서점 화면을 캡처해서 올리면 서가에 표지가 보여요.'}</p></div></div>
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
   }
-  return `${inSheet?'':shqPopHTML()}<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
+  return `${inSheet?'':shqPopHTML()}<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${nReal?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
 }
 function myBooksHTML(){
   const h=hexScores(),ha=hexScores('all');const p=h.p,n=h.all;const bs=hexBooks();
@@ -7878,6 +7894,7 @@ document.addEventListener('click',async e=>{
     case 'budpick':{if(!S.bpk)S.bpk={av:'',img:''};S.bpk.av=d.id||'';budPaintPick();break}
     case 'avset':{const id=(AVIMG[d.id]||(d.id==='custom'&&S.me.avatarImg))?d.id:'';const old=S.me.avatar;S.me.avatar=id;render();
       try{await S.db.doc('members/'+S.id).update({avatar:id});toast(id?'캐릭터를 바꿨어요.':'기본 로고로 바꿨어요.')}catch(err){S.me.avatar=old;render();toast('저장하지 못했어요.')}break}
+    case 'smpdel':S.progress.noSample=true;if(S.shelfSel===SMP_H)S.shelfSel=null;if(S.shqPop&&S.shqPop.h===SMP_H)S.shqPop=null;saveProgress();render();toast('샘플책을 서가에서 뺐어요.');break;
     case 'mbdel':S.progress.myBooks=(S.progress.myBooks||[]).filter(b=>b.id!==d.id);saveProgress();render();break;
     case 'view':if(d.v==='vision'&&vbOf()&&vbOf().board){S.vbAskBusy=false;S.vbAsk=vbPickQ(vbOf())}if(d.v==='admin'&&!isAdmin())break;S.view=d.v;S.sheet=null;S.info=null;render();if(d.v==='admin')loadAdmin();
       if(d.v==='friends'){if(!S.fr)S.fr=frNew();loadFriends(true)}
