@@ -2851,7 +2851,9 @@ function hk(x){const s=String(x==null?'':x);const mk=t=>`<mark class="hk">${t}</
   while(n<2&&(m=re.exec(s))){const a=m[1],b=m[3];if(!(((a==="'"||a==='‘')&&(b==="'"||b==='’'))||((a==='"'||a==='“')&&(b==='"'||b==='”'))))continue;o+=esc(s.slice(p,m.index))+mk(esc(m[0]));p=re.lastIndex;n++}
   return o+esc(s.slice(p))}
 const HKC=['y','g','b'];const hkHash=t=>{let h=0;for(const c of String(t))h=(h*31+c.charCodeAt(0))|0;return Math.abs(h)%3};
-function hkPaint(){document.querySelectorAll('.hl:not([data-c]),mark.hk:not([data-c])').forEach(e=>{e.dataset.c=HKC[hkHash(e.textContent)]})}
+/* 11-28 사용자 지시: 한 창에는 형광펜 한 색만. 창(열림창·패널·학습지도·메인)마다 첫 형광펜 글자로 색을 한 번 정하고 그 창 안의 모든 형광펜에 같은 색 */
+function hkPaint(){document.querySelectorAll('.hl,mark.hk').forEach(e=>{const w=e.closest('.cso')||e.closest('.layer')||e.closest('.panel')||e.closest('.lgpage')||e.closest('main')||document.body;
+  if(!w.dataset.hkc)w.dataset.hkc=HKC[hkHash(e.textContent)];if(e.dataset.c!==w.dataset.hkc)e.dataset.c=w.dataset.hkc})}
 try{new MutationObserver(hkPaint).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
 const clone=o=>JSON.parse(JSON.stringify(o));
 function hid(s){let h=5381;for(const ch of String(s)){h=(((h<<5)+h)+ch.charCodeAt(0))>>>0}return h.toString(36)}
