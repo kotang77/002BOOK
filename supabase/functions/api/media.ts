@@ -89,7 +89,7 @@ async function tmdb(title: string, year: string): Promise<Art | null> {
   }
   return best ? { url: 'https://image.tmdb.org/t/p/w342' + best.poster_path, src: 'tmdb', title: clean(best.title, 120) } : null;
 }
-async function kmdb(title: string, year: string): Promise<Art | null> {
+async function kmdb(title: string, year: string, en = ''): Promise<Art | null> {
   const key = env('KMDB_KEY'); if (!key) return null;
   /* 11-27: 같은 이름 속편이 많은 영화(터미네이터 등)는 원작이 앞 10개에 안 들어 못 찾았다 → 30개까지 받고, 연도를 알면 제작연도 ±1로 좁힌다.
      정확히 같은 제목이 없으면 한쪽 제목이 다른 쪽을 포함하는 것(루디 ↔ 루디 이야기)도 연도가 맞으면 받는다. 포스터가 없는 항목은 건너뛴다.
@@ -98,8 +98,11 @@ async function kmdb(title: string, year: string): Promise<Art | null> {
   /* 11-28: createDts·createDte로 좁히면 제작연도가 비었거나 다르게 적힌 작품(아이 엠 샘 등)이 빠진다 → 조건 없이 30개 받고 아래에서 연도로 고른다 */
   const j = await getJSON('http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?' + q) as { Data?: { Result?: Record<string, unknown>[] }[] } | null;
   const t = normT(title);
-  const rows = (j?.Data?.[0]?.Result ?? []).map((m) => ({ m, n: normT(m.title), y: Number(m.prodYear) || 0, p: String(m.posters ?? '').split('|').map(https).find(Boolean) || '' }))
+  const rows = (j?.Data?.[0]?.Result ?? []).map((m) => ({ m, n: normT(m.title), e: normT(String(m.titleEng ?? '') + ' ' + String(m.titleOrg ?? '')), y: Number(m.prodYear) || 0, p: String(m.posters ?? '').split('|').map(https).find(Boolean) || '' }))
     .filter((r) => r.p);
+  /* 11-28: 영어 원제(en)를 주면 원제가 맞고 제작연도가 ±1인 것만 받는다. 없으면 엉뚱한 포스터 대신 '못 찾음' */
+  if (en) { const e = normT(en); const ok = rows.filter((r) => r.e.includes(e) && (!year || (r.y && Math.abs(r.y - Number(year)) <= 1))).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0];
+    return ok ? { url: ok.p, src: 'kmdb', title: clean(String(ok.m.title).replace(/!H[SE]/g, ''), 120) } : null; }
   const near = year ? rows.filter((r) => !(r.y && Math.abs(r.y - Number(year)) > 1)) : rows;
   const pick = near.filter((r) => r.n === t).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0]
     ?? (t.length >= 2 ? near.filter((r) => r.n.length >= 2 && (r.n.includes(t) || t.includes(r.n)) && (year ? !!r.y : true)).sort((a, b) => (a.y || 9999) - (b.y || 9999) || Math.abs(a.n.length - t.length) - Math.abs(b.n.length - t.length))[0] : undefined);
@@ -110,12 +113,12 @@ async function kmdb(title: string, year: string): Promise<Art | null> {
 /* 영상자료원에 등록된 이름이 앱 제목과 다른 영화(루디 이야기 → 루디 등)는 다른 이름으로 한 번 더 찾는다 */
 /* 영상자료원에 없는 영화(넷플릭스 영화 등)는 같은 이야기의 원작 책 표지를 쓴다 */
 const MOVIE_BOOK: Record<string, [string, string]> = { '바람을길들인풍차소년': ['바람을 길들인 풍차소년', '윌리엄 캄쾀바'] };
-const MOVIE_AKA: Record<string, string[]> = { '알파위대한여정': ['알파'], '루디이야기': ['루디'], '달려라루디': ['루디'],
+const MOVIE_AKA: Record<string, string[]> = { '알파위대한여정': ['알파', 'Alpha'], '루디이야기': ['루디', 'Rudy'],
   '바람을길들인풍차소년': ['바람을 길들인 풍차 소년', 'The Boy Who Harnessed the Wind'] };
-export async function movieArt(title: string, year: string): Promise<Art | null> {
-  const r = (await tmdb(title, year)) ?? (await kmdb(title, year));
+export async function movieArt(title: string, year: string, en = ''): Promise<Art | null> {
+  const r = (en ? null : await tmdb(title, year)) ?? (await kmdb(title, year, en));
   if (r) return r;
-  for (const t of MOVIE_AKA[normT(title)] ?? []) { const a = (await tmdb(t, year)) ?? (await kmdb(t, year)); if (a) return a; }
+  for (const t of MOVIE_AKA[normT(title)] ?? []) { const a = (en ? null : await tmdb(t, year)) ?? (await kmdb(t, year, en)); if (a) return a; }
   const bk = MOVIE_BOOK[normT(title)]; if (bk) return bookArt(bk[0], bk[1]);
   return null;
 }
@@ -123,12 +126,12 @@ export async function movieArt(title: string, year: string): Promise<Art | null>
 /* ---------- op ---------- */
 export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO, admin = false) {
   const kind = b.kind === 'movie' ? 'movie' : 'book';
-  const title = clean(b.title, 80).replace(/\s*\(.*\)\s*$/, ''), au = clean(b.author, 40), year = /^\d{4}$/.test(String(b.year ?? '')) ? String(b.year) : '';
+  const title = clean(b.title, 80).replace(/\s*\(.*\)\s*$/, ''), au = clean(b.author, 40), year = /^\d{4}$/.test(String(b.year ?? '')) ? String(b.year) : '', en = kind === 'movie' ? clean(b.en, 60) : '';
   if (normT(title).length < 1) fail('bad_request', '제목이 필요해요.');
   const fake = env('FAKE_ART');
   if (!fake && !(kind === 'book' ? env('NL_CERT_KEY') || env('KAKAO_REST_KEY') : env('TMDB_TOKEN') || env('KMDB_KEY')))
     fail('art_not_configured', '표지·포스터 자동 찾기가 아직 설정되지 않았어요.', 503);
-  const p = `sys/art_${(await sha256hex(kind + '|' + normT(title) + '|' + year)).slice(0, 24)}`;
+  const p = `sys/art_${(await sha256hex(kind + '|' + normT(title) + '|' + year + (en ? '|' + normT(en) : ''))).slice(0, 24)}`;
   const row = await io.read(p);
   if (row && !(admin && b.fresh && !row.data.url)) { // 관리자는 '못 찾음' 캐시를 건너뛰고 다시 찾을 수 있다
     const at = Number(row.data.at) || 0, ok = !!row.data.url, ttl = ok ? 7 * DAY : row.data.err ? 30 * 60e3 : DAY;
@@ -144,9 +147,9 @@ export async function artOp(uid: string, b: Record<string, unknown>, io: BookIO,
   if (fake) { // 시험용: {"book:제목": "https://…", "movie:제목": "https://…"}
     const m = JSON.parse(fake) as Record<string, string>; const u = m[kind + ':' + title];
     art = u ? { url: u, src: 'fake' } : null;
-  } else art = kind === 'book' ? await bookArt(title, au) : await movieArt(title, year);
+  } else art = kind === 'book' ? await bookArt(title, au) : await movieArt(title, year, en);
   const err = !art && ER.n > e0;
-  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', found: art?.title ?? '', kind, title, year, at: Date.now(), ...(err ? { err: 1 } : {}) }, null, row);
+  await io.write(p, { url: art?.url ?? '', src: art?.src ?? '', found: art?.title ?? '', kind, title, year, ...(en ? { en } : {}), at: Date.now(), ...(err ? { err: 1 } : {}) }, null, row);
   return { url: art?.url ?? '', src: art?.src ?? '', title: art?.title ?? '', cached: false };
 }
 

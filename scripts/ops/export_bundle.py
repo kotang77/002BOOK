@@ -54,7 +54,9 @@ if REF and TOKEN:
     except Exception as e: print('올린 표지를 가져오지 못했어요:', e)
     try:
         # 연도를 정해 찾은 것(11-28~)은 '종류|제목|연도' 키로 따로 둔다(같은 제목의 다른 작품과 섞이지 않게). 앱의 ART_Q가 이 키를 읽음
-        for x in sql("select data->>'kind' as k, data->>'title' as t, data->>'year' as y, data->>'url' as u from docs where path like 'sys/art\\_%' and coalesce(data->>'url','') <> ''"):
+        # 11-28: 원제(en) 없이 엉뚱한 작품을 잡았던 영화(달려라 루디·2025 알파·다른 러브레터)의 옛 캐시는 지운다 → 앱이 원제를 붙여 다시 찾음
+        sql("delete from docs where path like 'sys/art\\_%' and data->>'kind' = 'movie' and data->>'title' in ('알파: 위대한 여정','루디 이야기','달려라 루디','러브레터') and coalesce(data->>'en','') = ''")
+        for x in sql("select data->>'kind' as k, data->>'title' as t, data->>'year' as y, data->>'url' as u from docs where path like 'sys/art\\_%' and coalesce(data->>'url','') <> '' order by coalesce((data->>'at')::bigint, 0)"):
             u = x.get('u') or ''
             if not u.startswith('https://'): continue
             y = x.get('y') or ''
