@@ -81,7 +81,13 @@ html[data-theme="sky"] body{background-image:radial-gradient(760px 360px at 50% 
 .wk-x small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wk-x strong{font-family:var(--f-display);font-size:17px;line-height:1.35}
 .wk-x em{font-style:normal;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:3px}
-.wk-x em.nw{color:var(--now-ink);font-weight:700}.wk-x em.dn{color:var(--done);font-weight:500}
+.wk-x em.nw{color:var(--now-ink);font-weight:700}
+/* 11-28 볼 수 있는 OTT: '아직' 옆 작은 꼬리표(로고 대신 글자) */
+.wk-x em{flex-wrap:wrap}
+.wk-ott{display:inline-flex;flex-wrap:wrap;gap:3px;margin-left:6px}
+.otc{display:inline-block;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700;line-height:1.5;color:#5A3E22;background:#F3E6CF;border:1px solid #E3CFAE;white-space:nowrap}
+.otc.rent{font-weight:500;color:#6B5A48;background:#F4EFE7;border-color:#E4DACB}
+.otc.none{font-weight:500;color:#8A7A6A;background:transparent;border-style:dashed}.wk-x em.dn{color:var(--done);font-weight:500}
 .wk-a{flex:none}
 .wk-b{min-height:44px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:0 16px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
 .wk-b.go{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
@@ -3788,6 +3794,25 @@ async function artRetry(){const SV=window.__002&&window.__002.server;if(!SV||!is
   window.__artRe={ok,no,diff};artDirty();toast(`${ok}개를 찾았어요.${no.length?' 못 찾은 것: '+no.slice(0,4).join(', ')+(no.length>4?' 외 '+(no.length-4)+'개':''):''}`)}
 function artSave(){clearTimeout(artSaveT);artSaveT=setTimeout(()=>{try{localStorage.setItem('yw.art',JSON.stringify(ART))}catch(e){}},800)}
 function artDirty(){artSave();clearTimeout(artT);artT=setTimeout(()=>{const a=document.activeElement;if(S.wr||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))return;if(S.sheet)renderLayers();else render()},500)}
+/* 11-28 사용자 지시: 영화를 볼 수 있는 OTT(넷플릭스·쿠팡플레이·웨이브 등)를 카드 '아직' 옆에 적는다. 서버 media.ott가 웹 검색으로 확인하고 7일 캐시한다.
+   기기에도 서버가 확인한 시각(t)과 함께 기억하고, 그 시각에서 7일이 지나면 다시 물어 새 결과로 바꾼다(7일에 한 번 자동 업데이트). 실패는 1시간 뒤 다시 */
+const OTT=(()=>{try{return JSON.parse(localStorage.getItem('yw.ott')||'{}')||{}}catch(e){return {}}})();
+const OTTP={};let ottQ=[],ottRun=0,ottSaveT=null;
+function ottOf(title,yr){const t=bTitle(title);if(!t)return null;const k=artN(t)+'|'+(yr||'');const v=OTT[k];const now=Date.now();
+  if(!v||(v.t?now-v.t>=7*864e5&&now-(v.c||0)>36e5:now-(v.c||0)>36e5))ottWant(k,{title:t,year:yr?String(yr):''});
+  return v&&(v.t||(v.s&&v.s.length))?v:null}
+function ottWant(k,q){if(S.ottOff||!S.id||OTTP[k])return;OTTP[k]=1;ottQ.push({k,q});setTimeout(ottPump,0)}
+function ottPump(){const SV=window.__002&&window.__002.server;if(!SV)return;
+  while(ottRun<2&&ottQ.length&&!S.ottOff){const {k,q}=ottQ.shift();ottRun++;
+    SV.call('media.ott',q).then(r=>{const o=OTT[k];const v={s:(r&&r.subs)||[],r:(r&&r.rent)||[],t:Number(r&&r.at)||0,c:Date.now()};OTT[k]=v;
+      clearTimeout(ottSaveT);ottSaveT=setTimeout(()=>{try{localStorage.setItem('yw.ott',JSON.stringify(OTT))}catch(e){}},800);
+      if(!o||JSON.stringify([o.s,o.r,!!o.t])!==JSON.stringify([v.s,v.r,!!v.t]))artDirty()})
+      .catch(e=>{if(e&&(e.code==='ott_not_configured'||e.code==='rate_limited'))S.ottOff=e.code;OTT[k]=Object.assign({},OTT[k],{c:Date.now()})})
+      .finally(()=>{delete OTTP[k];ottRun--;ottPump()})}}
+function ottHTML(title,yr){const v=ottOf(title,yr);if(!v)return '';
+  const d=v.t?new Date(v.t):null;const when=d?`${d.getMonth()+1}월 ${d.getDate()}일 확인 · 7일마다 다시 확인`:'';
+  const body=v.s.length?v.s.map(x=>`<span class="otc">${esc(x)}</span>`).join(''):v.r.length?`<span class="otc rent">대여·구매 ${esc(v.r.slice(0,2).join('·'))}</span>`:'<span class="otc none">OTT 없음</span>';
+  return `<span class="wk-ott" title="${esc(when)}" aria-label="볼 수 있는 곳: ${esc(v.s.join(', ')||(v.r.length?'대여·구매 '+v.r.join(', '):'없음'))}${when?' ('+esc(when)+')':''}">${body}</span>`}
 const coverOf=title=>artOf(title,'book');
 /* 자동으로 찾은 그림 주소가 열리지 않으면(지워졌거나 막힘) 그 그림은 하루 동안 쓰지 않고 도형 그림으로 바꾼다 */
 document.addEventListener('error',e=>{const im=e.target;if(!im||im.tagName!=='IMG')return;const src=im.getAttribute('src')||'';
@@ -4249,7 +4274,8 @@ function wkRowHTML(i,k,cur){
   const it=items()[i];const key=ik(i,k);const on=!!S.progress.done[key];const st=(S.progress.started||{})[key];const v=wkVerb(k);
   const name=bTitle(wkName(it,k));const ln=cardInfoLines(it,k);const r=on?readStat(i,k):null;const sv=svOK(i,k);
   const kind=k==='book'?'책':'영화';
-  const stat=on?`<em class="dn">${IC.check} ${r?r.days+'일 만에 끝'+(r.ppd?' · 하루 '+r.ppd+'쪽':''):'끝'}</em>`:st?`<em class="nw">${v[1]} 중 · ${Math.max(1,Math.ceil((Date.now()-st)/864e5))}일째</em>`:`<em>아직</em>`;
+  const ott=k!=='book'&&!on?ottHTML(wkName(it,k),yearOf(it,wkName(it,k))):'';
+  const stat=on?`<em class="dn">${IC.check} ${r?r.days+'일 만에 끝'+(r.ppd?' · 하루 '+r.ppd+'쪽':''):'끝'}</em>`:st?`<em class="nw">${v[1]} 중 · ${Math.max(1,Math.ceil((Date.now()-st)/864e5))}일째${ott}</em>`:`<em>아직${ott}</em>`;
   const a=on?(sv?`<button class="wk-b ok" data-act="wkundo" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 끝냄 (두 번 누르면 취소)">${IC.check}끝</button>`:`<button class="wk-b go" data-act="svopen" data-i="${i}" data-k="${k}">별점 남기기</button>`)
     :st?`<button class="wk-b go" data-act="done" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 다 ${v[2]}">다 ${v[2]}</button>`
     :k!=='book'?`<button class="wk-b go" data-act="done" data-i="${i}" data-k="${k}" aria-label="${kind} 「${esc(name)}」 다 ${v[2]}">다 ${v[2]}</button>`/* 영화는 시작 없이 바로 '다 봤어요'(2026-11-26) */
