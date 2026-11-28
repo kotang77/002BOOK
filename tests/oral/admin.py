@@ -110,10 +110,14 @@ with sync_playwright() as p:
         pg.wait_for_selector('[data-act=view][data-v=admin]', timeout=20000, state='attached')
         act(pg, '[data-act=view][data-v=admin]')
         ok(f'[{vp[0]}] 지표 타일 6개', wait(lambda: pg.locator('.ad-tile').count() == 6))
-        ok(f'[{vp[0]}] 메뉴 7개, 처음엔 모두 닫힘', pg.locator('.ad-sec').count() == 7 and pg.locator('.ad-sec.open').count() == 0)
+        ok(f'[{vp[0]}] 메뉴 8개, 처음엔 모두 닫힘', pg.locator('.ad-sec').count() == 8 and pg.locator('.ad-sec.open').count() == 0)
         ok(f'[{vp[0]}] 최근 가입·분포', '최근 가입' in pg.inner_text('.ad') and '학년' in pg.inner_text('.ad-two'))
         pg.screenshot(path=OUT + vp[0] + '_dash.png', full_page=True)
         if vp[0] == 'desktop': ctx.close(); continue
+        act(pg, '[data-act=admsec][data-v=sbook]')
+        ok('샘플책 펼침(기본값 나태주 시집)', wait(lambda: pg.locator('#sb-title').count() == 1 and pg.input_value('#sb-title') == '꽃을 보듯 너를 본다'))
+        pg.fill('#sbq-t0', '시험 문구 첫 줄\n둘째 줄'); act(pg, '[data-act=sbsave]')
+        ok('샘플책 저장 → 켜짐', wait(lambda: '켜짐' in pg.inner_text('#ads-sbook')))
         act(pg, '[data-act=admsec][data-v=members]')
         ok('회원 관리 펼침', wait(lambda: pg.locator('.ad-sec.open #adm-q').count() == 1))
         names = lambda: [x.split('\n')[0] for x in pg.locator('.ad-mh .ad-mt b').all_inner_texts()]

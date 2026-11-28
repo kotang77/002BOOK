@@ -44,7 +44,7 @@ with sync_playwright() as p:
                 d = api('db.get', s['token'], path='progress/' + 'samplemob').get('result') or {}
                 if (d.get('data') or {}).get('noSample'): break
                 time.sleep(.3)
-            ok('빼기 저장', (d.get('data') or {}).get('noSample') is True, d)
+            ok('빼기 저장', bool((d.get('data') or {}).get('noSample')), d)
         ctx.close()
     b.close()
 ok('페이지 오류 없음', not errs, errs)

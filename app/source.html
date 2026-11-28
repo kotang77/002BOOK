@@ -1798,6 +1798,14 @@ body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-
 .auth .tai .t1 i{font-style:normal;font-size:9.5px;font-weight:700}
 .auth .tai .t2{border-top:1px solid rgba(255,246,232,.45);padding-top:4px;font-size:8px;font-weight:500;letter-spacing:.03em;white-space:nowrap}
 .auth .tai .t2 b{font-weight:900}
+/* 11-28: 예시 책 줄 · 관리자 입력 */
+.shqpop-c blockquote{white-space:pre-line}
+.sbf{display:flex;flex-direction:column;gap:10px}.sbf label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:14px}
+.sbq{display:flex;gap:8px;align-items:flex-start}.sbq>label:first-child{flex:1}.sbq textarea{width:100%;font:inherit;font-weight:400;line-height:1.6;white-space:pre-wrap}.sbqp{width:72px;flex:none}.sbf .row{display:flex;gap:8px;flex-wrap:wrap}
+/* 11-28: 논술·구술 첨삭 예시 */
+.exban{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#FFF4D6;border:1px solid #EBCB7A;color:#5A4210;font-size:14px;line-height:1.5}
+.exban b{flex:none;padding:1px 8px;border-radius:999px;background:#C98A12;color:#fff;font-size:12px;line-height:20px}
+.exlink{display:inline-block;margin:2px 0 6px;padding:0;border:0;background:none;color:var(--primary-ink,var(--primary,#1F4D3A));font:600 14px/1.4 var(--f-body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .pwshow{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;margin:-2px 0 4px;font-size:14px;font-weight:500;cursor:pointer;width:auto!important}
 .pwshow input[type=checkbox]{width:18px!important;height:18px!important;min-height:0!important;margin:0!important;padding:0!important;flex:none;accent-color:var(--primary,#1F4D3A)}
 /* 11-28: 명함 로고와 같은 비례(윤곽선 SVG, 웜화이트) */
@@ -4661,18 +4669,25 @@ function bCat(b){const h=hid(b.title);const ov=(S.progress.catOv||{})[h];if(ov&&
   if(b.cat&&KY.includes(b.cat))return b.cat;return AXKY[b.main]||'기타'}
 /* 11-28 사용자 지시: 서가에 샘플책 한 권(운수 좋은 날, 1924, 저작권 만료)을 비치하고 인상적인 문구 꼬리표를 미리 달아 둔다.
    통계(hexBooks·육각형)에는 넣지 않고 서가 화면에서만 보인다. '서가에서 빼기' → progress.noSample */
-const SMP={id:'sample-unsu',src:'sample',title:'운수 좋은 날 (현진건)',author:'현진건',cat:'소설',catUser:true,
+const SMP0={id:'sample-unsu',src:'sample',title:'운수 좋은 날 (현진건)',author:'현진건',cat:'소설',catUser:true,
   why:'1924년 현진건 단편. 비 오는 날 인력거꾼 김 첨지에게 오랜만에 손님이 몰려드는 "운수 좋은 날"이, 마지막에 어떻게 뒤집히는지 따라가 보세요. 책 옆 색 꼬리표를 누르면 인상적인 문구가 떠요.'};
-const SMP_H=hid(SMP.title);
-const SMP_Q=[
+const SMP_Q0=[
   {t:'새침하게 흐린 품이 눈이 올 듯하더니 눈은 아니 오고 얼다가 만 비가 추적추적 내리었다.',r:'첫 문장의 흐리고 언 날씨가 비극으로 끝날 하루를 미리 알려 줘요.',s:1},
   {t:'이상하게도 꼬리를 맞물고 덤비는 이 행운 앞에 조금 겁이 났음이다.',r:'좋은 일이 겹칠수록 커지는 불안. 제목이 반어라는 신호예요.',s:1},
   {t:'설렁탕을 사다 놓았는데 왜 먹지를 못하니, 왜 먹지를 못하니…… 괴상하게도 오늘은! 운수가, 좋더니만…….',r:'"운수 좋은 날"이라는 제목이 가장 아프게 뒤집히는 마지막 문장.',s:1}];
 const SMP_COVER='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 172"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A4552"/><stop offset="1" stop-color="#1F262E"/></linearGradient></defs><rect width="124" height="172" fill="url(#g)"/><g stroke="#C9D3DC" stroke-opacity=".35" stroke-width="1.1" stroke-linecap="round">'+[[14,8],[40,20],[70,6],[98,16],[24,46],[58,40],[90,52],[110,36],[8,70],[44,74],[80,82],[104,96]].map(([x,y])=>`<line x1="${x}" y1="${y}" x2="${x-5}" y2="${y+14}"/>`).join('')+'</g><rect x="10" y="92" width="104" height="1" fill="#E8C877" opacity=".7"/><text x="62" y="115" text-anchor="middle" font-family="Noto Serif KR,Nanum Myeongjo,serif" font-weight="700" font-size="17" fill="#F5EBDD">운수 좋은 날</text><text x="62" y="133" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="9.5" fill="#E8C877" letter-spacing="2">현진건</text><g transform="translate(62 70)"><path d="M-17 -6h34c0 10-7 16-17 16s-17-6-17-16z" fill="#F2E6D2"/><rect x="-19" y="-8" width="38" height="3" rx="1.5" fill="#F7EEDF"/><path d="M-7 -12c-3-4 3-6 0-11M0 -12c-3-4 3-6 0-11M7 -12c-3-4 3-6 0-11" stroke="#F2E6D2" stroke-opacity=".6" stroke-width="1.3" fill="none" stroke-linecap="round"/></g><text x="62" y="146" text-anchor="middle" font-family="sans-serif" font-size="6.5" fill="#AEB8C2" letter-spacing="1">1924</text></svg>');
-const smpOn=bs=>!(S.progress&&S.progress.noSample)&&!(bs||hexBooks()).some(b=>hid(b.title)===SMP_H);
-const shBooks=()=>{const bs=hexBooks();return smpOn(bs)?bs.concat([SMP]):bs};
+/* 11-28 사용자 지시: 샘플책은 관리자가 정한다(관리자 대시보드 → 샘플책, config/samplebook). 정하지 않았으면 위 기본(운수 좋은 날) */
+const smpCfg=()=>{const c=S.sbook;return c&&c.title&&Array.isArray(c.quotes)&&c.quotes.some(q=>q&&q.t)?c:null};
+const smpB=()=>{const c=smpCfg();if(!c)return SMP0;const t=String(c.title).trim();
+  return {id:'sample-cfg',src:'sample',title:c.author&&!/\([^)]*\)\s*$/.test(t)?t+' ('+c.author+')':t,author:c.author||'',cat:KY.includes(c.cat)?c.cat:'시/에세이',catUser:true,
+    why:c.why||'관리자가 고른 샘플책이에요. 책 옆 색 꼬리표를 누르면 인상적인 문구가 떠요.'}};
+const smpH=()=>hid(smpB().title);
+const smpQ=()=>{const c=smpCfg();return c?c.quotes.filter(q=>q&&q.t).map(q=>({t:String(q.t),p:q.p||'',r:q.r||'',s:1})):SMP_Q0};
+const smpCover=()=>smpCfg()?(artOf(smpCfg().title,'book')||artOf(smpB().title,'book')||''):SMP_COVER;
+const smpOn=bs=>{const ns=S.progress&&S.progress.noSample,h=smpH();return !(ns===h||(ns===true&&!smpCfg()))&&!(bs||hexBooks()).some(b=>hid(b.title)===h)};
+const shBooks=()=>{const bs=hexBooks();return smpOn(bs)?bs.concat([smpB()]):bs};
 const shTitleOf=h=>{const b=shBooks().find(x=>hid(x.title)===h);return b?b.title:''};
-const shQuotes=h=>{const mine=((S.progress.quotes||{})[h])||[];return h===SMP_H&&smpOn()?mine.concat(SMP_Q):mine};
+const shQuotes=h=>{const mine=((S.progress.quotes||{})[h])||[];return h===smpH()&&smpOn()?mine.concat(smpQ()):mine};
 /* ---------- 서가에 꽂을 때 매기는 평가: 재미·난이도·다시 읽고 싶은 정도 (0.5~5점) ---------- */
 const MBQ=[['fun','재미','얼마나 재미있었나요?'],['diff','난이도','얼마나 어려웠나요? (별이 많을수록 어려움)'],['again','다시 읽기','어른이 되어서도 다시 읽고 싶나요?']];
 const rateOK=v=>!!(v&&MBQ.every(([q])=>Number(v[q])>0));
@@ -4763,7 +4778,7 @@ async function saveShRv(h,stars,text){
 /* 11-28 사용자 지시: 서가의 책에 저장한 인상적인 문구 수만큼 색 꼬리표(독서 화면 책·영화 꼬리표 모양), 누르면 그 문구가 뜬다 */
 const SQC=['#9CC8FF','#A8E08F','#FFC27A','#F7A1B5','#C3A8F5','#8FDCCB'];
 function shelfBook(b,cls){
-  const smp=b.src==='sample',h=hid(b.title),img=smp?((S.covers&&S.covers[h])||SMP_COVER):artOf(b.title,'book'),c=KYC[bCat(b)]||KYC['기타'];
+  const smp=b.src==='sample',h=hid(b.title),img=smp?((S.covers&&S.covers[h])||smpCover()):artOf(b.title,'book'),c=KYC[bCat(b)]||KYC['기타'];
   const bk=`<button type="button" class="sb ${cls||''}" data-act="shbook" data-h="${h}" aria-label="${smp?'샘플책 ':''}${esc(bTitle(b.title))}${S.shelfSel===h?' (선택됨)':''}" aria-pressed="${S.shelfSel===h}" style="--a:${c[0]};--b:${c[1]}">${img?`<img src="${img}" alt="" loading="lazy">`:`<span class="sbp"><i></i><em>${esc(bTitle(b.title))}</em></span>`}${smp?'<span class="sbsmp" aria-hidden="true">샘플</span>':''}</button>`;
   const qs=cls?[]:shQuotes(h);if(!qs.length)return bk;
   const n=Math.min(qs.length,5);
@@ -4792,7 +4807,7 @@ function shelfHTML(inSheet){
   const table=`<div class="stab"><div class="stb">${recent.map(b=>shelfBook(b,'tb')).join('')}</div><svg viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="150" cy="18" rx="138" ry="14" fill="#F4F1EA"/><path d="M12 18v5c0 8 60 14 138 14s138-6 138-14v-5c0 8-60 14-138 14S12 26 12 18z" fill="#C9B99B"/><path d="M142 36h16l4 28h-24z" fill="#8A5A3A"/><ellipse cx="150" cy="64" rx="46" ry="5" fill="#6E4626"/></svg></div>`;
   let det='';
   if(sel){
-    const smp=sel.src==='sample',h=hid(sel.title),selImg=smp?((S.covers&&S.covers[h])||SMP_COVER):artOf(sel.title,'book'),has=!!selImg,c=KYC[sel.c2]||KYC['기타'];
+    const smp=sel.src==='sample',h=hid(sel.title),selImg=smp?((S.covers&&S.covers[h])||smpCover()):artOf(sel.title,'book'),has=!!selImg,c=KYC[sel.c2]||KYC['기타'];
     det=`<div class="sdt"><span class="cvimg big" style="--a:${c[0]};--b:${c[1]}">${has?`<img src="${selImg}" alt="${esc(bTitle(sel.title))} 표지">`:`<span class="phd">${BOOKG}<span>${esc(sel.c2)}</span></span>`}</span>
       <div class="cvside">${smp?'<span class="smpb">샘플책</span>':''}<b>${esc(bTitle(sel.title))}</b>${(sel.author||bAuthor(sel.title))?`<span class="hint"> ${esc(sel.author||bAuthor(sel.title))}</span>`:''}
       ${sel.why?`<p class="hint">${esc(sel.why)}</p>`:''}
@@ -5046,7 +5061,7 @@ function admNoticesHTML(){const A=S.adm;const ms=A.members||[];let body;
   return body}
 /* ---------- 관리자 대시보드 (2026-11-24 개편: 포켓 스타일, 한눈에 보는 지표 + 펼치는 메뉴) ----------
    위에서 아래로: 지표 타일 → 분포 → 할 일·최근 가입 → 메뉴(누르면 그 메뉴만 펼쳐짐, 안쪽도 한 번에 하나만 펼쳐짐) */
-const ADM_SECS=[['members','회원 관리','정렬·필터 · 성적 · 시험 다시 열기 · 권한'],['rubric','평가 기준','논술·구술 영역과 배점'],['course','코스 (책·영화)','월별로 바꾸기 · 엑셀 · 영상 · 표지'],['pay','결제','신청·해지 요청, 결제 링크'],['notices','알림 보내기','전체·유료·무료·회원별'],['resets','비밀번호 요청','임시 비밀번호 만들기'],['admins','관리자','관리자 추가·해제']];
+const ADM_SECS=[['members','회원 관리','정렬·필터 · 성적 · 시험 다시 열기 · 권한'],['rubric','평가 기준','논술·구술 영역과 배점'],['course','코스 (책·영화)','월별로 바꾸기 · 엑셀 · 영상 · 표지'],['pay','결제','신청·해지 요청, 결제 링크'],['notices','알림 보내기','전체·유료·무료·회원별'],['resets','비밀번호 요청','임시 비밀번호 만들기'],['sbook','샘플책','모든 회원 서가에 꽂아 둘 책과 인상적인 문구'],['admins','관리자','관리자 추가·해제']];
 const admF=()=>{const A=S.adm;A.f=A.f||{kind:'all',gender:'all',grade:'all',plan:'all',sort:'join',q:''};return A.f};
 const CHEV='<svg class="ad-chev" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):null;
@@ -5088,6 +5103,15 @@ function admDashHTML(){const T=admStats();const tile=(v,l,sub,act)=>`<div class=
   ${todo?`<div class="ad-todos">${todo}</div>`:''}
   <div class="ad-two">${admBars('학년',T.grade)}${admBars('성별',T.gender)}
     <div class="ad-dist"><h4>최근 가입</h4>${recent.map(m=>`<button class="ad-rc" data-act="admgo" data-id="${esc(m.id)}"><span>${esc(m.nick||m.id)}</span><small>${esc(m.id)} · ${fmtD(m.at)}</small></button>`).join('')||'<p class="hint">아직 없어요.</p>'}</div></div>`}
+/* ---------- 샘플책 (11-28 사용자 지시: 관리자가 정하고 인상적인 문구를 직접 쓴다) ---------- */
+function admSbookHTML(){const b=S.sbook||{};const q=b.quotes||[];const t0=b.title||'꽃을 보듯 너를 본다',a0=b.title?(b.author||''):'나태주';
+  const rows=[0,1,2,3,4].map(k=>`<div class="sbq"><label for="sbq-t${k}">문구 ${k+1}${k?' (선택)':''}<textarea id="sbq-t${k}" rows="${k?3:7}" maxlength="800" placeholder="${k?'':'줄을 바꾸면 줄바꿈 그대로 보여요'}">${esc((q[k]||{}).t||'')}</textarea></label><label for="sbq-p${k}" class="sbqp">쪽<input id="sbq-p${k}" inputmode="numeric" maxlength="6" value="${esc((q[k]||{}).p||'')}"></label></div>`).join('');
+  return `<p class="hint">모든 회원의 서가에 샘플책 한 권을 꽂고, 여기 쓴 문구를 색 꼬리표로 달아 줘요. 정하지 않으면 기본 샘플책(운수 좋은 날)이 보여요. 회원은 자기 서가에서 샘플책을 뺄 수 있어요.</p>
+  <div class="sbf"><label for="sb-title">책 제목<input id="sb-title" list="sb-titles" maxlength="80" value="${esc(t0)}"></label><datalist id="sb-titles">${[...new Set((S.course||[]).map(x=>x.book))].map(t=>`<option value="${esc(t)}">`).join('')}</datalist>
+  <label for="sb-author">지은이<input id="sb-author" maxlength="40" value="${esc(a0)}"></label>
+  <label for="sb-cat">서가 칸<select id="sb-cat">${KY.filter(k=>k!=='기타').map(k=>`<option${k===(b.cat||'시/에세이')?' selected':''}>${k}</option>`).join('')}</select></label>
+  <label for="sb-why">책 소개 <small class="hint">책을 누르면 보이는 한두 문장 · 비우면 기본 안내</small><textarea id="sb-why" rows="2" maxlength="200">${esc(b.why||'')}</textarea></label>${rows}
+  <div class="row"><button class="btn small" data-act="sbsave">저장하고 서가에 꽂기</button>${b.title?'<button class="btn ghost small" data-act="sbdel">기본 샘플책으로 되돌리기</button>':''}</div>${b.at?`<p class="hint">마지막 저장 ${fmtD(b.at)}${b.by?' · '+esc(b.by):''}</p>`:''}</div>`}
 /* ---------- 회원 관리 ---------- */
 function admChips(k,opts){const F=admF();return `<div class="ad-chips" role="group">${opts.map(([v,t])=>`<button class="chip" data-act="admf" data-k="${k}" data-v="${v}" aria-pressed="${F[k]===v}">${t}</button>`).join('')}</div>`}
 function admMembersHTML(){const A=S.adm,F=admF();const L=admList();const mails=L.map(m=>m.email).filter(Boolean);
@@ -5210,8 +5234,8 @@ async function loadAdmins(){try{const r=await window.__002.server.call('admin.ad
 async function loadArch(id){try{const q=await S.db.collection('archive').where('uid','==',id).get();S.adm.arch=S.adm.arch||{};S.adm.arch[id]=q.docs.map(d=>d.data()).map(x=>({kind:x.kind,key:x.key,title:x.title,m:x.m,total:x.total,at:x.at})).sort((a,b)=>b.at-a.at)}catch(e){toast('불러오지 못했어요.')}render()}
 function adminViewHTML(){const A=S.adm;const ms=A.members;const sec=A.sec;
   if(!ms)return `<div class="lead"><div><h2>관리자 대시보드</h2></div></div><div class="sk"></div><div class="sk" style="margin-top:8px"></div>`;
-  const T=admStats();const badge={members:ms.length,pay:T.req||'',resets:T.pw||'',admins:(A.admins||[]).length||'',rubric:'',course:S.course.length+'개월',notices:''};
-  const bodyOf=k=>k==='members'?admMembersHTML():k==='rubric'?admRubricHTML():k==='course'?admCourseHTML():k==='pay'?payAdminHTML():k==='notices'?admNoticesHTML():k==='resets'?(admResetsHTML()||'<p class="hint">들어온 요청이 없어요.</p>'):admAdminsHTML();
+  const T=admStats();const badge={members:ms.length,pay:T.req||'',resets:T.pw||'',admins:(A.admins||[]).length||'',rubric:'',course:S.course.length+'개월',notices:'',sbook:S.sbook&&S.sbook.title?'켜짐':''};
+  const bodyOf=k=>k==='members'?admMembersHTML():k==='rubric'?admRubricHTML():k==='course'?admCourseHTML():k==='pay'?payAdminHTML():k==='notices'?admNoticesHTML():k==='resets'?(admResetsHTML()||'<p class="hint">들어온 요청이 없어요.</p>'):k==='sbook'?admSbookHTML():admAdminsHTML();
   return `<div class="ad"><div class="ad-top"><h2>관리자 대시보드</h2><p class="hint">${isOwner()?'최고 관리자':'관리자'} ${esc(S.id)} · ${new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'})}</p></div>
   ${admDashHTML()}
   <div class="ad-menu">${ADM_SECS.map(([k,t,d])=>{const open=sec===k;return `<section class="ad-sec${open?' open':''}" id="ads-${k}"><button class="ad-sh" data-act="admsec" data-v="${k}" aria-expanded="${open}"><span><b>${t}</b><small>${d}</small></span>${badge[k]!==''&&badge[k]!=null?`<em class="ad-badge${(k==='pay'||k==='resets')&&badge[k]?' hot':''}">${badge[k]}</em>`:''}${CHEV}</button>${open?`<div class="ad-sb">${bodyOf(k)}</div>`:''}</section>`}).join('')}</div></div>`}
@@ -5262,6 +5286,7 @@ const ytId=u=>{const m=/(?:youtu[.]be[/]|[?&]v=|embed[/]|shorts[/]|live[/])([A-Z
 const ytUrl=u=>{const id=ytId(u);return id?'https://www.youtube.com/watch?v='+id+'&autoplay=1':''};
 const evOK=i=>{const k=nk(i);return !!((S.progress.evDone||{})[k]||(S.progress.evalLog||[]).some(x=>x&&x.key===k)||(S.evals&&S.evals[k]))};
 const vidOf=it=>{const m=S.videos||{};return ytUrl(m[kwOf(it)]||m[kwDisp(it)]||'')};
+async function loadSbook(){try{const v=await S.db.doc('config/samplebook').get();S.sbook=v&&v.exists?(v.data()||null):null;if(S.id&&smpCfg())render()}catch(e){S.sbook=S.sbook||null}}
 async function loadVideos(){try{const v=await S.db.doc('config/videos').get();S.videos=v&&v.exists?((v.data()||{}).map||{}):{};if(S.id&&(S.view==='course'||S.view==='admin'))render()}catch(e){S.videos=S.videos||{}}}
 function vidAdminHTML(){const ks=[...new Set(S.course.map(kwOf).filter(Boolean))];const m=S.videos||{};
   return `<div class="sec" style="margin-top:18px"><h3>키워드별 유튜브 영상</h3><p class="hint">논술 1차 첨삭이 끝난 달의 표지에 유튜브 마크가 생기고, 누르면 새 창에서 그 달 키워드의 영상이 열려요. 유튜브 주소(youtube.com 또는 youtu.be)를 붙여 넣으세요. 빈 칸인 키워드는 체크 표시가 그대로 나와요.</p><div class="vdr">${ks.map(k=>`<b>${esc(k)}</b><input data-vkw="${esc(k)}" value="${esc(m[k]||'')}" placeholder="https://youtu.be/..." inputmode="url" autocomplete="off" aria-label="${esc(k)} 영상 주소">`).join('')}</div><button class="btn" data-act="vidsave">영상 링크 저장</button></div>`}
@@ -5666,7 +5691,7 @@ async function enter(id,member){
   S.grade=GR.includes(S.me.grade)?S.me.grade:'중1';S.view='course';S.sheet=null;S.info=null;
   S.adm={sec:null,sub:null,members:null,prog:{},open:null,to:'all',resets:[],tmp:{},adminIds:[]};
   S.fr=frNew();S.fam=famNew();S.gd={};S.askDraft='';S.askBusy=false;S.roadOpen=-1;frLast='';
-  render();loadCovers();loadFriends(false);loadVideos();
+  render();loadCovers();loadFriends(false);loadVideos();loadSbook();
   S.db.doc('members/'+id).update({seen:Date.now()}).catch(()=>{});
   if(S.me.mustChange){S.sheet={type:'profile'};renderLayers();toast('임시 비밀번호로 들어왔어요. 새 비밀번호로 바꿔 주세요.')}
 }
@@ -5876,7 +5901,7 @@ function essayHTML(i){
   const wsec=(S.progress.wtime||{})[key]||0;const has=!!(d.text&&d.text.trim());const off=S.essayOff&&S.essayOff.i===i;
   const now=busy?'선생님이 첨삭하고 있어요. 1~2분만 기다려요.':ev?(ev2?'2차 첨삭까지 마쳤어요. 결과를 확인해요.':'첨삭이 끝났어요. 결과를 확인하고, 3일 뒤 고쳐 쓰면 2차 점수를 받아요.'):['질문 세 개를 넘겨 읽고, 쓰고 싶은 질문 하나를 골라요.','헷갈리는 게 있으면 선생님께 물어봐요. 없으면 바로 다음으로 넘어가요.','주장·근거·맺음말을 한 문장씩 메모해요.',has||d.files.length?'다 썼으면 아래 \'제출하고 첨삭 받기\'를 눌러요.':'원고지를 열어 계획대로 글을 써요. 노트 사진으로 내도 돼요.'][st];
   const ci=ev||busy?3:st<=1?0:st===2?1:2;
-  const head=`<div class="esub" role="group" aria-label="글쓰기 순서">${['질문','계획','쓰기'].map((t,n)=>`<span class="${ci>n?'dn':ci===n?'on':''}"${ci===n?' aria-current="step"':''}>${ci>n?IC.check:'<i>'+(n+1)+'</i>'}${t}</span>`).join('')}${ev?`<span class="dn">${IC.check}첨삭</span>`:''}</div><p class="esnow">${esc(now)}</p>`;
+  const head=`<div class="esub" role="group" aria-label="글쓰기 순서">${['질문','계획','쓰기'].map((t,n)=>`<span class="${ci>n?'dn':ci===n?'on':''}"${ci===n?' aria-current="step"':''}>${ci>n?IC.check:'<i>'+(n+1)+'</i>'}${t}</span>`).join('')}${ev?`<span class="dn">${IC.check}첨삭</span>`:''}</div><p class="esnow">${esc(now)}</p>${ev?'':'<button class="exlink" data-act="exes">첨삭 예시 보기 ›</button>'}`;
   const tm=picked?qTime(qs[d.q]):null;
   const chg=!ev&&!busy&&st>=1&&S.esQChg===i;
   const qline=picked?`<details class="es-q"${chg?' open':''}><summary><span class="qn">질문 ${d.q+1}</span>${esc(qs[d.q])}</summary>
@@ -6235,7 +6260,7 @@ function mnPage(ev,lines,marks,p,total,geo){
   const cell=(l,v)=>`<div class="mi"><i>${l}</i><span>${esc(v)}</span></div>`;
   return `<div class="mnp"><div class="mhd">
     <div class="mh1"><b>002BOOK 논술 원고지 첨삭</b><em>${p+1} / ${total}</em></div>
-    <div class="mi4">${cell('학년·과정',ev.g+' '+ev.m+(kw?' · '+kw:''))}${cell('아이디',S.id||'')}${cell('평가날짜',new Date(ev.at).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\s/g,''))}${cell('도서','「'+ev.title+'」')}</div>
+    <div class="mi4">${cell('학년·과정',ev.g+' '+ev.m+(kw?' · '+kw:''))}${cell('아이디',ev.ex?'예시 학생':(S.id||''))}${cell('평가날짜',new Date(ev.at).toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\s/g,''))}${cell('도서','「'+ev.title+'」')}</div>
     <div class="mq"><i>논술 질문</i><p style="font-size:${geo.fs}px">${qShowHTML(ev)}</p></div></div>
     <div class="mbody" style="height:${rows*RH}px">${g200}
       <div class="mgrid" style="left:${GL}px;top:0;width:${cols*cw+1}px;height:${rows*RH}px">${cells}${over}</div>
@@ -6280,8 +6305,157 @@ function scv(v){v=Math.round(Number(v))||0;return v>0&&v<=10?v*10:v}
 /* 2026-11 개정: 점수 옆에 수준 이름(시작·발전·도달·숙달·탁월)을 쓴다 */
 function grd(v){return rbName(v)}
 /* 첨삭 결과: 요약(총점·칭찬) → 할 일(PDF·다시 쓰기) → 자세히(펼치기) */
+/* ---------- 11-28 사용자 지시: 논술·구술 첨삭과 평가 예시 (가상의 중1 학생 · 모든 회원이 열람) ----------
+   글과 대답, 첨삭은 영원이북이 직접 지은 예시다. 실제 회원의 글이 아니다. 점수는 실제 평가와 같은 산식(rbScore)으로 계산한다. */
+const EX_INFO='가상의 중학교 1학년 학생이 쓴 글과 대답으로 만든 예시예요. 실제 첨삭과 같은 모양이에요.';
+const EX_Q='「누가 내 치즈를 옮겼을까?」의 허와 영화 「업」의 칼 할아버지는 모두 변화 앞에서 머뭇거립니다. 두 인물이 변화를 받아들이는 과정의 공통점과 차이점을 비교하고, 변화 앞에서 더 바람직한 태도는 무엇인지 평가하시오. (500자 내외)';
+const EX_ES_T=`사람들은 변화를 무서워 한다. 나도 초등학교에서 중학교로 올라올때 친구들과 헤어지는게 너무 싫었다. 「누가 내 치즈를 옮겼을까?」의 허와 영화 「업」의 칼 할아버지도 변화앞에서 머뭇거렸다는 점에서 나와 비슷하다.
+먼저 공통점은 두 사람 다 과거에 집착했다는 것이다. 허는 치즈가 사라진 C창고에 몇일 동안 계속 찾아가서 치즈가 다시 생기길 기다렸다. 칼 할아버지도 엘리 할머니와의 추억이 담긴 집을 지키려고 풍선을 수천 개 달아서 집을 통째로 날려 버렸다. 둘다 잃어버린 것을 붙잡고 놓지 못한 것이다.
+하지만 차이점도 있다. 허는 스스로 깨닫고 운동화를 신고 새 치즈를 찾으러 미로로 나갔다. 그런데 칼 할아버지는 러셀이라는 아이와 커다란 새 케빈을 만나면서 바뀌였다. 즉 허는 혼자 변했고 칼은 다른 사람 덕분에 변했다.
+나는 허의 태도가 더 바람직하다고 생각한다. 왜냐하면 누가 도와주지 않아도 스스로 움직여야 되기 때문이다. 그래서 나도 중학교에서 새로운 친구를 먼저 사귀어 볼 것이다.`;
+const exByDom=(dom,arr)=>Object.fromEntries(dom.map(([k],n)=>[k,arr[n]]));
+function exEssay(){
+  const raw=exByDom(RB_ES,[3,2,3,3,2,3]);
+  const why=exByDom(RB_ES,[
+    {plus:['허가 C창고를 며칠씩 찾아간 장면을 정확히 끌어왔어요.'],minus:['칼이 마음을 바꾼 계기(엘리의 모험 책)를 빠뜨렸어요. 결정적 장면을 함께 써요.']},
+    {plus:['"허의 태도가 더 바람직하다"고 입장을 분명히 밝혔어요.'],minus:['근거가 "움직여야 되기 때문"으로 같은 말의 반복이에요. 평가 기준을 먼저 세우고 그 기준으로 판단해요.']},
+    {plus:['도입-공통점-차이점-판단으로 문단을 나눈 짜임이 좋아요.'],minus:['비교·평가형에 필요한 "평가 기준" 문단이 없어요. 차이점 다음에 한 문단을 더 세워요.']},
+    {plus:['"붙잡고 놓지 못한 것이다"처럼 두 사례를 한 문장으로 묶었어요.'],minus:['"그런데"처럼 대조에 맞지 않는 접속어가 있어요. "반면"으로 바꿔요.']},
+    {plus:['문장을 짧게 끊어 써서 읽기 쉬워요.'],minus:['띄어쓰기 5곳, 맞춤법 2곳이 틀렸어요. 제출 전에 소리 내어 한 번 읽어요.']},
+    {plus:['작품 속 변화를 중학교 입학이라는 내 경험과 연결했어요.'],minus:['"혼자 변하는 것"과 "함께 변하는 것"의 장단점을 견주면 판단이 더 깊어져요.']}]);
+  const ev={offTopic:false,question:EX_Q,fmt:'cmp',transcript:EX_ES_T,unreadable:[],scores:raw,scoreWhy:why,
+    process:{plan:'부분',note:'주장과 두 인물의 공통점은 계획했지만 평가 기준을 세우지 않아 마지막 판단이 짧아졌어요.'},
+    comment:'두 인물을 공통점과 차이점으로 나누어 비교한 짜임이 분명해요. 특히 허와 칼 할아버지가 모두 잃어버린 것을 붙잡고 있었다는 공통점은 날카롭게 짚었어요. 다만 비교·평가형 문제는 "무엇을 기준으로 더 바람직한가"를 밝혀야 하는데, 기준 없이 바로 결론으로 넘어가 판단의 힘이 약해졌어요. 칼 할아버지가 엘리의 모험 책을 읽고 스스로 마음을 바꾼 장면까지 넣으면 차이점도 더 정확해져요.',
+    praise:'중학교에 올라오며 친구들과 헤어지기 싫었던 마음을 솔직하게 꺼낸 첫 문단이 참 좋아요. 그 마음이 있었기에 허와 칼 할아버지의 머뭇거림을 더 잘 이해할 수 있었을 거예요. "둘 다 잃어버린 것을 붙잡고 놓지 못한 것이다"라는 문장은 두 작품을 한 줄로 꿰뚫는 멋진 문장이에요. 마지막에 새 친구를 먼저 사귀어 보겠다는 다짐까지, 읽은 것을 내 삶으로 가져온 점을 계속 이어 가요!',
+    spelling:[
+      {orig:'무서워 한다',fix:'무서워한다',why:"'무서워하다'는 한 낱말이라 붙여 써요."},
+      {orig:'올라올때',fix:'올라올 때',why:"'때'는 앞말과 띄어 써요."},
+      {orig:'헤어지는게',fix:'헤어지는 게',why:"'게'는 '것이'의 준말이라 띄어 써요."},
+      {orig:'변화앞에서',fix:'변화 앞에서',why:"'앞'은 명사라 띄어 써요."},
+      {orig:'몇일',fix:'며칠',why:"'몇 일'이 아니라 '며칠'이 표준어예요."},
+      {orig:'둘다',fix:'둘 다',why:"'다'는 부사라 띄어 써요."},
+      {orig:'바뀌였다',fix:'바뀌었다',why:"'바뀌-'에 '-었-'이 붙어 '바뀌었다'가 돼요."}],
+    sentences:[
+      {orig:'사람들은 변화를 무서워 한다.',grade:'보통',why:'첫 문장이 누구나 아는 말이라 글의 관심을 끌기 약해요. 질문의 두 인물과 바로 이어지게 써요.',fix:'새로운 환경 앞에서 사람은 누구나 한 번쯤 머뭇거린다.'},
+      {orig:'칼 할아버지도 엘리 할머니와의 추억이 담긴 집을 지키려고 풍선을 수천 개 달아서 집을 통째로 날려 버렸다.',grade:'잘함',why:'인물의 행동을 구체적인 장면으로 보여 주어 근거가 생생해요.',fix:''},
+      {orig:'둘다 잃어버린 것을 붙잡고 놓지 못한 것이다.',grade:'잘함',why:'두 사례를 하나의 공통점으로 정리하는 문단의 결론 문장이에요.',fix:''},
+      {orig:'그런데 칼 할아버지는 러셀이라는 아이와 커다란 새 케빈을 만나면서 바뀌였다.',grade:'고침',why:"대조에는 '그런데'보다 '반면'이 어울려요. 또 칼이 바뀐 결정적 계기인 엘리의 모험 책이 빠졌어요.",fix:'반면 칼 할아버지는 러셀과 케빈을 지키는 과정에서, 그리고 엘리가 남긴 모험 책의 마지막 장을 읽고 나서 마음을 바꾸었다.'},
+      {orig:'즉 허는 혼자 변했고 칼은 다른 사람 덕분에 변했다.',grade:'보통',why:'대비는 분명하지만 칼도 결국 스스로 결심했다는 점을 놓쳐 지나치게 단순해졌어요.',fix:'즉 허는 혼자 깨달아 변했고, 칼은 다른 사람과의 관계 속에서 깨달아 변했다.'},
+      {orig:'왜냐하면 누가 도와주지 않아도 스스로 움직여야 되기 때문이다.',grade:'고침',why:"'바람직하다'의 이유가 '움직여야 한다'로 되풀이되어 근거가 되지 못해요. 기준을 먼저 세워요.",fix:'변화가 찾아왔을 때 기다리기만 하면 기회를 놓치기 쉬우므로, 스스로 먼저 움직이는 태도가 더 오래 힘이 되기 때문이다.'},
+      {orig:'그래서 나도 중학교에서 새로운 친구를 먼저 사귀어 볼 것이다.',grade:'보통',why:'다짐은 좋지만 앞의 판단과 연결하는 말이 한 마디 더 있으면 자연스러워요.',fix:'그래서 나도 허처럼 중학교에서 새로운 친구에게 먼저 말을 걸어 볼 것이다.'}],
+    paragraphs:'도입(내 경험) - 공통점 - 차이점 - 판단의 네 문단으로 나눈 것은 아주 좋아요. 공통점 문단은 두 사례를 들고 마지막 문장으로 묶어 완성도가 높아요. 차이점 문단은 칼의 변화 계기를 일부만 써서 비교가 기울었어요. 무엇보다 비교·평가형에 필요한 "평가 기준"이 없어 마지막 문단의 판단이 두 문장에 그쳤어요. 차이점과 판단 사이에 기준을 세우는 문단을 넣으면 글이 단단해져요.',
+    paraReview:[
+      {no:1,role:'도입 · 내 경험과 문제 제기',good:'중학교 입학 경험으로 시작해 읽는 사람이 공감하기 쉬워요.',problem:'"나와 비슷하다"로 끝나 질문(두 인물 비교)으로 들어가는 문장이 약해요.',rewrite:'새로운 환경 앞에서 사람은 누구나 한 번쯤 머뭇거린다. 나도 초등학교에서 중학교로 올라올 때 친구들과 헤어지는 게 너무 싫었다. 「누가 내 치즈를 옮겼을까?」의 허와 영화 「업」의 칼 할아버지도 변화 앞에서 머뭇거렸다. 두 인물이 변화를 받아들이는 과정을 견주어 보면, 변화 앞에서 어떤 태도가 더 바람직한지 알 수 있다.'},
+      {no:2,role:'공통점 · 과거에 대한 집착',good:'두 인물의 구체적 행동을 하나씩 들고 결론 문장으로 묶었어요.',problem:'띄어쓰기·맞춤법 실수(몇일, 둘다)가 좋은 문단의 인상을 깎아요.',rewrite:'먼저 두 인물은 모두 과거에 집착했다. 허는 치즈가 사라진 C창고에 며칠 동안 찾아가 치즈가 다시 생기길 기다렸다. 칼 할아버지도 엘리 할머니와의 추억이 담긴 집을 지키려고 풍선을 수천 개 달아 집을 통째로 날려 버렸다. 둘 다 잃어버린 것을 붙잡고 놓지 못한 것이다.'},
+      {no:3,role:'차이점 · 변화의 계기',good:'"혼자"와 "다른 사람 덕분"으로 대비를 선명하게 세웠어요.',problem:'칼이 엘리의 모험 책을 읽고 스스로 결심한 장면을 빠뜨려 비교가 한쪽으로 기울었어요.',rewrite:'하지만 두 인물이 변화를 받아들인 계기는 다르다. 허는 기다림이 소용없다는 것을 스스로 깨닫고 운동화를 신고 새 치즈를 찾으러 미로로 나갔다. 반면 칼 할아버지는 러셀과 케빈을 지키는 과정에서, 그리고 엘리가 남긴 모험 책의 마지막 장을 읽고 나서 마음을 바꾸었다. 즉 허는 혼자 깨달아 변했고, 칼은 다른 사람과의 관계 속에서 깨달아 변했다.'},
+      {no:4,role:'판단 · 더 바람직한 태도',good:'입장을 분명히 밝히고 내 다짐으로 마무리했어요.',problem:'평가 기준 없이 "움직여야 하기 때문"으로 근거를 되풀이했어요.',rewrite:'변화 앞의 태도는 "기회를 놓치지 않는가"와 "스스로 선택했는가"로 평가할 수 있다. 이 기준으로 보면 허의 태도가 더 바람직하다. 허는 누구의 도움도 기다리지 않고 먼저 움직여 새 치즈를 찾았고, 그 선택의 주인도 자기 자신이었다. 물론 칼처럼 곁의 사람 덕분에 용기를 얻는 것도 소중하지만, 도와줄 사람이 늘 곁에 있는 것은 아니다. 그래서 나도 허처럼 중학교에서 새로운 친구에게 먼저 말을 걸어 볼 것이다.'}],
+    strengths:['두 인물의 행동을 구체적인 장면(C창고, 풍선 수천 개)으로 들어 근거가 생생해요.','도입-공통점-차이점-판단으로 문단을 나눠 짜임이 분명해요.','작품 속 변화를 중학교 입학이라는 내 경험과 연결했어요.'],
+    improvements:['[주장과 근거] 판단 앞에 평가 기준을 한 문장으로 세우고, 그 기준으로 두 인물을 다시 견주어요.','[작품 이해와 활용] 칼 할아버지가 엘리의 모험 책을 읽고 스스로 결심한 장면까지 넣어 차이점을 정확히 써요.','[어문 규범] 띄어쓰기(때·게·앞·다)와 "며칠"을 외워 두고, 제출 전 소리 내어 한 번 읽어요.'],
+    tags:['평가 기준 없음','띄어쓰기','근거 반복'],
+    cumulative:'첫 첨삭이에요. 이번 글에서 가장 먼저 고칠 과제는 "평가 기준 세우기"예요. 비교·평가형 문제는 비교만큼 기준이 중요해요. 다음 글부터는 차이점 다음에 "나는 ○○을 기준으로 판단한다"는 문장을 꼭 넣어 보세요. 띄어쓰기 실수도 의존 명사(때, 것, 수)에서 반복되니 함께 연습해요.',
+    marks:[
+      {find:'무서워 한다',kind:'space',fix:'무서워한다',note:'한 낱말이에요'},
+      {find:'올라올때',kind:'space',fix:'올라올 때',note:'때는 띄어 써요'},
+      {find:'헤어지는게',kind:'space',fix:'헤어지는 게',note:'게=것이'},
+      {find:'변화앞에서',kind:'space',fix:'변화 앞에서',note:''},
+      {find:'나와 비슷하다',kind:'wave',fix:'',note:'질문으로 이어 주세요'},
+      {find:'몇일',kind:'replace',fix:'며칠',note:'며칠이 표준어'},
+      {find:'풍선을 수천 개',kind:'good',fix:'',note:'장면이 생생해요'},
+      {find:'둘다',kind:'space',fix:'둘 다',note:''},
+      {find:'놓지 못한 것이다',kind:'good',fix:'',note:'공통점 정리 굿'},
+      {find:'그런데',kind:'replace',fix:'반면',note:'대조는 반면'},
+      {find:'바뀌였다',kind:'replace',fix:'바뀌었다',note:''},
+      {find:'다른 사람 덕분에',kind:'wave',fix:'',note:'모험 책도 계기예요'},
+      {find:'움직여야 되기 때문이다',kind:'wave',fix:'',note:'기준을 먼저 세워요'},
+      {find:'새로운 친구를 먼저',kind:'good',fix:'',note:'내 삶과 연결 굿'}],
+    teacher:'두 인물을 공통점과 차이점으로 나눈 짜임이 훌륭해요. 다음 글에서는 "무엇을 기준으로 더 바람직한가"를 먼저 밝힌 뒤 판단해 보세요. 그 한 문장이 글 전체를 단단하게 만들어요.',
+    models:[
+      {title:'모범 답안 1 · 스스로 움직이는 용기가 더 바람직하다',text:`변화 앞에서 머뭇거리는 것은 누구에게나 자연스럽다. 「누가 내 치즈를 옮겼을까?」의 허와 영화 「업」의 칼 할아버지도 그랬다. 두 인물은 변화를 받아들이기까지 비슷한 길을 걸었지만, 그 계기는 달랐다.
+두 인물의 공통점은 잃어버린 것에 매달렸다는 점이다. 허는 치즈가 사라진 C창고에서 며칠을 기다렸고, 칼은 아내 엘리와의 추억이 담긴 집을 풍선으로 띄워 끝까지 지키려 했다. 둘 다 과거가 돌아오기를 바랐다.
+차이점은 변화의 계기다. 허는 기다림이 소용없다는 것을 혼자 깨닫고 미로로 나섰다. 반면 칼은 러셀을 구해야 하는 순간, 엘리의 모험 책을 다시 읽고서야 집을 놓아주었다.
+변화 앞의 태도는 "기회를 놓치지 않는가"를 기준으로 평가할 수 있다. 이 기준에서 허의 태도가 더 바람직하다. 허는 위기가 닥치기 전에 스스로 움직여 새 치즈를 찾았지만, 칼은 러셀이 위험해진 뒤에야 움직였다. 변화는 기다려 주지 않는다. 나도 낯선 교실에서 누군가 말을 걸어 주기를 기다리기보다 먼저 다가가는 사람이 되고 싶다.`},
+      {title:'모범 답안 2 · 함께 깨닫는 변화가 더 오래간다',text:`허와 칼 할아버지는 모두 변화 앞에서 멈춰 섰던 인물이다. 하지만 두 사람이 다시 걷기 시작한 방식은 달랐고, 나는 칼의 방식에서 더 큰 의미를 찾았다.
+두 인물은 모두 익숙한 것을 놓지 못했다. 허는 텅 빈 C창고로 날마다 돌아갔고, 칼은 추억이 깃든 집을 하늘로 띄워 데려갔다. 잃은 것을 붙잡으려 했다는 점에서 두 사람은 닮았다.
+그러나 변화의 계기는 달랐다. 허는 혼자 생각을 정리하며 미로를 나섰고, 칼은 러셀과 케빈을 지키는 과정에서 지금 곁에 있는 사람의 소중함을 깨달았다.
+변화 앞의 태도를 "그 변화가 나를 얼마나 성장시키는가"라는 기준으로 보면 칼의 변화가 더 깊다. 허는 새 치즈라는 결과를 얻었지만, 칼은 과거의 사랑을 현재의 사람에게 이어 주는 법을 배웠다. 혼자의 용기도 소중하지만, 다른 사람과 함께 깨달은 변화는 쉽게 되돌아가지 않는다. 새 학교에서도 나는 친구들과 함께 부딪히며 자라고 싶다.`}],
+    asked:1,writeSec:1560};
+  const RS=rbScore(ev.scores,RB_ES);ev.scores=RS.scores;ev.levels=RS.levels;ev.rb=2;
+  return Object.assign(ev,{total:RS.total,at:Date.now(),title:'누가 내 치즈를 옮겼을까?',g:'중1',m:'3월',ex:1});
+}
+const EX_OQ=['「누가 내 치즈를 옮겼을까?」에서 가장 기억에 남는 인물은 누구이고, 왜 그런가요?','영화 「업」에서 칼 할아버지가 집 안의 가구를 버리고 집을 놓아주는 장면은 어떤 의미라고 생각하나요?','「월터의 상상은 현실이 된다」의 월터처럼 상상만 하던 일을 실제로 해 본 경험이 있나요? 그 경험을 작품과 연결해 말해 보세요.'];
+function exOral(){
+  const A1=[
+    {sec:52,text:'음 저는 허가 제일 기억에 남아요 그니까 허는 처음에는 헴이랑 같이 치즈가 없어진 창고에서 계속 기다렸는데 나중에는 혼자 미로로 나가거든요 음 그게 좀 멋있었어요 그리고 벽에 글씨를 쓰면서 가는 것도 기억에 남고요 그래서 허가 제일 기억에 남는 것 같아요',
+      summary:'허가 혼자 미로로 나간 모습이 멋있어서 가장 기억에 남는다.',good:'처음에는 기다리다가 나중에 혼자 나간 허의 변화를 정확히 짚었어요.',problem:'"멋있었어요" 말고 왜 멋있는지 이유가 없어요. 결론-이유-장면-마무리 순서로 말해 봐요.',followUp:'허가 벽에 글을 남긴 이유는 무엇이라고 생각하나요?',
+      marks:[{find:'음 저는',kind:'delete',fix:'',note:'첫마디 군말은 빼요'},{find:'그니까',kind:'delete',fix:'',note:'군말이에요'},{find:'혼자 미로로 나가거든요',kind:'good',fix:'',note:'핵심 장면을 잘 짚었어요'},{find:'좀 멋있었어요',kind:'wave',fix:'',note:'왜 멋있는지 말해요'}],
+      sentences:[{orig:'음 그게 좀 멋있었어요',grade:'고침',why:'느낌만 있고 이유가 없어요.',fix:'두려움을 이기고 스스로 움직였다는 점이 인상 깊었습니다.'},{orig:'그래서 허가 제일 기억에 남는 것 같아요',grade:'보통',why:'처음 말한 결론을 되풀이해요. "~것 같아요"보다 단정해서 말해요.',fix:'그래서 저도 허처럼 먼저 한 걸음 내딛고 싶습니다.'}],
+      better:'저는 허가 가장 기억에 남습니다. 두려움을 이기고 스스로 움직였기 때문입니다. 허는 처음에 헴과 함께 치즈가 사라진 창고에서 기다렸지만, 결국 혼자 미로로 나섭니다. 가는 길마다 벽에 깨달은 것을 적는 모습도 인상 깊었습니다. 그래서 저도 허처럼 먼저 한 걸음 내딛고 싶습니다.',
+      model:'제가 가장 기억에 남는 인물은 허입니다. 허는 두려움을 인정하면서도 끝내 움직인 인물이기 때문입니다. 처음에 허는 헴과 함께 텅 빈 창고로 날마다 돌아가며 치즈가 돌아오길 바랐습니다. 하지만 기다림이 답이 아니라는 것을 깨닫고 혼자 미로로 나섭니다. 특히 허가 벽에 깨달음을 적어 두는 장면은 자기 두려움을 정리하고 뒤에 올 헴을 배려하는 행동이라고 생각합니다. 저도 새로운 환경이 두려울 때 허처럼 두려움을 인정하고 한 걸음 내딛는 사람이 되고 싶습니다.'},
+    {sec:58,text:'칼 할아버지가 집을 놓아준 건 그 엘리 할머니를 잊은 게 아니라 이제 새로운 걸 시작한다는 뜻 같아요 음 집에 있던 가구를 막 버리잖아요 그 장면이 좀 슬펐는데 그래도 러셀을 구하러 가니까 좋았어요 그니까 과거보다 지금 옆에 있는 사람이 더 중요하다는 거요',
+      summary:'집을 놓아준 것은 엘리를 잊은 것이 아니라 새로운 시작이라는 뜻이다.',good:'"엘리를 잊은 게 아니라"는 해석이 깊어요. 과거와 지금의 사람을 견준 마지막 말도 좋아요.',problem:'근거 장면이 "가구를 버린다" 하나뿐이에요. 엘리의 모험 책 장면을 근거로 더하면 해석이 단단해져요.',followUp:'엘리가 모험 책에 남긴 마지막 장은 칼에게 어떤 영향을 주었나요?',
+      marks:[{find:'그 엘리',kind:'delete',fix:'',note:'군말 그'},{find:'잊은 게 아니라',kind:'good',fix:'',note:'해석이 깊어요'},{find:'좀 슬펐는데',kind:'wave',fix:'',note:'느낌보다 의미를'},{find:'그니까',kind:'replace',fix:'결국',note:'정리하는 말로'}],
+      sentences:[{orig:'칼 할아버지가 집을 놓아준 건 그 엘리 할머니를 잊은 게 아니라 이제 새로운 걸 시작한다는 뜻 같아요',grade:'잘함',why:'결론을 맨 앞에 말했고, 흔한 해석을 뒤집는 생각이 들어 있어요.',fix:''},{orig:'그 장면이 좀 슬펐는데 그래도 러셀을 구하러 가니까 좋았어요',grade:'고침',why:'감상만 있고 장면의 의미가 빠졌어요.',fix:'무거운 가구를 버리는 장면은 과거보다 지금 곁의 러셀을 택했다는 뜻입니다.'}],
+      better:'칼 할아버지가 집을 놓아준 것은 엘리를 잊은 것이 아니라 새로운 모험을 시작한다는 뜻입니다. 할아버지는 엘리의 모험 책을 보고 추억은 사라지지 않는다는 것을 깨닫습니다. 그래서 무거운 가구를 버리고 러셀을 구하러 갑니다. 결국 과거보다 지금 곁에 있는 사람이 더 중요하다는 장면입니다.',
+      model:'저는 칼 할아버지가 집을 놓아준 장면이 엘리와의 약속을 지키는 새로운 방법이라고 생각합니다. 할아버지는 엘리의 모험 책 마지막 장에서 엘리가 함께한 삶 자체를 모험으로 여겼다는 것을 알게 됩니다. 그 순간 집은 추억을 가두는 곳이 아니라 짐이 됩니다. 그래서 할아버지는 가구를 하나씩 내던지고 러셀을 구하러 떠납니다. 이 장면은 과거를 버리는 것이 아니라, 과거의 사랑을 지금 곁에 있는 사람에게 이어 주는 선택이라고 생각합니다.'},
+    {sec:47,text:'저는 상상만 하던 일을 해 본 거는 음 수영 대회 나간 거요 원래는 그냥 생각만 했는데 엄마가 신청해 줘서 나갔어요 월터도 상상만 하다가 진짜로 그린란드에 가잖아요 그래서 비슷한 것 같아요 음 그리고 해 보니까 생각보다 재밌었어요',
+      summary:'수영 대회에 나간 경험이 상상만 하다 떠난 월터와 비슷하다.',good:'자기 경험(수영 대회)과 작품 장면(그린란드)을 함께 들었어요.',problem:'엄마가 신청해 준 일과 월터가 스스로 떠난 일은 차이가 있어요. 공통점과 차이를 함께 짚고, "재밌었다"보다 무엇을 배웠는지 말해요.',followUp:'대회 준비 중에 그만두고 싶었던 순간은 없었나요? 어떻게 이겨 냈나요?',
+      marks:[{find:'해 본 거는',kind:'replace',fix:'해 본 경험은',note:'면접 말투로'},{find:'엄마가 신청해 줘서',kind:'wave',fix:'',note:'월터와 다른 점이에요'},{find:'그린란드에 가잖아요',kind:'good',fix:'',note:'장면을 잘 들었어요'},{find:'생각보다 재밌었어요',kind:'wave',fix:'',note:'무엇을 배웠나요?'}],
+      sentences:[{orig:'월터도 상상만 하다가 진짜로 그린란드에 가잖아요',grade:'잘함',why:'작품의 구체적인 장면으로 경험과 연결했어요.',fix:''},{orig:'그래서 비슷한 것 같아요',grade:'고침',why:'무엇이 비슷한지 말하지 않았어요.',fix:'둘 다 처음은 망설였지만 끝까지 해냈다는 점이 같습니다.'}],
+      better:'저는 지난여름 수영 대회에 나간 경험이 있습니다. 처음에는 엄마가 신청해 주셔서 시작했지만, 연습하면서 끝까지 완주하겠다는 목표는 제가 세웠습니다. 월터도 상상만 하다가 결국 그린란드로 떠납니다. 둘 다 처음은 망설였지만 끝까지 해냈다는 점이 같습니다.',
+      model:'저는 지난여름 처음으로 수영 대회에 나갔습니다. 시작은 엄마가 신청해 주신 것이었지만, 연습하면서 "완주하겠다"는 목표는 제가 정했습니다. 월터도 처음에는 사라진 사진을 찾아야 해서 떠났지만, 여행 중에는 스스로 바다에 뛰어들고 산을 오릅니다. 둘 다 시작은 우연이었어도 끝까지 해낸 것은 자기 선택이었습니다. 저는 이 경험으로 상상을 현실로 만드는 힘은 첫걸음보다 계속 가는 마음에 있다는 것을 배웠습니다.'}];
+  const sw1=exByDom(RB_OR,[
+    {plus:['세 질문 모두 작품의 장면(미로, 가구, 그린란드)을 바르게 들었어요.'],minus:['엘리의 모험 책처럼 결정적 장면을 근거로 써야 한 수준 올라가요.']},
+    {plus:['2번에서 "잊은 게 아니라"는 자기 해석이 분명해요.'],minus:['1·3번은 "멋있었어요", "재밌었어요"로 끝나 이유가 없어요. "왜냐하면"을 붙여요.']},
+    {plus:['2번은 결론을 먼저 말했어요.'],minus:['1·3번은 결론이 끝에 다시 나와요. 결론-이유-장면-마무리 순서를 지켜요.']},
+    {plus:['문장을 대부분 끝맺었어요.'],minus:['"~거요", "~잖아요"처럼 친구에게 말하는 말투가 섞여요. "~입니다"로 끝맺어요.']},
+    {plus:['말하는 속도가 1분에 300자 안팎으로 알맞아요.'],minus:['"음", "그니까"가 자주 나와요. 첫마디 전에 숨을 한 번 쉬고 시작해요.']},
+    {plus:['3번에서 내 경험을 작품과 연결했어요.'],minus:['경험과 작품의 차이까지 말하면 생각이 깊어져요.']}]);
+  const ev={offTopic:false,scores:exByDom(RB_OR,[3,2,2,3,3,2]),scoreWhy:sw1,
+    comment:'세 질문 모두 작품의 장면을 바르게 들고 질문에 답했어요. 특히 2번에서 칼 할아버지가 엘리를 잊은 것이 아니라 새로 시작한 것이라는 해석은 면접관에게 인상을 줄 만해요. 다만 1번과 3번은 "멋있었어요", "재밌었어요"로 끝나 이유가 빠졌고, "음", "그니까" 같은 군말이 흐름을 자주 끊었어요.',
+    praise:'세 질문 모두 멈추지 않고 끝까지 대답했어요. 2번의 "엘리 할머니를 잊은 게 아니라 새로운 걸 시작한다는 뜻"이라는 말은 영화를 깊이 본 사람만 할 수 있는 해석이에요. 수영 대회 경험을 월터와 연결한 것도 아주 좋은 시도였어요. 이 생각들을 순서만 정리하면 훨씬 단단한 대답이 될 거예요!',
+    strengths:['작품의 장면을 바르게 기억하고 대답에 끌어왔어요.','2번에서 흔한 해석을 넘어서는 자기 생각을 말했어요.','3번에서 내 경험을 작품과 연결하려고 했어요.'],
+    improvements:['[주장과 근거] 느낌("멋있었어요") 뒤에 "왜냐하면"으로 이유를 꼭 붙여요.','[구성] 결론을 첫 문장에 말하고, 마지막에 되풀이하지 말고 다짐이나 의미로 마무리해요.','[전달] 첫마디 "음"을 줄이려고 질문을 듣고 숨을 한 번 쉰 뒤 결론부터 말해요.'],
+    tags:['이유 부족','결론 되풀이','군말'],cumulative:'첫 구술 평가예요. 가장 먼저 연습할 것은 "결론 먼저, 이유 바로 다음"이에요. 대답마다 첫 문장에 결론을, 둘째 문장에 "왜냐하면"을 넣는 연습을 하면 구성과 근거가 함께 올라가요.',
+    teacher:'작품을 정확히 기억하고 자기 해석까지 말한 점이 훌륭해요. 다음에는 결론을 먼저 말하고 이유를 바로 붙여 보세요. 2차 도전에서 모범 답안의 순서를 따라 하면 금방 달라질 거예요.',
+    answers:A1.map((a,n)=>Object.assign({no:n+1,q:EX_OQ[n]},a))};
+  ev.answers.forEach(a=>{const st=orStat(a);Object.assign(a,{chars:st.ch,cpm:st.cpm,fill:st.fill})});
+  const R1=orScore(ev.scores);Object.assign(ev,{scores:R1.scores,levels:R1.levels,held:R1.held,rb:2,total:R1.total,at:Date.now(),title:'누가 내 치즈를 옮겼을까?',g:'중1',m:'3월',round:1,ex:1});
+  const A2=[
+    {sec:63,shAcc:91,growth:88,text:'제가 가장 기억에 남는 인물은 허입니다 이유는 두려움을 이겨 내고 스스로 움직였기 때문입니다 허는 처음에 헴과 함께 치즈가 사라진 창고에서 며칠을 기다렸지만 결국 혼자 운동화를 신고 미로로 나갑니다 특히 가는 길마다 벽에 깨달은 것을 적어 두는데 저는 이것이 자기 두려움을 정리하는 방법이라고 생각했습니다 그래서 저도 중학교에 올라가 낯설 때 허처럼 먼저 한 걸음 내디뎌 보고 싶습니다',
+      summary:'허는 두려움을 이기고 스스로 움직였기에 가장 기억에 남는다.',improved:'1차의 "좀 멋있었어요"가 2차에서 "두려움을 이겨 내고 스스로 움직였기 때문입니다"라는 이유로 바뀌었어요. 결론-이유-장면-다짐 순서도 지켰어요.',still:'벽에 글을 남긴 이유를 "헴을 위한 배려"까지 넓히면 생각이 더 깊어져요.',
+      marks:[{find:'제가 가장 기억에 남는 인물은 허입니다',kind:'good',fix:'',note:'결론을 먼저!'},{find:'두려움을 정리하는 방법',kind:'good',fix:'',note:'자기 해석이 좋아요'}]},
+    {sec:68,shAcc:84,growth:86,text:'저는 칼 할아버지가 집을 놓아준 장면이 엘리와의 약속을 지키는 새로운 방법이라고 생각합니다 첫째 할아버지는 엘리의 모험 책을 보고 집을 잃어도 추억은 사라지지 않는다는 것을 깨닫습니다 둘째 그 순간 할아버지에게 더 중요한 것은 지금 곁에 있는 러셀이었습니다 그래서 무거운 가구를 버리고 러셀을 구하러 갑니다 결국 이 장면은 과거를 버리는 것이 아니라 과거의 사랑을 지금의 사람에게 이어 주는 장면이라고 생각합니다',
+      summary:'집을 놓아준 것은 엘리와의 약속을 지키는 새로운 방법이다.',improved:'1차에 없던 엘리의 모험 책 장면을 근거로 더했고, "첫째, 둘째"로 이유를 나눠 말했어요.',still:'모범 답안의 마지막 문장과 비슷한 표현이 있어요. 다음에는 같은 뜻을 내 말로 바꿔 말해 봐요.',
+      marks:[{find:'첫째',kind:'good',fix:'',note:'이유를 나눠 말했어요'},{find:'엘리의 모험 책',kind:'good',fix:'',note:'결정적 근거'}]},
+    {sec:61,shAcc:79,growth:90,text:'저는 지난여름 수영 대회에 나간 경험이 있습니다 처음에는 엄마가 신청해 주셔서 시작했지만 연습을 하면서 완주하고 싶다는 목표는 제가 정했습니다 월터도 처음에는 사진을 찾아야 해서 떠났지만 여행을 하면서 스스로 바다에 뛰어들고 산을 오릅니다 둘 다 시작은 우연이었어도 끝까지 해낸 것은 자기 선택이었다는 점이 같습니다 그래서 상상을 현실로 만드는 힘은 첫걸음보다 계속 가는 마음에 있다고 생각합니다',
+      summary:'시작은 우연이어도 끝까지 해낸 것은 자기 선택이었다.',improved:'1차의 "엄마가 신청해 줘서"를 숨기지 않고 "목표는 제가 정했습니다"로 연결해 월터와의 공통점을 정확히 세웠어요. "재밌었어요" 대신 배운 점으로 마무리했어요.',still:'완주를 위해 무엇을 연습했는지 한 문장 더하면 경험이 더 생생해져요.',
+      marks:[{find:'목표는 제가 정했습니다',kind:'good',fix:'',note:'1차 약점을 잘 고쳤어요'},{find:'계속 가는 마음',kind:'good',fix:'',note:'멋진 마무리'}]}];
+  const sw2=exByDom(RB_OR,[
+    {plus:['엘리의 모험 책, 바다와 산 등 결정적 장면을 근거로 썼어요.'],minus:['두 작품을 서로 견주는 말이 한 번 있으면 탁월해져요.']},
+    {plus:['세 대답 모두 이유를 "왜냐하면/첫째·둘째"로 분명히 밝혔어요.'],minus:['이유와 근거 장면 사이를 "그 장면에서 알 수 있듯이"로 이어 주면 더 좋아요.']},
+    {plus:['결론-이유-장면-마무리 순서를 세 대답 모두 지켰어요.'],minus:['가장 중요한 이유를 가장 길게 말하는 비중 조절을 연습해요.']},
+    {plus:['"~입니다"로 끝맺어 면접 말투가 안정됐어요.'],minus:['"생각합니다"가 자주 반복돼요. "봅니다", "느꼈습니다"로 바꿔 써 봐요.']},
+    {plus:['군말이 거의 사라지고 속도가 고르게 유지됐어요.'],minus:['결론 문장 뒤에 한 박자 쉬면 듣는 사람이 따라오기 쉬워요.']},
+    {plus:['3번에서 자기 경험과 월터의 차이까지 짚었어요.'],minus:['다른 사람은 어떻게 볼지(반대 의견)를 한 번 말해 보면 더 깊어져요.']}]);
+  const ev2={scores:exByDom(RB_OR,[4,3,4,3,4,3]),scoreWhy:sw2,growth:88,
+    growthWhy:{plus:['1차의 "멋있었어요", "재밌었어요"가 2차에서 구체적인 이유로 바뀌었어요.','세 대답 모두 결론을 첫 문장에 말했어요.','"음", "그니까" 같은 군말이 거의 사라졌어요.'],minus:['2번 마지막 문장은 모범 답안 표현을 많이 빌렸어요. 내 말로 바꿔 말하는 연습이 필요해요.']},
+    growthComment:'1차보다 대답의 순서와 이유가 눈에 띄게 좋아졌어요. 모범 답안을 따라 읽으며 "결론-이유-장면-마무리" 구조를 몸에 익힌 것이 그대로 드러나요. 특히 3번은 1차의 약점(엄마가 신청해 준 일)을 숨기지 않고 "목표는 제가 정했습니다"로 바꿔 월터와의 공통점을 정확히 세운 점이 훌륭해요.',
+    comment:'세 대답 모두 결론을 먼저 말하고 이유와 장면을 이어 말해 듣기 쉬웠어요. 근거 장면도 1차보다 정확해졌어요.',
+    praise:'3분 동안 생각을 정리하고 다시 도전한 보람이 그대로 보여요! 1차에서 짚은 "이유 부족"을 세 대답 모두에서 고쳤고, 군말도 거의 사라졌어요. "계속 가는 마음"이라는 마지막 말은 듣는 사람의 마음에 오래 남을 거예요. 다음 달에도 이 순서로 말해 봐요.',
+    strengths:['결론을 첫 문장에 말하는 습관이 생겼어요.','"첫째, 둘째"로 이유를 나눠 말했어요.','자기 경험과 작품을 견주어 공통점과 차이를 함께 말했어요.'],
+    improvements:['모범 답안의 구조는 빌리되 문장은 내 말로 바꿔 말해요.','가장 중요한 이유를 가장 길게 말하는 비중 조절을 연습해요.','반대 의견을 한 번 떠올려 "물론 ~라고 볼 수도 있지만"으로 말해 봐요.'],
+    tags:['모범 답안 표현 의존','비중 조절'],cumulative:'첫 1·2차 구술이에요. 1차의 가장 큰 약점이던 "이유 없는 느낌 표현"과 "결론 되풀이"가 2차에서 크게 줄었어요. 다음 과제는 모범 답안에 기대지 않고 내 말로 같은 구조를 만드는 것이에요.',
+    nextGoal:'다음 달에는 1차부터 결론-이유-장면-마무리 순서로 말해 보기',
+    teacher:'한 번의 다시 도전으로 대답의 짜임이 크게 좋아졌어요. 부모님께서는 "왜 그렇게 생각해?"라고 한 번 더 물어 주시면 이유를 말하는 습관이 굳어져요. 다음 과제는 모범 답안을 내 말로 바꿔 말하는 것이에요.',
+    answers:A2.map((a,n)=>Object.assign({no:n+1,q:EX_OQ[n],copied:false,sentences:[]},a))};
+  ev2.answers.forEach(a=>{const st=orStat(a);Object.assign(a,{chars:st.ch,cpm:st.cpm,fill:st.fill})});
+  const R2=orScore(ev2.scores);Object.assign(ev2,{scores:R2.scores,levels:R2.levels,held:R2.held,rb:2,total:R2.total,at:Date.now(),title:ev.title,g:'중1',m:'3월',round:2,ex:1});
+  ev2.up=orUp(ev.scores,ev2.scores);
+  return [ev,ev2];
+}
+const exBanner=k=>`<div class="exban" role="note"><b>예시</b><span>${esc(EX_INFO)}</span></div>`;
 function evalHTML(){
-  const v=S.evalView;const ev=v.r===2?S.evals2[v.key]:S.evals[v.key];
+  const v=S.evalView;const ev=v.ex?S.exEv:v.r===2?S.evals2[v.key]:S.evals[v.key];
   if(!ev)return `<div class="panel"><div class="ph"><h2>첨삭</h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div><p>첨삭을 찾지 못했어요.</p></div>`;
   const sc=ev.scores||{};const r2=ev.round===2;
   const ul=a=>Array.isArray(a)&&a.length?`<ul>${a.map(x=>`<li>${hk(x)}</li>`).join('')}</ul>`:'<p class="hint">없음</p>';
@@ -6293,13 +6467,13 @@ function evalHTML(){
   const why=Object.keys(sc).map(k=>{const w=swList(ev,k);return w?`<div class="evw"><b>${esc(k)} <span>${scv(sc[k])}</span></b>${w.plus.map(x=>`<p class="swp"><i>＋</i>${esc(x)}</p>`).join('')}${w.minus.map(x=>`<p class="swm"><i>－</i>${esc(x)}</p>`).join('')}</div>`:''}).join('');
   const D=(t,body,n,open)=>`<details class="ev-d"${open?' open':''}><summary>${t}${n||''}</summary><div class="ev-db">${body}</div></details>`;
   const df=r2?Number(ev.total)-Number(ev.firstTotal):0;
-  return `<div class="panel ev pk"><div class="ph"><h2><span class="hl">${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭</span><br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>
+  return `<div class="panel ev pk"><div class="ph"><h2><span class="hl">${esc(ev.g)} ${esc(ev.m)} 논술 ${r2?'2차 ':''}첨삭</span><br><small style="font-size:14px;font-weight:400;color:var(--muted)">「${esc(ev.title)}」 · ${new Date(ev.at).toLocaleDateString('ko-KR')}</small></h2><button class="x" data-act="close2" aria-label="뒤로">${IC.back}</button></div>${v.ex?exBanner():''}
   <div class="ev-sum"><div class="ev-s1">
       ${ev.rb?`<p class="ev-lv"><b>${rbReach(sc)}</b>/${Object.keys(sc).length}개 영역이 학년 기대 수준(도달)에 닿았어요${ev.process?` · 쓰기 과정: 계획 ${esc(ev.process.plan)}`:''}</p>`:''}<p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
       ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
     <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${hk(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${hk(ev.progress)}</p>`:''}${PX.html(ev)}${ev.teacher?`<blockquote class="ev-t">${hk(ev.teacher)}</blockquote>`:''}</div></div>
-  <div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
-    ${!r2&&rwLeft(ev)?`<small class="hint">${esc(rwHint(ev))}</small>`:''}${S.downloads?'':'<small class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</small>'}</div>
+  ${v.ex?`<div class="ev-act"><button class="btn ghost" data-act="exor">구술 평가 예시도 보기</button><small class="hint">내 글을 제출하면 이런 첨삭을 받아요. 2차(다시 쓰기) 점수는 3일 뒤 고쳐 쓰면 받을 수 있어요.</small></div>`:`<div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
+    ${!r2&&rwLeft(ev)?`<small class="hint">${esc(rwHint(ev))}</small>`:''}${S.downloads?'':'<small class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</small>'}</div>`}
   ${D('원고지 첨삭',`<p class="evq">${qShowHTML(ev)}</p>${ev.writeSec||ev.asked!=null?`<p class="hint">${ev.asked!=null?'쓰기 전 질문 '+ev.asked+'개 · 계획 작성 · ':''}쓴 시간 ${ev.writeSec?fmtSw(ev.writeSec):'기록 없음'}</p>`:''}<p class="hint">파란색은 고친 곳, 초록색은 선생님 메모예요. 손가락으로 크게 볼 수 있어요.</p>${mnSheets(ev).map(h=>`<div class="mnw">${h}</div>`).join('')}`,'',innerWidth>=720)}
   ${D('점수 이유',`${ev.comment?`<p>${hk(ev.comment)}</p>`:''}${why||'<p class="hint">항목별 이유가 없어요.</p>'}`)}
   ${D('맞춤법',pr(ev.spelling),cnt(ev.spelling))}
@@ -6624,7 +6798,7 @@ function oralHTML(i){
   if(!S.odoc[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
   const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];const ev2=S.orals2[key];
   const foot=ev2?`<div class="sec orhistsec"><h3>지난 구술 기록</h3>${orLogMini(S.progress.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(S.id)}" style="align-self:flex-start">전체 구술 기록 보기</button></div>`
-    :`<div class="orfoot"><button class="link" data-act="orhist" data-id="${esc(S.id)}">지난 구술 기록 ›</button>${!ev&&q&&q.ai?'<small>Claude(생성형 AI)가 이달 작품으로 낸 질문이에요</small>':''}</div>`;
+    :`<div class="orfoot"><button class="link" data-act="orhist" data-id="${esc(S.id)}">지난 구술 기록 ›</button><button class="link" data-act="exor">평가 예시 보기 ›</button>${!ev&&q&&q.ai?'<small>Claude(생성형 AI)가 이달 작품으로 낸 질문이에요</small>':''}</div>`;
   const wrap=(st,body)=>`<div class="sec orwrap" data-st="${st}">${orSteps(i)}${body}</div>${foot}`;
   if(ev)return wrap(ev2?'done':'r2',oralR2HTML(i));
   const oStale=q&&!(orD(i).ans||[]).some(Boolean)&&(q.sig||'책+영화 ①+영화 ②')!==esSig(i);
@@ -6963,7 +7137,7 @@ function oralEvalHTML(){
   const sent=a=>Array.isArray(a)&&a.length?`<h4>문장 지도</h4>${a.map(x=>`<div class="rv"><span><span class="gr ${gc(x.grade)}">${esc(x.grade||'보통')}</span> ${esc(x.orig)}</span><span class="hint">${esc(x.why)}</span>${x.fix?`<span class="rw">이렇게 말해요 · ${esc(x.fix)}</span>`:''}</div>`).join('')}`:'';
   const chips=(a,aid,label)=>`<div class="orchips"><span>말한 시간 <b>${orMS(a.sec)}</b></span><span>${esc(a.chars)}자</span><span>1분에 ${esc(a.cpm)}자 · ${orSpeed(a.cpm)}</span>${a.fill?`<span>군말 ${esc(a.fill)}회</span>`:''}${a.audio?orPB(aid,label):''}</div>`;
   const marked=a=>{const mk=orMarked(a.text,a.marks);return `<div class="ormk"><small class="hint">말한 내용 첨삭 · 빨간 줄은 뺄 말, 파란 글씨는 고친 말, 초록 밑줄은 잘한 표현이에요.</small><p>${mk.h}</p>${mk.notes?`<ol class="ornotes">${mk.notes}</ol>`:''}</div>`};
-  const top=t=>`${head(t)}<div class="oract"><button class="btn${v.r===2?'':' ghost'}" data-act="orpdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${v.r===2&&uid===S.id?`<button class="btn ghost" data-act="orsend" data-i="${v.i}">${ev2.sentAt?'부모님·선생님께 다시 보내기':'부모님·선생님께 보내기'}</button>`:''}${v.r===2?`<button class="btn ghost" data-act="orview" data-r="1" data-uid="${esc(uid)}" data-key="${esc(v.key)}">1차 평가 보기</button>`:ev2?`<button class="btn ghost" data-act="orview" data-r="2" data-uid="${esc(uid)}" data-key="${esc(v.key)}">최종 리포트 보기</button>`:''}</div>`;
+  const top=t=>v.ex?`${head(t)}${exBanner()}<div class="oract"><button class="btn ghost" data-act="exor" data-r="${v.r===2?1:2}">${v.r===2?'1차 평가 보기':'최종 리포트(2차) 보기'}</button><button class="btn ghost" data-act="exes">논술 첨삭 예시 보기</button></div>`:`${head(t)}<div class="oract"><button class="btn${v.r===2?'':' ghost'}" data-act="orpdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${v.r===2&&uid===S.id?`<button class="btn ghost" data-act="orsend" data-i="${v.i}">${ev2.sentAt?'부모님·선생님께 다시 보내기':'부모님·선생님께 보내기'}</button>`:''}${v.r===2?`<button class="btn ghost" data-act="orview" data-r="1" data-uid="${esc(uid)}" data-key="${esc(v.key)}">1차 평가 보기</button>`:ev2?`<button class="btn ghost" data-act="orview" data-r="2" data-uid="${esc(uid)}" data-key="${esc(v.key)}">최종 리포트 보기</button>`:''}</div>`;
   if(v.r!==2){
     const ans=(a,n)=>`<details class="sec ora"${n===0?' open':''}><summary><b>질문 ${n+1}</b>${a.summary?` <span>${esc(a.summary)}</span>`:''}</summary><p class="orqt">${esc(a.q)}</p>${chips(a,orAud(uid,v.key,n,1),'내 대답 다시 듣기')}
       ${marked(a)}
@@ -7925,7 +8099,7 @@ document.addEventListener('click',async e=>{
     case 'budpick':{if(!S.bpk)S.bpk={av:'',img:''};S.bpk.av=d.id||'';budPaintPick();break}
     case 'avset':{const id=(AVIMG[d.id]||(d.id==='custom'&&S.me.avatarImg))?d.id:'';const old=S.me.avatar;S.me.avatar=id;render();
       try{await S.db.doc('members/'+S.id).update({avatar:id});toast(id?'캐릭터를 바꿨어요.':'기본 로고로 바꿨어요.')}catch(err){S.me.avatar=old;render();toast('저장하지 못했어요.')}break}
-    case 'smpdel':S.progress.noSample=true;if(S.shelfSel===SMP_H)S.shelfSel=null;if(S.shqPop&&S.shqPop.h===SMP_H)S.shqPop=null;saveProgress();render();toast('샘플책을 서가에서 뺐어요.');break;
+    case 'smpdel':{const h=smpH();S.progress.noSample=h;if(S.shelfSel===h)S.shelfSel=null;if(S.shqPop&&S.shqPop.h===h)S.shqPop=null;}saveProgress();render();toast('샘플책을 서가에서 뺐어요.');break;
     case 'mbdel':S.progress.myBooks=(S.progress.myBooks||[]).filter(b=>b.id!==d.id);saveProgress();render();break;
     case 'view':if(d.v==='vision'&&vbOf()&&vbOf().board){S.vbAskBusy=false;S.vbAsk=vbPickQ(vbOf())}if(d.v==='admin'&&!isAdmin())break;S.view=d.v;S.sheet=null;S.info=null;render();if(d.v==='admin')loadAdmin();
       if(d.v==='friends'){if(!S.fr)S.fr=frNew();loadFriends(true)}
@@ -7978,6 +8152,14 @@ document.addEventListener('click',async e=>{
     case 'wrset':{const el=$('#wr-set');if(el)el.hidden=!el.hidden;break}
     case 'wrform':case 'wrfont':case 'wrdir':{S.progress.wrPref=Object.assign({},wrPref(),{[d.act==='wrform'?'form':d.act==='wrfont'?'font':'dir']:+d.v});saveProgress();wrApply();const el=$('#wr-set');if(el)el.innerHTML=wrSetHTML();wrDraw();break}
     case 'wrclear':{if(!S._wrc){S._wrc=1;toast('한 번 더 누르면 쓴 글이 모두 지워져요.');setTimeout(()=>{S._wrc=0},3000)}else{S._wrc=0;const ta=$('#wr-ta');ta.value='';wrDraw();wrSave();ta.focus()}break}
+    case 'sbsave':{const v=id=>{const e=$('#'+id);return e?String(e.value||'').trim():''};const title=v('sb-title').slice(0,80),author=v('sb-author').slice(0,40);
+      const quotes=[0,1,2,3,4].map(k=>({t:v('sbq-t'+k).slice(0,800),p:v('sbq-p'+k).replace(/[^0-9]/g,'').slice(0,6)})).filter(x=>x.t).map(x=>x.p?x:{t:x.t});
+      if(!title){toast('책 제목을 써 주세요.');break}if(!quotes.length){toast('인상적인 문구를 하나 이상 써 주세요.');break}
+      const cat=v('sb-cat'),why=v('sb-why').slice(0,200);const nb={title,author,cat:KY.includes(cat)?cat:'시/에세이',why,quotes,at:Date.now(),by:S.id};
+      try{await S.db.doc('config/samplebook').set(nb);S.sbook=nb;toast('샘플책을 저장했어요. 회원들의 서가에 꽂혀요.');render()}catch(err){toast('저장하지 못했어요. 관리자 계정인지 확인해 주세요.')}break}
+    case 'sbdel':try{await S.db.doc('config/samplebook').set({title:'',quotes:[],at:Date.now(),by:S.id});S.sbook=null;toast('기본 샘플책(운수 좋은 날)으로 되돌렸어요.');render()}catch(err){toast('내리지 못했어요.')}break;
+    case 'exes':S.oralView=null;S.oralHist=null;S.exEv=exEssay();S.evalView={ex:1};renderLayers();break;
+    case 'exor':{const [a,b]=exOral();S.evalView=null;S.oralView={uid:'__ex',key:'__ex',r:+d.r===2?2:1,i:null,ex:1,ev1:a,ev2:b};renderLayers();break}
     case 'close2':if(S.oralView&&S.oralHist){S.oralView=null;renderLayers();break}S.info=null;S.evalView=null;S.oralView=null;S.oralHist=null;renderLayers();break;
     case 'start':{const key=ik(+d.i,d.k);S.progress.started=S.progress.started||{};if(S.progress.done[key])break;
       if(S.progress.started[key]){delete S.progress.started[key];saveProgress();render();toast('시작을 취소했어요.');break}
