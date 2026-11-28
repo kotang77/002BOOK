@@ -1044,7 +1044,6 @@ form{display:flex;flex-direction:column;gap:12px}
 .shplq b{font:900 16px/1 'Noto Sans KR',sans-serif;letter-spacing:.06em;color:#1C1306;text-shadow:var(--engrave);white-space:nowrap}
 .shplq small{font:700 9px/1 'Noto Serif KR',serif;letter-spacing:.04em;color:#1C1306;text-shadow:0 1px 0 rgba(255,236,176,.35)}
 @media (min-width:721px){.shplq{padding:11px 22px 10px}.shplq b{font-size:19px}.shplq small{font-size:10px}}
-.mysh>h3{display:flex;align-items:center}
 /* 육각형 독서 분류 글씨: 주변과 같은 본문 글꼴(타자기 글씨 아님), 갈색 보조 글씨 */
 html body .sec>h3 small.hxlab{font-family:var(--f-body)!important;font-weight:500!important;font-size:13px!important;letter-spacing:0!important;-webkit-text-fill-color:#8A6A3E!important;color:#8A6A3E!important;margin-left:6px}
 /* 책 종류 명패(소설·시/에세이…)도 같은 황동 */
@@ -4096,7 +4095,7 @@ function meHTML(){
     if(n.sentence){words++;lines.push(`<div class="rvc"><span class="rtag">${esc(it.g)} ${esc(it.m)} · 문장</span><b>“${esc(n.sentence)}”</b><small>${esc(n.sreason||'')}</small></div>`)}
     if(n.scene){words++;lines.push(`<div class="rvc"><span class="rtag">${esc(it.g)} ${esc(it.m)} · 장면</span><b>${esc(n.scene)}</b><small>${esc(n.creason||'')}</small></div>`)}});
   Object.keys(S.progress.quotes||{}).forEach(h=>{const tt=shTitleOf(h);shQuotes(h).forEach(q=>{words++;lines.push(`<div class="rvc"><span class="rtag">${esc(bTitle(tt||'책'))} · 문구</span><b>${q.t?`“${esc(q.t)}”`:'(사진으로 모은 문구)'}</b><small>${q.p?esc(q.p)+'쪽 · ':''}${esc(q.r||'')}</small></div>`)})});
-  return `<div class="sec mysh" style="margin:0 0 18px"><h3><span class="shplq" role="img" aria-label="꿈을 그리는 서재, Est. 2019"><b>꿈을 그리는 서재</b><small>Est. 2019</small></span><button class="btn ghost small" data-act="mybooks" style="margin-left:10px">읽은 책 추가하기</button></h3>${shelfHTML()}</div>
+  return `<div class="sec mysh" style="margin:0 0 18px"><h3>나의 서가 <button class="btn ghost small" data-act="mybooks" style="margin-left:8px">읽은 책 추가하기</button></h3>${shelfHTML()}</div>
     ${isPaid()?'':'<p class="note" style="margin-bottom:14px">무료회원은 기본코스를 쓸 수 있어요. 맞춤형코스는 유료회원이 되면 열려요.</p>'}
     
     <div class="sec" style="margin-top:18px"><h3>모아 둔 문장과 장면</h3>${lines.length?`<div class="rvg">${lines.join('')}</div>`:'<p class="hint">월 화면의 기록 탭에서 인상 깊은 문장과 장면을 적으면 여기에 모여요.</p>'}</div>
@@ -4699,7 +4698,7 @@ function shelfHTML(inSheet){
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
   }
-  return `<div class="bshf"><div class="bcase"><span class="spl3${S.covers&&S.covers.deco_monstera?' mon':''}" aria-hidden="true"><img src="${(S.covers&&S.covers.deco_monstera)||'shelf/plant.webp'}" alt="" width="360" height="${S.covers&&S.covers.deco_monstera?1014:406}"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
+  return `<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
 }
 function myBooksHTML(){
   const h=hexScores(),ha=hexScores('all');const p=h.p,n=h.all;const bs=hexBooks();
@@ -4707,7 +4706,7 @@ function myBooksHTML(){
     :`지금까지 ${n}권을 읽었어요(${h.g} ${h.n}권). ${hexEvenTxt(h)}${h.un?` 분야를 정하지 못한 책 ${h.un}권은 세지 않았어요.`:''}`;
   const tag=b=>`<span class="tg">${AX[b.main]?AX[b.main][1]:'분야 미정'}</span>${b.src==='nl'||b.kdc?`<span class="tg sub" title="국립중앙도서관 서지">도서관 분류${b.kdc?' '+esc(b.kdc):''}</span>`:b.src==='ai'?'<span class="tg sub">AI 추정</span>':''}${b.nc?`<span class="tg sub">${esc(b.ncw||'')} 세지 않음</span>`:''}${Number.isInteger(b.sub)&&AX[b.sub]&&b.sub!==b.main?`<span class="tg sub">${AX[b.sub][1]}</span>`:''}`;
   return `<div class="panel"><div class="ph"><h2>내가 읽은 책<small>읽은 책의 분야와 깊이로 독서를 돌아봐요</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
-  <div class="sec" style="margin-top:0"><h3><span class="shplq" role="img" aria-label="꿈을 그리는 서재, Est. 2019"><b>꿈을 그리는 서재</b><small>Est. 2019</small></span></h3>${shelfHTML(true)}</div>
+  <div class="sec" style="margin-top:0"><h3>나의 서가</h3>${shelfHTML(true)}</div>
   <div style="display:flex;justify-content:center">${radarSVG(p,300,true,h.t)}</div>
   <p>${esc(sum)}</p>
   <div class="sec"><h4 style="margin:0 0 6px"><small class="hint">${esc(h.lab)}</small></h4>${AX.map((a,k)=>`<div class="axr"><span>${a[1]}</span><div class="bar"><i style="width:${Math.min(100,h.r[k]*100)}%"></i></div><small>${p[k]} / ${h.t[k]} · ${hexLevel(h.r[k])}</small></div>`).join('')}
