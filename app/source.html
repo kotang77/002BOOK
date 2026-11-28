@@ -1001,11 +1001,15 @@ html body .bshf .sbr>.sb:not(.tb),html body .bshf .sbw{width:calc((100% - 66px -
 html body .bshf .sbw>.sb{width:100%!important}
 html body .bshf .sqtabs{left:calc(100% + 1px)!important;gap:3px}
 html body .bshf .sqtab{width:16px;height:16px;font-size:10px;line-height:16px}
-.shqpop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px}
+.shqpop{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px 20px 36px}
 .shqpop-bg{position:absolute;inset:0;border:0;background:rgba(20,12,6,.55);cursor:pointer}
-.shqpop-c{position:relative;max-width:340px;width:100%;min-height:min(340px,calc(100vw - 40px));max-height:80vh;overflow:auto;display:flex;flex-direction:column;color:#2B2117;padding:26px 22px 18px;border-radius:1px;transform:rotate(-1.2deg);
-  background:linear-gradient(180deg,rgba(201,160,0,.10),rgba(201,160,0,.06) 38px,rgba(201,160,0,0) 44px),linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%,rgba(184,138,0,.10)),#FFE873;
-  box-shadow:0 1px 1px rgba(0,0,0,.14),0 3px 6px rgba(0,0,0,.18),2px 16px 18px -8px rgba(0,0,0,.42)}
+/* 11-28 사용자 지시(Figma 19 v2): 실물 포스트잇처럼 윗부분은 붙고 아랫부분이 들떠, 그림자가 아래로 넓고 멀게 진다 */
+.shqpop-n{position:relative;max-width:340px;width:100%;transform:perspective(900px) rotateX(5deg) rotate(-1.2deg);transform-origin:50% 0}
+.shqpop-n::before{content:"";position:absolute;left:3%;right:2%;top:22%;bottom:-16px;z-index:0;background:rgba(0,0,0,.85);filter:blur(12px);transform:perspective(380px) rotateX(18deg) translateY(14px);transform-origin:50% 0;pointer-events:none}
+.shqpop-c{position:relative;z-index:1;width:100%;min-height:min(340px,calc(100vw - 40px));max-height:80vh;overflow:auto;display:flex;flex-direction:column;color:#2B2117;padding:26px 22px 18px;border-radius:1px;
+  background:linear-gradient(180deg,rgba(201,160,0,.12),rgba(201,160,0,.05) 40px,rgba(255,255,255,0) 44px,rgba(255,255,255,.12) 58%,rgba(168,124,0,.10) 88%,rgba(138,100,0,.16) 97%,rgba(255,246,192,.6)),#FFE873;
+  box-shadow:0 1px 1.5px rgba(0,0,0,.16)}
+.shqpop-d{margin:0 0 6px;text-align:right;font:400 19px/1.2 'Nanum Pen Script','Gaegu',cursive;color:#6E5420}
 .shqpop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.shqpop-h small{color:#6E5420;font:400 17px/1.2 'Nanum Pen Script','Gaegu',cursive}
 .shqpop-c blockquote{margin:8px 0 12px;font:400 27px/1.25 'Nanum Pen Script','Gaegu',cursive;color:#1E2A5A;letter-spacing:-.01em}
 .shqpop-c .hint{font:400 18px/1.2 'Nanum Pen Script','Gaegu',cursive;color:#6E5420}
@@ -2547,7 +2551,8 @@ html .auth:has(form.loan) .lpocket{border-top:0!important;box-shadow:inset 0 .5p
 /* 비전보드 전체 보기 */
 main .vpage .vphw{cursor:zoom-in}
 #vbfull{position:fixed;inset:0;z-index:300;background:#1A120B;display:grid;place-items:center;cursor:zoom-out}
-#vbfull .vphw{width:min(100vw,calc(100svh * 390 / 844));max-width:none;border-radius:0;box-shadow:none}
+#vbfull .vphw{width:100vw;height:100vh;height:100dvh;aspect-ratio:auto;max-width:none;border-radius:0;box-shadow:none}
+main .vphw.fit{max-width:none;aspect-ratio:auto}
 #vbfull button{position:absolute;width:46px;height:46px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;background:rgba(255,246,232,.94);color:#1F4637;box-shadow:0 3px 10px rgba(0,0,0,.45)}
 #vbfull .vbf-x{top:max(12px,env(safe-area-inset-top));right:12px;width:38px;height:38px}
 #vbfull .vbf-dl{right:16px;bottom:max(18px,env(safe-area-inset-bottom));background:#1F4637;color:#FFF8EA}
@@ -3322,7 +3327,22 @@ function cvFit(){document.querySelectorAll('.cvrow[data-fit]').forEach(r=>{const
   if(im&&!rt&&!im.dataset.fw){im.dataset.fw=1;im.addEventListener('load',cvFit,{once:true})}
   for(let n=0;n<3;n++){const h=s.offsetHeight;if(!h)return;const mx=Math.round(r.clientWidth*.42);let w=Math.round(h*(rt||.72));if(w>mx)w=mx;c.style.width=w+'px';c.style.height=(rt?Math.round(w/rt):h)+'px'}
   if(im){im.style.width='100%';im.style.height='100%';im.style.objectFit=rt?'contain':'cover'}})}
-function vbFit(){cvFit();document.querySelectorAll('.vpw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/(+w.dataset.w||960);if(p&&s>0)p.style.transform=`scale(${s})`});document.querySelectorAll('.vphw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/390;if(p&&s>0)p.style.transform=`scale(${s})`});vbScatter()}
+function vbFit(){cvFit();document.querySelectorAll('.vpw').forEach(w=>{const p=w.firstElementChild,s=w.clientWidth/(+w.dataset.w||960);if(p&&s>0)p.style.transform=`scale(${s})`});document.querySelectorAll('.vphw').forEach(vbFill);vbScatter()}
+/* 11-28 사용자 지시: 핸드폰마다 화면 비율이 달라도 비전보드를 자르지 않고 화면 전체에 맞춤.
+   휴대폰 비전보드 탭은 보드가 제목 아래~하단 메뉴 위를 꽉 채우고, 전체 보기는 화면 전체를 채운다.
+   보드(390×844 기준)는 잘리지 않게 작은 쪽 배율로 줄이고, 남는 가로·세로는 조각들의 자리를 비율대로 벌려 빈 띠 없이 채운다(크기·글자는 그대로라 찌그러지지 않음). 저장 이미지는 그대로 390×844 */
+function vbFill(w){const p=w.firstElementChild;if(!p)return;
+  const full=!!w.closest('#vbfull'),nav=document.querySelector('nav.nav'),tab=!full&&!!w.closest('main')&&innerWidth<720&&!!nav;
+  if(tab){const nh=nav.getBoundingClientRect().height,tb=document.querySelector('.top'),th=tb?tb.getBoundingClientRect().height:0;
+    const top=w.getBoundingClientRect().top+scrollY,hmin=innerHeight-nh-th-16;let h=innerHeight-nh-top-10;if(h<hmin*.7)h=hmin;
+    w.classList.add('fit');w.style.height=Math.max(240,Math.round(h))+'px'}
+  else if(w.classList.contains('fit')){w.classList.remove('fit');w.style.height=''}
+  const W=w.clientWidth,H=w.clientHeight;if(!W||!H)return;
+  if(!full&&!tab){p.style.width=p.style.height='';vbPos(p,1,1);p.style.transform=`scale(${W/390})`;return}
+  const k=Math.min(W/390,H/844),Wc=W/k,Hc=H/k;
+  p.style.width=Wc+'px';p.style.height=Hc+'px';p.style.transform=`scale(${k})`;vbPos(p,Wc/390,Hc/844)}
+function vbPos(p,kx,ky){[...p.children].forEach(el=>{if(el.dataset.ox==null){el.dataset.ox=el.offsetLeft;el.dataset.oy=el.offsetTop}
+  el.style.left=(+el.dataset.ox*kx)+'px';el.style.top=(+el.dataset.oy*ky)+'px'})}
 /* 폰 보드 사진 랜덤 배치: 칸을 섞어 고르고, 사진 비율대로 크기를 정한 뒤 살짝 겹치고 기울여 꽂아요. 시드는 보드마다 고정이라 저장 이미지와 화면 배치가 같아요 */
 function vbScatter(root){(root||document).querySelectorAll('.vphg').forEach(g=>{
   const W=g.clientWidth,H=g.clientHeight,C=[...g.children];if(!W||!H||!C.length)return;
@@ -4689,7 +4709,8 @@ const smpB=()=>{const c=smpCfg();if(!c)return SMP0;const t=String(c.title).trim(
   return {id:'sample-cfg',src:'sample',title:c.author&&!/\([^)]*\)\s*$/.test(t)?t+' ('+c.author+')':t,author:c.author||'',cat:KY.includes(c.cat)?c.cat:'시/에세이',catUser:true,
     why:c.why||'관리자가 고른 샘플책이에요. 책 옆 색 꼬리표를 누르면 인상적인 문구가 떠요.'}};
 const smpH=()=>hid(smpB().title);
-const smpQ=()=>{const c=smpCfg();return c?c.quotes.filter(q=>q&&q.t).map(q=>({t:String(q.t),p:q.p||'',r:q.r||'',s:1})):SMP_Q0};
+const SMP_AT=new Date(2026,10,28).getTime();/* 기본 샘플책 문구를 꽂은 날 */
+const smpQ=()=>{const c=smpCfg();return c?c.quotes.filter(q=>q&&q.t).map(q=>({t:String(q.t),p:q.p||'',r:q.r||'',s:1,at:+c.at||SMP_AT})):SMP_Q0.map(q=>Object.assign({at:SMP_AT},q))};
 const smpCover=()=>smpCfg()?(artOf(smpCfg().title,'book')||artOf(smpB().title,'book')||''):SMP_COVER;
 const smpOn=bs=>{const ns=S.progress&&S.progress.noSample,h=smpH();return !(ns===h||(ns===true&&!smpCfg()))&&!(bs||hexBooks()).some(b=>hid(b.title)===h)};
 const shBooks=()=>{const bs=hexBooks();return smpOn(bs)?bs.concat([smpB()]):bs};
@@ -4794,10 +4815,12 @@ function shelfBook(b,cls){
 function shqPopHTML(){const P=S.shqPop;if(!P)return '';const qs=shQuotes(P.h);if(!qs.length)return '';
   const b=shBooks().find(x=>hid(x.title)===P.h);const n=Math.max(0,Math.min(P.n,qs.length-1));const q=qs[n];const im=q.img?S.qimg[q.img]:'';
   return `<div class="shqpop" role="dialog" aria-modal="true" aria-label="인상적인 문구"><button type="button" class="shqpop-bg" data-act="shqpopx" aria-label="닫기"></button>
-    <div class="shqpop-c"><div class="shqpop-h"><small>${esc(b?bTitle(b.title):'')} · 문구 ${n+1}/${qs.length}</small><button type="button" class="x" data-act="shqpopx" aria-label="닫기">${IC.x}</button></div>
+    <div class="shqpop-n"><div class="shqpop-c"><div class="shqpop-h"><small>${esc(b?bTitle(b.title):'')}</small><button type="button" class="x" data-act="shqpopx" aria-label="닫기">${IC.x}</button></div>
     ${q.t?`<blockquote>“${esc(q.t)}”</blockquote>`:''}${q.img?(im?`<img src="${im}" alt="문구 사진">`:'<p class="hint">사진을 불러오는 중…</p>'):''}
-    ${q.p||q.r?`<p class="hint">${q.p?esc(q.p)+'쪽':''}${q.p&&q.r?' · ':''}${esc(q.r||'')}</p>`:''}
-    ${qs.length>1?`<div class="shqpop-nav"><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n-1+qs.length)%qs.length}">‹ 이전</button><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n+1)%qs.length}">다음 ›</button></div>`:''}</div></div>`}
+    ${q.p||q.at?`<p class="shqpop-d">${q.p?esc(q.p)+'쪽':''}${q.p&&q.at?' · ':''}${q.at?shqDate(q.at):''}</p>`:''}
+    ${qs.length>1?`<div class="shqpop-nav"><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n-1+qs.length)%qs.length}">‹ 이전</button><button type="button" class="btn ghost small" data-act="shqtab" data-h="${P.h}" data-n="${(n+1)%qs.length}">다음 ›</button></div>`:''}</div></div></div>`}
+/* 포스트잇 아래 '문구 저장한 날'(2026. 11. 28.) */
+function shqDate(at){const d=new Date(+at);return isNaN(d)?'':`${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`}
 function shelfHTML(inSheet){
   const bs=shBooks().map(b=>Object.assign({},b,{c2:bCat(b)}));const nReal=bs.filter(b=>b.src!=='sample').length;
   const by={};bs.forEach(b=>{(by[b.c2]=by[b.c2]||[]).push(b)});

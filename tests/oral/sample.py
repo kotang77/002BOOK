@@ -30,7 +30,7 @@ with sync_playwright() as p:
         tabs = pg.locator('.mysh .sbw:has(' + SMP + ') .sqtab').count(); ok(f'{mode}: 문구 꼬리표 3개', tabs == 3, tabs)
         pg.locator('.mysh .bcase').screenshot(path=OUT + f'{mode}_shelf.png')
         pg.locator('.mysh .sbw:has(' + SMP + ') .sqtab').nth(2).click(); time.sleep(.4)
-        t = pg.inner_text('.shqpop-c'); ok(f'{mode}: 꼬리표 누르면 문구', '설렁탕' in t and '3/3' in t, t)
+        t = pg.inner_text('.shqpop-c'); ok(f'{mode}: 꼬리표 누르면 문구', '설렁탕' in t and '/3' not in t and '2026.' in t, t)
         pg.screenshot(path=OUT + f'{mode}_pop.png')
         pg.locator('.shqpop-c [data-act=shqpopx]').first.click(); time.sleep(.3)
         pg.locator('.mysh ' + SMP).click(); time.sleep(.6)
