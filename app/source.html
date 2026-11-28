@@ -2671,6 +2671,15 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgmon b{color:#FFF6E8;font:700 14px var(--f-body);min-width:36px;text-align:center}
 /* 11-27 Figma 16 선택줄 v6: ‹ 학년 › · ‹ 달 › 두 알약, 녹색 바탕 없이 테두리만 */
 .lgmon{background:none!important;border:1.5px solid #1F4637;padding:2px}.lgmon button,.lgmon b{color:#1F4637!important}.lgmon.lggr b{min-width:52px}.lgpick{padding:8px 10px!important}
+/* 11-28 '중학교 1학년 11월' 한 줄 가운데, 학년·달 버튼은 작게 같은 크기 */
+html body .lgpick{justify-content:center!important;gap:8px!important;min-height:44px!important;padding:6px 10px!important}
+html body .lgpick .lgmid{font:700 15px/1 var(--f-body);color:#1F4637}
+html body .lgmon{padding:1px!important;border-width:1.2px!important}
+html body .lgmon button{width:24px!important;height:24px!important;font-size:15px!important}
+html body .lgmon b,html body .lgmon.lggr b{min-width:46px!important;font-size:14px!important;font-family:var(--f-body)!important}
+/* 책·영화 표지를 윗선에 맞춤(포스터가 아래로 처지지 않게) */
+html body .lgcvs{align-items:start!important}
+html body .lgcvi.lgcvi>img,html body .lgcvi.fitd.fitd>img{object-position:center top!important}
 .lgevsum{background:#F7F1E4;border-radius:18px;padding:16px;scroll-margin-top:80px}
 .lgevl{margin:-4px 0 12px!important}
 .lgevrows{display:grid;gap:8px;margin-bottom:12px}
@@ -7470,7 +7479,7 @@ function lgHTML(){
     :G.err?`<div><p class="warn">${esc(G.err)}</p><button class="btn ghost small" data-act="lggo">다시 만들기</button></div>`:lgViewHTML(it,G.data||{},key);
   return `<div class="lgh"><h2><span class="hl">학습지도</span></h2><p>이달의 책과 영화로 지도할 수 있게 정리했어요.</p></div>
     <div class="lgsh"><div class="lgpickw"><div class="lgpick">
-        <div class="lgmon lggr" role="group" aria-label="학년 고르기"><button data-act="lggstep" data-d="-1" aria-label="이전 학년" ${GR.indexOf(S.lg.g)<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(String(S.lg.g).replace(/^중/,''))}학년</b><button data-act="lggstep" data-d="1" aria-label="다음 학년" ${GR.indexOf(S.lg.g)>=GR.length-1?'disabled':''}>›</button></div><span class="lgsp"></span>
+        <span class="lgpg lgmid">중학교</span><div class="lgmon lggr" role="group" aria-label="학년 고르기"><button data-act="lggstep" data-d="-1" aria-label="이전 학년" ${GR.indexOf(S.lg.g)<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(String(S.lg.g).replace(/^중/,''))}학년</b><button data-act="lggstep" data-d="1" aria-label="다음 학년" ${GR.indexOf(S.lg.g)>=GR.length-1?'disabled':''}>›</button></div>
         <div class="lgmon" role="group" aria-label="달 고르기"><button data-act="lgmstep" data-d="-1" aria-label="이전 달" ${pos<=0?'disabled':''}>‹</button><b aria-live="polite">${lgT(it.m)}</b><button data-act="lgmstep" data-d="1" aria-label="다음 달" ${pos>=ids.length-1?'disabled':''}>›</button></div></div>
 </div>
       ${plan}
