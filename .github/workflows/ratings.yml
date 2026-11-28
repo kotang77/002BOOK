@@ -1,0 +1,15 @@
+name: 영화 관람등급 확인 (KMDb)
+on:
+  push:
+    branches: [ops-ratings]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 확인
+        env:
+          KMDB_KEY: ${{ secrets.KMDB_KEY }}
+        run: python3 scripts/ops/ratings.py
