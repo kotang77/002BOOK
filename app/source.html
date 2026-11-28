@@ -1798,6 +1798,8 @@ body:has(.auth) #legal{color:rgba(255,244,228,.8)!important;position:relative;z-
 .auth .tai .t1 i{font-style:normal;font-size:9.5px;font-weight:700}
 .auth .tai .t2{border-top:1px solid rgba(255,246,232,.45);padding-top:4px;font-size:8px;font-weight:500;letter-spacing:.03em;white-space:nowrap}
 .auth .tai .t2 b{font-weight:900}
+.pwshow{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;margin:-2px 0 4px;font-size:14px;font-weight:500;cursor:pointer;width:auto!important}
+.pwshow input[type=checkbox]{width:18px!important;height:18px!important;min-height:0!important;margin:0!important;padding:0!important;flex:none;accent-color:var(--primary,#1F4D3A)}
 /* 11-28: 명함 로고와 같은 비례(윤곽선 SVG, 웜화이트) */
 .auth .tai .tai-svg{display:block;width:74px;height:auto;filter:drop-shadow(0 1px 2px rgba(20,14,8,.8))}
 @media (min-width:821px){.auth .tai .tai-svg{width:92px}}
@@ -3643,7 +3645,8 @@ function suFormHTML(g){
   const step=(n,t,body)=>`<section class="sus" data-s="${n}"><h3 class="sus-t">${t}</h3>${body}</section>`;
   const s1=step(1,'나를 알려 주세요',`<label for="su-id">아이디 <small class="hint">영문 소문자·숫자 3~20자</small><input id="su-id" name="id" autocomplete="username" autocapitalize="none" required value="${g?esc(S.gs.idHint||''):''}"></label>
     ${g?'':`<label for="su-pw">비밀번호 <small class="hint">8자 이상</small><input id="su-pw" name="pw" type="password" autocomplete="new-password" required></label>
-    <label for="su-pw2">비밀번호 다시 입력 <small class="hint" id="su-pwm" aria-live="polite"></small><input id="su-pw2" name="pw2" type="password" autocomplete="new-password" required></label>`}
+    <label for="su-pw2">비밀번호 다시 입력 <small class="hint" id="su-pwm" aria-live="polite"></small><input id="su-pw2" name="pw2" type="password" autocomplete="new-password" required></label>
+    <label class="pwshow" for="su-pwshow"><input type="checkbox" id="su-pwshow"><span>비밀번호 보이기</span></label>`}
     <label for="su-nick">닉네임 <small class="hint">친구에게 보이는 이름 · 비우면 아이디를 써요</small><input id="su-nick" name="nick" maxlength="12" value="${g?esc(S.gs.name||''):''}"></label>
     ${g?'':`<label for="su-email">이메일 <small class="hint">비밀번호를 잊었을 때 받을 주소</small><input id="su-email" name="email" type="email" autocomplete="email" required></label>`}`);
   /* 11-27 사용자 지시: 가입 2단계 순서 = 성별(남자·여자) → 중학생·성인 → 학년 → 태어난 연월 → 지역 */
@@ -5467,6 +5470,8 @@ function pcDraw(){const sh=S.sheet;if(!sh||sh.type!=='post')return;const el=$('#
   const c=$('#pc-cnt');if(c)c.textContent=(sh.text||'').length+'/120'}
 document.addEventListener('input',e=>{const t=e.target;if(t&&(t.id==='pc-in'||t.id==='pc-to'||t.id==='pc-day'))pcDraw()});
 document.addEventListener('change',e=>{const t=e.target;if(t&&(t.id==='pc-to'||t.id==='pc-day'))pcDraw()});
+/* 11-28: 가입 비밀번호 보이기 */
+document.addEventListener('change',e=>{const t=e.target;if(!t||t.id!=='su-pwshow')return;['#su-pw','#su-pw2'].forEach(q=>{const i=$(q);if(i)i.type=t.checked?'text':'password'})});
 async function pcSend(fd){
   const sh=S.sheet;if(!sh||sh.type!=='post'||sh.busy)return;
   const to=String(fd.get('to')||'');const text=String(fd.get('text')||'').trim().slice(0,120);
