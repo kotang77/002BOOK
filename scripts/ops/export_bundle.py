@@ -13,6 +13,20 @@ def sql(q):
 def norm(s):  # 서버 media.ts normT 와 같은 규칙
     s = re.sub(r'<[^>]*>|!H[SE]', '', str(s or '')); s = re.sub(r'\(.*?\)|\[.*?\]', '', s)
     return re.sub(r'[^0-9A-Za-z가-힣]', '', s).lower()
+def trim(im):
+    """11-28: 포스터·표지 가장자리에 붙은 흰 띠(스캔 여백)를 잘라 낸다. 거의 한 색이고 밝은 줄만, 한 변에 최대 6%"""
+    try:
+        from PIL import ImageStat
+    except Exception: return im
+    w, h = im.size; g = im.convert('L')
+    def light(box):
+        st = ImageStat.Stat(g.crop(box)); return st.mean[0] > 222 and st.stddev[0] < 20
+    t = b = l = r = 0
+    while t < h * 0.06 and light((0, t, w, t + 1)): t += 1
+    while b < h * 0.06 and light((0, h - b - 1, w, h - b)): b += 1
+    while l < w * 0.06 and light((l, 0, l + 1, h)): l += 1
+    while r < w * 0.06 and light((w - r - 1, 0, w - r, h)): r += 1
+    return im.crop((l, t, w - r, h - b)) if (t or b or l or r) else im
 os.makedirs('dist/data/cv', exist_ok=True)
 guides, covers, art = {}, {}, {}
 if REF and TOKEN:
@@ -30,6 +44,11 @@ if REF and TOKEN:
             if not m or not re.match(r'^[A-Za-z0-9_-]+$', x['id']): continue
             ext = 'jpg' if m.group(1) in ('jpeg', 'jpg') else m.group(1)
             raw = base64.b64decode(m.group(2))
+            try:
+                from PIL import Image as _I; import io as _io
+                _im = _I.open(_io.BytesIO(raw)).convert('RGB'); _t = trim(_im)
+                if _t.size != _im.size: _b = _io.BytesIO(); _t.save(_b, 'JPEG', quality=86); raw = _b.getvalue(); ext = 'jpg'
+            except Exception: pass
             with open(f"dist/data/cv/{x['id']}.{ext}", 'wb') as f: f.write(raw)
             covers[x['id']] = f"data/cv/{x['id']}.{ext}?v={hashlib.sha256(raw).hexdigest()[:8]}"
     except Exception as e: print('올린 표지를 가져오지 못했어요:', e)
@@ -62,7 +81,7 @@ if art:
                 if len(raw) < 800: continue
                 ext = 'jpg'
                 if Image:
-                    im = Image.open(io.BytesIO(raw)).convert('RGB'); im.thumbnail((480, 480)); b = io.BytesIO(); im.save(b, 'JPEG', quality=82, optimize=True); raw = b.getvalue()
+                    im = trim(Image.open(io.BytesIO(raw)).convert('RGB')); im.thumbnail((480, 480)); b = io.BytesIO(); im.save(b, 'JPEG', quality=82, optimize=True); raw = b.getvalue()
                 elif raw[:8].startswith(b'\x89PNG'): ext = 'png'
                 elif raw[8:12] == b'WEBP': ext = 'webp'
                 name = hashlib.sha256(k.encode()).hexdigest()[:16]
