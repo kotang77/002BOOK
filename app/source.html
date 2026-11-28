@@ -1043,17 +1043,14 @@ html body .bshf .sqtab{width:16px;height:16px;font-size:10px;line-height:16px}
 @media (min-width:721px){.bshf .bcase{margin-top:60px;padding:18px 18px 0}.bshf .bcase::after{margin:0 -18px}.bshf .bbd{margin:0 -18px}.spl3{width:124px;right:28px}}
 @media (max-width:720px){.bshf .bcase{padding-left:10px;padding-right:10px}.bshf .bcase::before{left:0;right:0}.bshf .bcase::after{margin:0 -10px}.bshf .bbd{margin:0 -10px}}
 /* 11-28 받침 나무 1.5배(16→24px), 오른쪽 아래 제작사 명판: 오래된 황동(헤어라인·얼룩·모서리 나사), 글자는 음각(검게 파이고 아래에 빛) */
-:root{--brass:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cfilter id='p' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 0.9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.15 0 0 0 0 0.04 0 0 0 -2.2 1.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/160px 40px,
+:root{--brass:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cfilter id='p' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 0.9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.15 0 0 0 0 0.04 0 0 0 -2.2 0.78'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/160px 40px,
     repeating-linear-gradient(0deg,rgba(255,240,190,.09) 0 .5px,rgba(60,40,10,.08) .5px 1.5px),
-    radial-gradient(circle at 18% 30%,rgba(70,48,16,.2),rgba(70,48,16,0) 28%),radial-gradient(circle at 74% 72%,rgba(70,48,16,.17),rgba(70,48,16,0) 30%),radial-gradient(circle at 52% 12%,rgba(255,240,185,.45),rgba(255,240,185,0) 40%),
-    linear-gradient(100deg,#B8964A,#DDBC68 34%,#C9A452 58%,#AA8840);
+    radial-gradient(circle at 18% 30%,rgba(70,48,16,.1),rgba(70,48,16,0) 28%),radial-gradient(circle at 74% 72%,rgba(70,48,16,.08),rgba(70,48,16,0) 30%),radial-gradient(circle at 52% 12%,rgba(255,246,205,.55),rgba(255,246,205,0) 40%),
+    linear-gradient(100deg,#D4B466,#F3DA8E 34%,#E3C678 58%,#C6A65C);
   --brass-sh:inset 0 0 0 1px rgba(60,40,12,.55),inset 0 1px 0 rgba(255,238,180,.55),inset 0 -1px 0 rgba(40,26,6,.5),0 1px 2px rgba(0,0,0,.55);
   --engrave:0 1px 0 rgba(255,236,176,.55),0 -.5px 0 rgba(0,0,0,.45)}
 .bshf .bplate{position:absolute;left:auto;right:16px;bottom:11px;transform:scale(.8);transform-origin:right bottom;height:32px;display:flex;align-items:center;gap:9px;padding:0 12px 0 13px;border-radius:1.5px;z-index:2;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cfilter id='p' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 0.9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.15 0 0 0 0 0.04 0 0 0 -2.2 1.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/160px 40px,
-    repeating-linear-gradient(0deg,rgba(255,240,190,.09) 0 .5px,rgba(60,40,10,.08) .5px 1.5px),
-    radial-gradient(circle at 18% 30%,rgba(70,48,16,.2),rgba(70,48,16,0) 28%),radial-gradient(circle at 74% 72%,rgba(70,48,16,.17),rgba(70,48,16,0) 30%),radial-gradient(circle at 52% 12%,rgba(255,236,170,.35),rgba(255,236,170,0) 40%),
-    linear-gradient(100deg,#B8964A,#DDBC68 34%,#C9A452 58%,#AA8840);
+  background:var(--brass);
   box-shadow:inset 0 0 0 1px rgba(60,40,12,.55),inset 0 1px 0 rgba(255,238,180,.55),inset 0 -1px 0 rgba(40,26,6,.5),0 1px 2px rgba(0,0,0,.55)}
 .bshf .bplate::before,.bshf .bplate::after{content:"";position:absolute;top:50%;width:3px;height:3px;margin-top:-1.5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#E9CF8A,#6E5220 70%);box-shadow:0 .5px 0 rgba(255,240,190,.4)}
 .bshf .bplate::before{left:3.5px}.bshf .bplate::after{right:3.5px}
