@@ -1045,6 +1045,8 @@ form{display:flex;flex-direction:column;gap:12px}
 .shplq small{font:700 9px/1 'Noto Serif KR',serif;letter-spacing:.04em;color:#1C1306;text-shadow:0 1px 0 rgba(255,236,176,.35)}
 @media (min-width:721px){.shplq{padding:11px 22px 10px}.shplq b{font-size:19px}.shplq small{font-size:10px}}
 .mysh>h3{display:flex;align-items:center}
+/* 육각형 독서 분류 글씨: 주변과 같은 본문 글꼴(타자기 글씨 아님), 갈색 보조 글씨 */
+html body .sec>h3 small.hxlab{font-family:var(--f-body)!important;font-weight:500!important;font-size:13px!important;letter-spacing:0!important;-webkit-text-fill-color:#8A6A3E!important;color:#8A6A3E!important;margin-left:6px}
 /* 책 종류 명패(소설·시/에세이…)도 같은 황동 */
 html body .bshf .bnl{background:var(--brass)!important;box-shadow:var(--brass-sh)!important;color:#1C1306!important;text-shadow:var(--engrave)!important;border-radius:1.5px!important;font-family:'Noto Sans KR',sans-serif;font-weight:800}
 /* 독서 화면 소주제 명판도 같은 황동 */
@@ -4061,7 +4063,7 @@ function hexEvenTxt(h){const empty=AX.map((a,k)=>h.r[k]===0?a[1]:null).filter(Bo
   return `여섯 분야 중 ${h.even}개를 고르게 읽고 있어요.`+(empty.length?` 아직 비어 있는 분야: ${empty.join(', ')}.`:` 다음 책은 '${AX[lo][1]}'(${AX[lo][2]})에서 골라 보면 육각형이 고르게 커져요.`)}
 function hexMeHTML(){
   const h=hexScores();
-  return `<div class="sec" style="margin-top:16px"><h3>육각형 독서 <small class="hint">${esc(h.lab)}</small></h3>
+  return `<div class="sec" style="margin-top:16px"><h3>육각형 독서 <small class="hint hxlab">${esc(h.lab)}</small></h3>
     <details class="hxdef"><summary><b>육각형 독서란?</b><span>읽은 책의 분야와 깊이를 보여 줘요</span></summary><p>능력이나 인성 점수가 아니에요. 책 한 권은 그 분야에 1점, 인상 깊은 문장을 남기면 1.5점, 그 책으로 논술이나 구술까지 하면 2점이에요. ${h.yr?'1년 동안':'학년마다'} 분야별 목표를 채우면 꼭짓점이 가득 차요.${hxWho()==='adult'?' 성인은 한 달 3권꼴(1년 36점)로, 문학보다 인문·사회 비중을 조금 높게 잡았어요.':''}</p>
       <ul class="hxax">${AX.map((a,k)=>`<li><b>${a[1]}</b>${a[2]}<small>${h.p[k]} / ${h.t[k]}</small></li>`).join('')}</ul></details>
     <div class="hxme"><button class="hxb" data-act="mybooks" aria-label="육각형 독서 자세히 보기">${radarSVG(h.p,240,true,h.t)}</button>
@@ -4508,7 +4510,7 @@ function hexBooks(){
 function hexScores(g){const who=hxWho();const yr=!g&&who!=='mid';g=g||hxGrade();const p=[0,0,0,0,0,0];const bs=hexBooks();let n=0,un=0;
   bs.forEach(b=>{if(!yr&&g!=='all'&&b.g!==g)return;if(b.nc)return;const m=b.main;if(!(m>=0&&m<6)){un++;return}n++;const d=b.dp||1;const sub=Number.isInteger(b.sub)&&b.sub>=0&&b.sub<6&&b.sub!==m;p[m]+=(sub?0.7:1)*d;if(sub)p[b.sub]+=0.3*d});
   const t=(yr&&who==='adult'?HXA:HXT).map(x=>g==='all'?x*3:x);const q=p.map(v=>Math.round(v*10)/10);const r=q.map((v,k)=>v/t[k]);
-  const lab=yr?(who==='adult'?'성인 · '+gradeTxt(S.me)+' · 1년 목표':'학생 · '+(gradeTxt(S.me)||'기타')+' · 1년 목표'):'학생 · '+g+' 학년 목표';
+  const lab=who==='adult'?'성인 · 1년 목표':'중학생 · '+(yr?'1년':g==='all'?'3년':'학년')+' 목표'; // 11-28 분류는 성인·중학생 두 가지
   return {p:q,t,r,n,un,all:bs.length,even:r.filter(x=>x>=0.5).length,g:yr?(who==='adult'?'성인':'학생'):g,yr,lab:lab+' '+t.reduce((a,b)=>a+b,0)+'점'}}
 const hxLo=h=>h.r.indexOf(Math.min(...h.r));
 /* 육각형 독서 고급판(2026-11-26 사용자 지시, Figma 13): 크림 원판 위 금박 테두리 육각형, 4단 눈금, 초록 보석 같은 값 면 + 금빛 테두리·은은한 빛, 꼭짓점은 금 테 진주, 분야 이름은 명조 */
