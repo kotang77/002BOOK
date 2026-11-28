@@ -2641,7 +2641,9 @@ body:has(.wrap.shopin) #legal{padding-top:2px!important}@media (max-width:720px)
 .lgcv:nth-child(2) .lgcvi:not(:has(>img)){background:#8FA8B8}.lgcv:nth-child(3) .lgcvi:not(:has(>img)){background:#B98A7A}
 .lgcv figcaption{margin-top:6px;font:700 13px/1.3 var(--f-body);color:#FFF6E8}.lgcv figcaption small{display:block;font-size:11px;color:#D9A441}
 .lgnote{display:flex;gap:10px;background:#EEF3EC;border-radius:14px;padding:12px 14px;color:#1F4637}
-.lgnote b{font-size:12.5px}.lgnote p{color:#2B2622;font-size:13.5px;line-height:1.55}
+.lgnote b{font-size:12.5px}
+/* 11-28 사용자 지시: '부모님께' 블록 아래 샘플평가 보기(논술 첨삭·구술 평가 예시) */
+.lgnbtn{display:inline-flex;align-items:center;gap:4px;margin-top:10px;padding:7px 12px 7px 14px;border-radius:999px;border:1.5px solid #1F4637;background:#FFFFFF;color:#1F4637;font:700 13px/1 var(--f-body);cursor:pointer;box-shadow:0 1px 0 rgba(31,70,55,.12)}.lgnbtn:active{transform:translateY(1px)}.lgnote p{color:#2B2622;font-size:13.5px;line-height:1.55}
 .lgwarn{background:#FBF1EC;color:#C0533F}
 .lgi{flex:none;margin-top:2px}
 .lgp1{color:#3B332C}
@@ -5906,7 +5908,7 @@ function essayHTML(i){
   const wsec=(S.progress.wtime||{})[key]||0;const has=!!(d.text&&d.text.trim());const off=S.essayOff&&S.essayOff.i===i;
   const now=busy?'선생님이 첨삭하고 있어요. 1~2분만 기다려요.':ev?(ev2?'2차 첨삭까지 마쳤어요. 결과를 확인해요.':'첨삭이 끝났어요. 결과를 확인하고, 3일 뒤 고쳐 쓰면 2차 점수를 받아요.'):['질문 세 개를 넘겨 읽고, 쓰고 싶은 질문 하나를 골라요.','헷갈리는 게 있으면 선생님께 물어봐요. 없으면 바로 다음으로 넘어가요.','주장·근거·맺음말을 한 문장씩 메모해요.',has||d.files.length?'다 썼으면 아래 \'제출하고 첨삭 받기\'를 눌러요.':'원고지를 열어 계획대로 글을 써요. 노트 사진으로 내도 돼요.'][st];
   const ci=ev||busy?3:st<=1?0:st===2?1:2;
-  const head=`<div class="esub" role="group" aria-label="글쓰기 순서">${['질문','계획','쓰기'].map((t,n)=>`<span class="${ci>n?'dn':ci===n?'on':''}"${ci===n?' aria-current="step"':''}>${ci>n?IC.check:'<i>'+(n+1)+'</i>'}${t}</span>`).join('')}${ev?`<span class="dn">${IC.check}첨삭</span>`:''}</div><p class="esnow">${esc(now)}</p>${ev?'':'<button class="exlink" data-act="exes">첨삭 예시 보기 ›</button>'}`;
+  const head=`<div class="esub" role="group" aria-label="글쓰기 순서">${['질문','계획','쓰기'].map((t,n)=>`<span class="${ci>n?'dn':ci===n?'on':''}"${ci===n?' aria-current="step"':''}>${ci>n?IC.check:'<i>'+(n+1)+'</i>'}${t}</span>`).join('')}${ev?`<span class="dn">${IC.check}첨삭</span>`:''}</div><p class="esnow">${esc(now)}</p>`;
   const tm=picked?qTime(qs[d.q]):null;
   const chg=!ev&&!busy&&st>=1&&S.esQChg===i;
   const qline=picked?`<details class="es-q"${chg?' open':''}><summary><span class="qn">질문 ${d.q+1}</span>${esc(qs[d.q])}</summary>
@@ -6477,7 +6479,7 @@ function evalHTML(){
       ${ev.rb?`<p class="ev-lv"><b>${rbReach(sc)}</b>/${Object.keys(sc).length}개 영역이 학년 기대 수준(도달)에 닿았어요${ev.process?` · 쓰기 과정: 계획 ${esc(ev.process.plan)}`:''}</p>`:''}<p class="tot">${esc(ev.total)}<small> / 100</small>${r2?` <span class="ev-df ${df>=0?'up':'dn'}">1차 ${esc(ev.firstTotal)} → ${esc(ev.total)} ${df>=0?'▲':'▼'}${Math.abs(df)}</span>`:''}</p>
       ${Object.keys(sc).map(k=>`<div class="sc"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.max(0,Math.min(100,scv(sc[k])))}%"></i></div><b>${scv(sc[k])}${grd(sc[k])?` <small>${grd(sc[k])}</small>`:''}</b></div>`).join('')}</div>
     <div class="ev-s2">${ev.praise?`<div class="praise"><b>칭찬과 응원</b><p>${hk(ev.praise)}</p></div>`:''}${r2&&ev.progress?`<p class="ev-prog">${hk(ev.progress)}</p>`:''}${PX.html(ev)}${ev.teacher?`<blockquote class="ev-t">${hk(ev.teacher)}</blockquote>`:''}</div></div>
-  ${v.ex?`<div class="ev-act"><button class="btn ghost" data-act="exor">구술 평가 예시도 보기</button><small class="hint">내 글을 제출하면 이런 첨삭을 받아요. 2차(다시 쓰기) 점수는 3일 뒤 고쳐 쓰면 받을 수 있어요.</small></div>`:`<div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
+  ${v.ex?`<div class="ev-act"><button class="btn ghost" data-act="exor">구술 평가 예시도 보기</button><small class="hint">학생이 글을 제출하면 이런 첨삭을 받아요. 2차(다시 쓰기) 점수는 3일 뒤 고쳐 쓰면 받을 수 있어요.</small></div>`:`<div class="ev-act"><button class="btn ghost" data-act="pdf" ${S.downloads?'':'disabled'}>PDF로 저장</button>${r2?`<button class="btn ghost" data-act="vieweval" data-i="${v.i}">1차 첨삭 보기</button>`:rwBtn(v.i,ev,rwLeft(ev)?'다시 쓰기':'고쳐 쓰고 2차 점수 받기',rwLeft(ev)?'ghost':'')}${!r2&&S.evals2[v.key]?`<button class="btn ghost" data-act="viewe2" data-i="${v.i}">2차 첨삭 보기</button>`:''}
     ${!r2&&rwLeft(ev)?`<small class="hint">${esc(rwHint(ev))}</small>`:''}${S.downloads?'':'<small class="hint">이 화면에서는 PDF 저장을 쓸 수 없어요.</small>'}</div>`}
   ${D('원고지 첨삭',`<p class="evq">${qShowHTML(ev)}</p>${ev.writeSec||ev.asked!=null?`<p class="hint">${ev.asked!=null?'쓰기 전 질문 '+ev.asked+'개 · 계획 작성 · ':''}쓴 시간 ${ev.writeSec?fmtSw(ev.writeSec):'기록 없음'}</p>`:''}<p class="hint">파란색은 고친 곳, 초록색은 선생님 메모예요. 손가락으로 크게 볼 수 있어요.</p>${mnSheets(ev).map(h=>`<div class="mnw">${h}</div>`).join('')}`,'',innerWidth>=720)}
   ${D('점수 이유',`${ev.comment?`<p>${hk(ev.comment)}</p>`:''}${why||'<p class="hint">항목별 이유가 없어요.</p>'}`)}
@@ -6803,7 +6805,7 @@ function oralHTML(i){
   if(!S.odoc[key]){setTimeout(()=>orLoad(i),0);return '<div class="sk"></div><div class="sk"></div>'}
   const q=orQ(i);const busy=S.oBusy[key];const ev=S.orals[key];const ev2=S.orals2[key];
   const foot=ev2?`<div class="sec orhistsec"><h3>지난 구술 기록</h3>${orLogMini(S.progress.oralLog)}<button class="btn ghost" data-act="orhist" data-id="${esc(S.id)}" style="align-self:flex-start">전체 구술 기록 보기</button></div>`
-    :`<div class="orfoot"><button class="link" data-act="orhist" data-id="${esc(S.id)}">지난 구술 기록 ›</button><button class="link" data-act="exor">평가 예시 보기 ›</button>${!ev&&q&&q.ai?'<small>Claude(생성형 AI)가 이달 작품으로 낸 질문이에요</small>':''}</div>`;
+    :`<div class="orfoot"><button class="link" data-act="orhist" data-id="${esc(S.id)}">지난 구술 기록 ›</button>${!ev&&q&&q.ai?'<small>Claude(생성형 AI)가 이달 작품으로 낸 질문이에요</small>':''}</div>`;
   const wrap=(st,body)=>`<div class="sec orwrap" data-st="${st}">${orSteps(i)}${body}</div>${foot}`;
   if(ev)return wrap(ev2?'done':'r2',oralR2HTML(i));
   const oStale=q&&!(orD(i).ans||[]).some(Boolean)&&(q.sig||'책+영화 ①+영화 ②')!==esSig(i);
@@ -7717,7 +7719,7 @@ function lgViewHTML(it,g,key){
   const cover=k=>{const u=ti[k]?artOf(ti[k],k==='book'?'book':'movie'):'';return `<figure class="lgcv"><div class="lgcvi">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>${lgT(bTitle(ti[k]))}</span>`}</div><figcaption><small>${nm[k]}</small>${lgT(bTitle(ti[k]))}</figcaption></figure>`};
   const P=S.lg.more?pts:pts.slice(0,3);
   return `<section class="lghero"><small>이달의 주제</small><h3><span class="hl">${lgT(topic)}</span></h3>${g.theme?`<p>${hk(g.theme)}</p>`:''}<div class="lgcvs">${['book','m1','m2'].filter(k=>String(it[k]||'').trim()).map(cover).join('')}</div></section>
-  ${g.intro?`<div class="lgnote">${lgI('msg')}<div><b>부모님께</b><p>${hk(g.intro)}</p></div></div>`:''}
+  <div class="lgnote">${lgI('msg')}<div><b>부모님께</b>${g.intro?`<p>${hk(g.intro)}</p>`:''}<button type="button" class="lgnbtn" data-act="exes">샘플평가 보기<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
   ${g.why?`<section>${lgSec('세 작품, 왜 함께 볼까?')}<p class="lgp1">${hk(g.why)}</p></section>`:''}
   ${works.length?`<section>${lgSec('작품 안내',works.length)}<div class="lgcar" tabindex="0" aria-label="작품 안내. 옆으로 넘겨 보세요">${works.map(w=>`<article class="lgwc"><span class="lgk">${nm[w.k]}</span><h4>${lgT(bTitle(ti[w.k]))}</h4><p>${hk(w.sum)}</p>${w.who?`<dl><dt>인물</dt><dd>${hk(w.who)}</dd></dl>`:''}${w.look?`<dl><dt>눈여겨볼 점</dt><dd>${hk(w.look)}</dd></dl>`:''}${link[w.k]?`<p class="lglink">주제와 연결 · ${hk(link[w.k])}</p>`:''}</article>`).join('')}</div><div class="lgdots" aria-hidden="true">${works.map((_,n)=>`<i class="${n?'':'on'}"></i>`).join('')}</div></section>`:''}
   ${pts.length?`<section>${lgSec('가르칠 포인트',pts.length)}<ol class="lgpts">${P.map((x,n)=>`<li><b class="lgnum">${String(n+1).padStart(2,'0')}</b><div><b>${lgT(x.t)}</b><p>${hk(x.d)}</p></div></li>`).join('')}</ol>${pts.length>3?`<button class="lgmore" data-act="lgmore" aria-expanded="${!!S.lg.more}">${S.lg.more?'접기':`+ ${pts.length-3}개 더 보기`}</button>`:''}</section>`:''}
@@ -7774,7 +7776,7 @@ function lgHTML(){
 </div>
       ${plan}
       ${lgEvalSumHTML()}
-      ${G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button><button class="btn ghost" data-act="lgq" data-i="${i}">모범 답안</button></div>`:''}
+      ${G&&G.data?`<div class="lgbar"><button class="btn" data-act="lgpdf" ${S.downloads?'':'disabled'}>PDF 저장</button><button class="btn ghost" data-act="lgprint">인쇄</button></div>`:''}
     </div>
     ${isAdmin()?`<div class="lgadm">${S.lgBusy?`<p role="status">학습 자료 일체를 차례로 만드는 중… ${S.lgBusy.n}/${S.lgBusy.of} (${esc(S.lgBusy.cur||'')}) · 새로 ${S.lgBusy.made}개</p>`:`<button class="btn ghost small" data-act="lgall">중1 3월부터 학습 자료 일체 만들기 (없는 것만)</button><button class="btn ghost small" data-act="artre">빠진 표지·포스터 다시 찾기</button>${G&&G.data?'<button class="btn ghost small" data-act="lggo" data-f="1">이 달 새로 만들기</button>':''}`}</div>`:''}
     ${G&&G.data?`<div class="lgprint" aria-hidden="true">${lgSheetHTML(it,G.data)}</div>`:''}`}
