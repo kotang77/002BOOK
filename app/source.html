@@ -1016,7 +1016,13 @@ form{display:flex;flex-direction:column;gap:12px}
 @media (min-width:721px){.bshf .bcase{margin-top:60px;padding:18px 18px 0}.bshf .bcase::after{margin:0 -18px}.bshf .bbd{margin:0 -18px}.spl3{width:124px;right:28px}}
 @media (max-width:720px){.bshf .bcase{padding-left:10px;padding-right:10px}.bshf .bcase::before{left:0;right:0}.bshf .bcase::after{margin:0 -10px}.bshf .bbd{margin:0 -10px}}
 /* 11-28 받침 나무 1.5배(16→24px), 오른쪽 아래 제작사 명판: 오래된 황동(헤어라인·얼룩·모서리 나사), 글자는 음각(검게 파이고 아래에 빛) */
-.bshf .bplate{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);height:32px;display:flex;align-items:center;gap:9px;padding:0 12px 0 13px;border-radius:1.5px;z-index:2;
+:root{--brass:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cfilter id='p' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 0.9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.15 0 0 0 0 0.04 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/160px 40px,
+    repeating-linear-gradient(0deg,rgba(255,240,190,.09) 0 .5px,rgba(60,40,10,.08) .5px 1.5px),
+    radial-gradient(circle at 18% 30%,rgba(70,48,16,.32),rgba(70,48,16,0) 28%),radial-gradient(circle at 74% 72%,rgba(70,48,16,.28),rgba(70,48,16,0) 30%),radial-gradient(circle at 52% 12%,rgba(255,236,170,.35),rgba(255,236,170,0) 40%),
+    linear-gradient(100deg,#9C7A32,#C7A251 34%,#B08A3C 58%,#8E6C2A);
+  --brass-sh:inset 0 0 0 1px rgba(60,40,12,.55),inset 0 1px 0 rgba(255,238,180,.55),inset 0 -1px 0 rgba(40,26,6,.5),0 1px 2px rgba(0,0,0,.55);
+  --engrave:0 1px 0 rgba(255,236,176,.55),0 -.5px 0 rgba(0,0,0,.45)}
+.bshf .bplate{position:absolute;left:auto;right:16px;bottom:11px;transform:scale(.8);transform-origin:right bottom;height:32px;display:flex;align-items:center;gap:9px;padding:0 12px 0 13px;border-radius:1.5px;z-index:2;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='40'%3E%3Cfilter id='p' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55 0.9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.15 0 0 0 0 0.04 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E") 0 0/160px 40px,
     repeating-linear-gradient(0deg,rgba(255,240,190,.09) 0 .5px,rgba(60,40,10,.08) .5px 1.5px),
     radial-gradient(circle at 18% 30%,rgba(70,48,16,.32),rgba(70,48,16,0) 28%),radial-gradient(circle at 74% 72%,rgba(70,48,16,.28),rgba(70,48,16,0) 30%),radial-gradient(circle at 52% 12%,rgba(255,236,170,.35),rgba(255,236,170,0) 40%),
@@ -1031,6 +1037,26 @@ form{display:flex;flex-direction:column;gap:12px}
 .bshf .bplate i{font:500 9px/1 'Noto Serif KR',serif;font-style:italic;letter-spacing:.06em;opacity:.92}
 .bshf .bplate small{font:500 6.5px/1 'Noto Serif KR',serif;letter-spacing:.14em;color:#1C1306;text-shadow:0 1px 0 rgba(255,236,176,.5);opacity:.85;font-style:italic}
 @media (min-width:721px){.bshf .bplate{height:34px}.bshf .bplate b{font-size:18px!important}.bshf .bplate i{font-size:10px}.bshf .bplate small{font-size:7px}}
+@media (min-width:721px){.bshf .bplate{right:24px;bottom:10px}}
+/* 11-28 '나의 서가' 글자 → 황동 명패 '꿈을 그리는 서재 / Est. 2019'(사용자 사진과 같은 구성: 굵은 고딕 제목, 아래 작은 세리프) */
+.shplq{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:9px 18px 8px;border-radius:2px;vertical-align:middle;
+  background:var(--brass);box-shadow:var(--brass-sh)}
+.shplq b{font:900 16px/1 'Noto Sans KR',sans-serif;letter-spacing:.06em;color:#1C1306;text-shadow:var(--engrave);white-space:nowrap}
+.shplq small{font:700 9px/1 'Noto Serif KR',serif;letter-spacing:.04em;color:#1C1306;text-shadow:0 1px 0 rgba(255,236,176,.35)}
+@media (min-width:721px){.shplq{padding:11px 22px 10px}.shplq b{font-size:19px}.shplq small{font-size:10px}}
+.mysh>h3{display:flex;align-items:center}
+/* 책 종류 명패(소설·시/에세이…)도 같은 황동 */
+html body .bshf .bnl{background:var(--brass)!important;box-shadow:var(--brass-sh)!important;color:#1C1306!important;text-shadow:var(--engrave)!important;border-radius:1.5px!important;font-family:'Noto Sans KR',sans-serif;font-weight:800}
+/* 독서 화면 소주제 명판도 같은 황동 */
+html body .shopin .grid>.cv>.cvinfo{background:var(--brass)!important;box-shadow:0 3px 5px -1px rgba(0,0,0,.6),var(--brass-sh)!important}
+html body .shopin .grid .cvinfo .cmo{color:#2A1C0A!important;text-shadow:var(--engrave)!important}
+html body .shopin .grid .cvinfo .ckw{color:#1C1306!important;text-shadow:var(--engrave)!important}
+/* 책장 위 화분: 몬스테라(정면, 지지대·흰 화분·받침) */
+.spl3.mon{width:56px;right:20px;bottom:calc(100% + 3px)}
+.mysh .bshf:has(.spl3.mon) .bcase{margin-top:104px!important}.mysh:has(.spl3.mon)>h3{transform:translateY(94px)}
+.spl3.mon img{filter:drop-shadow(-2px 4px 4px rgba(20,10,4,.35))}
+.spl3.mon::after{left:18%;right:18%;bottom:-4px;height:6px}
+@media (min-width:721px){.spl3.mon{width:64px;right:34px}.mysh .bshf:has(.spl3.mon) .bcase{margin-top:120px!important}.mysh:has(.spl3.mon)>h3{transform:translateY(108px)}}
 .sb{flex:0 0 auto;position:relative;width:62px;height:84px;padding:0;border:0;border-radius:2px 4px 4px 2px;overflow:hidden;background:linear-gradient(160deg,var(--a),var(--b));box-shadow:2px 3px 6px rgba(0,0,0,.55);transform:none;cursor:pointer;transition:transform .15s}
 .sb:hover,.sb:focus-visible{transform:translateY(-5px)}
 .sb[aria-pressed=true]{outline:2px solid #F4C34F;outline-offset:1px;transform:translateY(-7px)}
@@ -4053,7 +4079,7 @@ function meHTML(){
     if(n.sentence){words++;lines.push(`<div class="rvc"><span class="rtag">${esc(it.g)} ${esc(it.m)} · 문장</span><b>“${esc(n.sentence)}”</b><small>${esc(n.sreason||'')}</small></div>`)}
     if(n.scene){words++;lines.push(`<div class="rvc"><span class="rtag">${esc(it.g)} ${esc(it.m)} · 장면</span><b>${esc(n.scene)}</b><small>${esc(n.creason||'')}</small></div>`)}});
   Object.keys(S.progress.quotes||{}).forEach(h=>{const tt=shTitleOf(h);shQuotes(h).forEach(q=>{words++;lines.push(`<div class="rvc"><span class="rtag">${esc(bTitle(tt||'책'))} · 문구</span><b>${q.t?`“${esc(q.t)}”`:'(사진으로 모은 문구)'}</b><small>${q.p?esc(q.p)+'쪽 · ':''}${esc(q.r||'')}</small></div>`)})});
-  return `<div class="sec mysh" style="margin:0 0 18px"><h3>나의 서가 <button class="btn ghost small" data-act="mybooks" style="margin-left:8px">읽은 책 추가하기</button></h3>${shelfHTML()}</div>
+  return `<div class="sec mysh" style="margin:0 0 18px"><h3><span class="shplq" role="img" aria-label="꿈을 그리는 서재, Est. 2019"><b>꿈을 그리는 서재</b><small>Est. 2019</small></span><button class="btn ghost small" data-act="mybooks" style="margin-left:10px">읽은 책 추가하기</button></h3>${shelfHTML()}</div>
     ${isPaid()?'':'<p class="note" style="margin-bottom:14px">무료회원은 기본코스를 쓸 수 있어요. 맞춤형코스는 유료회원이 되면 열려요.</p>'}
     
     <div class="sec" style="margin-top:18px"><h3>모아 둔 문장과 장면</h3>${lines.length?`<div class="rvg">${lines.join('')}</div>`:'<p class="hint">월 화면의 기록 탭에서 인상 깊은 문장과 장면을 적으면 여기에 모여요.</p>'}</div>
@@ -4656,7 +4682,7 @@ function shelfHTML(inSheet){
       <div class="sxs shqtop"><h4>인상적인 문구 <small>${shQuotes(h).length}개</small></h4>${shQuoteCards(h)}</div>
       ${sel.src==='mine'?`<div class="sxs"><h4>내 평가 <small class="sdrate">${esc(rateLine(sel.rate))}</small></h4>${rateBox('shelf',sel.id,sel.rate)}</div>`:''}${shelfExtra(sel,h)}`;
   }
-  return `<div class="bshf"><div class="bcase"><span class="spl3" aria-hidden="true"><img src="shelf/plant.webp" alt="" width="360" height="406"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
+  return `<div class="bshf"><div class="bcase"><span class="spl3${S.covers&&S.covers.deco_monstera?' mon':''}" aria-hidden="true"><img src="${(S.covers&&S.covers.deco_monstera)||'shelf/plant.webp'}" alt="" width="360" height="${S.covers&&S.covers.deco_monstera?1014:406}"></span>${rows}<span class="bplate" aria-label="Jacob, built for greatness, since 2007. 10.24"><b>Jacob</b><span class="bpr"><i>built for greatness</i><small>since 2007. 10.24</small></span></span></div>${det}${bs.length?'':'<p class="shnote">읽은 책을 추가하거나 코스에서 책을 완료하면 서가에 한 권씩 꽂혀요.</p>'}</div>`;
 }
 function myBooksHTML(){
   const h=hexScores(),ha=hexScores('all');const p=h.p,n=h.all;const bs=hexBooks();
@@ -4664,7 +4690,7 @@ function myBooksHTML(){
     :`지금까지 ${n}권을 읽었어요(${h.g} ${h.n}권). ${hexEvenTxt(h)}${h.un?` 분야를 정하지 못한 책 ${h.un}권은 세지 않았어요.`:''}`;
   const tag=b=>`<span class="tg">${AX[b.main]?AX[b.main][1]:'분야 미정'}</span>${b.src==='nl'||b.kdc?`<span class="tg sub" title="국립중앙도서관 서지">도서관 분류${b.kdc?' '+esc(b.kdc):''}</span>`:b.src==='ai'?'<span class="tg sub">AI 추정</span>':''}${b.nc?`<span class="tg sub">${esc(b.ncw||'')} 세지 않음</span>`:''}${Number.isInteger(b.sub)&&AX[b.sub]&&b.sub!==b.main?`<span class="tg sub">${AX[b.sub][1]}</span>`:''}`;
   return `<div class="panel"><div class="ph"><h2>내가 읽은 책<small>읽은 책의 분야와 깊이로 독서를 돌아봐요</small></h2><button class="x" data-act="close1" aria-label="닫기">${IC.x}</button></div>
-  <div class="sec" style="margin-top:0"><h3>나의 서가</h3>${shelfHTML(true)}</div>
+  <div class="sec" style="margin-top:0"><h3><span class="shplq" role="img" aria-label="꿈을 그리는 서재, Est. 2019"><b>꿈을 그리는 서재</b><small>Est. 2019</small></span></h3>${shelfHTML(true)}</div>
   <div style="display:flex;justify-content:center">${radarSVG(p,300,true,h.t)}</div>
   <p>${esc(sum)}</p>
   <div class="sec"><h4 style="margin:0 0 6px"><small class="hint">${esc(h.lab)}</small></h4>${AX.map((a,k)=>`<div class="axr"><span>${a[1]}</span><div class="bar"><i style="width:${Math.min(100,h.r[k]*100)}%"></i></div><small>${p[k]} / ${h.t[k]} · ${hexLevel(h.r[k])}</small></div>`).join('')}
