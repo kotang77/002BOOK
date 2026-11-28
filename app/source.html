@@ -3803,7 +3803,7 @@ const ART_Q={'b|아큐정전':{q:'아Q정전'},
 /* 11-28 사용자 지시: 같은 이름의 다른 작품(달려라 루디·2025 알파·다른 러브레터)이 잡히지 않게 en(영어 원제)을 주면 서버가 원제·연도가 맞는 것만 고른다 */
 const aqK=(qt,yr,aq)=>hid(qt+'|'+(yr||'')+(aq&&aq.en?'|'+aq.en:''));
 /* 11-28 사용자 지시: 영상자료원에 포스터가 없는 작품은 사용자가 준 포스터를 사이트 안(web/art)에 두고 먼저 쓴다 */
-const ART_FIX={'m|알파: 위대한 여정':'art/alpha-2018.jpg?v=1'};
+const ART_FIX={'m|알파: 위대한 여정':'art/alpha-2018.jpg?v=1','m|루디 이야기':'art/rudy-1993.jpg?v=1'};
 function artOf(title,kind,yr){
   if(!title)return '';const h=hid(title);if(S.covers&&S.covers[h])return S.covers[h];
   const kd=kind==='movie'?'m':'b';if(ART_FIX[kd+'|'+bTitle(title)])return ART_FIX[kd+'|'+bTitle(title)];const aq=ART_Q[kd+'|'+bTitle(title)];const qt=aq&&aq.q||bTitle(title);if(aq&&aq.y)yr=aq.y;
